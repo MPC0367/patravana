@@ -243,8 +243,10 @@
       $$("source", c).forEach((s) => s.remove()); c.removeAttribute("src"); c.load();   // nothing of the single file is fetched
       if (c === allClips[0] || warmed) ctl.start();          // the opening film starts buffering at once; the others wait their turn
     } else if (w.kind === "file") {
-      // the file is asked for at once. Whether this host can serve part of a file (Safari insists on it) is checked
-      // alongside, not first: on a host that can, which is the usual case, the film starts a round trip sooner
+      // a film carried inside the page itself can never be served in parts, which Safari insists on: straight to the next way
+      if (apple && /^data:/.test(w.url)) { nextWay(c, "this host cannot serve part of a file"); return; }
+      // otherwise the file is asked for at once. Whether this host can serve part of a file is checked alongside, not
+      // first: on a host that can, which is the usual case, the film starts a round trip sooner
       setFile(c, w.url, at);
       if (apple) hostRanges(w.url).then((can) => { if (!can && c._way === w) nextWay(c, "this host cannot serve part of a file"); });
     } else {
@@ -345,7 +347,9 @@
       v.addEventListener("waiting", () => { if (v._way && v._way.kind === "file" && !v.seeking && v.currentTime > .2 && performance.now() - (v._fileAt || 0) > 2000) { v._stalls = (v._stalls || 0) + 1; v._waitAt = performance.now(); } });
       v.addEventListener("playing", () => { v._waitAt = 0; });
       // an error on the current way moves the film to its next way
-      v.addEventListener("error", () => { if (!v._way) return; if (v._pv && !v._pv.dead) v._pv.fail(new Error("the browser reported a media error")); else nextWay(v, "the browser reported a media error"); }, true);
+      // (an error that arrives late, for a source the film has already moved on from, is not counted against the new one:
+      // the film's own error state is cleared whenever a new source is loaded, so a real failure always carries one)
+      v.addEventListener("error", (e) => { if (!v._way) return; if (e.target === v && !v.error) return; if (v._pv && !v._pv.dead) v._pv.fail(new Error("the browser reported a media error")); else nextWay(v, "the browser reported a media error"); }, true);
     });
     paintSlide();
     const step = (d) => { if (clips.length < 2 || handing) return; if (userPaused) setPaused(false); handOver((clipIdx + d + clips.length) % clips.length); };
