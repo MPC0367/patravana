@@ -109,9 +109,104 @@
       b.style.transform = "scaleX(" + p.toFixed(4) + ")";
     });
   }
-  let warmed = false;
-  // a film that streams (film-stream.js) is started and paused through its stream; a plain file directly
-  function clipPlay(v) { if (v._pv) { v._pv.play(); return; } const p = v.play(); if (p) p.catch(() => {}); }
+  let warmed = false, heroSeen = true, gestureArmed = false;
+  const filmLog = [];                                 // what happened to the films, newest last; #diag shows it
+  const note = (c, text) => { filmLog.push("film " + (allClips.indexOf(c) + 1) + ": " + text); if (filmLog.length > 8) filmLog.shift(); };
+
+  /* How each film gets played, best first:
+       stream  in parts, at the size the screen can show (film-stream.js)
+       file    one file: the size the screen warrants, then the smaller ones
+       memory  that file fetched whole and played from memory, for a host that cannot serve part of a file,
+               which Safari on iPhone and iPad insists on
+     A way that errors, or is asked to play and never moves, is dropped for the next one down. So every device ends up
+     on the best version it can really play, and on the poster only if it can play none of them. */
+  const ua = navigator.userAgent;
+  const forced = (function () { try { return new URLSearchParams(location.search).get("film") || ""; } catch (e) { return ""; } })();   // ?film=nostream|memory, for testing a way
+  const apple = forced === "memory" || /iP(hone|ad|od)/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) || (/Safari\//.test(ua) && !/Chrom(e|ium)|Android|Edg\//.test(ua));
+  let rangeProbe = null;
+  // can this host serve part of a file? Asked once, with a two-byte request
+  function hostRanges(url) {
+    if (forced === "memory" || /^data:/.test(url)) return Promise.resolve(false);
+    if (!rangeProbe) rangeProbe = fetch(url, { headers: { Range: "bytes=0-1" } }).then((r) => { const ok = r.status === 206; try { if (r.body) r.body.cancel(); } catch (e) { /* ignore */ } return ok; }, () => true);
+    return rangeProbe;
+  }
+  function dataToBlob(u) { const bin = atob(u.slice(u.indexOf(",") + 1)), a = new Uint8Array(bin.length); for (let k = 0; k < bin.length; k++) a[k] = bin.charCodeAt(k); return new Blob([a], { type: "video/mp4" }); }
+  function waysFor(c) {
+    const srcEl = c.querySelector("source");
+    const files = { sd: (srcEl && srcEl.getAttribute("src")) || c.getAttribute("src") || "", hq: c.dataset.hq || "", uhd: c.dataset.uhd || "" };
+    const saveData = !!(navigator.connection && navigator.connection.saveData);
+    const touch = window.matchMedia("(pointer: coarse)").matches || /iP(hone|ad|od)|Android/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+    // the film is cover-fitted: on a tall screen it is the height, not the width, that decides how big the frame is drawn
+    const px = Math.max(window.innerWidth, window.innerHeight * 16 / 9) * (window.devicePixelRatio || 1);
+    const ways = [];
+    if (forced !== "nostream" && forced !== "memory" && !reduced && typeof window.PVStream === "function" && (window.PV_STREAMS || {})[c.id]) ways.push({ kind: "stream" });
+    // a single 4K file only goes to a large desktop screen; phones and tablets get that quality from the stream or not at all
+    const order = saveData ? ["sd"] : px >= 2200 && !touch ? ["uhd", "hq", "sd"] : px >= 1400 ? ["hq", "sd"] : ["sd"];
+    order.forEach((k) => { if (files[k] && !ways.some((w) => w.url === files[k])) ways.push({ kind: "file", url: files[k] }); });
+    const mem = (px >= 1400 && !saveData && files.hq) || files.sd;
+    if (mem) ways.push({ kind: "memory", url: mem });
+    return ways;
+  }
+  function setFile(c, url) {
+    c._pv = null;
+    $$("source", c).forEach((s) => s.remove());
+    c.src = url; c.load();
+  }
+  function dropClip(c) {
+    // nothing plays this film here: it leaves the rotation, and the other one (or the poster) carries the hero
+    note(c, "cannot be played on this device");
+    c._pv = null; c._way = null;
+    clips = clips.filter((x) => x !== c); c.classList.remove("is-on", "is-prev"); c.style.display = "none";
+    clipIdx = Math.min(clipIdx, Math.max(0, clips.length - 1));
+    if (clips.length === 1) { clips[0].loop = true; clips[0].classList.add("is-on"); playHero(); }
+    paintSlide();
+  }
+  async function startWay(c) {
+    const w = c._ways[0];
+    if (!w) { dropClip(c); return; }
+    c._way = w; c._asked = performance.now(); c._moved = 0;
+    if (w.kind === "stream") {
+      const ctl = window.PVStream(c, window.PV_STREAMS[c.id], (e) => { if (c._way === w) nextWay(c, "stream stopped: " + (e && e.message ? e.message : e)); }, armGesture);
+      if (!ctl) { nextWay(c, "this browser cannot stream"); return; }
+      c._pv = ctl;
+      $$("source", c).forEach((s) => s.remove()); c.removeAttribute("src"); c.load();   // nothing of the single file is fetched
+      if (c === allClips[0] || warmed) ctl.start();          // the opening film buffers behind the loader
+    } else if (w.kind === "file") {
+      if (apple && !(await hostRanges(w.url))) { if (c._way === w) nextWay(c, "this host cannot serve part of a file"); return; }
+      if (c._way !== w) return;
+      setFile(c, w.url);
+    } else {
+      if (!apple || (await hostRanges(w.url))) { if (c._way === w) nextWay(c, "file would not play"); return; }
+      let blob = null;
+      try { blob = /^data:/.test(w.url) ? dataToBlob(w.url) : await (await fetch(w.url)).blob(); } catch (e) { blob = null; }
+      if (c._way !== w) return;
+      if (!blob) { nextWay(c, "could not fetch the file"); return; }
+      setFile(c, URL.createObjectURL(blob));
+    }
+    note(c, w.kind + (w.url && !/^data:|^blob:/.test(w.url) ? " " + w.url.split("/").pop().slice(0, 28) : ""));
+    if (c === activeClip() && booted) playHero();
+  }
+  function nextWay(c, why) {
+    if (!c._ways || !c._ways.length) return;
+    note(c, why);
+    if (c._pv && !c._pv.dead) { const old = c._pv; c._pv = null; c._way = null; old.fail(); }   // shut the stream; its own report is ignored
+    c._ways.shift();
+    startWay(c);
+  }
+  // a browser may refuse to start a film until the page has been touched (Low Power Mode does this): the first tap starts it
+  function armGesture() {
+    if (gestureArmed) return; gestureArmed = true;
+    filmLog.push("playback waits for a first touch"); if (filmLog.length > 8) filmLog.shift();
+    const types = ["touchend", "click", "keydown"];
+    const go = () => { gestureArmed = false; types.forEach((t) => document.removeEventListener(t, go, true)); clips.forEach((c) => { c._asked = 0; }); playHero(); };
+    types.forEach((t) => document.addEventListener(t, go, true));
+  }
+  // a film that streams is started and paused through its stream; a plain file directly
+  function clipPlay(v) {
+    if (!v._asked || v.paused) v._asked = performance.now();
+    if (v._pv) { v._pv.play(); return; }
+    const p = v.play(); if (p) p.catch((e) => { if (e && e.name === "NotAllowedError") armGesture(); });
+  }
   function clipPause(v) { if (v._pv) v._pv.pause(); else v.pause(); }
   function playHero() {
     if (reduced || userPaused || !clips.length) return;
@@ -120,13 +215,13 @@
     // the queued clips only buffer once the first one is running and its own download has gone quiet,
     // so a phone never pulls two films at once
     if (!warmed && clips.length > 1) {
-      warmed = true;
       const warm = () => {
         const a = activeClip();
         if (a && a._pv && a._pv.busy()) { setTimeout(warm, 1500); return; }
+        warmed = true;
         clips.forEach((c) => { if (c === a) return; if (c._pv) c._pv.start(); else { c.preload = "auto"; c.load(); } });
       };
-      setTimeout(warm, 4000);
+      if (!playHero.warming) { playHero.warming = true; setTimeout(warm, 4000); }
     }
   }
   function handOver(toIdx) {
@@ -152,49 +247,17 @@
     if (pauseBtn) pauseBtn.setAttribute("aria-pressed", String(p));
     if (p) clips.forEach(clipPause); else playHero();
   }
-  // Note for the single-file build: Safari/WebKit plays video only from a real HTTP source. Tested on
-  // iOS WebKit, both data: and blob: URLs fail with MEDIA_ERR_SRC_NOT_SUPPORTED. Clips embedded as data
-  // URIs therefore cannot play on iPhone/iPad; the error handler below drops them and the poster stands in.
   function initHeroClips() {
     if (!clips.length) return;
-    // if a clip has produced nothing after a fair wait (iOS with the inlined build), take it out of the
-    // way so the poster still carries the hero instead of an empty black rectangle; restore it if it does load
-    clips.forEach((v) => v.addEventListener("loadeddata", () => { v.style.display = ""; }, { once: true }));
-    setTimeout(() => clips.forEach((v) => { if (v.readyState === 0) v.style.display = "none"; }), 6000);
-    // resolution is chosen before anything loads, because the first clip starts playing immediately.
-    // the ladder is driven by the screen's real pixel width: 4K masters only go to screens that can show them,
-    // phones and anyone on data-saver stay on the light file
-    const saveData = !!(navigator.connection && navigator.connection.saveData);
-    // the film is cover-fitted: on a tall phone it is the screen height, not its width, that decides how big the frame is drawn
-    const px = Math.max(window.innerWidth, window.innerHeight * 16 / 9) * (window.devicePixelRatio || 1);
-    const ladder = (c) => (saveData ? null : (px >= 2200 && c.dataset.uhd) || (px >= 1400 && c.dataset.hq) || null);
-    // Films that also exist as streamable parts (film-manifest.js) play through the streaming engine, which is not held to
-    // the 20 MB a single stored file can be. Everything else, and any stream that fails, uses the single-file ladder.
-    const streams = window.PV_STREAMS || {};
-    if (!reduced && typeof window.PVStream === "function") clips.forEach((c, i) => {
-      const man = streams[c.id]; if (!man) return;
-      const srcEl = c.querySelector("source"), keepAttr = c.getAttribute("src");
-      const ctl = window.PVStream(c, man, () => {
-        c._pv = null;
-        if (srcEl) { const pick = ladder(c); if (pick) srcEl.src = pick; c.appendChild(srcEl); } else if (keepAttr) c.setAttribute("src", keepAttr);
-        c.load();
-        if (c === activeClip() && booted) playHero();
-      });
-      if (!ctl) return;
-      c._pv = ctl;
-      if (srcEl) srcEl.remove();
-      c.removeAttribute("src"); c.load();               // nothing of the single file is fetched
-      if (i === 0) ctl.start();                          // the opening film buffers behind the loader
-    });
-    clips.forEach((c) => {
-      if (c._pv) return;
-      const pick = ladder(c), srcEl = c.querySelector("source");
-      if (pick && srcEl && srcEl.getAttribute("src") !== pick) { srcEl.src = pick; c.load(); }
-    });
+    // Nothing here ever hides a film that is still trying to load: Safari will not start, and will pause, a film it
+    // cannot see, so a hidden film would stay hidden for good. An unloaded film is transparent over the poster anyway.
+    clips.forEach((c) => { c._ways = waysFor(c); });
     // the slide control only shows once a film is really running, and follows the playing clip
     clips.forEach((v) => {
       v.addEventListener("playing", () => { if (slidesEl) slidesEl.classList.add("is-film"); }, { once: true });
       v.addEventListener("timeupdate", () => { if (v === activeClip()) paintBars(); });
+      // an error on the current way moves the film to its next way
+      v.addEventListener("error", () => { if (!v._way) return; if (v._pv && !v._pv.dead) v._pv.fail(new Error("the browser reported a media error")); else nextWay(v, "the browser reported a media error"); }, true);
     });
     paintSlide();
     const step = (d) => { if (clips.length < 2 || handing) return; if (userPaused) setPaused(false); handOver((clipIdx + d + clips.length) % clips.length); };
@@ -202,23 +265,29 @@
     if (prevBtn) prevBtn.addEventListener("click", () => step(-1));
     if (nextBtn) nextBtn.addEventListener("click", () => step(1));
     if (pauseBtn) pauseBtn.addEventListener("click", () => setPaused(!userPaused));
-    if (clips.length < 2) { clips[0].loop = true; return; }
-    clips.forEach((v) => {
+    if (clips.length < 2) clips[0].loop = true;
+    else clips.forEach((v) => {
       v.loop = false;
-      // a clip that cannot load drops out of the rotation rather than fading the hero to black
-      v.addEventListener("error", () => {
-        if (v._pv) { v._pv.fail(); return; }             // a stream that breaks goes back to its single file before anything is dropped
-        clips = clips.filter((c) => c !== v); v.style.display = "none";
-        clipIdx = Math.min(clipIdx, Math.max(0, clips.length - 1));
-        if (clips.length === 1) { clips[0].loop = true; clips[0].classList.add("is-on"); playHero(); }
-        paintSlide();
-      }, true);
       v.addEventListener("timeupdate", () => {
-        if (v !== activeClip() || !v.duration || !isFinite(v.duration)) return;
+        if (v !== activeClip() || !v.duration || !isFinite(v.duration) || v.loop) return;
         if (v.duration - v.currentTime <= FADE) handOver();
       });
-      v.addEventListener("ended", () => { if (v === activeClip()) handOver(); });
+      v.addEventListener("ended", () => { if (v === activeClip() && !v.loop) handOver(); });
     });
+    if (reduced) return;                                   // reduced motion shows the poster: no film is fetched at all
+    clips.slice().forEach((c) => startWay(c));
+    // the watch: the film on screen was asked to play. If it has not moved for a while and there is another way to play
+    // it, take that way. The last way left is never given up on for being slow, only for failing outright.
+    setInterval(() => {
+      const v = activeClip();
+      if (!v || !v._way || !booted || reduced || userPaused || gestureArmed || document.hidden || !heroSeen) return;
+      const now = performance.now();
+      if (v.currentTime !== v._lastT) { v._lastT = v.currentTime; v._moved = now; return; }
+      const idle = now - Math.max(v._moved || 0, v._asked || 0);
+      const limit = v._way.kind === "stream" ? 12000 : v._way.kind === "memory" ? 45000 : 15000;
+      if (idle > limit && v._ways.length > 1) nextWay(v, "asked to play and did not move for " + Math.round(idle / 1000) + " s");
+      else if (idle > 4000 && v.paused && !v._pv) { const p = v.play(); if (p) p.catch((e) => { if (e && e.name === "NotAllowedError") armGesture(); }); }   // a film stopped from outside is asked again, without restarting its clock
+    }, 1000);
   }
   function bootReveal() {
     if (booted) return; booted = true;
@@ -264,9 +333,10 @@
   if (heroVideo) {
     initHeroClips();
     new IntersectionObserver((en) => en.forEach((x) => {
+      heroSeen = x.isIntersecting;
       if (!booted || reduced) return;
       if (x.isIntersecting) playHero(); else clips.forEach(clipPause);
-    })).observe(heroVideo);
+    })).observe($("#hero") || heroVideo);
   }
 
   /* ---------- smooth scroll ---------- */
@@ -1001,14 +1071,16 @@
   function initDiag() {
     if (!/^#diag/.test(location.hash)) return;
     const box = document.createElement("pre");
-    box.style.cssText = "position:fixed;left:8px;bottom:8px;z-index:99999;margin:0;padding:8px 10px;background:rgba(0,0,0,.84);color:#9f9;font:11px/1.5 monospace;border-radius:6px;pointer-events:none;white-space:pre";
+    box.style.cssText = "position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;margin:0;padding:8px 10px;background:rgba(0,0,0,.86);color:#9f9;font:11px/1.5 monospace;border-radius:6px;pointer-events:none;white-space:pre-wrap;word-break:break-word";
     document.body.appendChild(box);
     setInterval(() => {
       box.textContent = allClips.map((v, i) => {
-        const on = v === activeClip() ? "> " : "  ";
-        if (v._pv && !v._pv.dead) { const d = v._pv.info(); return on + "film " + (i + 1) + ": stream " + d.size + " " + d.mbps + " Mbps, decoded " + d.shown + ", ahead " + d.ahead + "s, net " + d.net + " Mbps, dropped " + d.dropped + ", " + d.via; }
-        return on + "film " + (i + 1) + ": file " + (v.currentSrc || "none").split("/").pop().slice(0, 24) + ", decoded " + v.videoWidth + "x" + v.videoHeight + ", ready " + v.readyState;
-      }).join("\n") + "\nscreen " + window.innerWidth + "x" + window.innerHeight + " @" + (window.devicePixelRatio || 1);
+        const on = v === activeClip() ? "> " : "  ", way = v._way ? v._way.kind : "none";
+        const tail = ", decoded " + v.videoWidth + "x" + v.videoHeight + ", t " + v.currentTime.toFixed(1) + ", ready " + v.readyState + (v.paused ? ", paused" : "") + (v.error ? ", ERROR " + v.error.code : "");
+        if (v._pv && !v._pv.dead) { const d = v._pv.info(); return on + "film " + (i + 1) + ": stream " + d.size + " " + d.mbps + " Mbps" + tail + ", ahead " + d.ahead + "s, net " + d.net + " Mbps, dropped " + d.dropped + ", " + d.via + (d.open ? "" : " (not open)") + ", shift " + d.shift; }
+        return on + "film " + (i + 1) + ": " + way + " " + (v.currentSrc || "none").split("/").pop().slice(0, 24) + tail;
+      }).join("\n") + "\nscreen " + window.innerWidth + "x" + window.innerHeight + " @" + (window.devicePixelRatio || 1) + (gestureArmed ? " | WAITING FOR A TOUCH" : "") + (booted ? "" : " | loading") +
+        "\n" + filmLog.join("\n") + "\n" + navigator.userAgent.replace(/Mozilla\/5\.0 /, "").slice(0, 110);
     }, 1000);
   }
 
