@@ -926,3 +926,8 @@ html[lang="th"] .views__k { letter-spacing: .02em; text-transform: none; font-si
 @media (min-width: 1181px) { .stay-layout { grid-template-columns: 1.08fr 1fr; } }
 @media (max-width: 640px) { .acc__thai { display: block; } }
 .stay-stage.is-loading .stay-stage__view img#stayImg { opacity: .45; }
+
+/* playback refused until the page is touched (Low Power Mode): the control becomes a play button with a line of help */
+.slides__tap { display: none; font-size: .86rem; color: rgba(244,240,231,.94); }
+.slides.is-waiting .slides__tap { display: block; }
+.slides.is-waiting .slides__count, .slides.is-waiting .slides__cap, .slides.is-waiting .slides__bars, .slides.is-waiting #slidePrev, .slides.is-waiting #slideNext { display: none; }

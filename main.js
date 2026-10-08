@@ -109,7 +109,7 @@
       b.style.transform = "scaleX(" + p.toFixed(4) + ")";
     });
   }
-  let warmed = false, heroSeen = true, gestureArmed = false;
+  let warmed = false, heroSeen = true, gestureArmed = false, gestureAt = -1e9;
   const filmLog = [];                                 // what happened to the films, newest last; #diag shows it
   const note = (c, text) => { filmLog.push("film " + (allClips.indexOf(c) + 1) + ": " + text); if (filmLog.length > 8) filmLog.shift(); };
 
@@ -121,12 +121,12 @@
      A way that errors, or is asked to play and never moves, is dropped for the next one down. So every device ends up
      on the best version it can really play, and on the poster only if it can play none of them. */
   const ua = navigator.userAgent;
-  const forced = (function () { try { return new URLSearchParams(location.search).get("film") || ""; } catch (e) { return ""; } })();   // ?film=nostream|memory, for testing a way
-  const apple = forced === "memory" || /iP(hone|ad|od)/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) || (/Safari\//.test(ua) && !/Chrom(e|ium)|Android|Edg\//.test(ua));
+  const forced = (function () { try { return new URLSearchParams(location.search).get("film") || ""; } catch (e) { return ""; } })();   // ?film=nostream | memory | norange (an Apple browser on a host without ranges), for testing a way
+  const apple = forced === "memory" || forced === "norange" || /iP(hone|ad|od)/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) || (/Safari\//.test(ua) && !/Chrom(e|ium)|Android|Edg\//.test(ua));
   let rangeProbe = null;
   // can this host serve part of a file? Asked once, with a two-byte request
   function hostRanges(url) {
-    if (forced === "memory" || /^data:/.test(url)) return Promise.resolve(false);
+    if (forced === "memory" || forced === "norange" || /^data:/.test(url)) return Promise.resolve(false);
     if (!rangeProbe) rangeProbe = fetch(url, { headers: { Range: "bytes=0-1" } }).then((r) => { const ok = r.status === 206; try { if (r.body) r.body.cancel(); } catch (e) { /* ignore */ } return ok; }, () => true);
     return rangeProbe;
   }
@@ -136,21 +136,38 @@
     const files = { sd: (srcEl && srcEl.getAttribute("src")) || c.getAttribute("src") || "", hq: c.dataset.hq || "", uhd: c.dataset.uhd || "" };
     const saveData = !!(navigator.connection && navigator.connection.saveData);
     const touch = window.matchMedia("(pointer: coarse)").matches || /iP(hone|ad|od)|Android/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+    const phone = touch && Math.min(screen.width, screen.height) < 600;
     // the film is cover-fitted: on a tall screen it is the height, not the width, that decides how big the frame is drawn
     const px = Math.max(window.innerWidth, window.innerHeight * 16 / 9) * (window.devicePixelRatio || 1);
-    const ways = [];
-    if (forced !== "nostream" && forced !== "memory" && !reduced && typeof window.PVStream === "function" && (window.PV_STREAMS || {})[c.id]) ways.push({ kind: "stream" });
-    // a single 4K file only goes to a large desktop screen; phones and tablets get that quality from the stream or not at all
-    const order = saveData ? ["sd"] : px >= 2200 && !touch ? ["uhd", "hq", "sd"] : px >= 1400 ? ["hq", "sd"] : ["sd"];
-    order.forEach((k) => { if (files[k] && !ways.some((w) => w.url === files[k])) ways.push({ kind: "file", url: files[k] }); });
+    const stream = forced !== "nostream" && forced !== "memory" && !reduced && typeof window.PVStream === "function" && (window.PV_STREAMS || {})[c.id] ? { kind: "stream" } : null;
+    // the largest single file: where the page marks it as fit for tablets (a 1440p file) anything but a phone may have it;
+    // otherwise it is a 4K file and only a large desktop screen gets it. Phones stop at the 1080p file.
+    const top = !!files.uhd && (c.dataset.uhdTouch === "1" ? !phone : !touch);
+    const order = saveData ? ["sd"] : px >= 2200 && top ? ["uhd", "hq", "sd"] : px >= 1400 ? ["hq", "sd"] : ["sd"];
+    const fileWays = [];
+    const sizeRank = { uhd: 0, hq: 1, sd: 2 };          // a larger number is a lighter file
+    order.forEach((k) => { if (files[k] && !fileWays.some((w) => w.url === files[k])) fileWays.push({ kind: "file", url: files[k], rank: sizeRank[k] }); });
+    // Safari (every browser on an iPhone or iPad) plays a plain file natively, starts it quickly and is strict about
+    // streams, so there the file comes first and the stream is the fallback. Everywhere else the stream comes first.
+    const ways = apple ? fileWays.concat(stream ? [stream] : []) : (stream ? [stream] : []).concat(fileWays);
     const mem = (px >= 1400 && !saveData && files.hq) || files.sd;
     if (mem) ways.push({ kind: "memory", url: mem });
     return ways;
   }
-  function setFile(c, url) {
-    c._pv = null;
+  // The opening film, when it is a plain file, starts playing behind the loader: a phone fetches nothing of a file until it is
+  // asked to play, and a line too slow for this file shows itself there, before anyone is watching. As the loader lifts the
+  // film is wound back to its first frame (see clipPlay).
+  function prime(c) {
+    if (booted || reduced || c !== allClips[0]) return;
+    c._primed = true;
+    const p = c.play(); if (p) p.catch((e) => { if (e && e.name === "NotAllowedError") armGesture(); });
+  }
+  // at: where to pick the film up (a film moved to a smaller file carries on from where it was)
+  function setFile(c, url, at) {
+    c._pv = null; c._stalls = 0; c._waitAt = 0; c._fileAt = performance.now();
     $$("source", c).forEach((s) => s.remove());
     c.src = url; c.load();
+    if (at > .3) c.addEventListener("loadedmetadata", () => { try { c.currentTime = at; } catch (e) { /* starts from the top */ } }, { once: true });
   }
   function dropClip(c) {
     // nothing plays this film here: it leaves the rotation, and the other one (or the poster) carries the hero
@@ -161,7 +178,7 @@
     if (clips.length === 1) { clips[0].loop = true; clips[0].classList.add("is-on"); playHero(); }
     paintSlide();
   }
-  async function startWay(c) {
+  async function startWay(c, at) {
     const w = c._ways[0];
     if (!w) { dropClip(c); return; }
     c._way = w; c._asked = performance.now(); c._moved = 0;
@@ -174,37 +191,51 @@
     } else if (w.kind === "file") {
       if (apple && !(await hostRanges(w.url))) { if (c._way === w) nextWay(c, "this host cannot serve part of a file"); return; }
       if (c._way !== w) return;
-      setFile(c, w.url);
+      setFile(c, w.url, at); prime(c);
     } else {
       if (!apple || (await hostRanges(w.url))) { if (c._way === w) nextWay(c, "file would not play"); return; }
       let blob = null;
       try { blob = /^data:/.test(w.url) ? dataToBlob(w.url) : await (await fetch(w.url)).blob(); } catch (e) { blob = null; }
       if (c._way !== w) return;
       if (!blob) { nextWay(c, "could not fetch the file"); return; }
-      setFile(c, URL.createObjectURL(blob));
+      setFile(c, URL.createObjectURL(blob)); prime(c);
     }
     note(c, w.kind + (w.url && !/^data:|^blob:/.test(w.url) ? " " + w.url.split("/").pop().slice(0, 28) : ""));
     if (c === activeClip() && booted) playHero();
   }
-  function nextWay(c, why) {
+  function nextWay(c, why, keepTime) {
     if (!c._ways || !c._ways.length) return;
+    const at = keepTime ? c.currentTime : 0;
     note(c, why);
     if (c._pv && !c._pv.dead) { const old = c._pv; c._pv = null; c._way = null; old.fail(); }   // shut the stream; its own report is ignored
     c._ways.shift();
-    startWay(c);
+    startWay(c, at);
   }
   // a browser may refuse to start a film until the page has been touched (Low Power Mode does this): the first tap starts it
   function armGesture() {
     if (gestureArmed) return; gestureArmed = true;
     filmLog.push("playback waits for a first touch"); if (filmLog.length > 8) filmLog.shift();
+    // the control shows as a play button with a line saying what to do, so the still hero reads as paused, not broken
+    if (slidesEl) slidesEl.classList.add("is-film", "is-waiting");
+    if (pauseBtn) pauseBtn.setAttribute("aria-pressed", "true");
     const types = ["touchend", "click", "keydown"];
-    const go = () => { gestureArmed = false; types.forEach((t) => document.removeEventListener(t, go, true)); clips.forEach((c) => { c._asked = 0; }); playHero(); };
+    const go = () => {
+      gestureArmed = false; gestureAt = performance.now();
+      types.forEach((t) => document.removeEventListener(t, go, true));
+      if (slidesEl) slidesEl.classList.remove("is-waiting");
+      if (pauseBtn) pauseBtn.setAttribute("aria-pressed", String(userPaused));
+      // a touch unlocks only the films played inside it, so each one is started here; the ones not on screen are paused again
+      const on = activeClip();
+      clips.forEach((c) => { c._asked = 0; if (c === on) return; const p = c.play(); if (p) p.then(() => { if (c !== activeClip() && !handing) c.pause(); }, () => {}); });
+      playHero();
+    };
     types.forEach((t) => document.addEventListener(t, go, true));
   }
   // a film that streams is started and paused through its stream; a plain file directly
   function clipPlay(v) {
     if (!v._asked || v.paused) v._asked = performance.now();
     if (v._pv) { v._pv.play(); return; }
+    if (v._primed) { v._primed = false; if (v.currentTime > .03) { try { v.currentTime = 0; } catch (e) { /* plays on from where it is */ } } }
     const p = v.play(); if (p) p.catch((e) => { if (e && e.name === "NotAllowedError") armGesture(); });
   }
   function clipPause(v) { if (v._pv) v._pv.pause(); else v.pause(); }
@@ -256,6 +287,9 @@
     clips.forEach((v) => {
       v.addEventListener("playing", () => { if (slidesEl) slidesEl.classList.add("is-film"); }, { once: true });
       v.addEventListener("timeupdate", () => { if (v === activeClip()) paintBars(); });
+      // a plain file that stops to load, after it had been running, counts against it (the first two seconds of a file do not)
+      v.addEventListener("waiting", () => { if (v._way && v._way.kind === "file" && !v.seeking && v.currentTime > .2 && performance.now() - (v._fileAt || 0) > 2000) { v._stalls = (v._stalls || 0) + 1; v._waitAt = performance.now(); } });
+      v.addEventListener("playing", () => { v._waitAt = 0; });
       // an error on the current way moves the film to its next way
       v.addEventListener("error", () => { if (!v._way) return; if (v._pv && !v._pv.dead) v._pv.fail(new Error("the browser reported a media error")); else nextWay(v, "the browser reported a media error"); }, true);
     });
@@ -264,7 +298,7 @@
     const prevBtn = $("#slidePrev"), nextBtn = $("#slideNext");
     if (prevBtn) prevBtn.addEventListener("click", () => step(-1));
     if (nextBtn) nextBtn.addEventListener("click", () => step(1));
-    if (pauseBtn) pauseBtn.addEventListener("click", () => setPaused(!userPaused));
+    if (pauseBtn) pauseBtn.addEventListener("click", () => { if (performance.now() - gestureAt < 500) return; setPaused(!userPaused); });   // the tap that started the film is not also a pause
     if (clips.length < 2) clips[0].loop = true;
     else clips.forEach((v) => {
       v.loop = false;
@@ -280,11 +314,22 @@
     // it, take that way. The last way left is never given up on for being slow, only for failing outright.
     setInterval(() => {
       const v = activeClip();
-      if (!v || !v._way || !booted || reduced || userPaused || gestureArmed || document.hidden || !heroSeen) return;
+      if (!v || !v._way || reduced || userPaused || gestureArmed || document.hidden) return;
       const now = performance.now();
+      // too heavy for this line: a file that has stopped to load twice, or for more than a few seconds, gives way to the
+      // next smaller one, picking up where it was. This runs behind the loader too, so it is usually settled before anyone looks.
+      const lighter = v._way.kind === "file" && v._ways[1] && v._ways[1].kind === "file";
+      if (lighter && (v._stalls >= 2 || (v._waitAt && now - v._waitAt > 2500))) {
+        nextWay(v, v._stalls >= 2 ? "kept stopping to load" : "stopped to load for too long", true);
+        // what the line could not carry for this film it cannot carry for the others: they move to the same size now, off screen
+        const rank = v._ways[0] && v._ways[0].rank;
+        if (rank != null) clips.forEach((c) => { if (c === v || !c._way || c._way.kind !== "file") return; let moved = false; while (c._ways[0] && c._ways[0].kind === "file" && c._ways[0].rank < rank && c._ways[1] && c._ways[1].kind === "file") { c._ways.shift(); moved = true; } if (moved) { note(c, "moved to the lighter file as well"); startWay(c); } });
+        return;
+      }
+      if (!booted || !heroSeen) return;
       if (v.currentTime !== v._lastT) { v._lastT = v.currentTime; v._moved = now; return; }
       const idle = now - Math.max(v._moved || 0, v._asked || 0);
-      const limit = v._way.kind === "stream" ? 12000 : v._way.kind === "memory" ? 45000 : 15000;
+      const limit = v._way.kind === "stream" ? (v.readyState >= 3 ? 5000 : 10000) : v._way.kind === "memory" ? 45000 : lighter ? 7000 : 15000;
       if (idle > limit && v._ways.length > 1) nextWay(v, "asked to play and did not move for " + Math.round(idle / 1000) + " s");
       else if (idle > 4000 && v.paused && !v._pv) { const p = v.play(); if (p) p.catch((e) => { if (e && e.name === "NotAllowedError") armGesture(); }); }   // a film stopped from outside is asked again, without restarting its clock
     }, 1000);

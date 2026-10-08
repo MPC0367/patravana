@@ -81,6 +81,7 @@
         if (!S.placed) S.kept.push(r.value);
         await appendChunk(r.value);
         if (!S.placed) await place();
+        if (!S.placed && got > 12000000) throw new Error("12 MB of film went in and none of it was buffered");
         S.fed = true;
         if (S.shownTi < 0) S.shownTi = ti; else if (S.shownTi !== ti) S.mixed = true;
         const secs = (performance.now() - tFirst) / 1000;

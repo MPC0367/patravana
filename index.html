@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300..800&family=Fraunces:ital,opsz,wght@1,9..144,300..500&family=DM+Sans:opsz,wght@9..40,300..600&family=Prompt:wght@300;400;500;600&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=cc81b70e">
+<link rel="stylesheet" href="styles.css?v=74d3f9f6">
 </head>
 <body>
 
@@ -142,15 +142,16 @@
 <!-- ===== hero: two films, one line, and the way in ===== -->
 <section class="hero" id="hero" data-dark>
   <div class="hero__media" aria-hidden="true">
-    <img class="hero__poster" fetchpriority="high" src="assets/web/hero-poster-2400.jpg" srcset="assets/web/hero-poster-800.jpg 800w, assets/web/hero-poster-1600.jpg 1600w, assets/web/hero-poster-2400.jpg 2400w, assets/web/hero-poster-4k.jpg 3840w" sizes="100vw" alt="">
-    <video class="hero__video is-on" id="heroVideo" muted playsinline preload="auto"
-      poster="assets/web/hero-poster-2400.jpg"
-      data-hq="assets/video/hero-pavilion-1080.mp4" data-uhd="assets/video/hero-pavilion-2160-cap.mp4">
-      <source src="assets/video/hero-pavilion-720.mp4" type="video/mp4">
+    <img class="hero__poster" fetchpriority="high" src="assets/web/hero-first-2400.jpg" srcset="assets/web/hero-first-800.jpg 800w, assets/web/hero-first-1600.jpg 1600w, assets/web/hero-first-2400.jpg 2400w, assets/web/hero-first-4k.jpg 3840w" sizes="100vw" alt="">
+    <!-- the script decides how each film is played (streamed in parts, or one of these files), so nothing preloads here -->
+    <video class="hero__video is-on" id="heroVideo" muted playsinline preload="none"
+      poster="assets/web/hero-first-2400.jpg"
+      data-hq="assets/video/film-pav-1080.mp4" data-uhd="assets/video/film-pav-1440.mp4" data-uhd-touch="1">
+      <source src="assets/video/film-pav-720.mp4" type="video/mp4">
     </video>
-    <video class="hero__video" id="heroVideo2" muted playsinline preload="metadata"
-      data-hq="assets/video/hero-drone-1080.mp4" data-uhd="assets/video/hero-drone-2160.mp4">
-      <source src="assets/video/hero-drone-720.mp4" type="video/mp4">
+    <video class="hero__video" id="heroVideo2" muted playsinline preload="none"
+      data-hq="assets/video/film-hill-1080.mp4" data-uhd="assets/video/film-hill-1440.mp4" data-uhd-touch="1">
+      <source src="assets/video/film-hill-720.mp4" type="video/mp4">
     </video>
     <canvas class="hero__canvas" id="heroCanvas"></canvas>
     <div class="hero__shade"></div>
@@ -177,6 +178,7 @@
         <span class="is-on" data-i18n="slides.c1">From the dining pavilion out to the lake</span>
         <span data-i18n="slides.c2">Sunlight over the hills</span>
       </p>
+      <p class="slides__tap" data-i18n="slides.tap">Tap to play the film</p>
       <div class="slides__ctrl">
         <div class="slides__bars" aria-hidden="true"><i><b></b></i><i><b></b></i></div>
         <button class="iconbtn iconbtn--glass" id="slidePrev" aria-label="Previous film" data-i18n-attr="aria-label:slides.prev"><svg aria-hidden="true"><use href="#i-back"/></svg></button>
@@ -887,10 +889,10 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/InertiaPlugin.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js" defer></script>
-<script src="i18n.js?v=743c8874" defer></script>
+<script src="i18n.js?v=11d08f72" defer></script>
 <script src="scene.js?v=9c086cd3" defer></script>
 <script src="film-manifest.js?v=1ca8444e" defer></script>
-<script src="film-stream.js?v=a9d897a2" defer></script>
-<script src="main.js?v=64783e9e" defer></script>
+<script src="film-stream.js?v=791d49af" defer></script>
+<script src="main.js?v=f1f571f7" defer></script>
 </body>
 </html>
