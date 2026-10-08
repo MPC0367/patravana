@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Patravana, Khao Yai</title>
+<meta name="description" content="Patravana Resort Khao Yai. Sixty-four suites in the hills, at the seventh-richest ozone on Earth. A bilingual concept experience.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 40'%3E%3Cg fill='none' stroke='%2335543F' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 31 L12 26 L18 20 L25 9 L31 18 L34 23'/%3E%3Cpath d='M30 25 L35 21 L40 14 L46 21 L53 27 L60 31'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300..800&family=Fraunces:ital,opsz,wght@1,9..144,300..500&family=DM+Sans:opsz,wght@9..40,300..600&family=Prompt:wght@300;400;500;600&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-arrow" viewBox="0 0 16 16"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-back" viewBox="0 0 16 16"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-out" viewBox="0 0 16 16"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 16 16"><path d="M5.6 3.6v8.8M10.4 3.6v8.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-play" viewBox="0 0 16 16"><path d="M5.2 3.3v9.4L12.8 8z" fill="currentColor"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 16 16"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M10.5 5.5V4.1a1.6 1.6 0 0 0-1.6-1.6H4.1a1.6 1.6 0 0 0-1.6 1.6v4.8a1.6 1.6 0 0 0 1.6 1.6h1.4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 16 16"><path d="M3 8.6 6.4 12 13 4.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-share" viewBox="0 0 16 16"><path d="M8 10V2.6M5.2 5.2 8 2.4l2.8 2.8M3 9v3.4a1.1 1.1 0 0 0 1.1 1.1h7.8a1.1 1.1 0 0 0 1.1-1.1V9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-x" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip" href="#offers" data-i18n="a11y.skip">Skip to content</a>
+
+<!-- ===== loader ===== -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__inner">
+    <i class="loader__mark pv-mark" aria-hidden="true"></i>
+    <div class="loader__word" aria-hidden="true">
+      <span>P</span><span>A</span><span>T</span><span>R</span><span>A</span><span>V</span><span>A</span><span>N</span><span>A</span>
+    </div>
+    <p class="loader__sub">Resort <i aria-hidden="true"></i> Khao Yai</p>
+    <div class="loader__count" aria-hidden="true"><span id="loaderPct">0</span><span class="loader__unit">%</span></div>
+    <div class="loader__bar" aria-hidden="true"><i id="loaderBar"></i></div>
+  </div>
+</div>
+<div class="veil" id="veil" aria-hidden="true"></div>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<!-- ===== header ===== -->
+<header class="top" id="topbar">
+  <a class="brand" href="#hero" aria-label="Patravana Resort, back to top" data-i18n-attr="aria-label:nav.brand">
+    <i class="brand__mark pv-mark" aria-hidden="true"></i>
+    <span class="brand__text"><span class="brand__name">PATRAVANA</span><span class="brand__sub">Resort <i aria-hidden="true"></i> Khao Yai</span></span>
+  </a>
+  <nav class="menu" aria-label="Primary" data-i18n-attr="aria-label:nav.primary">
+    <a href="#offers" data-i18n="nav.offers" class="menu__offers">Offers</a>
+    <a href="#facilities" data-i18n="nav.facilities">Facilities</a>
+    <a href="#stay" data-i18n="nav.stay">Stay</a>
+    <a href="#dining" data-i18n="nav.dining">Dining</a>
+    <a href="#gather" data-i18n="nav.gather">Gather</a>
+    <a href="#roam" data-i18n="nav.roam">Roam</a>
+    <a href="#visit" data-i18n="nav.visit">Visit</a>
+  </nav>
+  <div class="top__right">
+    <button class="lang" id="langToggle" aria-label="เปลี่ยนภาษาเป็นไทย">
+      <span class="lang__opt is-on" data-lang-opt="en">EN</span><span class="lang__sep" aria-hidden="true"></span><span class="lang__opt" data-lang-opt="th" lang="th">ไทย</span>
+    </button>
+    <a class="pill pill--solid top__book" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span class="top__book-long" data-i18n="nav.book">Book a suite</span><span class="top__book-short" data-i18n="nav.bookshort">Book</span></a>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="mnav" data-i18n-attr="aria-label:nav.menu"><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- chapter index: where you are on the page (wide screens) -->
+<nav class="cindex" id="cindex" aria-label="On this page" data-i18n-attr="aria-label:ci.label">
+  <a href="#hero"><span data-i18n="ci.top">Top</span></a>
+  <a href="#offers"><span data-i18n="nav.offers">Offers</span></a>
+  <a href="#air"><span data-i18n="air.title">Air</span></a>
+  <a href="#facilities"><span data-i18n="nav.facilities">Facilities</span></a>
+  <a href="#stay"><span data-i18n="nav.stay">Stay</span></a>
+  <a href="#dining"><span data-i18n="nav.dining">Dining</span></a>
+  <a href="#gather"><span data-i18n="nav.gather">Gather</span></a>
+  <a href="#roam"><span data-i18n="nav.roam">Roam</span></a>
+  <a href="#tonight"><span data-i18n="night.kicker">After dark</span></a>
+  <a href="#gallery"><span data-i18n="reel.kicker">Gallery</span></a>
+  <a href="#visit"><span data-i18n="nav.visit">Visit</span></a>
+</nav>
+
+<!-- booking pre-stage: dates and guests, then the resort's own engine -->
+<div class="bookscrim" id="bookScrim" aria-hidden="true"></div>
+<section class="book" id="bookPanel" role="dialog" aria-modal="true" aria-labelledby="bookTitle" aria-hidden="true">
+  <div class="book__inner">
+    <div class="book__head">
+      <p class="chapter__kicker" data-i18n="book.kicker">Direct booking</p>
+      <h2 class="book__title" id="bookTitle" data-i18n="book.title">Pick your dates, we hand you to the resort's engine</h2>
+      <button class="iconbtn" id="bookClose" aria-label="Close" data-i18n-attr="aria-label:lb.close"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <form class="book__form" id="bookForm" novalidate>
+      <label class="field"><span data-i18n="book.in">Check-in</span><input type="date" id="bookIn" name="checkin" required></label>
+      <label class="field"><span data-i18n="book.out">Check-out</span><input type="date" id="bookOut" name="checkout" required></label>
+      <label class="field"><span data-i18n="book.adults">Adults</span><input type="number" id="bookAdults" name="adults" min="1" max="6" value="2"></label>
+      <label class="field field--promo"><span data-i18n="book.promo">Promo code</span><input type="text" id="bookPromo" name="promo" placeholder="welcome2024" autocomplete="off" spellcheck="false"></label>
+      <div class="book__actions">
+        <a class="pill pill--solid pill--lg" id="bookGo" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener"><span data-i18n="book.go">Check availability</span><svg class="pill__ic" aria-hidden="true"><use href="#i-out"/></svg></a>
+        <p class="book__note" data-i18n="book.note">Opens the resort's own booking page in a new tab with your dates and guests carried over. A promo code is copied for you to paste there, and children are added on that page. Direct bookings on 088-504-1888 or LINE also work.</p>
+      </div>
+      <p class="book__summary num" id="bookSummary" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+<!-- mobile bottom bar: LINE and Book, always within reach -->
+<div class="mbar" id="mbar" aria-hidden="true">
+  <a class="pill pill--ghost" href="https://www.patravana.com/line-qr-code" target="_blank" rel="noopener">LINE</a>
+  <a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="nav.bookshort">Book</span></a>
+</div>
+<div class="mnav" id="mnav" aria-hidden="true">
+  <nav aria-label="Mobile" data-i18n-attr="aria-label:nav.mobile">
+    <a href="#offers" data-i18n="nav.offers" class="menu__offers">Offers</a>
+    <a href="#facilities" data-i18n="nav.facilities">Facilities</a>
+    <a href="#stay" data-i18n="nav.stay">Stay</a>
+    <a href="#dining" data-i18n="nav.dining">Dining</a>
+    <a href="#gather" data-i18n="nav.gather">Gather</a>
+    <a href="#roam" data-i18n="nav.roam">Roam</a>
+    <a href="#visit" data-i18n="nav.visit">Visit</a>
+  </nav>
+  <a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="nav.book">Book a suite</span></a>
+</div>
+
+<main id="main">
+
+<!-- ===== hero: two films, one line, and the way in ===== -->
+<section class="hero" id="hero" data-dark>
+  <div class="hero__media" aria-hidden="true">
+    <img class="hero__poster" fetchpriority="high" src="assets/web/hero-poster-2400.jpg" srcset="assets/web/hero-poster-800.jpg 800w, assets/web/hero-poster-1600.jpg 1600w, assets/web/hero-poster-2400.jpg 2400w, assets/web/hero-poster-4k.jpg 3840w" sizes="100vw" alt="">
+    <video class="hero__video is-on" id="heroVideo" muted playsinline preload="auto"
+      poster="assets/web/hero-poster-2400.jpg"
+      data-hq="assets/video/hero-pavilion-1080.mp4" data-uhd="assets/video/hero-pavilion-2160-cap.mp4">
+      <source src="assets/video/hero-pavilion-720.mp4" type="video/mp4">
+    </video>
+    <video class="hero__video" id="heroVideo2" muted playsinline preload="metadata"
+      data-hq="assets/video/hero-drone-1080.mp4" data-uhd="assets/video/hero-drone-2160.mp4">
+      <source src="assets/video/hero-drone-720.mp4" type="video/mp4">
+    </video>
+    <canvas class="hero__canvas" id="heroCanvas"></canvas>
+    <div class="hero__shade"></div>
+  </div>
+
+  <div class="hero__grid">
+    <div class="hero__content">
+      <p class="eyebrow hero__eyebrow"><span data-i18n="hero.eyebrow1">Patravana Resort</span><i aria-hidden="true"></i><span data-i18n="hero.eyebrow2">Khao Yai</span></p>
+      <h1 class="hero__h1">
+        <span class="hero__line"><span class="hero__word" data-i18n="hero.h1a">Come up</span></span>
+        <span class="hero__line"><span class="hero__word" data-i18n="hero.h1b">for <em class="it">air.</em></span></span>
+      </h1>
+      <p class="hero__sub" data-i18n="hero.sub">Sixty-four suites in the hills of Khao Yai, where the air carries the seventh-richest ozone on Earth.</p>
+      <div class="hero__cta">
+        <a class="pill pill--solid pill--lg" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="hero.book">Book a suite</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="pill pill--ghost pill--lg" href="#air"><span data-i18n="hero.explore">Explore the hills</span></a>
+      </div>
+    </div>
+
+    <!-- which film is playing, and the controls for it -->
+    <div class="slides" id="heroSlides" role="group" aria-label="Hero films" data-i18n-attr="aria-label:slides.label">
+      <p class="slides__count" aria-hidden="true"><b class="num" id="slideNow">01</b><span class="num">/ <span id="slideTotal">02</span></span></p>
+      <p class="slides__cap" id="slideCap" aria-live="polite">
+        <span class="is-on" data-i18n="slides.c1">From the dining pavilion out to the lake</span>
+        <span data-i18n="slides.c2">Sunlight over the hills</span>
+      </p>
+      <div class="slides__ctrl">
+        <div class="slides__bars" aria-hidden="true"><i><b></b></i><i><b></b></i></div>
+        <button class="iconbtn iconbtn--glass" id="slidePrev" aria-label="Previous film" data-i18n-attr="aria-label:slides.prev"><svg aria-hidden="true"><use href="#i-back"/></svg></button>
+        <button class="iconbtn iconbtn--glass" id="slideNext" aria-label="Next film" data-i18n-attr="aria-label:slides.next"><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        <button class="iconbtn iconbtn--glass" id="slidePause" aria-pressed="false" aria-label="Pause the film" data-i18n-attr="aria-label:slides.pause"><svg class="ic-pause" aria-hidden="true"><use href="#i-pause"/></svg><svg class="ic-play" aria-hidden="true"><use href="#i-play"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <ul class="hero__meta" role="list">
+    <li data-i18n="hero.meta2">Phayayen, Pak Chong</li>
+    <li><span class="num" id="heroTime" data-clock>--:--</span> <span data-i18n="hero.meta3">local time</span></li>
+    <li><span data-i18n="hero.sunset">Sunset today about</span> <span class="num" data-sky="sunset">--:--</span></li>
+  </ul>
+</section>
+
+<!-- the way in: dates straight to the resort's booking engine -->
+<div class="dockwrap">
+  <form class="dock" id="dock" novalidate>
+    <label class="dock__f"><span data-i18n="book.in">Check-in</span><input type="date" id="dockIn" name="checkin"></label>
+    <label class="dock__f"><span data-i18n="book.out">Check-out</span><input type="date" id="dockOut" name="checkout"></label>
+    <label class="dock__f dock__f--s"><span data-i18n="book.adults">Adults</span>
+      <select id="dockAdults" name="adults"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select>
+    </label>
+    <a class="pill pill--solid pill--lg dock__go" id="dockGo" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener"><span data-i18n="book.go">Check availability</span><svg class="pill__ic" aria-hidden="true"><use href="#i-out"/></svg></a>
+  </form>
+  <p class="dock__note" data-i18n="dock.note">Opens the resort's own booking page in a new tab, with your dates and guests carried over.</p>
+</div>
+
+<!-- ===== offers (slim ticket row, first scroll) ===== -->
+<section class="chapter chapter--offers" id="offers">
+  <div class="chapter__side">
+    <p class="chapter__num num" aria-hidden="true">01</p>
+    <p class="chapter__kicker" data-i18n="offers.kicker">Current as of August 2026</p>
+    <h2 class="chapter__title" data-i18n="offers.title">Offers</h2>
+    <p class="chapter__note" data-i18n="offers.note">Taken from the resort's own promotions. Codes copy with one tap.</p>
+  </div>
+  <div class="chapter__body">
+    <div class="tickets">
+      <article class="ticket" data-rv data-season="4-9">
+        <p class="ticket__tag" data-i18n="offers.o1.tag">Groups, low season</p>
+        <p class="ticket__big"><span class="num">฿1,800</span></p>
+        <p class="ticket__per" data-i18n="offers.o1.per">per room per night, from</p>
+        <p class="ticket__desc" data-i18n="offers.o1.desc">Sunday to Friday, April to September. Minimum 15 rooms, direct booking only.</p>
+        <a class="pill pill--ghost" href="tel:+66885041888"><span class="num">088-504-1888</span></a>
+      </article>
+      <article class="ticket" data-rv data-evergreen>
+        <p class="ticket__tag" data-i18n="offers.o2.tag">Year round</p>
+        <p class="ticket__big"><span class="num">10%</span></p>
+        <p class="ticket__per" data-i18n="offers.o2.per">on top, every day</p>
+        <p class="ticket__desc" data-i18n="offers.o2.desc">Enter the code when booking direct. It stacks on the best available rate.</p>
+        <button class="pill pill--ghost pill--copy" data-copy="welcome2024" title="Copy code" data-i18n-attr="title:offers.copy"><span class="num">welcome2024</span><svg class="pill__ic pill__ic--copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="pill__ic pill__ic--done" aria-hidden="true"><use href="#i-check"/></svg></button>
+      </article>
+      <article class="ticket ticket--hot" data-rv data-ends="2026-09-30">
+        <p class="ticket__tag" data-i18n="offers.o3.tag">Until 30 September 2026</p>
+        <p class="ticket__big"><span class="num">25%</span></p>
+        <p class="ticket__per" data-i18n="offers.o3.per">on top, plus 10% off dining</p>
+        <p class="ticket__desc" data-i18n="offers.o3.desc">Book and stay by 30 September, with 10% off every food bill at Phu Yai Lee.</p>
+        <button class="pill pill--ghost pill--copy" data-copy="refresh2026" title="Copy code" data-i18n-attr="title:offers.copy"><span class="num">refresh2026</span><svg class="pill__ic pill__ic--copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="pill__ic pill__ic--done" aria-hidden="true"><use href="#i-check"/></svg></button>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== air ===== -->
+<section class="chapter" id="air">
+  <div class="chapter__side">
+    <p class="chapter__num num" aria-hidden="true">02</p>
+    <p class="chapter__kicker" data-i18n="air.kicker">The place</p>
+    <h2 class="chapter__title" data-i18n="air.title">Air</h2>
+    <p class="chapter__note" data-i18n="air.note">Part of the Phu Patra estate, resting against Khao Yai National Park.</p>
+  </div>
+  <div class="chapter__body">
+    <p class="statement st-lines" data-i18n="air.statement">The itinerary here is short. Wake up above the mist, breathe air ranked seventh in the world for its ozone, and let the hills <em class="it">set the pace of the day.</em></p>
+    <ul class="stats" role="list">
+      <li class="stat" data-rv><span class="stat__n num"><span data-count="64">0</span></span><span class="stat__l" data-i18n="air.s1">suites and rooms, each with a living room and balcony</span></li>
+      <li class="stat" data-rv><span class="stat__n num"><span data-count="20">0</span><small>km</small></span><span class="stat__l" data-i18n="air.s3">to the gates of Khao Yai National Park</span></li>
+      <li class="stat" data-rv><span class="stat__n num"><span data-count="280">0</span><small>m²</small></span><span class="stat__l" data-i18n="air.s4">of seminar hall for the days that need a plan</span></li>
+    </ul>
+    <div class="pair">
+      <figure class="frame pair__a" data-mr>
+        <img src="assets/web/aerial-estate-2400.jpg" srcset="assets/web/aerial-estate-800.jpg 800w, assets/web/aerial-estate-1600.jpg 1600w, assets/web/aerial-estate-2400.jpg 2400w, assets/web/aerial-estate-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="Aerial view of Patravana Resort, its lake and the hills" data-i18n-attr="alt:air.alt" loading="lazy" data-parallax="8">
+        <figcaption data-i18n="air.cap">The estate from above: a lake, a lawn, an amphitheatre, and the hills doing the rest.</figcaption>
+      </figure>
+      <figure class="frame pair__b" data-mr>
+        <img src="assets/web/reception-2400.jpg" srcset="assets/web/reception-800.jpg 800w, assets/web/reception-1600.jpg 1600w, assets/web/reception-2400.jpg 2400w, assets/web/reception-4k.jpg 3840w" sizes="(max-width: 820px) 60vw, 22vw" alt="Timber-lined reception with woven chairs" data-i18n-attr="alt:air.alt2" loading="lazy">
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- band: the great lawn -->
+<section class="band band--top" id="band-lawn" data-dark aria-label="The great lawn" data-i18n-attr="aria-label:band.a.label">
+  <img class="band__img" src="assets/web/lawn-wings-2400.jpg" srcset="assets/web/lawn-wings-800.jpg 800w, assets/web/lawn-wings-1600.jpg 1600w, assets/web/lawn-wings-2400.jpg 2400w, assets/web/lawn-wings-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy" data-band>
+  <div class="band__scrim" aria-hidden="true"></div>
+  <div class="band__inner">
+    <p class="band__line st-lines" data-i18n="band.a">Slow mornings, <em class="it">wide lawns,</em> and nowhere you have to be.</p>
+    <p class="band__cap" data-i18n="band.a.cap">The suite wings across the great lawn</p>
+  </div>
+</section>
+
+<!-- ===== facilities: the resort as a map ===== -->
+<section class="chapter chapter--stack chapter--dark" id="facilities" data-dark>
+  <div class="chapter__side">
+    <p class="chapter__num num" aria-hidden="true">03</p>
+    <p class="chapter__kicker" data-i18n="fac.kicker">Around the grounds</p>
+    <h2 class="chapter__title" data-i18n="fac.title">Facilities</h2>
+    <p class="chapter__note" data-i18n="fac.note">The whole resort from the air, as a map. Press a marker to open that place, then let it take you there.</p>
+  </div>
+  <div class="chapter__body">
+    <div class="map" data-map>
+      <div class="map__bar">
+        <button class="pill pill--ghost map__tour" id="mapTour" aria-pressed="false"><svg class="pill__ic pill__ic--lead ic-play" aria-hidden="true"><use href="#i-play"/></svg><svg class="pill__ic pill__ic--lead ic-pause" aria-hidden="true"><use href="#i-pause"/></svg><span class="map__tour-on" data-i18n="fac.tour">Take the tour</span><span class="map__tour-off" data-i18n="fac.tourstop">Stop the tour</span></button>
+        <p class="map__step num" aria-hidden="true"><b id="mapStepNow">00</b><span>/ 08</span></p>
+        <div class="map__prog" aria-hidden="true"><i id="mapProg"></i></div>
+        <p class="map__hint" data-i18n="fac.hint">Eight markers, one real photograph. Hover a facility below to find it on the map.</p>
+      </div>
+      <div class="map__stage" id="mapStage">
+        <img class="map__img" src="assets/web/aerial-map-edited-2400.jpg" srcset="assets/web/aerial-map-edited-800.jpg 800w, assets/web/aerial-map-edited-1600.jpg 1600w, assets/web/aerial-map-edited-2400.jpg 2400w, assets/web/aerial-map-edited-4k.jpg 3582w" sizes="100vw" alt="Drone view of the whole Patravana estate: the suite wings, amphitheatre, lake, pool and Phu Yai Lee kitchen" data-i18n-attr="alt:fac.mapalt" loading="eager" decoding="async" width="2000" height="1122">
+        <button class="hot" style="--x:21%;--y:34%" data-hot="suites" data-go="#stay" data-img="assets/web/vana-bedroom-1600.jpg" aria-label="Suite wings" data-i18n-attr="aria-label:fac.h1.t"><span class="hot__dot"><span class="hot__n num">01</span></span><span class="hot__label" data-i18n="fac.h1.t">Suite wings</span></button>
+        <button class="hot" style="--x:28.5%;--y:47%" data-hot="amphi" data-go="#gather" data-img="assets/web/amphitheatre-1600.jpg" aria-label="Amphitheatre" data-i18n-attr="aria-label:fac.h2.t"><span class="hot__dot"><span class="hot__n num">02</span></span><span class="hot__label" data-i18n="fac.h2.t">Amphitheatre</span></button>
+        <button class="hot" style="--x:37%;--y:58%" data-hot="lake" data-go="#gallery" data-img="assets/web/lake-dusk-1600.jpg" aria-label="The lake and the sign" data-i18n-attr="aria-label:fac.h3.t"><span class="hot__dot"><span class="hot__n num">03</span></span><span class="hot__label" data-i18n="fac.h3.t">The lake and the sign</span></button>
+        <button class="hot" style="--x:47.5%;--y:61%" data-hot="deck" data-go="#dining" data-img="assets/web/dining-terrace-1600.jpg" aria-label="Lakeside deck" data-i18n-attr="aria-label:fac.h4.t"><span class="hot__dot"><span class="hot__n num">04</span></span><span class="hot__label" data-i18n="fac.h4.t">Lakeside deck</span></button>
+        <button class="hot" style="--x:62%;--y:54%" data-hot="kitchen" data-go="#dining" data-img="assets/web/cafe-rattan-1600.jpg" aria-label="Phu Yai Lee kitchen" data-i18n-attr="aria-label:fac.h5.t"><span class="hot__dot"><span class="hot__n num">05</span></span><span class="hot__label" data-i18n="fac.h5.t">Phu Yai Lee kitchen</span></button>
+        <button class="hot" style="--x:56%;--y:45.5%" data-hot="pool" data-go="#fac-pool" data-img="assets/web/pool-swim-1600.jpg" aria-label="Pool" data-i18n-attr="aria-label:fac.h6.t"><span class="hot__dot"><span class="hot__n num">06</span></span><span class="hot__label" data-i18n="fac.h6.t">Pool</span></button>
+        <button class="hot" style="--x:27%;--y:61%" data-hot="loop" data-go="#fac-loop" data-img="assets/web/lawn-wings-1600.jpg" aria-label="Garden loop" data-i18n-attr="aria-label:fac.h7.t"><span class="hot__dot"><span class="hot__n num">07</span></span><span class="hot__label" data-i18n="fac.h7.t">Garden loop</span></button>
+        <button class="hot" style="--x:9%;--y:63%" data-hot="arrival" data-go="#visit" data-img="assets/web/entrance-dusk-1600.jpg" aria-label="Arrival and parking" data-i18n-attr="aria-label:fac.h8.t"><span class="hot__dot"><span class="hot__n num">08</span></span><span class="hot__label" data-i18n="fac.h8.t">Arrival and parking</span></button>
+
+        <aside class="map__panel" id="mapPanel" aria-live="polite" aria-hidden="true">
+          <figure class="map__panel-media"><img id="mapPanelImg" src="" alt=""></figure>
+          <div class="map__panel-body">
+            <p class="map__panel-kicker" data-i18n="fac.panelk">On the map</p>
+            <h3 class="map__panel-title" id="mapPanelTitle"></h3>
+            <p class="map__panel-desc" id="mapPanelDesc"></p>
+            <div class="map__panel-actions">
+              <button class="pill pill--solid" id="mapGo"><span data-i18n="fac.go">Take me there</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+              <button class="iconbtn" id="mapClose" aria-label="Close" data-i18n-attr="aria-label:lb.close"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+            </div>
+          </div>
+        </aside>
+      </div>
+      <div id="hotCopy" hidden>
+        <span data-hot="suites" data-i18n="fac.h1.d">The pitched-roof wings hold the sixty-four keys, every one with its own balcony facing the lawn or the lake. The resort's own caption on the photograph points here.</span>
+        <span data-hot="amphi" data-i18n="fac.h2.d">The tiered lawn steps down toward the water, built for group nights and gatherings of any size, with the hills as the backdrop.</span>
+        <span data-hot="lake" data-i18n="fac.h3.d">The lake sits at the heart of the estate, with the white PATRAVANA letters on its near bank and wooden piers for the quiet hours.</span>
+        <span data-hot="deck" data-i18n="fac.h4.d">A timber deck runs along the water beside the kitchen, where breakfast and dinner come with the lake a few steps away.</span>
+        <span data-hot="kitchen" data-i18n="fac.h5.d">Phu Yai Lee, the resort's restaurant, labelled on the photograph by the resort itself. Thai cooking with a few international detours, indoors and out, 150 seats.</span>
+        <span data-hot="pool" data-i18n="fac.h6.d">The rock-edged lagoon pool, tucked between the kitchen and the suite lawns, with a fitness room nearby for the diligent.</span>
+        <span data-hot="loop" data-i18n="fac.h7.d">A loop path circles the great lawn between the wings and the lake. The resort's own drone photographs show guests cycling it.</span>
+        <span data-hot="arrival" data-i18n="fac.h8.d">Off Mittraphap Road, u-turn at kilometre 39. The drive curls in past the gate and the parking sits beside the first wing.</span>
+      </div>
+    </div>
+
+    <ul class="fac" role="list" data-fac>
+      <li class="fac__item" id="fac-pool" data-hot="pool" data-rv>
+        <span class="fac__n num">06</span>
+        <figure class="fac__media"><img src="assets/web/pool-umbrellas-2400.jpg" srcset="assets/web/pool-umbrellas-800.jpg 800w, assets/web/pool-umbrellas-1600.jpg 1600w, assets/web/pool-umbrellas-2400.jpg 2400w, assets/web/pool-umbrellas-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Poolside deck with orange umbrellas" data-i18n-attr="alt:fac.f1.alt" loading="lazy"></figure>
+        <h3 data-i18n="fac.f1.t">Pool and fitness</h3>
+        <p data-i18n="fac.f1.d">An outdoor pool aimed at the range, a rock-edged lagoon for slower afternoons, and a fitness room for the few.</p>
+      </li>
+      <li class="fac__item" id="fac-lake" data-hot="lake" data-rv>
+        <span class="fac__n num">03</span>
+        <figure class="fac__media"><img src="assets/web/lake-dusk-2400.jpg" srcset="assets/web/lake-dusk-800.jpg 800w, assets/web/lake-dusk-1600.jpg 1600w, assets/web/lake-dusk-2400.jpg 2400w, assets/web/lake-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="The resort reflected in the lake at dusk" data-i18n-attr="alt:fac.f2.alt" loading="lazy"></figure>
+        <h3 data-i18n="fac.f2.t">The lake and piers</h3>
+        <p data-i18n="fac.f2.d">The estate is built around the water. Piers for sitting, a bank for the sign, and reflections worth the early alarm.</p>
+      </li>
+      <li class="fac__item" id="fac-amphi" data-hot="amphi" data-rv>
+        <span class="fac__n num">02</span>
+        <figure class="fac__media"><img src="assets/web/amphitheatre-2400.jpg" srcset="assets/web/amphitheatre-800.jpg 800w, assets/web/amphitheatre-1600.jpg 1600w, assets/web/amphitheatre-2400.jpg 2400w, assets/web/amphitheatre-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Outdoor amphitheatre lawn" data-i18n-attr="alt:fac.f3.alt" loading="lazy"></figure>
+        <h3 data-i18n="fac.f3.t">Outdoor amphitheatre</h3>
+        <p data-i18n="fac.f3.d">Tiered lawn over the lake for group nights and gatherings of any size.</p>
+      </li>
+      <li class="fac__item" id="fac-hall" data-hot="" data-rv>
+        <span class="fac__n fac__n--note" data-i18n="fac.offmap1">Beside the resort</span>
+        <figure class="fac__media is-crop"><img src="assets/web/hall-classroom-2400.jpg" srcset="assets/web/hall-classroom-800.jpg 800w, assets/web/hall-classroom-1600.jpg 1600w, assets/web/hall-classroom-2400.jpg 2400w, assets/web/hall-classroom-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Seminar hall in classroom setup" data-i18n-attr="alt:fac.f4.alt" loading="lazy"></figure>
+        <h3 data-i18n="fac.f4.t">Seminar hall</h3>
+        <p data-i18n="fac.f4.d">280 m² beside the resort, divisible into two rooms, with stage, sound and a dressing room. 120 to 190 guests.</p>
+      </li>
+      <li class="fac__item" id="fac-dining" data-hot="kitchen" data-rv>
+        <span class="fac__n num">05</span>
+        <figure class="fac__media"><img src="assets/web/dining-terrace-2400.jpg" srcset="assets/web/dining-terrace-800.jpg 800w, assets/web/dining-terrace-1600.jpg 1600w, assets/web/dining-terrace-2400.jpg 2400w, assets/web/dining-terrace-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Lakeside dining terrace" data-i18n-attr="alt:fac.f5.alt" loading="lazy"></figure>
+        <h3 data-i18n="fac.f5.t">Phu Yai Lee and the deck</h3>
+        <p data-i18n="fac.f5.d">Thai cooking, 150 seats indoors and on the timber deck, breakfast daily from 7:00.</p>
+      </li>
+      <li class="fac__item" id="fac-loop" data-hot="loop" data-rv>
+        <span class="fac__n num">07</span>
+        <figure class="fac__media"><img src="assets/web/lawn-wings-2400.jpg" srcset="assets/web/lawn-wings-800.jpg 800w, assets/web/lawn-wings-1600.jpg 1600w, assets/web/lawn-wings-2400.jpg 2400w, assets/web/lawn-wings-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Lawn and palms in front of the suite wings" data-i18n-attr="alt:fac.f6.alt" loading="lazy"></figure>
+        <h3 data-i18n="fac.f6.t">Gardens and the loop</h3>
+        <p data-i18n="fac.f6.d">Lawns, palms and rock gardens threaded by a loop path for evening walks and bicycles.</p>
+      </li>
+      <li class="fac__item" id="fac-suites" data-hot="suites" data-rv>
+        <span class="fac__n num">01</span>
+        <figure class="fac__media"><img src="assets/web/vana-living-2400.jpg" srcset="assets/web/vana-living-800.jpg 800w, assets/web/vana-living-1600.jpg 1600w, assets/web/vana-living-2400.jpg 2400w, assets/web/vana-living-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Suite living room opening to the balcony" data-i18n-attr="alt:fac.f8.alt" loading="lazy"></figure>
+        <h3 data-i18n="fac.f8.t">Sixty-four suites and rooms</h3>
+        <p data-i18n="fac.f8.d">Living room, balcony, kitchenette and a 50 inch screen in every suite. Jacuzzi in the Patra.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== stay ===== -->
+<section class="chapter" id="stay">
+  <div class="chapter__side">
+    <p class="chapter__num num" aria-hidden="true">04</p>
+    <p class="chapter__kicker" data-i18n="stay.kicker">Suites</p>
+    <h2 class="chapter__title" data-i18n="stay.title">Stay</h2>
+    <p class="chapter__note" data-i18n="stay.note">Three ways to sleep in the hills. Every suite keeps a living room and a balcony.</p>
+    <button class="textlink textlink--map" data-map-open="suites"><span data-i18n="fac.find">Find on the map</span></button>
+    <div class="chapter__acts">
+      <button class="pill pill--ghost" data-compare-open><span data-i18n="stay.compare">Compare suites</span></button>
+      <button class="pill pill--ghost" data-amen-open><span data-i18n="stay.amen">What's in every suite</span></button>
+    </div>
+  </div>
+  <div class="chapter__body">
+    <div class="stay-layout">
+    <ul class="acc" role="list" data-acc>
+      <li class="acc__item is-open" data-stage-name="Vana Suite">
+        <button class="acc__head" aria-expanded="true" aria-controls="acc-vana">
+          <span class="acc__no num" aria-hidden="true">01</span>
+          <span class="acc__name">Vana Suite</span>
+          <span class="acc__thai" lang="th">วานา สวีท</span>
+          <span class="acc__meta" data-i18n="stay.vana.meta">61 m², king or twin beds, lake, garden or country view</span>
+          <span class="acc__toggle" aria-hidden="true"></span>
+        </button>
+        <div class="acc__panel" id="acc-vana">
+          <div class="acc__grid">
+            <figure class="acc__media"><img src="assets/web/vana-bedroom-2400.jpg" srcset="assets/web/vana-bedroom-800.jpg 800w, assets/web/vana-bedroom-1600.jpg 1600w, assets/web/vana-bedroom-2400.jpg 2400w, assets/web/vana-bedroom-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="Vana Suite bedroom with twin beds" data-i18n-attr="alt:stay.vana.alt" loading="lazy"></figure>
+            <figure class="acc__media acc__media--b"><img src="assets/web/vana-living-2400.jpg" srcset="assets/web/vana-living-800.jpg 800w, assets/web/vana-living-1600.jpg 1600w, assets/web/vana-living-2400.jpg 2400w, assets/web/vana-living-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Vana Suite living room opening to the balcony" data-i18n-attr="alt:stay.vana.alt2" loading="lazy"></figure>
+            <div class="acc__copy">
+              <p data-i18n="stay.vana.desc">Our signature suite: a full living room, a balcony facing the green, and everything a slow morning could ask for.</p>
+              <ul class="chips" role="list">
+                <li><b class="num">61 m²</b><span data-i18n="stay.c.size">size</span></li>
+                <li><b data-i18n="stay.c.bedsv">King or twin</b><span data-i18n="stay.c.beds">beds</span></li>
+                <li><b class="num">2 + 1</b><span data-i18n="stay.c.occ">adults, extra bed</span></li>
+                <li><b data-i18n="stay.vana.viewsv">Lake, garden, country</b><span data-i18n="stay.c.views">views</span></li>
+              </ul>
+              <a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="stay.book">Check dates</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="acc__item" data-stage-name="Patra Suite">
+        <button class="acc__head" aria-expanded="false" aria-controls="acc-patra">
+          <span class="acc__no num" aria-hidden="true">02</span>
+          <span class="acc__name">Patra Suite</span>
+          <span class="acc__thai" lang="th">ภัทรา สวีท</span>
+          <span class="acc__meta" data-i18n="stay.patra.meta">64 m², jacuzzi bathtub, lake or garden view</span>
+          <span class="acc__toggle" aria-hidden="true"></span>
+        </button>
+        <div class="acc__panel" id="acc-patra">
+          <div class="acc__grid">
+            <figure class="acc__media"><img src="assets/web/patra-bedroom-2400.jpg" srcset="assets/web/patra-bedroom-800.jpg 800w, assets/web/patra-bedroom-1600.jpg 1600w, assets/web/patra-bedroom-2400.jpg 2400w, assets/web/patra-bedroom-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="Patra Suite bedroom with desk and garden view" data-i18n-attr="alt:stay.patra.alt" loading="lazy"></figure>
+            <figure class="acc__media acc__media--b"><img src="assets/web/patra-jacuzzi-2400.jpg" srcset="assets/web/patra-jacuzzi-800.jpg 800w, assets/web/patra-jacuzzi-1600.jpg 1600w, assets/web/patra-jacuzzi-2400.jpg 2400w, assets/web/patra-jacuzzi-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Jacuzzi bathtub in the Patra Suite" data-i18n-attr="alt:stay.patra.alt2" loading="lazy"></figure>
+            <div class="acc__copy">
+              <p data-i18n="stay.patra.desc">The wider view over mountain and lagoon, and a jacuzzi bathtub to watch it from. The Junior Suite is its twin-bed sibling.</p>
+              <ul class="chips" role="list">
+                <li><b class="num">64 m²</b><span data-i18n="stay.c.size">size</span></li>
+                <li><b data-i18n="stay.c.bedsv">King or twin</b><span data-i18n="stay.c.beds">beds</span></li>
+                <li><b class="num">2 + 1</b><span data-i18n="stay.c.occ">adults, extra bed</span></li>
+                <li><b data-i18n="stay.patra.viewsv">Lake or garden</b><span data-i18n="stay.c.views">views</span></li>
+              </ul>
+              <a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="stay.book">Check dates</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="acc__item" data-stage-name="Standard Room">
+        <button class="acc__head" aria-expanded="false" aria-controls="acc-std">
+          <span class="acc__no num" aria-hidden="true">03</span>
+          <span class="acc__name" data-i18n="stay.std.name">Standard Room</span>
+          <span class="acc__thai" data-i18n="stay.std.thai">ห้องสแตนดาร์ด</span>
+          <span class="acc__meta" data-i18n="stay.std.meta">A simpler landing for short escapes</span>
+          <span class="acc__toggle" aria-hidden="true"></span>
+        </button>
+        <div class="acc__panel" id="acc-std">
+          <div class="acc__grid acc__grid--single">
+            <figure class="acc__media"><img src="assets/web/building-sky-2400.jpg" srcset="assets/web/building-sky-800.jpg 800w, assets/web/building-sky-1600.jpg 1600w, assets/web/building-sky-2400.jpg 2400w, assets/web/building-sky-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="Resort building under a blue sky" data-i18n-attr="alt:stay.std.alt" loading="lazy"></figure>
+            <div class="acc__copy">
+              <p data-i18n="stay.std.desc">Ask the front desk for seasonal availability. Same hills, same breakfast, smaller footprint.</p>
+              <a class="pill pill--ghost" href="tel:+66885041888"><span class="num">088-504-1888</span></a>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <figure class="stay-stage" aria-hidden="true">
+      <img id="stayImg" src="assets/web/vana-bedroom-2400.jpg" srcset="assets/web/vana-bedroom-800.jpg 800w, assets/web/vana-bedroom-1600.jpg 1600w, assets/web/vana-bedroom-2400.jpg 2400w, assets/web/vana-bedroom-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt=""><img id="stayImgNext" src="" alt="">
+      <figcaption class="stay-stage__cap"><b class="num" id="stayNow">01</b><i></i><span class="num">03</span><span class="stay-stage__name" id="stayName">Vana Suite</span></figcaption>
+    </figure>
+    </div>
+  </div>
+</section>
+
+<!-- amenities drawer -->
+<div class="drawer" id="amen" role="dialog" aria-modal="true" aria-labelledby="amenTitle" aria-hidden="true">
+  <div class="drawer__panel">
+    <div class="drawer__head"><h3 id="amenTitle" data-i18n="amen.title">In every suite</h3><button class="iconbtn" data-drawer-close aria-label="Close" data-i18n-attr="aria-label:lb.close"><svg aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <ul class="drawer__list" role="list">
+      <li data-i18n="amen.1">Air conditioning and a 50 inch LCD TV</li>
+      <li data-i18n="amen.2">Free wi-fi internet</li>
+      <li data-i18n="amen.3">Refrigerator, microwave and kitchen sink</li>
+      <li data-i18n="amen.4">Kettle with tea and coffee set</li>
+      <li data-i18n="amen.5">Dining table and complimentary water</li>
+      <li data-i18n="amen.6">Hair dryer, wardrobe and toiletries</li>
+      <li data-i18n="amen.7">Bathrobe and slippers, Patra Suite</li>
+      <li data-i18n="amen.8">Jacuzzi bathtub, Patra Suite</li>
+      <li data-i18n="amen.9">In-room safe, on request</li>
+      <li data-i18n="amen.10">Iron and board, on request</li>
+    </ul>
+  </div>
+</div>
+
+<!-- comparison drawer -->
+<div class="drawer drawer--wide" id="compare" role="dialog" aria-modal="true" aria-labelledby="compareTitle" aria-hidden="true">
+  <div class="drawer__panel">
+    <div class="drawer__head"><h3 id="compareTitle" data-i18n="cmp.title">Compare the suites</h3><button class="iconbtn" data-drawer-close aria-label="Close" data-i18n-attr="aria-label:lb.close"><svg aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <div class="cmp" role="region" tabindex="0" aria-labelledby="compareTitle">
+      <table class="cmp__t">
+        <thead>
+          <tr><td></td><th scope="col">Vana Suite</th><th scope="col">Patra Suite</th><th scope="col" data-i18n="stay.std.name">Standard Room</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row" data-i18n="cmp.size">Size</th><td class="num">61 m²</td><td class="num">64 m²</td><td class="cmp__ask" data-i18n="cmp.ask">Ask the resort</td></tr>
+          <tr><th scope="row" data-i18n="cmp.beds">Beds</th><td data-i18n="stay.c.bedsv">King or twin</td><td data-i18n="stay.c.bedsv">King or twin</td><td class="cmp__ask" data-i18n="cmp.ask">Ask the resort</td></tr>
+          <tr><th scope="row" data-i18n="cmp.sleeps">Sleeps</th><td data-i18n="cmp.sleepsv">2 adults, plus an extra bed</td><td data-i18n="cmp.sleepsv">2 adults, plus an extra bed</td><td class="cmp__ask" data-i18n="cmp.ask">Ask the resort</td></tr>
+          <tr><th scope="row" data-i18n="cmp.views">Views</th><td data-i18n="stay.vana.viewsv">Lake, garden, country</td><td data-i18n="stay.patra.viewsv">Lake or garden</td><td class="cmp__ask" data-i18n="cmp.ask">Ask the resort</td></tr>
+          <tr><th scope="row" data-i18n="cmp.living">Living room and balcony</th><td><span class="cmp__yes" data-i18n="cmp.yes">Yes</span></td><td><span class="cmp__yes" data-i18n="cmp.yes">Yes</span></td><td class="cmp__ask" data-i18n="cmp.ask">Ask the resort</td></tr>
+          <tr><th scope="row" data-i18n="cmp.tub">Jacuzzi bathtub</th><td class="cmp__no" data-i18n="cmp.no">Not listed</td><td><span class="cmp__yes" data-i18n="cmp.yes">Yes</span></td><td class="cmp__no" data-i18n="cmp.no">Not listed</td></tr>
+          <tr><th scope="row" data-i18n="cmp.robe">Bathrobe and slippers</th><td class="cmp__no" data-i18n="cmp.no">Not listed</td><td><span class="cmp__yes" data-i18n="cmp.yes">Yes</span></td><td class="cmp__no" data-i18n="cmp.no">Not listed</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td></td>
+            <td><a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="stay.book">Check dates</span></a></td>
+            <td><a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="stay.book">Check dates</span></a></td>
+            <td><a class="pill pill--ghost" href="tel:+66885041888"><span class="num">088-504-1888</span></a></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <p class="cmp__note" data-i18n="cmp.note">Figures are the resort's own. The Standard Room is offered by season, so its details come from the front desk.</p>
+  </div>
+</div>
+
+<!-- ===== dining ===== -->
+<section class="chapter" id="dining">
+  <div class="chapter__side">
+    <p class="chapter__num num" aria-hidden="true">05</p>
+    <p class="chapter__kicker" data-i18n="dining.kicker">Phu Yai Lee</p>
+    <h2 class="chapter__title" data-i18n="dining.title">Table</h2>
+    <p class="chapter__note" data-i18n="dining.note">Thai cooking with a few international detours, 150 seats, all of them facing the hills.</p>
+    <button class="textlink textlink--map" data-map-open="kitchen"><span data-i18n="fac.find">Find on the map</span></button>
+  </div>
+  <div class="chapter__body">
+    <p class="statement st-lines" data-i18n="dining.lede">A classic twist on traditional Thai architecture, indoors and out, where dinner comes <em class="it">with the sound of the lake.</em></p>
+    <div class="dining">
+      <figure class="frame dining__img" data-mr>
+        <img src="assets/web/dining-terrace-2400.jpg" srcset="assets/web/dining-terrace-800.jpg 800w, assets/web/dining-terrace-1600.jpg 1600w, assets/web/dining-terrace-2400.jpg 2400w, assets/web/dining-terrace-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="Breakfast table on the lakeside terrace" data-i18n-attr="alt:dining.alt" loading="lazy">
+      </figure>
+      <div class="dining__card" data-rv>
+        <p class="status" id="diningStatus" data-state=""><i aria-hidden="true"></i><span id="diningStatusText"></span></p>
+        <dl class="rows">
+          <div><dt data-i18n="dining.r1">Breakfast, daily</dt><dd class="num">7:00 to 10:00</dd></div>
+          <div><dt data-i18n="dining.r2">Wednesday to Sunday</dt><dd class="num">11:00 to 21:00</dd></div>
+          <div><dt data-i18n="dining.r3">Monday and Tuesday</dt><dd data-i18n="dining.r3v">the kitchen rests</dd></div>
+          <div><dt data-i18n="dining.r4">Reservations</dt><dd><a class="num" href="tel:+66840887785">+66 84 088 7785</a></dd></div>
+        </dl>
+        <p class="card__small" data-i18n="dining.statusnote">The status follows the hours listed here, in resort time.</p>
+      </div>
+      <figure class="frame dining__img2" data-mr>
+        <img src="assets/web/cafe-rattan-2400.jpg" srcset="assets/web/cafe-rattan-800.jpg 800w, assets/web/cafe-rattan-1600.jpg 1600w, assets/web/cafe-rattan-2400.jpg 2400w, assets/web/cafe-rattan-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Rattan chairs and hanging plants in the cafe corner" data-i18n-attr="alt:dining.alt2" loading="lazy">
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- band: the pool -->
+<section class="band band--short" id="band-pool" data-dark aria-label="The pool deck" data-i18n-attr="aria-label:band.b.label">
+  <img class="band__img" src="assets/web/pool-umbrellas-2400.jpg" srcset="assets/web/pool-umbrellas-800.jpg 800w, assets/web/pool-umbrellas-1600.jpg 1600w, assets/web/pool-umbrellas-2400.jpg 2400w, assets/web/pool-umbrellas-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy" data-band>
+  <div class="band__scrim" aria-hidden="true"></div>
+  <div class="band__inner">
+    <p class="band__line st-lines" data-i18n="band.b">Afternoons belong <em class="it">to the water.</em></p>
+    <p class="band__cap" data-i18n="band.b.cap">The pool deck, looking back to the suites</p>
+  </div>
+</section>
+
+<!-- ===== gather ===== -->
+<section class="chapter" id="gather">
+  <div class="chapter__side">
+    <p class="chapter__num num" aria-hidden="true">06</p>
+    <p class="chapter__kicker" data-i18n="gather.kicker">Events and seminars</p>
+    <h2 class="chapter__title" data-i18n="gather.title">Gather</h2>
+    <p class="chapter__note" data-i18n="gather.note">An outdoor amphitheatre over the lake for the loud nights, and a 280 m² hall beside the resort for the quiet plans.</p>
+    <button class="textlink textlink--map" data-map-open="amphi"><span data-i18n="fac.find">Find on the map</span></button>
+    <a class="pill pill--ghost" href="#visit"><span data-i18n="gather.cta">Plan a seminar</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+  </div>
+  <div class="chapter__body">
+    <figure class="frame frame--wide" data-mr>
+      <img src="assets/web/amphitheatre-2400.jpg" srcset="assets/web/amphitheatre-800.jpg 800w, assets/web/amphitheatre-1600.jpg 1600w, assets/web/amphitheatre-2400.jpg 2400w, assets/web/amphitheatre-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="Outdoor amphitheatre lawn under a dramatic sky" data-i18n-attr="alt:gather.alt" loading="lazy" data-parallax="8">
+      <figcaption data-i18n="gather.cap">The amphitheatre, looking down to the water.</figcaption>
+    </figure>
+
+    <!-- hall planner: pick a layout, see the room -->
+    <div class="hall" data-hall data-rv>
+      <div class="hall__left">
+        <p class="bars__title" data-i18n="gather.bars">Hall capacity by layout, full hall</p>
+        <div class="hall__rows" role="group" aria-label="Choose a layout" data-i18n-attr="aria-label:gather.pick">
+          <button class="bar is-on" aria-pressed="true" data-layout="theatre" data-n="220"><span class="bar__l" data-i18n="gather.b1">Theatre</span><span class="bar__track"><span class="bar__fill" data-w="100"></span></span><span class="bar__n num">220</span></button>
+          <button class="bar" aria-pressed="false" data-layout="classroom" data-n="168"><span class="bar__l" data-i18n="gather.b2">Classroom</span><span class="bar__track"><span class="bar__fill" data-w="76"></span></span><span class="bar__n num">168</span></button>
+          <button class="bar" aria-pressed="false" data-layout="banquet" data-n="120"><span class="bar__l" data-i18n="gather.b3">Banquet</span><span class="bar__track"><span class="bar__fill" data-w="55"></span></span><span class="bar__n num">120</span></button>
+          <button class="bar" aria-pressed="false" data-layout="ushape" data-n="64"><span class="bar__l" data-i18n="gather.b4">U-shape</span><span class="bar__track"><span class="bar__fill" data-w="29"></span></span><span class="bar__n num">64</span></button>
+        </div>
+        <p class="bars__foot" data-i18n="gather.foot">The hall splits into two rooms, A and B, with stage, sound and dressing room. Capacities from the resort's own floor plans.</p>
+      </div>
+      <div class="hall__right">
+        <p class="hall__big"><b class="num" id="hallNum">220</b><span data-i18n="gather.guests">guests</span></p>
+        <svg class="hall__svg" id="hallSvg" viewBox="0 0 320 210" role="img" aria-label="Sketch of the chosen layout" data-i18n-attr="aria-label:gather.sketchalt"></svg>
+        <p class="card__small" data-i18n="gather.sketch">A sketch of the layout, not to scale.</p>
+      </div>
+    </div>
+
+    <div class="duo">
+      <figure class="frame is-crop" data-mr><img src="assets/web/hall-classroom-2400.jpg" srcset="assets/web/hall-classroom-800.jpg 800w, assets/web/hall-classroom-1600.jpg 1600w, assets/web/hall-classroom-2400.jpg 2400w, assets/web/hall-classroom-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Seminar hall in full classroom setup" data-i18n-attr="alt:gather.alt2" loading="lazy"></figure>
+      <figure class="frame" data-mr><img src="assets/web/pool-swim-2400.jpg" srcset="assets/web/pool-swim-800.jpg 800w, assets/web/pool-swim-1600.jpg 1600w, assets/web/pool-swim-2400.jpg 2400w, assets/web/pool-swim-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Guest swimming in the outdoor pool facing the range" data-i18n-attr="alt:gather.alt3" loading="lazy"></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ===== roam ===== -->
+<section class="chapter" id="roam">
+  <div class="chapter__side">
+    <p class="chapter__num num" aria-hidden="true">07</p>
+    <p class="chapter__kicker" data-i18n="roam.kicker">Nearby</p>
+    <h2 class="chapter__title" data-i18n="roam.title">Roam</h2>
+    <p class="chapter__note" data-i18n="roam.note">Slide the radius. Khao Yai rearranges itself around the resort.</p>
+  </div>
+  <div class="chapter__body">
+    <div class="radius" data-radius>
+      <label class="radius__label" for="radiusRange"><span data-i18n="roam.within">Places within</span> <b class="num"><span id="radiusVal">20</span> km</b></label>
+      <input class="radius__range" id="radiusRange" type="range" min="2" max="55" step="1" value="20">
+      <p class="radius__count"><b class="num" id="radiusCount">0</b> <span data-i18n="roam.count">places in range</span></p>
+    </div>
+    <div class="chipsrow" role="group" aria-label="Kind of place" data-i18n-attr="aria-label:roam.kind" data-roam-chips>
+      <button class="chip is-on" aria-pressed="true" data-cat="all" data-i18n="roam.c.all">All</button>
+      <button class="chip" aria-pressed="false" data-cat="wine" data-i18n="roam.c.wine">Wine</button>
+      <button class="chip" aria-pressed="false" data-cat="golf" data-i18n="roam.c.golf">Golf</button>
+      <button class="chip" aria-pressed="false" data-cat="nature" data-i18n="roam.c.nature">Nature</button>
+      <button class="chip" aria-pressed="false" data-cat="food" data-i18n="roam.c.food">Cafes and villages</button>
+      <button class="chip" aria-pressed="false" data-cat="family" data-i18n="roam.c.family">Family</button>
+    </div>
+    <ul class="places" role="list" data-places>
+      <li class="place" data-km="1.4" data-cat="food"><span class="place__n" data-i18n="roam.p1">Pirom Cafe</span><span class="place__k" data-i18n="roam.k.cafe">cafe</span><span class="place__d num">1.4 km</span></li>
+      <li class="place" data-km="2" data-cat="nature"><span class="place__n" data-i18n="roam.p2">The Bloom flower park</span><span class="place__k" data-i18n="roam.k.garden">garden</span><span class="place__d num">2 km</span></li>
+      <li class="place" data-km="3" data-cat="wine"><span class="place__n" data-i18n="roam.p3">P.B. Valley winery</span><span class="place__k" data-i18n="roam.k.wine">wine</span><span class="place__d num">3 km</span></li>
+      <li class="place" data-km="3" data-cat="wine"><span class="place__n" data-i18n="roam.p4">GranMonte vineyard</span><span class="place__k" data-i18n="roam.k.wine">wine</span><span class="place__d num">3 km</span></li>
+      <li class="place" data-km="4" data-cat="food"><span class="place__n" data-i18n="roam.p5">Primo Piazza</span><span class="place__k" data-i18n="roam.k.village">village</span><span class="place__d num">4 km</span></li>
+      <li class="place" data-km="12.5" data-cat="golf"><span class="place__n" data-i18n="roam.p6">Sir James Country Club</span><span class="place__k" data-i18n="roam.k.golf">golf</span><span class="place__d num">12.5 km</span></li>
+      <li class="place" data-km="16.9" data-cat="golf"><span class="place__n" data-i18n="roam.p7">Khao Yai Golf Club</span><span class="place__k" data-i18n="roam.k.golf">golf</span><span class="place__d num">16.9 km</span></li>
+      <li class="place" data-km="20" data-cat="food"><span class="place__n" data-i18n="roam.p9">Palio Khao Yai</span><span class="place__k" data-i18n="roam.k.village">village</span><span class="place__d num">20 km</span></li>
+      <li class="place" data-km="20" data-cat="nature"><span class="place__n" data-i18n="roam.p10">Khao Yai National Park</span><span class="place__k" data-i18n="roam.k.nature">nature</span><span class="place__d num">20 km</span></li>
+      <li class="place" data-km="27.4" data-cat="golf"><span class="place__n" data-i18n="roam.p11">Kirimaya Golf Club</span><span class="place__k" data-i18n="roam.k.golf">golf</span><span class="place__d num">27.4 km</span></li>
+      <li class="place" data-km="30" data-cat="family"><span class="place__n" data-i18n="roam.p12">Chok Chai Farm</span><span class="place__k" data-i18n="roam.k.farm">farm</span><span class="place__d num">30 km</span></li>
+      <li class="place" data-km="30.6" data-cat="golf"><span class="place__n" data-i18n="roam.p13">Bonanza Golf and Country Club</span><span class="place__k" data-i18n="roam.k.golf">golf</span><span class="place__d num">30.6 km</span></li>
+      <li class="place" data-km="31.9" data-cat="golf"><span class="place__n" data-i18n="roam.p14">Jungle Golf Club</span><span class="place__k" data-i18n="roam.k.golf">golf</span><span class="place__d num">31.9 km</span></li>
+      <li class="place" data-km="32" data-cat="family"><span class="place__n" data-i18n="roam.p15">Khao Yai Fantasy</span><span class="place__k" data-i18n="roam.k.park">water park</span><span class="place__d num">32 km</span></li>
+      <li class="place" data-km="52" data-cat="family"><span class="place__n" data-i18n="roam.p16">Thong Somboon Club</span><span class="place__k" data-i18n="roam.k.adventure">adventure</span><span class="place__d num">52 km</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== after dark: the evening, tonight's sunset and moon ===== -->
+<section class="night" id="tonight" data-dark aria-labelledby="tonightTitle">
+  <div class="night__media" aria-hidden="true">
+    <img class="night__img is-on" data-night="moon" src="assets/web/moonrise-2400.jpg" srcset="assets/web/moonrise-800.jpg 800w, assets/web/moonrise-1600.jpg 1600w, assets/web/moonrise-2400.jpg 2400w, assets/web/moonrise-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy">
+    <img class="night__img" data-night="dusk" src="assets/web/lake-dusk-2400.jpg" srcset="assets/web/lake-dusk-800.jpg 800w, assets/web/lake-dusk-1600.jpg 1600w, assets/web/lake-dusk-2400.jpg 2400w, assets/web/lake-dusk-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy">
+    <canvas class="night__canvas" id="nightCanvas"></canvas>
+    <div class="night__scrim"></div>
+  </div>
+  <div class="night__inner">
+    <div class="night__copy">
+      <p class="chapter__kicker" data-i18n="night.kicker">After dark</p>
+      <h2 class="night__title st-lines" id="tonightTitle" data-i18n="night.title">Stay for <em class="it">the evening.</em></h2>
+      <p class="night__body" data-i18n="night.body">Dusk settles on the lake, the lights come on along the wings, and the moon takes its time over the hills.</p>
+      <div class="seg" role="group" aria-label="Choose the photograph" data-i18n-attr="aria-label:night.pick">
+        <button class="seg__b" aria-pressed="false" data-night-set="dusk" data-i18n="night.dusk">Dusk</button>
+        <button class="seg__b is-on" aria-pressed="true" data-night-set="moon" data-i18n="night.moon">Moonrise</button>
+      </div>
+    </div>
+    <div class="sky" data-rv>
+      <div class="sky__cell">
+        <p class="card__k" data-i18n="sky.sunsetk">Sunset today in Pak Chong</p>
+        <p class="sky__v"><span class="sky__pre" data-i18n="sky.about">about</span> <b class="num" data-sky="sunset">--:--</b></p>
+      </div>
+      <div class="sky__cell">
+        <p class="card__k" data-i18n="sky.moonk">Moon tonight</p>
+        <p class="sky__v sky__v--moon"><svg class="moon" viewBox="0 0 40 40" aria-hidden="true" data-sky="moonsvg"></svg><span data-sky="moonname"></span></p>
+      </div>
+      <div class="sky__cell">
+        <p class="card__k" data-i18n="sky.timek">Resort time now</p>
+        <p class="sky__v"><b class="num" data-clock>--:--</b></p>
+      </div>
+      <p class="sky__note" data-i18n="sky.note">Worked out for Pak Chong, and approximate.</p>
+    </div>
+  </div>
+  <p class="night__cap"><span class="is-on" data-night-cap="moon" data-i18n="night.cap.moon">Moonrise over the lake</span><span data-night-cap="dusk" data-i18n="night.cap.dusk">The wings reflected in the lake at dusk</span></p>
+</section>
+
+<!-- ===== reel ===== -->
+<section class="reelwrap" id="gallery" aria-labelledby="galleryTitle">
+  <div class="reelwrap__head">
+    <div>
+      <p class="chapter__kicker" data-i18n="reel.kicker">Gallery</p>
+      <h2 class="reelwrap__title st-lines" id="galleryTitle" data-i18n="reel.title">Eight frames from <em class="it">a slow weekend.</em></h2>
+    </div>
+    <p class="reelwrap__hint" data-i18n="reel.hint">The reel drifts on its own. Drag to browse, tap a photo to open it.</p>
+  </div>
+  <div class="reel" id="reel">
+    <div class="reel__track" id="reelTrack">
+      <button class="reel__item" data-full="assets/web/moonrise-4k.jpg" aria-label="View photo" data-i18n-attr="aria-label:reel.view"><img src="assets/web/moonrise-2400.jpg" srcset="assets/web/moonrise-800.jpg 800w, assets/web/moonrise-1600.jpg 1600w, assets/web/moonrise-2400.jpg 2400w, assets/web/moonrise-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" data-full="assets/web/lake-dusk-4k.jpg" aria-label="View photo" data-i18n-attr="aria-label:reel.view"><img src="assets/web/lake-dusk-2400.jpg" srcset="assets/web/lake-dusk-800.jpg 800w, assets/web/lake-dusk-1600.jpg 1600w, assets/web/lake-dusk-2400.jpg 2400w, assets/web/lake-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" data-full="assets/web/pool-umbrellas-4k.jpg" aria-label="View photo" data-i18n-attr="aria-label:reel.view"><img src="assets/web/pool-umbrellas-2400.jpg" srcset="assets/web/pool-umbrellas-800.jpg 800w, assets/web/pool-umbrellas-1600.jpg 1600w, assets/web/pool-umbrellas-2400.jpg 2400w, assets/web/pool-umbrellas-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" data-full="assets/web/entrance-dusk-4k.jpg" aria-label="View photo" data-i18n-attr="aria-label:reel.view"><img src="assets/web/entrance-dusk-2400.jpg" srcset="assets/web/entrance-dusk-800.jpg 800w, assets/web/entrance-dusk-1600.jpg 1600w, assets/web/entrance-dusk-2400.jpg 2400w, assets/web/entrance-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" data-full="assets/web/lagoon-pool-4k.jpg" aria-label="View photo" data-i18n-attr="aria-label:reel.view"><img src="assets/web/lagoon-pool-2400.jpg" srcset="assets/web/lagoon-pool-800.jpg 800w, assets/web/lagoon-pool-1600.jpg 1600w, assets/web/lagoon-pool-2400.jpg 2400w, assets/web/lagoon-pool-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" data-full="assets/web/pavilion-lounge-4k.jpg" aria-label="View photo" data-i18n-attr="aria-label:reel.view"><img src="assets/web/pavilion-lounge-2400.jpg" srcset="assets/web/pavilion-lounge-800.jpg 800w, assets/web/pavilion-lounge-1600.jpg 1600w, assets/web/pavilion-lounge-2400.jpg 2400w, assets/web/pavilion-lounge-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" data-full="assets/web/lawn-wings-4k.jpg" aria-label="View photo" data-i18n-attr="aria-label:reel.view"><img src="assets/web/lawn-wings-2400.jpg" srcset="assets/web/lawn-wings-800.jpg 800w, assets/web/lawn-wings-1600.jpg 1600w, assets/web/lawn-wings-2400.jpg 2400w, assets/web/lawn-wings-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" data-full="assets/web/reception-4k.jpg" aria-label="View photo" data-i18n-attr="aria-label:reel.view"><img src="assets/web/reception-2400.jpg" srcset="assets/web/reception-800.jpg 800w, assets/web/reception-1600.jpg 1600w, assets/web/reception-2400.jpg 2400w, assets/web/reception-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== visit ===== -->
+<section class="chapter" id="visit">
+  <div class="chapter__side">
+    <p class="chapter__num num" aria-hidden="true">08</p>
+    <p class="chapter__kicker" data-i18n="visit.kicker">Getting here</p>
+    <h2 class="chapter__title" data-i18n="visit.title">Visit</h2>
+    <p class="chapter__note" data-i18n="visit.note">Off Mittraphap Road, u-turn at kilometre 39.</p>
+    <button class="textlink textlink--map" data-map-open="arrival"><span data-i18n="fac.find">Find on the map</span></button>
+  </div>
+  <div class="chapter__body visit">
+    <div class="visit__grid">
+      <div class="card card--lead" data-rv>
+        <p class="card__k" data-i18n="visit.addrk">Address</p>
+        <address id="addrText" data-i18n="visit.addr">88/1, 88/88-93 Moo 5, Phayayen,<br>Pak Chong, Nakhon Ratchasima 30320</address>
+        <div class="card__acts">
+          <button class="pill pill--ghost pill--copy" id="addrCopy" data-copy-el="#addrText" data-copy-msg="addrCopied"><span data-i18n="visit.copyaddr">Copy address</span><svg class="pill__ic pill__ic--copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="pill__ic pill__ic--done" aria-hidden="true"><use href="#i-check"/></svg></button>
+          <button class="pill pill--ghost" id="shareLoc"><span data-i18n="visit.share">Share location</span><svg class="pill__ic" aria-hidden="true"><use href="#i-share"/></svg></button>
+        </div>
+        <dl class="card__foot">
+          <div><dt data-i18n="visit.mapsk">Map</dt><dd><a class="textlink" href="https://maps.app.goo.gl/nnPAtFGH4KwDBAJA9" target="_blank" rel="noopener" data-i18n="visit.maps">Open in Google Maps</a></dd></div>
+          <div><dt data-i18n="visit.gpsk">Coordinates</dt><dd><button class="textlink num" data-copy="14.559493, 101.256252" title="Copy coordinates" data-i18n-attr="title:visit.copygps">14.559493, 101.256252</button></dd></div>
+        </dl>
+      </div>
+      <div class="card card--forest" data-rv>
+        <p class="card__k" data-i18n="visit.talkk">Talk to the resort</p>
+        <a class="card__phone num" href="tel:+66885041888">+66 88 504 1888</a>
+        <p class="card__time"><span class="num" data-clock>--:--</span> <span data-i18n="hero.meta3">local time</span></p>
+        <div class="card__acts">
+          <a class="pill pill--ghost" href="https://www.patravana.com/line-qr-code" target="_blank" rel="noopener"><span>LINE @patravana</span><svg class="pill__ic" aria-hidden="true"><use href="#i-out"/></svg></a>
+          <a class="pill pill--ghost" href="mailto:info@patravanaresort.com"><span data-i18n="visit.email">Send an email</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+      <div class="card card--wide" data-rv>
+        <p class="card__k" data-i18n="visit.knowk">Good to know</p>
+        <ul class="know" role="list">
+          <li><b data-i18n="visit.k1k">Accessibility</b><span data-i18n="visit.k1v">Wheelchair friendly in public areas and suites</span></li>
+          <li><b data-i18n="visit.k2k">Pets</b><span data-i18n="visit.k2v">Listed as not accepted on booking sites. Message the resort on LINE for the latest word</span></li>
+          <li><b data-i18n="visit.k3k">Breakfast</b><span data-i18n="visit.k3v">Daily at Phu Yai Lee, 7:00 to 10:00</span></li>
+          <li><b data-i18n="visit.k4k">Groups</b><span data-i18n="visit.k4v">Hall for 120 to 190 guests, weekday rates from 15 rooms</span></li>
+        </ul>
+      </div>
+    </div>
+    <figure class="frame frame--wide" data-mr>
+      <img src="assets/web/entrance-dusk-2400.jpg" srcset="assets/web/entrance-dusk-800.jpg 800w, assets/web/entrance-dusk-1600.jpg 1600w, assets/web/entrance-dusk-2400.jpg 2400w, assets/web/entrance-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="The resort entrance and its sign at blue hour" data-i18n-attr="alt:visit.alt" loading="lazy" data-parallax="8">
+      <figcaption data-i18n="visit.cap">The entrance at blue hour, off Mittraphap Road.</figcaption>
+    </figure>
+  </div>
+</section>
+
+</main>
+
+<!-- ===== closing ===== -->
+<section class="closing" id="closing" data-dark aria-labelledby="closingLine">
+  <i class="closing__mark pv-mark" aria-hidden="true"></i>
+  <p class="chapter__kicker" data-i18n="close.kicker">Plan your stay</p>
+  <p class="closing__line st-lines" id="closingLine" data-i18n="close.line">Pick your dates. The air <em class="it">will be here.</em></p>
+  <div class="closing__acts">
+    <a class="pill pill--light pill--lg" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="book.go">Check availability</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    <a class="pill pill--ghost pill--lg" href="#stay"><span data-i18n="close.suites">Explore the suites</span></a>
+  </div>
+  <p class="closing__note" data-i18n="close.note">Booking is completed on the resort's own booking page.</p>
+</section>
+
+<!-- ===== footer ===== -->
+<footer class="foot" id="foot" data-dark>
+  <div class="foot__word" aria-hidden="true">
+    <svg viewBox="0 0 1000 128" preserveAspectRatio="xMidYMid meet"><text x="44" y="112" font-family="Montserrat, Helvetica, Arial, sans-serif" font-weight="300" font-size="118" textLength="912" lengthAdjust="spacing" fill="currentColor">PATRAVANA</text></svg>
+  </div>
+  <div class="foot__cols">
+    <div class="foot__brand">
+      <div class="lockup lockup--light" role="img" aria-label="Patravana Resort Khao Yai">
+        <i class="lockup__mark pv-mark" aria-hidden="true"></i>
+        <span class="lockup__name">PATRAVANA</span>
+        <span class="lockup__sub">Resort <i aria-hidden="true"></i> Khao Yai</span>
+      </div>
+    </div>
+    <div><p class="card__k" data-i18n="foot.here">Here</p><a href="https://maps.app.goo.gl/nnPAtFGH4KwDBAJA9" target="_blank" rel="noopener" data-i18n="foot.addr">88/1 Moo 5, Phayayen, Pak Chong, Nakhon Ratchasima 30320</a><a href="tel:+66885041888" class="num">+66 88 504 1888</a><a href="https://www.patravana.com/line-qr-code" target="_blank" rel="noopener">LINE @patravana</a><a href="mailto:info@patravanaresort.com">info@patravanaresort.com</a></div>
+    <div><p class="card__k" data-i18n="foot.explore">Explore</p><a href="#offers" data-i18n="nav.offers">Offers</a><a href="#facilities" data-i18n="nav.facilities">Facilities</a><a href="#stay" data-i18n="nav.stay">Stay</a><a href="#dining" data-i18n="nav.dining">Dining</a><a href="#gather" data-i18n="nav.gather">Gather</a><a href="#roam" data-i18n="nav.roam">Roam</a><a href="#visit" data-i18n="nav.visit">Visit</a></div>
+    <div><p class="card__k" data-i18n="foot.follow">Follow</p><a href="https://www.facebook.com/patravanaresort/" target="_blank" rel="noopener">Facebook</a><a href="https://www.instagram.com/patravana_khaoyai/" target="_blank" rel="noopener">Instagram</a><p class="card__k foot__langk" data-i18n="foot.lang">Language</p><button class="textlink" data-lang-set="en" lang="en">English</button><button class="textlink" data-lang-set="th" lang="th">ภาษาไทย</button></div>
+    <div class="foot__sky">
+      <p class="card__k" data-i18n="foot.timek">Local time at the resort</p><p class="foot__fig num" data-clock>--:--</p>
+      <p class="card__k" data-i18n="foot.sunsetk">Sunset today</p><p class="foot__fig"><span class="foot__pre" data-i18n="sky.about">about</span> <span class="num" data-sky="sunset">--:--</span></p>
+      <p class="card__k" data-i18n="sky.moonk">Moon tonight</p><p class="foot__fig foot__fig--moon"><svg class="moon" viewBox="0 0 40 40" aria-hidden="true" data-sky="moonsvg"></svg><span data-sky="moonname"></span></p>
+    </div>
+  </div>
+  <div class="foot__base">
+    <span data-i18n="foot.copy">Imagery and information © Patravana Resort, Khao Yai</span>
+    <span class="foot__concept" data-i18n="foot.concept">An unofficial concept redesign</span>
+    <button class="textlink" id="toTop"><span data-i18n="foot.top">Back to the top</span></button>
+  </div>
+  <!-- the studio credit: the last line of every site O2 builds -->
+  <p class="o2row">
+    <a class="o2credit" href="https://o2-designstudio.com/" target="_blank" rel="noopener noreferrer" aria-label="Website by O2 Design Studio (opens in a new tab)" data-i18n-attr="aria-label:o2.label">
+      <span lang="en"><svg class="o2credit__mark" viewBox="0 0 158.1 129.7" aria-hidden="true" focusable="false"><path fill="currentColor" d="M56.99 99.51A50 50 0 0 1 33.88 2.67L38 10.97A40.84 40.84 0 0 0 52.65 90.75ZM42.27 0.6A50 50 0 0 1 66.45 97.22L62.34 88.93A40.84 40.84 0 0 0 46.59 9.31ZM157.94 74.78L148.9 74.77C147.72 72.56 147.05 70.73 145.23 68.89C138.08 61.67 125.49 63.06 119.44 70.92L118.43 72.68C116.33 76.4 116.59 78.85 116.23 82.89C113.81 83.15 109.39 83.26 107.04 82.84C106.96 80.45 106.94 77.98 107.43 75.63C109.72 64.58 119.41 55.88 130.73 55.04C140.97 54.28 151.46 58.93 156.12 68.39C157.1 70.38 158.02 72.54 157.94 74.78ZM148.84 83.59C151.04 83.14 155.75 83.23 158.04 83.51C157.97 85.63 157.24 87.64 156.34 89.53C153.35 95.79 148.24 98.9 142.26 101.9C137.63 104.22 133.19 106.96 128.53 109.23C126.42 110.25 120.74 112.92 119.24 114.34C116.45 116.97 117.29 117.47 116.13 119.2L114.32 121.49C112.04 121.8 109.41 121.77 107.13 121.51C106.19 114 111.68 108.04 117.74 104.62C124.34 100.89 131.24 97.68 137.85 93.97C143.08 91.03 146.6 89.67 148.84 83.59ZM121.53 120.51C124.54 119.99 135.15 120.36 138.93 120.36C142.92 120.36 154.81 119.99 157.91 120.49L157.85 129.51C154.88 129.77 151.82 129.6 148.83 129.59L135.02 129.59C130.67 129.59 119.91 129.95 116.29 129.48C117.52 126.27 119.99 123.58 121.53 120.51Z"/></svg>Design Studio</span>
+    </a>
+  </p>
+</footer>
+
+<!-- lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" data-i18n-attr="aria-label:lb.label" aria-hidden="true">
+  <button class="iconbtn lightbox__close" id="lbClose" aria-label="Close" data-i18n-attr="aria-label:lb.close"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+  <button class="iconbtn lightbox__nav lightbox__nav--prev" id="lbPrev" aria-label="Previous photo" data-i18n-attr="aria-label:lb.prev"><svg aria-hidden="true"><use href="#i-back"/></svg></button>
+  <figure class="lightbox__stage"><img id="lbImg" src="" alt="Patravana Resort photograph" data-i18n-attr="alt:lb.alt"><span class="lightbox__count num" id="lbCount"></span></figure>
+  <button class="iconbtn lightbox__nav lightbox__nav--next" id="lbNext" aria-label="Next photo" data-i18n-attr="aria-label:lb.next"><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+</div>
+<div class="toast num" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/InertiaPlugin.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js" defer></script>
+<script src="i18n.js" defer></script>
+<script src="scene.js" defer></script>
+<script src="film-manifest.js" defer></script>
+<script src="film-stream.js" defer></script>
+<script src="main.js" defer></script>
+</body>
+</html>
