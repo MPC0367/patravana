@@ -437,10 +437,11 @@
       // the next photograph fades in over the current one once it has loaded; a newer request cancels an older one
       nxt.onload = () => {
         if (my !== token) return;
-        stage.classList.add("is-swapping");
+        stage.classList.remove("is-loading"); stage.classList.add("is-swapping");
         setTimeout(() => { if (my !== token) return; cur.src = key; stage.classList.remove("is-swapping"); }, 620);
       };
-      stage.classList.remove("is-swapping");
+      nxt.onerror = () => { if (my === token) stage.classList.remove("is-loading"); };
+      stage.classList.remove("is-swapping"); stage.classList.add("is-loading");
       nxt.src = key;
     }
     function buildThumbs() {

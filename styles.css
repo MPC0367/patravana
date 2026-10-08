@@ -925,3 +925,4 @@ html[lang="th"] .views__k { letter-spacing: .02em; text-transform: none; font-si
 .acc__toggle { grid-column: 3; grid-row: 1 / span 2; }
 @media (min-width: 1181px) { .stay-layout { grid-template-columns: 1.08fr 1fr; } }
 @media (max-width: 640px) { .acc__thai { display: block; } }
+.stay-stage.is-loading .stay-stage__view img#stayImg { opacity: .45; }
