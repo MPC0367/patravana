@@ -489,8 +489,8 @@
     }
   }
   function setOverlay(on) { document.body.classList.toggle("has-overlay", on); }
-  let scrollTick = false;
-  const queueScroll = () => { if (scrollTick) return; scrollTick = true; requestAnimationFrame(() => { scrollTick = false; onScroll(); }); };
+  let scrollTick = false, revealCheck = null;             // revealCheck: set by initMotion, see "belt and braces" there
+  const queueScroll = () => { if (scrollTick) return; scrollTick = true; requestAnimationFrame(() => { scrollTick = false; onScroll(); if (revealCheck) revealCheck(); }); };
   window.addEventListener("scroll", queueScroll, { passive: true });
   window.addEventListener("resize", queueScroll, { passive: true });
 
@@ -588,17 +588,50 @@
     let splitDone = false;
     const splitAll = () => { if (splitDone) return; splitDone = true; $$(".st-lines").forEach(buildSplit); ScrollTrigger.refresh(); };
     if (document.fonts && document.fonts.ready) { document.fonts.ready.then(splitAll); setTimeout(splitAll, 1500); } else splitAll();
+    const waiting = new Map();                           // what is still hidden, and the tweens that will show it
     // cards and tiles rise in; siblings follow one another by a beat
     $$("[data-rv]").forEach((el) => {
       const sibs = $$(":scope > [data-rv]", el.parentElement), i = Math.max(0, sibs.indexOf(el));
-      gsap.from(el, { opacity: 0, y: 40, duration: 1.1, delay: i * .09, scrollTrigger: { trigger: el, start: "top 88%", once: true, onEnter: () => el.classList.add("is-in") } });
+      waiting.set(el, [gsap.from(el, { opacity: 0, y: 40, duration: 1.1, delay: i * .09, scrollTrigger: { trigger: el, start: "top 88%", once: true, onEnter: () => { el._seen = true; el.classList.add("is-in"); } } })]);
     });
     // photographs open from the bottom edge while the image settles back into its frame
     $$("[data-mr]").forEach((fig) => {
-      const img = $("img", fig), st = { trigger: fig, start: "top 88%", once: true };
-      gsap.fromTo(fig, { clipPath: "inset(100% 0% 0% 0% round 16px)" }, { clipPath: "inset(0% 0% 0% 0% round 16px)", duration: 1.4, ease: "power4.inOut", scrollTrigger: st, clearProps: "clipPath" });
-      if (img && !img.hasAttribute("data-parallax")) gsap.fromTo(img, { scale: 1.2 }, { scale: 1, duration: 1.9, ease: "power3.out", scrollTrigger: st, clearProps: "transform", onComplete: () => fig.classList.add("is-in") });
+      const img = $("img", fig), st = { trigger: fig, start: "top 88%", once: true, onEnter: () => { fig._seen = true; } };
+      const tweens = [gsap.fromTo(fig, { clipPath: "inset(100% 0% 0% 0% round 16px)" }, { clipPath: "inset(0% 0% 0% 0% round 16px)", duration: 1.4, ease: "power4.inOut", scrollTrigger: st, clearProps: "clipPath" })];
+      if (img && !img.hasAttribute("data-parallax")) tweens.push(gsap.fromTo(img, { scale: 1.2 }, { scale: 1, duration: 1.9, ease: "power3.out", scrollTrigger: st, clearProps: "transform", onComplete: () => fig.classList.add("is-in") }));
+      waiting.set(fig, tweens);
+      // Chrome and Edge will not fetch a lazy photograph they consider fully clipped, and a frame waiting for its reveal
+      // is exactly that: the photograph only began to download as its frame opened. So it is asked for a screen and a
+      // half before the frame arrives, and is there when the frame opens.
+      if (img && img.loading === "lazy") ScrollTrigger.create({ trigger: fig, start: "top bottom+=1500", once: true, onEnter: () => { img.loading = "eager"; } });
     });
+    /* Belt and braces for the reveals above. A card, a frame or a headline that has been well inside the screen for
+       half a second and is still waiting for its cue is simply shown. No photograph and no line of copy can be left
+       hidden because a cue was missed. In the ordinary course the cue comes first and this does nothing. */
+    let lastCheck = 0, again = 0;
+    revealCheck = () => {
+      const now = performance.now(); if (now - lastCheck < 150) return; lastCheck = now;
+      const vh = window.innerHeight, inZone = (r) => r.width > 0 && r.top < vh * .6 && r.bottom > vh * .08;
+      let pending = false;
+      waiting.forEach((tweens, el) => {
+        if (el._seen) { waiting.delete(el); return; }
+        if (!inZone(el.getBoundingClientRect())) { el._zoneAt = 0; return; }
+        if (!el._zoneAt) el._zoneAt = now;
+        if (now - el._zoneAt < 500) { pending = true; return; }
+        waiting.delete(el);
+        tweens.forEach((t) => { if (t.scrollTrigger) t.scrollTrigger.kill(false, true); t.progress(1); });
+        el.classList.add("is-in");
+      });
+      splits.forEach((r) => {
+        if (r.revealed || !r.split || !r.trigger) return;
+        if (!inZone(r.el.getBoundingClientRect())) { r.zoneAt = 0; return; }
+        if (!r.zoneAt) r.zoneAt = now;
+        if (now - r.zoneAt < 500) { pending = true; return; }
+        r.trigger.kill(); r.trigger = null; gsap.set(r.split.lines, { yPercent: 0 }); r.revealed = true; r.el.dataset.revealed = "1";
+      });
+      // the visitor may have stopped scrolling: look once more when the half second is up
+      if (pending) { clearTimeout(again); again = setTimeout(() => { lastCheck = 0; revealCheck(); }, 560); }
+    };
     $$(".chapter__side").forEach((el) => gsap.from(el.children, { opacity: 0, x: -16, stagger: .1, duration: .9, scrollTrigger: { trigger: el.parentElement, start: "top 80%", once: true } }));
     $$("[data-parallax]").forEach((img) => {
       const d = parseFloat(img.dataset.parallax) || 8;
