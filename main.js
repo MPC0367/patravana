@@ -1054,7 +1054,7 @@
         $$("button", t).forEach((b) => { b.disabled = true; });
       } else if (t.dataset.season) {
         const span = t.dataset.season.split("-").map(Number);
-        if (month < span[0] || month > span[1]) { key = "offerReturns"; t.classList.add("is-off"); }
+        if (month < span[0] || month > span[1]) { key = "offerOff"; t.classList.add("is-off"); }
       }
       if (key) { const s = document.createElement("span"); s.className = "ticket__state"; s.dataset.key = key; t.insertBefore(s, t.firstChild); }
     });
