@@ -380,10 +380,22 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
   }
 
-  /* ---------- accordion + the sticky image stage ---------- */
-  function initAccordion() {
+  /* ---------- stay: the rooms, their views, and a gallery for each ----------
+     Each accordion item is a suite. Inside it, one set of photographs per view (.rg__set, carrying the booking engine's
+     own room id). Wide screens show the open set in the sticky stage beside the list; small screens swipe the set in
+     place. Choosing a view changes the photographs and the room the "Check dates" link asks the engine for. */
+  function initStay() {
     const acc = $("[data-acc]"); if (!acc) return;
     const items = $$(".acc__item", acc);
+    const stage = $("#stayStage"), view = $("#stayView"), cur = $("#stayImg"), nxt = $("#stayImgNext"), now = $("#stayNow"), total = $("#stayTotal"), capEl = $("#stayName"), thumbs = $("#stayThumbs"), roomLine = $("#stayRoom");
+    let shown = items.find((i) => i.classList.contains("is-open")) || items[0], idx = 0, token = 0, showing = "";
+    const setOf = (item) => $(".rg__set:not([hidden])", item) || $(".rg__set", item);
+    const shotsOf = (item) => $$(".rg__shot", setOf(item));
+    const capOf = (shot) => I18N.t("cap" + shot.dataset.cap.charAt(0).toUpperCase() + shot.dataset.cap.slice(1));
+    // a room is called what the booking panel's list calls it, so the two always agree
+    const roomLabel = (id) => { const o = $('#bookRoom option[value="' + id + '"]'); return o ? o.textContent.trim() : ""; };
+    const fullList = (item) => shotsOf(item).map((s) => s.dataset.full);
+
     function setOpen(item, open) {
       const panel = $(".acc__panel", item), head = $(".acc__head", item);
       head.setAttribute("aria-expanded", String(open));
@@ -399,29 +411,76 @@
         gsap.to(panel, { height: 0, duration: .55, ease: "power3.inOut", onComplete: () => { if (hasST) ScrollTrigger.refresh(); } });
       }
     }
-    // one sticky image column on desktop that crossfades between suites, with a counter for which one is showing
-    const stage = $(".stay-stage"), cur = $("#stayImg"), nxt = $("#stayImgNext"), now = $("#stayNow"), name = $("#stayName");
-    let shown = items.find((i) => i.classList.contains("is-open")) || items[0];
-    function paintStage() { if (!shown) return; if (now) now.textContent = pad2(items.indexOf(shown) + 1); if (name) name.textContent = $(".acc__name", shown).textContent; }
-    function showStage(item) {
-      shown = item; paintStage();
-      if (!stage || !cur || !nxt) return;
-      const im = $(".acc__media img", item); const src = im && (im.currentSrc || im.src); if (!src || src === cur.src) return;
-      cur.removeAttribute("srcset"); nxt.src = src;
-      const swap = () => { stage.classList.add("is-swapping"); setTimeout(() => { cur.src = src; stage.classList.remove("is-swapping"); }, 720); };
-      if (nxt.complete) swap(); else nxt.onload = swap;
+
+    // ---- the stage ----
+    function paintText() {
+      const shots = shotsOf(shown), s = shots[idx]; if (!s) return;
+      const room = roomLabel(setOf(shown).dataset.room);
+      if (now) now.textContent = pad2(idx + 1);
+      if (total) total.textContent = pad2(shots.length);
+      if (capEl) capEl.textContent = capOf(s);
+      if (roomLine) roomLine.textContent = room;
+      if (cur) cur.alt = room + ": " + capOf(s);
+      $$(".stay-thumb", thumbs).forEach((t, k) => { t.classList.toggle("is-on", k === idx); if (k === idx) t.setAttribute("aria-current", "true"); else t.removeAttribute("aria-current"); t.setAttribute("aria-label", capOf(shots[k])); });
+      // every photograph of the set carries a real description too (the small-screen strip shows them directly)
+      items.forEach((it) => $$(".rg__set", it).forEach((set) => { const name = roomLabel(set.dataset.room); $$(".rg__shot", set).forEach((b) => { const t = name + ": " + capOf(b); b.setAttribute("aria-label", t); const im = $("img", b); if (im) im.alt = t; }); }));
     }
-    items.forEach((item) => {
-      const head = $(".acc__head", item);
-      head.addEventListener("click", () => {
-        const isOpen = item.classList.contains("is-open");
-        if (isOpen) { setOpen(item, false); return; }
-        items.forEach((o) => { if (o !== item && o.classList.contains("is-open")) setOpen(o, false); });
-        setOpen(item, true); showStage(item);
+    function show(i, instant) {
+      const shots = shotsOf(shown); if (!shots.length) return;
+      idx = (i + shots.length) % shots.length;
+      paintText();
+      const key = shots[idx].dataset.full;
+      if (!cur || !nxt || key === showing) return;
+      showing = key;
+      const my = ++token;
+      if (instant || reduced) { cur.src = key; return; }
+      // the next photograph fades in over the current one once it has loaded; a newer request cancels an older one
+      nxt.onload = () => {
+        if (my !== token) return;
+        stage.classList.add("is-swapping");
+        setTimeout(() => { if (my !== token) return; cur.src = key; stage.classList.remove("is-swapping"); }, 620);
+      };
+      stage.classList.remove("is-swapping");
+      nxt.src = key;
+    }
+    function buildThumbs() {
+      if (!thumbs) return;
+      thumbs.textContent = "";
+      shotsOf(shown).forEach((s, k) => {
+        const b = document.createElement("button"); b.type = "button"; b.className = "stay-thumb";
+        const im = document.createElement("img"); im.alt = ""; im.src = ($("img", s) || {}).src || s.dataset.full; b.appendChild(im);
+        b.addEventListener("click", () => show(k));
+        thumbs.appendChild(b);
       });
+    }
+    function showRoom(item, instant) { shown = item; idx = 0; buildThumbs(); show(0, instant); }
+    if ($("#stayPrev")) $("#stayPrev").addEventListener("click", (e) => { e.stopPropagation(); show(idx - 1); });
+    if ($("#stayNext")) $("#stayNext").addEventListener("click", (e) => { e.stopPropagation(); show(idx + 1); });
+    if (view) view.addEventListener("click", () => lightbox.open(fullList(shown), idx));
+    if (stage) stage.addEventListener("keydown", (e) => { if (e.key === "ArrowLeft") show(idx - 1); else if (e.key === "ArrowRight") show(idx + 1); });
+
+    items.forEach((item) => {
+      $(".acc__head", item).addEventListener("click", () => {
+        if (item.classList.contains("is-open")) { setOpen(item, false); return; }
+        items.forEach((o) => { if (o !== item && o.classList.contains("is-open")) setOpen(o, false); });
+        setOpen(item, true); showRoom(item);
+      });
+      // choosing a view: its photographs, and its room in the booking engine
+      const chips = $$(".views .chip", item), book = $("[data-book-room]", item);
+      const pickView = (v) => {
+        chips.forEach((c) => { const on = c.dataset.view === v; c.classList.toggle("is-on", on); c.setAttribute("aria-pressed", String(on)); });
+        $$(".rg__set", item).forEach((s) => { s.hidden = s.dataset.view !== v; });
+        const id = setOf(item).dataset.room;
+        if (book) { book.dataset.bookRoom = id; book.href = ENGINE + "?roomtype=" + id; }
+        if (item === shown) showRoom(item); else paintText();
+        if (hasST) ScrollTrigger.refresh();
+      };
+      chips.forEach((c) => c.addEventListener("click", () => pickView(c.dataset.view)));
+      // small screens: the photographs sit in the panel; a tap opens them full size
+      $$(".rg__shot", item).forEach((s) => s.addEventListener("click", () => { const set = s.closest(".rg__set"), list = $$(".rg__shot", set); lightbox.open(list.map((x) => x.dataset.full), list.indexOf(s)); }));
     });
-    paintStage();
-    document.addEventListener("pv:lang", paintStage);
+    showRoom(shown, true);
+    document.addEventListener("pv:lang", paintText);
   }
 
   /* ---------- roam: radius slider and kind-of-place chips, working together ---------- */
@@ -554,6 +613,39 @@
     document.addEventListener("pv:lang", () => { if (active) { pTitle.textContent = $(".hot__label", active).textContent; pDesc.innerHTML = descFor(active.dataset.hot); } });
   }
 
+  /* ---------- lightbox: one viewer, used by the gallery reel and by the room galleries ---------- */
+  const lightbox = (function () {
+    const box = $("#lightbox"), img = $("#lbImg"), count = $("#lbCount");
+    if (!box || !img) return { open() {} };
+    let list = [], idx = 0, isOpen = false, lastFocus = null, onToggle = null;
+    function render() { img.src = list[idx]; count.textContent = (idx + 1) + " / " + list.length; if (hasGSAP && !reduced) gsap.fromTo(img, { opacity: .2, scale: .97 }, { opacity: 1, scale: 1, duration: .45 }); }
+    // items: the addresses of the full-size photographs. cb(true|false) tells the caller when the viewer opens and closes
+    function open(items, i, cb) {
+      if (!items || !items.length) return;
+      list = items; idx = Math.max(0, i || 0); onToggle = cb || null; isOpen = true; lastFocus = document.activeElement;
+      if (onToggle) onToggle(true);
+      box.classList.add("is-open"); box.setAttribute("aria-hidden", "false"); setOverlay(true); render();
+      if (hasGSAP && !reduced) gsap.to(box, { opacity: 1, duration: .35 }); else box.style.opacity = "1";
+      if (lenis) lenis.stop();
+      $("#lbClose").focus();
+    }
+    function close() {
+      isOpen = false; if (onToggle) onToggle(false);
+      const done = () => { box.classList.remove("is-open"); box.setAttribute("aria-hidden", "true"); };
+      if (hasGSAP && !reduced) gsap.to(box, { opacity: 0, duration: .3, onComplete: done }); else { box.style.opacity = "0"; done(); }
+      setOverlay(false); if (lenis) lenis.start(); if (lastFocus) lastFocus.focus();
+    }
+    const step = (d) => { idx = (idx + d + list.length) % list.length; render(); };
+    $("#lbClose").addEventListener("click", close); $("#lbPrev").addEventListener("click", () => step(-1)); $("#lbNext").addEventListener("click", () => step(1));
+    box.addEventListener("click", (e) => { if (e.target === box || e.target.classList.contains("lightbox__stage")) close(); });
+    document.addEventListener("keydown", (e) => {
+      if (!isOpen) return;
+      if (e.key === "Escape") close(); else if (e.key === "ArrowLeft") step(-1); else if (e.key === "ArrowRight") step(1);
+      else if (e.key === "Tab") { const f = [$("#lbClose"), $("#lbPrev"), $("#lbNext")]; const i = f.indexOf(document.activeElement); e.preventDefault(); f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus(); }
+    });
+    return { open: open };
+  })();
+
   /* ---------- gallery reel: drifts on its own in a seamless loop; drag or fling to browse; tap to open ---------- */
   function initReel() {
     const reel = $("#reel"), track = $("#reelTrack"); if (!reel || !track) return;
@@ -606,20 +698,7 @@
       }
     } else { reel.classList.add("is-native"); }
 
-    const box = $("#lightbox"), img = $("#lbImg"), count = $("#lbCount");
-    let idx = 0, isOpen = false, lastFocus = null;
-    function render() { img.src = gallery[idx]; count.textContent = (idx + 1) + " / " + gallery.length; if (hasGSAP && !reduced) gsap.fromTo(img, { opacity: .2, scale: .97 }, { opacity: 1, scale: 1, duration: .45 }); }
-    function open(i) { idx = i; isOpen = true; state.open = true; lastFocus = document.activeElement; box.classList.add("is-open"); box.setAttribute("aria-hidden", "false"); setOverlay(true); render(); if (hasGSAP && !reduced) gsap.to(box, { opacity: 1, duration: .35 }); else box.style.opacity = "1"; if (lenis) lenis.stop(); $("#lbClose").focus(); }
-    function close() { isOpen = false; state.open = false; const done = () => { box.classList.remove("is-open"); box.setAttribute("aria-hidden", "true"); }; if (hasGSAP && !reduced) gsap.to(box, { opacity: 0, duration: .3, onComplete: done }); else { box.style.opacity = "0"; done(); } setOverlay(false); if (lenis) lenis.start(); if (lastFocus) lastFocus.focus(); }
-    const step = (d) => { idx = (idx + d + gallery.length) % gallery.length; render(); };
-    $$(".reel__item", track).forEach((b) => b.addEventListener("click", () => { if (state.didDrag || state.caught) return; open(Math.max(0, gallery.indexOf(b.dataset.full))); }));
-    $("#lbClose").addEventListener("click", close); $("#lbPrev").addEventListener("click", () => step(-1)); $("#lbNext").addEventListener("click", () => step(1));
-    box.addEventListener("click", (e) => { if (e.target === box || e.target.classList.contains("lightbox__stage")) close(); });
-    document.addEventListener("keydown", (e) => {
-      if (!isOpen) return;
-      if (e.key === "Escape") close(); else if (e.key === "ArrowLeft") step(-1); else if (e.key === "ArrowRight") step(1);
-      else if (e.key === "Tab") { const f = [$("#lbClose"), $("#lbPrev"), $("#lbNext")]; const i = f.indexOf(document.activeElement); e.preventDefault(); f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus(); }
-    });
+    $$(".reel__item", track).forEach((b) => b.addEventListener("click", () => { if (state.didDrag || state.caught) return; lightbox.open(gallery, Math.max(0, gallery.indexOf(b.dataset.full)), (on) => { state.open = on; }); }));
   }
 
   /* ---------- drawers: what is in every suite, and the suite comparison ---------- */
@@ -662,8 +741,9 @@
   /* ---------- booking: the dock under the hero and the pre-stage panel, both handing over to the resort's engine ---------- */
   const ENGINE = "https://letsbook.me/booking/patravanaresortkhaoyai";
   let lastCode = "";
-  // the engine keeps check-in, check-out and adults. It drops promo codes, so a code is put on the clipboard to paste there
-  const engineUrl = (v) => ENGINE + "?" + new URLSearchParams({ checkin: v.checkin, checkout: v.checkout, adults: v.adults }).toString();
+  // the engine keeps check-in, check-out and adults, and "roomtype" (its own room id) narrows the page to that one room.
+  // It drops promo codes, so a code is put on the clipboard to paste there
+  const engineUrl = (v) => { const q = new URLSearchParams({ checkin: v.checkin, checkout: v.checkout, adults: v.adults }); if (v.room) q.set("roomtype", v.room); return ENGINE + "?" + q.toString(); };
   // The hand-over is a real link whose address follows the form. A window opened from script is refused for many
   // viewers (embedded frames, popup blockers); a link the visitor clicks is not. v is null when the dates do not add up.
   function sendToEngine(e, link, v) {
@@ -674,7 +754,7 @@
   }
   function initBooking() {
     const panel = $("#bookPanel"), scrim = $("#bookScrim"), form = $("#bookForm"); if (!panel || !form) return;
-    const inEl = $("#bookIn"), outEl = $("#bookOut"), adults = $("#bookAdults"), promo = $("#bookPromo"), summary = $("#bookSummary");
+    const inEl = $("#bookIn"), outEl = $("#bookOut"), adults = $("#bookAdults"), promo = $("#bookPromo"), summary = $("#bookSummary"), roomSel = $("#bookRoom");
     const iso = (d) => d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());   // local date, not UTC
     const addDays = (s, n) => { const d = new Date(s + "T00:00:00"); d.setDate(d.getDate() + n); return iso(d); };
     const today = iso(new Date());
@@ -683,6 +763,9 @@
     function open(e) {
       if (e) e.preventDefault();
       isOpen = true; lastFocus = document.activeElement;
+      // opened from a room ("Check dates for this room"): the panel starts on that room
+      const from = e && e.currentTarget;
+      if (roomSel && from && from.dataset && from.dataset.bookRoom) roomSel.value = from.dataset.bookRoom;
       if (lastCode && !promo.value) promo.value = lastCode;
       panel.classList.add("is-open"); panel.setAttribute("aria-hidden", "false"); scrim.classList.add("is-on"); setOverlay(true);
       if (lenis) lenis.stop();
@@ -696,15 +779,16 @@
     }
     function nights() { const a = new Date(inEl.value + "T00:00:00"), b = new Date(outEl.value + "T00:00:00"); return Math.max(0, Math.round((b - a) / 86400000)); }
     const go = $("#bookGo");
-    const values = () => (inEl.value && outEl.value && nights() >= 1 ? { checkin: inEl.value, checkout: outEl.value, adults: adults.value, promo: promo.value.trim() } : null);
+    const values = () => (inEl.value && outEl.value && nights() >= 1 ? { checkin: inEl.value, checkout: outEl.value, adults: adults.value, promo: promo.value.trim(), room: roomSel ? roomSel.value : "" } : null);
     function paint() {
       const n = nights(), v = values();
       if (v && go) go.href = engineUrl(v);
       const fmt = new Intl.DateTimeFormat(I18N.lang === "th" ? "th-TH" : "en-GB", { day: "numeric", month: "short", year: "numeric" });
-      summary.textContent = inEl.value && outEl.value ? (fmt.format(new Date(inEl.value + "T00:00:00")) + "  " + String.fromCharCode(8594) + "  " + fmt.format(new Date(outEl.value + "T00:00:00")) + "   " + n + " " + I18N.t(n === 1 ? "night" : "nights") + "   " + adults.value + " " + I18N.t("adultsShort") + (promo.value ? "   " + I18N.t("codeShort") + " " + promo.value.trim() : "")) : "";
+      const roomName = roomSel && roomSel.value ? roomSel.options[roomSel.selectedIndex].textContent.trim() + "   " : "";
+      summary.textContent = inEl.value && outEl.value ? (roomName + fmt.format(new Date(inEl.value + "T00:00:00")) + "  " + String.fromCharCode(8594) + "  " + fmt.format(new Date(outEl.value + "T00:00:00")) + "   " + n + " " + I18N.t(n === 1 ? "night" : "nights") + "   " + adults.value + " " + I18N.t("adultsShort") + (promo.value ? "   " + I18N.t("codeShort") + " " + promo.value.trim() : "")) : "";
     }
     inEl.addEventListener("change", () => { if (!inEl.value) return; outEl.min = addDays(inEl.value, 1); if (!outEl.value || outEl.value <= inEl.value) outEl.value = addDays(inEl.value, 1); paint(); });
-    [outEl, adults, promo].forEach((el) => el.addEventListener("input", paint));
+    [outEl, adults, promo, roomSel].forEach((el) => { if (el) el.addEventListener("input", paint); });
     if (go) go.addEventListener("click", (e) => sendToEngine(e, go, values()));
     form.addEventListener("submit", (e) => { e.preventDefault(); if (go) go.click(); });   // Enter in a field follows the same link
     $$("[data-book-open]").forEach((b) => b.addEventListener("click", open));
@@ -712,7 +796,7 @@
     document.addEventListener("keydown", (e) => {
       if (!isOpen) return;
       if (e.key === "Escape") close();
-      if (e.key === "Tab") { const f = $$("input, button, a[href]", panel).filter((x) => x.offsetParent); if (!f.length) return; const first = f[0], last = f[f.length - 1]; if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); } }
+      if (e.key === "Tab") { const f = $$("input, select, button, a[href]", panel).filter((x) => x.offsetParent); if (!f.length) return; const first = f[0], last = f[f.length - 1]; if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); } }
     });
     document.addEventListener("pv:lang", paint);
 
@@ -943,7 +1027,7 @@
   /* ---------- boot ---------- */
   document.addEventListener("DOMContentLoaded", () => {
     I18N.capture(); I18N.apply(initialLang());
-    runLoader(); initOffers(); initHall(); initMotion(); initAccordion(); initRadius(); initMap(); initReel(); initDrawers(); initBooking(); initCopy(); initClock(); initSky(); initDining(); initNight(); initLang(); initDiag(); onScroll();
+    runLoader(); initOffers(); initHall(); initMotion(); initStay(); initRadius(); initMap(); initReel(); initDrawers(); initBooking(); initCopy(); initClock(); initSky(); initDining(); initNight(); initLang(); initDiag(); onScroll();
     // ?goto=<section id> deep link: jump once the layout has settled (images sized), so the landing spot is exact
     try {
       const params = new URLSearchParams(location.search);

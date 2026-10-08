@@ -95,6 +95,17 @@
       <button class="iconbtn" id="bookClose" aria-label="Close" data-i18n-attr="aria-label:lb.close"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
     </div>
     <form class="book__form" id="bookForm" novalidate>
+      <label class="field field--room"><span data-i18n="book.room">Room</span>
+        <select id="bookRoom" name="roomtype">
+          <option value="" data-i18n="book.anyroom">Any room</option>
+          <option value="3446300000000000005" data-i18n="room.vl">Vana Suite, lake view</option>
+          <option value="3446300000000000004" data-i18n="room.vg">Vana Suite, garden view</option>
+          <option value="3446300000000000003" data-i18n="room.vc">Vana Suite, country view</option>
+          <option value="3446300000000000008" data-i18n="room.pl">Patra Suite, lake view</option>
+          <option value="3446300000000000007" data-i18n="room.pg">Patra Suite, garden view</option>
+          <option value="3446300000000000006" data-i18n="room.pj">Patra Junior Suite, garden view</option>
+        </select>
+      </label>
       <label class="field"><span data-i18n="book.in">Check-in</span><input type="date" id="bookIn" name="checkin" required></label>
       <label class="field"><span data-i18n="book.out">Check-out</span><input type="date" id="bookOut" name="checkout" required></label>
       <label class="field"><span data-i18n="book.adults">Adults</span><input type="number" id="bookAdults" name="adults" min="1" max="6" value="2"></label>
@@ -219,11 +230,11 @@
         <p class="ticket__desc" data-i18n="offers.o2.desc">Enter the code when booking direct. It stacks on the best available rate.</p>
         <button class="pill pill--ghost pill--copy" data-copy="welcome2024" title="Copy code" data-i18n-attr="title:offers.copy"><span class="num">welcome2024</span><svg class="pill__ic pill__ic--copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="pill__ic pill__ic--done" aria-hidden="true"><use href="#i-check"/></svg></button>
       </article>
-      <article class="ticket ticket--hot" data-rv data-ends="2026-09-30">
-        <p class="ticket__tag" data-i18n="offers.o3.tag">Until 30 September 2026</p>
-        <p class="ticket__big"><span class="num">25%</span></p>
-        <p class="ticket__per" data-i18n="offers.o3.per">on top, plus 10% off dining</p>
-        <p class="ticket__desc" data-i18n="offers.o3.desc">Book and stay by 30 September, with 10% off every food bill at Phu Yai Lee.</p>
+      <article class="ticket ticket--hot" data-rv data-ends="2027-03-31">
+        <p class="ticket__tag" data-i18n="offers.o3.tag">Until 31 March 2027</p>
+        <p class="ticket__big"><span class="num">15%</span></p>
+        <p class="ticket__per" data-i18n="offers.o3.per">on top of the room rate</p>
+        <p class="ticket__desc" data-i18n="offers.o3.desc">Enter the code on the booking page, for stays until 31 March 2027. The discounted rate is non-refundable.</p>
         <button class="pill pill--ghost pill--copy" data-copy="refresh2026" title="Copy code" data-i18n-attr="title:offers.copy"><span class="num">refresh2026</span><svg class="pill__ic pill__ic--copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="pill__ic pill__ic--done" aria-hidden="true"><use href="#i-check"/></svg></button>
       </article>
     </div>
@@ -372,7 +383,7 @@
     <p class="chapter__num num" aria-hidden="true">04</p>
     <p class="chapter__kicker" data-i18n="stay.kicker">Suites</p>
     <h2 class="chapter__title" data-i18n="stay.title">Stay</h2>
-    <p class="chapter__note" data-i18n="stay.note">Three ways to sleep in the hills. Every suite keeps a living room and a balcony.</p>
+    <p class="chapter__note" data-i18n="stay.note">Three suites across lake, garden and country views. Every one comes with a balcony and a kitchenette.</p>
     <button class="textlink textlink--map" data-map-open="suites"><span data-i18n="fac.find">Find on the map</span></button>
     <div class="chapter__acts">
       <button class="pill pill--ghost" data-compare-open><span data-i18n="stay.compare">Compare suites</span></button>
@@ -382,7 +393,7 @@
   <div class="chapter__body">
     <div class="stay-layout">
     <ul class="acc" role="list" data-acc>
-      <li class="acc__item is-open" data-stage-name="Vana Suite">
+      <li class="acc__item is-open" data-room-family="vana">
         <button class="acc__head" aria-expanded="true" aria-controls="acc-vana">
           <span class="acc__no num" aria-hidden="true">01</span>
           <span class="acc__name">Vana Suite</span>
@@ -392,22 +403,49 @@
         </button>
         <div class="acc__panel" id="acc-vana">
           <div class="acc__grid">
-            <figure class="acc__media"><img src="assets/web/vana-bedroom-2400.jpg" srcset="assets/web/vana-bedroom-800.jpg 800w, assets/web/vana-bedroom-1600.jpg 1600w, assets/web/vana-bedroom-2400.jpg 2400w, assets/web/vana-bedroom-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="Vana Suite bedroom with twin beds" data-i18n-attr="alt:stay.vana.alt" loading="lazy"></figure>
-            <figure class="acc__media acc__media--b"><img src="assets/web/vana-living-2400.jpg" srcset="assets/web/vana-living-800.jpg 800w, assets/web/vana-living-1600.jpg 1600w, assets/web/vana-living-2400.jpg 2400w, assets/web/vana-living-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Vana Suite living room opening to the balcony" data-i18n-attr="alt:stay.vana.alt2" loading="lazy"></figure>
             <div class="acc__copy">
               <p data-i18n="stay.vana.desc">Our signature suite: a full living room, a balcony facing the green, and everything a slow morning could ask for.</p>
               <ul class="chips" role="list">
                 <li><b class="num">61 m²</b><span data-i18n="stay.c.size">size</span></li>
                 <li><b data-i18n="stay.c.bedsv">King or twin</b><span data-i18n="stay.c.beds">beds</span></li>
                 <li><b class="num">2 + 1</b><span data-i18n="stay.c.occ">adults, extra bed</span></li>
-                <li><b data-i18n="stay.vana.viewsv">Lake, garden, country</b><span data-i18n="stay.c.views">views</span></li>
               </ul>
-              <a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="stay.book">Check dates</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+              <div class="views" role="group" aria-label="Choose the view" data-i18n-attr="aria-label:stay.viewpick">
+                <span class="views__k" data-i18n="stay.viewk">View</span>
+                <button class="chip is-on" aria-pressed="true" data-view="lake" data-i18n="stay.v.lake">Lake</button>
+                <button class="chip" aria-pressed="false" data-view="garden" data-i18n="stay.v.garden">Garden</button>
+                <button class="chip" aria-pressed="false" data-view="country" data-i18n="stay.v.country">Country</button>
+              </div>
+              <!-- the photographs of this room, one set per view: small screens swipe them here, wide screens show them in the stage -->
+              <div class="rg">
+                <div class="rg__set" data-view="lake" data-room="3446300000000000005">
+                  <button class="rg__shot" data-full="assets/web/room-vana-lake-bedroom-1600.jpg" data-cap="bedroom"><img src="assets/web/room-vana-lake-bedroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-lake-balcony-1600.jpg" data-cap="balcony"><img src="assets/web/room-vana-lake-balcony-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-lake-living-1600.jpg" data-cap="living"><img src="assets/web/room-vana-lake-living-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-lake-kitchenette-1600.jpg" data-cap="kitchenette"><img src="assets/web/room-vana-lake-kitchenette-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-lake-bathroom-1600.jpg" data-cap="bathroom"><img src="assets/web/room-vana-lake-bathroom-800.jpg" alt="" loading="lazy"></button>
+                </div>
+                <div class="rg__set" data-view="garden" data-room="3446300000000000004" hidden>
+                  <button class="rg__shot" data-full="assets/web/room-vana-garden-bedroom-1600.jpg" data-cap="bedroom"><img src="assets/web/room-vana-garden-bedroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-garden-balcony-1600.jpg" data-cap="balcony"><img src="assets/web/room-vana-garden-balcony-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-garden-living-1600.jpg" data-cap="living"><img src="assets/web/room-vana-garden-living-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-garden-kitchenette-1600.jpg" data-cap="kitchenette"><img src="assets/web/room-vana-garden-kitchenette-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-garden-bathroom-1600.jpg" data-cap="bathroom"><img src="assets/web/room-vana-garden-bathroom-800.jpg" alt="" loading="lazy"></button>
+                </div>
+                <div class="rg__set" data-view="country" data-room="3446300000000000003" hidden>
+                  <button class="rg__shot" data-full="assets/web/room-vana-country-bedroom-1600.jpg" data-cap="bedroom"><img src="assets/web/room-vana-country-bedroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-country-balcony-1600.jpg" data-cap="balcony"><img src="assets/web/room-vana-country-balcony-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-country-living-1600.jpg" data-cap="living"><img src="assets/web/room-vana-country-living-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-country-kitchenette-1600.jpg" data-cap="kitchenette"><img src="assets/web/room-vana-country-kitchenette-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-country-bathroom-1600.jpg" data-cap="bathroom"><img src="assets/web/room-vana-country-bathroom-800.jpg" alt="" loading="lazy"></button>
+                </div>
+              </div>
+              <a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000005" target="_blank" rel="noopener" data-book-open data-book-room="3446300000000000005"><span data-i18n="stay.bookroom">Check dates for this room</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
             </div>
           </div>
         </div>
       </li>
-      <li class="acc__item" data-stage-name="Patra Suite">
+      <li class="acc__item" data-room-family="patra">
         <button class="acc__head" aria-expanded="false" aria-controls="acc-patra">
           <span class="acc__no num" aria-hidden="true">02</span>
           <span class="acc__name">Patra Suite</span>
@@ -417,43 +455,83 @@
         </button>
         <div class="acc__panel" id="acc-patra">
           <div class="acc__grid">
-            <figure class="acc__media"><img src="assets/web/patra-bedroom-2400.jpg" srcset="assets/web/patra-bedroom-800.jpg 800w, assets/web/patra-bedroom-1600.jpg 1600w, assets/web/patra-bedroom-2400.jpg 2400w, assets/web/patra-bedroom-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="Patra Suite bedroom with desk and garden view" data-i18n-attr="alt:stay.patra.alt" loading="lazy"></figure>
-            <figure class="acc__media acc__media--b"><img src="assets/web/patra-jacuzzi-2400.jpg" srcset="assets/web/patra-jacuzzi-800.jpg 800w, assets/web/patra-jacuzzi-1600.jpg 1600w, assets/web/patra-jacuzzi-2400.jpg 2400w, assets/web/patra-jacuzzi-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Jacuzzi bathtub in the Patra Suite" data-i18n-attr="alt:stay.patra.alt2" loading="lazy"></figure>
             <div class="acc__copy">
-              <p data-i18n="stay.patra.desc">The wider view over mountain and lagoon, and a jacuzzi bathtub to watch it from. The Junior Suite is its twin-bed sibling.</p>
+              <p data-i18n="stay.patra.desc">The wider view over mountain and lagoon, and a jacuzzi bathtub to watch it from.</p>
               <ul class="chips" role="list">
                 <li><b class="num">64 m²</b><span data-i18n="stay.c.size">size</span></li>
                 <li><b data-i18n="stay.c.bedsv">King or twin</b><span data-i18n="stay.c.beds">beds</span></li>
                 <li><b class="num">2 + 1</b><span data-i18n="stay.c.occ">adults, extra bed</span></li>
-                <li><b data-i18n="stay.patra.viewsv">Lake or garden</b><span data-i18n="stay.c.views">views</span></li>
               </ul>
-              <a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="stay.book">Check dates</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+              <div class="views" role="group" aria-label="Choose the view" data-i18n-attr="aria-label:stay.viewpick">
+                <span class="views__k" data-i18n="stay.viewk">View</span>
+                <button class="chip is-on" aria-pressed="true" data-view="lake" data-i18n="stay.v.lake">Lake</button>
+                <button class="chip" aria-pressed="false" data-view="garden" data-i18n="stay.v.garden">Garden</button>
+              </div>
+              <!-- the photographs of this room, one set per view: small screens swipe them here, wide screens show them in the stage -->
+              <div class="rg">
+                <div class="rg__set" data-view="lake" data-room="3446300000000000008">
+                  <button class="rg__shot" data-full="assets/web/room-patra-lake-bedroom-1600.jpg" data-cap="bedroom"><img src="assets/web/room-patra-lake-bedroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-lake-balcony-1600.jpg" data-cap="balcony"><img src="assets/web/room-patra-lake-balcony-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-lake-jacuzzi-1600.jpg" data-cap="jacuzzi"><img src="assets/web/room-patra-lake-jacuzzi-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-lake-living-1600.jpg" data-cap="living"><img src="assets/web/room-patra-lake-living-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-lake-kitchenette-1600.jpg" data-cap="kitchenette"><img src="assets/web/room-patra-lake-kitchenette-800.jpg" alt="" loading="lazy"></button>
+                </div>
+                <div class="rg__set" data-view="garden" data-room="3446300000000000007" hidden>
+                  <button class="rg__shot" data-full="assets/web/room-patra-garden-bedroom-1600.jpg" data-cap="bedroom"><img src="assets/web/room-patra-garden-bedroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-garden-balcony-1600.jpg" data-cap="balcony"><img src="assets/web/room-patra-garden-balcony-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-garden-jacuzzi-1600.jpg" data-cap="jacuzzi"><img src="assets/web/room-patra-garden-jacuzzi-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-garden-living-1600.jpg" data-cap="living"><img src="assets/web/room-patra-garden-living-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-garden-kitchenette-1600.jpg" data-cap="kitchenette"><img src="assets/web/room-patra-garden-kitchenette-800.jpg" alt="" loading="lazy"></button>
+                </div>
+              </div>
+              <a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000008" target="_blank" rel="noopener" data-book-open data-book-room="3446300000000000008"><span data-i18n="stay.bookroom">Check dates for this room</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
             </div>
           </div>
         </div>
       </li>
-      <li class="acc__item" data-stage-name="Standard Room">
-        <button class="acc__head" aria-expanded="false" aria-controls="acc-std">
+      <li class="acc__item" data-room-family="junior">
+        <button class="acc__head" aria-expanded="false" aria-controls="acc-junior">
           <span class="acc__no num" aria-hidden="true">03</span>
-          <span class="acc__name" data-i18n="stay.std.name">Standard Room</span>
-          <span class="acc__thai" data-i18n="stay.std.thai">ห้องสแตนดาร์ด</span>
-          <span class="acc__meta" data-i18n="stay.std.meta">A simpler landing for short escapes</span>
+          <span class="acc__name">Patra Junior Suite</span>
+          <span class="acc__thai" lang="th">ภัทรา จูเนียร์ สวีท</span>
+          <span class="acc__meta" data-i18n="stay.junior.meta">40 m², twin beds, jacuzzi bathtub, garden view</span>
           <span class="acc__toggle" aria-hidden="true"></span>
         </button>
-        <div class="acc__panel" id="acc-std">
-          <div class="acc__grid acc__grid--single">
-            <figure class="acc__media"><img src="assets/web/building-sky-2400.jpg" srcset="assets/web/building-sky-800.jpg 800w, assets/web/building-sky-1600.jpg 1600w, assets/web/building-sky-2400.jpg 2400w, assets/web/building-sky-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="Resort building under a blue sky" data-i18n-attr="alt:stay.std.alt" loading="lazy"></figure>
+        <div class="acc__panel" id="acc-junior">
+          <div class="acc__grid">
             <div class="acc__copy">
-              <p data-i18n="stay.std.desc">Ask the front desk for seasonal availability. Same hills, same breakfast, smaller footprint.</p>
-              <a class="pill pill--ghost" href="tel:+66885041888"><span class="num">088-504-1888</span></a>
+              <p data-i18n="stay.junior.desc">The Patra in a smaller footprint: twin beds, the same jacuzzi bathtub, and a balcony over the garden.</p>
+              <ul class="chips" role="list">
+                <li><b class="num">40 m²</b><span data-i18n="stay.c.size">size</span></li>
+                <li><b data-i18n="stay.c.twinv">Twin</b><span data-i18n="stay.c.beds">beds</span></li>
+                <li><b class="num">2 + 1</b><span data-i18n="stay.c.occ">adults, extra bed</span></li>
+              </ul>
+              <!-- the photographs of this room, one set per view: small screens swipe them here, wide screens show them in the stage -->
+              <div class="rg">
+                <div class="rg__set" data-view="garden" data-room="3446300000000000006">
+                  <button class="rg__shot" data-full="assets/web/room-patra-junior-bedroom-1600.jpg" data-cap="bedroom"><img src="assets/web/room-patra-junior-bedroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-junior-balcony-1600.jpg" data-cap="balcony"><img src="assets/web/room-patra-junior-balcony-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-junior-twin-1600.jpg" data-cap="twin"><img src="assets/web/room-patra-junior-twin-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-junior-jacuzzi-1600.jpg" data-cap="jacuzzi"><img src="assets/web/room-patra-junior-jacuzzi-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-junior-kitchenette-1600.jpg" data-cap="kitchenette"><img src="assets/web/room-patra-junior-kitchenette-800.jpg" alt="" loading="lazy"></button>
+                </div>
+              </div>
+              <a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000006" target="_blank" rel="noopener" data-book-open data-book-room="3446300000000000006"><span data-i18n="stay.bookroom">Check dates for this room</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
             </div>
           </div>
         </div>
       </li>
     </ul>
-    <figure class="stay-stage" aria-hidden="true">
-      <img id="stayImg" src="assets/web/vana-bedroom-2400.jpg" srcset="assets/web/vana-bedroom-800.jpg 800w, assets/web/vana-bedroom-1600.jpg 1600w, assets/web/vana-bedroom-2400.jpg 2400w, assets/web/vana-bedroom-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt=""><img id="stayImgNext" src="" alt="">
-      <figcaption class="stay-stage__cap"><b class="num" id="stayNow">01</b><i></i><span class="num">03</span><span class="stay-stage__name" id="stayName">Vana Suite</span></figcaption>
+    <!-- the gallery of the open room in its chosen view -->
+    <figure class="stay-stage" id="stayStage" aria-label="Photographs of the selected room" data-i18n-attr="aria-label:stay.stagelabel">
+      <div class="stay-stage__view" id="stayView">
+        <img id="stayImg" src="assets/web/room-vana-lake-bedroom-1600.jpg" alt=""><img id="stayImgNext" src="" alt="">
+        <button class="iconbtn iconbtn--glass stay-stage__nav stay-stage__nav--prev" id="stayPrev" aria-label="Previous photo" data-i18n-attr="aria-label:lb.prev"><svg aria-hidden="true"><use href="#i-back"/></svg></button>
+        <button class="iconbtn iconbtn--glass stay-stage__nav stay-stage__nav--next" id="stayNext" aria-label="Next photo" data-i18n-attr="aria-label:lb.next"><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        <figcaption class="stay-stage__cap"><b class="num" id="stayNow">01</b><i></i><span class="num" id="stayTotal">05</span><span class="stay-stage__name" id="stayName"></span></figcaption>
+      </div>
+      <div class="stay-stage__thumbs" id="stayThumbs"></div>
+      <p class="stay-stage__room" id="stayRoom"></p>
     </figure>
     </div>
   </div>
@@ -485,27 +563,27 @@
     <div class="cmp" role="region" tabindex="0" aria-labelledby="compareTitle">
       <table class="cmp__t">
         <thead>
-          <tr><td></td><th scope="col">Vana Suite</th><th scope="col">Patra Suite</th><th scope="col" data-i18n="stay.std.name">Standard Room</th></tr>
+          <tr><td></td><th scope="col">Vana Suite</th><th scope="col">Patra Suite</th><th scope="col">Patra Junior Suite</th></tr>
         </thead>
         <tbody>
-          <tr><th scope="row" data-i18n="cmp.size">Size</th><td class="num">61 m²</td><td class="num">64 m²</td><td class="cmp__ask" data-i18n="cmp.ask">Ask the resort</td></tr>
-          <tr><th scope="row" data-i18n="cmp.beds">Beds</th><td data-i18n="stay.c.bedsv">King or twin</td><td data-i18n="stay.c.bedsv">King or twin</td><td class="cmp__ask" data-i18n="cmp.ask">Ask the resort</td></tr>
-          <tr><th scope="row" data-i18n="cmp.sleeps">Sleeps</th><td data-i18n="cmp.sleepsv">2 adults, plus an extra bed</td><td data-i18n="cmp.sleepsv">2 adults, plus an extra bed</td><td class="cmp__ask" data-i18n="cmp.ask">Ask the resort</td></tr>
-          <tr><th scope="row" data-i18n="cmp.views">Views</th><td data-i18n="stay.vana.viewsv">Lake, garden, country</td><td data-i18n="stay.patra.viewsv">Lake or garden</td><td class="cmp__ask" data-i18n="cmp.ask">Ask the resort</td></tr>
-          <tr><th scope="row" data-i18n="cmp.living">Living room and balcony</th><td><span class="cmp__yes" data-i18n="cmp.yes">Yes</span></td><td><span class="cmp__yes" data-i18n="cmp.yes">Yes</span></td><td class="cmp__ask" data-i18n="cmp.ask">Ask the resort</td></tr>
-          <tr><th scope="row" data-i18n="cmp.tub">Jacuzzi bathtub</th><td class="cmp__no" data-i18n="cmp.no">Not listed</td><td><span class="cmp__yes" data-i18n="cmp.yes">Yes</span></td><td class="cmp__no" data-i18n="cmp.no">Not listed</td></tr>
-          <tr><th scope="row" data-i18n="cmp.robe">Bathrobe and slippers</th><td class="cmp__no" data-i18n="cmp.no">Not listed</td><td><span class="cmp__yes" data-i18n="cmp.yes">Yes</span></td><td class="cmp__no" data-i18n="cmp.no">Not listed</td></tr>
+          <tr><th scope="row" data-i18n="cmp.size">Size</th><td class="num">61 m²</td><td class="num">64 m²</td><td class="num">40 m²</td></tr>
+          <tr><th scope="row" data-i18n="cmp.beds">Beds</th><td data-i18n="stay.c.bedsv">King or twin</td><td data-i18n="stay.c.bedsv">King or twin</td><td data-i18n="stay.c.twinv">Twin</td></tr>
+          <tr><th scope="row" data-i18n="cmp.sleeps">Sleeps</th><td data-i18n="cmp.sleepsv">2 adults, plus an extra bed</td><td data-i18n="cmp.sleepsv">2 adults, plus an extra bed</td><td data-i18n="cmp.sleepsv">2 adults, plus an extra bed</td></tr>
+          <tr><th scope="row" data-i18n="cmp.views">Views</th><td data-i18n="cmp.v3">Lake, garden or country</td><td data-i18n="cmp.v2">Lake or garden</td><td data-i18n="cmp.v1">Garden</td></tr>
+          <tr><th scope="row" data-i18n="cmp.layout">Layout</th><td data-i18n="cmp.sep">Bedroom and separate living room</td><td data-i18n="cmp.sep">Bedroom and separate living room</td><td data-i18n="cmp.open">One open room</td></tr>
+          <tr><th scope="row" data-i18n="cmp.balc">Balcony and kitchenette</th><td><span class="cmp__yes" data-i18n="cmp.yes">Yes</span></td><td><span class="cmp__yes" data-i18n="cmp.yes">Yes</span></td><td><span class="cmp__yes" data-i18n="cmp.yes">Yes</span></td></tr>
+          <tr><th scope="row" data-i18n="cmp.tub">Jacuzzi bathtub</th><td class="cmp__no" data-i18n="cmp.no">Not listed</td><td><span class="cmp__yes" data-i18n="cmp.yes">Yes</span></td><td><span class="cmp__yes" data-i18n="cmp.yes">Yes</span></td></tr>
         </tbody>
         <tfoot>
           <tr><td></td>
-            <td><a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="stay.book">Check dates</span></a></td>
-            <td><a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="stay.book">Check dates</span></a></td>
-            <td><a class="pill pill--ghost" href="tel:+66885041888"><span class="num">088-504-1888</span></a></td>
+            <td><a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000005" target="_blank" rel="noopener" data-book-open data-book-room="3446300000000000005"><span data-i18n="stay.book">Check dates</span></a></td>
+            <td><a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000008" target="_blank" rel="noopener" data-book-open data-book-room="3446300000000000008"><span data-i18n="stay.book">Check dates</span></a></td>
+            <td><a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000006" target="_blank" rel="noopener" data-book-open data-book-room="3446300000000000006"><span data-i18n="stay.book">Check dates</span></a></td>
           </tr>
         </tfoot>
       </table>
     </div>
-    <p class="cmp__note" data-i18n="cmp.note">Figures are the resort's own. The Standard Room is offered by season, so its details come from the front desk.</p>
+    <p class="cmp__note" data-i18n="cmp.note">Sizes and occupancy are the resort's own figures, as listed on its booking page.</p>
   </div>
 </div>
 
