@@ -1185,3 +1185,12 @@ html:not(.js) .drawer__head { position: static; }
   .slides__ctrl { gap: .35rem; }
   .petsec__title { font-size: 1.9rem; }
 }
+
+/* ---------- meetings: Hall A and Hall B beside the full hall (12 October 2026) ---------- */
+.halfcap { width: 100%; margin-top: 1.1rem; border-collapse: collapse; font-size: .9rem; }
+.halfcap caption { caption-side: top; text-align: left; padding-bottom: .5rem; color: var(--muted); font-size: .84rem; }
+.halfcap th, .halfcap td { padding: .6rem .6rem .6rem 0; border-top: 1px solid var(--line); text-align: left; }
+.halfcap thead th { color: var(--forest); font-weight: 500; font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; }
+html[lang="th"] .halfcap thead th { letter-spacing: 0; text-transform: none; font-size: .84rem; }
+.halfcap tbody th { color: var(--muted); font-weight: 400; }
+.halfcap td { color: var(--charcoal); }

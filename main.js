@@ -1477,6 +1477,8 @@
     if (FX) {
       const max = Math.max.apply(null, FX.hall.layouts.map((l) => l.full));
       rows.forEach((b) => { const l = FX.hall.layouts.find((x) => x.key === b.dataset.layout); if (!l) return; b.dataset.n = l.full; $(".bar__n", b).textContent = l.full; $(".bar__fill", b).dataset.w = Math.round(l.full / max * 100); });
+      // the full hall and each half, in the table under the layouts
+      $$("[data-cap]").forEach((td) => { const v = FACTS.val("hall." + td.dataset.cap); if (v != null) td.textContent = v; });
     }
     const f = (n) => (Math.round(n * 10) / 10);
     const seat = (x, y, r) => '<circle class="h-seat" cx="' + f(x) + '" cy="' + f(y) + '" r="' + r + '"/>';

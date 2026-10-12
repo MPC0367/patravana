@@ -10,13 +10,14 @@
    - Run  node _qa/check-facts.mjs  after any change: it checks the page's built-in English against this file.
    ============================================================ */
 window.PV_FACTS = {
-  reviewed: "2026-10-08",                               // when these facts were last checked against the resort's own pages
+  reviewed: "2026-10-12",                               // when these facts were last checked against the resort's own pages
 
   contact: {
     phone: { tel: "+66885041888", show: "+66 88 504 1888", local: "088-504-1888" },
     diningPhones: [{ tel: "+66840887785", show: "+66 84 088 7785" }, { tel: "+66840887786", show: "+66 84 088 7786" }],
     line: { id: "@patravana", url: "https://www.patravana.com/line-qr-code" },   // the resort's LINE page: it shows a QR code, it does not open a chat
     email: "info@patravanaresort.com",
+    diningFacebook: "https://www.facebook.com/PhuYaiLee.KhaoYai/",   // the restaurant's own page, as linked from the resort's dining page
     map: "https://maps.app.goo.gl/nnPAtFGH4KwDBAJA9",
     gps: "14.559493, 101.256252",
     // the resort's own address, as printed on its contact page
@@ -98,11 +99,11 @@ window.PV_FACTS = {
     "pet.askteam": { en: "Which pets, how many, and any conditions are confirmed by the team for your stay.", th: "ประเภทสัตว์เลี้ยง จำนวน และเงื่อนไขต่าง ๆ ทีมงานจะยืนยันให้ตามการเข้าพักของคุณ" },
     "pet.reviewed": { en: "Last reviewed {pet.reviewed}.", th: "ตรวจสอบล่าสุดเมื่อ {pet.reviewed}" },
 
-    "hall.fac": { en: "{hall.area} m² beside the resort, divisible into two rooms, with stage, sound and a dressing room. Up to {hall.theatre.full} guests in theatre rows, full hall.", th: "{hall.area} ตร.ม. ข้างรีสอร์ท แบ่งเป็นสองห้องได้ พร้อมเวที เครื่องเสียง และห้องแต่งตัว รองรับสูงสุด {hall.theatre.full} ท่านแบบเธียเตอร์ เมื่อใช้เต็มห้อง" },
-    "hall.note": { en: "An outdoor amphitheatre over the lake, and a {hall.area} m² seminar hall beside the resort that divides into two rooms.", th: "อัฒจันทร์กลางแจ้งเหนือบึงน้ำ และห้องสัมมนา {hall.area} ตร.ม. ข้างรีสอร์ท ที่แบ่งเป็นสองห้องได้" },
-    "hall.know": { en: "Seminar hall for up to {hall.theatre.full} guests in theatre rows. Send a group enquiry for dates and a quote.", th: "ห้องสัมมนารองรับสูงสุด {hall.theatre.full} ท่านแบบเธียเตอร์ ส่งคำขอแบบหมู่คณะเพื่อสอบถามวันและราคา" },
-    "hall.faq": { en: "Yes. The seminar hall beside the resort is {hall.area} m² and divides into two rooms. With the full hall it takes {hall.theatre.full} guests in theatre rows, {hall.classroom.full} in classroom rows, {hall.banquet.full} for a banquet and {hall.ushape.full} in a U-shape.", th: "ได้ ห้องสัมมนาข้างรีสอร์ทมีพื้นที่ {hall.area} ตร.ม. และแบ่งเป็นสองห้องได้ เมื่อใช้เต็มห้องรองรับ {hall.theatre.full} ท่านแบบเธียเตอร์ {hall.classroom.full} ท่านแบบคลาสรูม {hall.banquet.full} ท่านแบบโต๊ะจีน และ {hall.ushape.full} ท่านแบบตัวยู" },
-    "hall.stat": { en: "of seminar hall beside the resort, up to {hall.theatre.full} guests", th: "ห้องสัมมนาข้างรีสอร์ท รองรับสูงสุด {hall.theatre.full} ท่าน" },
+    "hall.fac": { en: "{hall.area} m², nearby and off the resort grounds, divisible into two rooms, with stage, sound and a dressing room. Up to {hall.theatre.full} guests in theatre rows, full hall.", th: "{hall.area} ตร.ม. อยู่ใกล้รีสอร์ท นอกพื้นที่รีสอร์ท แบ่งเป็นสองห้องได้ พร้อมเวที เครื่องเสียง และห้องแต่งตัว รองรับสูงสุด {hall.theatre.full} ท่านแบบเธียเตอร์ เมื่อใช้เต็มห้อง" },
+    "hall.note": { en: "An outdoor amphitheatre over the lake, and a {hall.area} m² seminar hall nearby, off the resort grounds, that divides into two rooms.", th: "อัฒจันทร์กลางแจ้งเหนือบึงน้ำ และห้องสัมมนา {hall.area} ตร.ม. ที่อยู่ใกล้รีสอร์ท นอกพื้นที่รีสอร์ท ซึ่งแบ่งเป็นสองห้องได้" },
+    "hall.know": { en: "A nearby offsite seminar hall for up to {hall.theatre.full} guests in theatre rows. Send a group enquiry for dates and a quote.", th: "ห้องสัมมนาอยู่ใกล้รีสอร์ท นอกพื้นที่รีสอร์ท รองรับสูงสุด {hall.theatre.full} ท่านแบบเธียเตอร์ ส่งคำขอแบบหมู่คณะเพื่อสอบถามวันและราคา" },
+    "hall.faq": { en: "Yes. The seminar hall is offsite, close to the resort: {hall.area} m², dividing into two rooms. With the full hall it takes {hall.theatre.full} guests in theatre rows, {hall.classroom.full} in classroom rows, {hall.banquet.full} for a banquet and {hall.ushape.full} in a U-shape.", th: "ได้ ห้องสัมมนาอยู่นอกพื้นที่รีสอร์ท ใกล้กับรีสอร์ท มีพื้นที่ {hall.area} ตร.ม. และแบ่งเป็นสองห้องได้ เมื่อใช้เต็มห้องรองรับ {hall.theatre.full} ท่านแบบเธียเตอร์ {hall.classroom.full} ท่านแบบคลาสรูม {hall.banquet.full} ท่านแบบโต๊ะจีน และ {hall.ushape.full} ท่านแบบตัวยู" },
+    "hall.stat": { en: "of seminar hall nearby, offsite, up to {hall.theatre.full} guests", th: "ห้องสัมมนาใกล้รีสอร์ท นอกพื้นที่รีสอร์ท รองรับสูงสุด {hall.theatre.full} ท่าน" },
 
     "dining.note": { en: "Thai cooking with a few international dishes. Up to {dining.seats} seats, indoors and outdoors.", th: "อาหารไทยพร้อมเมนูนานาชาติอีกไม่กี่จาน รองรับได้ถึง {dining.seats} ที่นั่ง ทั้งในร่มและกลางแจ้ง" },
     "dining.fac": { en: "Thai cooking, up to {dining.seats} seats indoors and on the timber deck, breakfast daily from {dining.breakfast.open}.", th: "อาหารไทย รองรับได้ถึง {dining.seats} ที่นั่งในร่มและบนระเบียงไม้ อาหารเช้าทุกวันตั้งแต่ {dining.breakfast.open} น." },
