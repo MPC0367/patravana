@@ -78,7 +78,7 @@ html[lang="th"] .it { font-family: inherit; font-style: normal; font-weight: inh
 
 /* ---------- the language veil and the reading-progress line ---------- */
 /* the logo's divider is a hairline rule, not a dot */
-.brand__sub i, .lockup__sub i { display: inline-block; width: 1px; height: .95em; background: currentColor; vertical-align: -.1em; margin: 0 .7em; opacity: .6; }
+.loader__sub i, .brand__sub i, .lockup__sub i { display: inline-block; width: 1px; height: .95em; background: currentColor; vertical-align: -.1em; margin: 0 .7em; opacity: .6; }
 .veil { position: fixed; inset: 0; z-index: 995; background: var(--forest); transform: scaleX(0); transform-origin: left; pointer-events: none; }
 .progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 91; background: linear-gradient(90deg, var(--forest), var(--sage)); transform: scaleX(0); transform-origin: left; }
 
@@ -949,18 +949,44 @@ section[tabindex="-1"]:focus, div[tabindex="-1"]:focus, aside[tabindex="-1"]:foc
 /* pet stays withdrawn or paused in facts.js: the section, its links and its enquiry step back together */
 html.no-pet #pet-friendly, html.no-pet [href="#pet-friendly"], html.no-pet [data-enquiry="pet"], html.no-pet .book__pet, html.no-pet .stay-pet, html.no-pet [data-pet-item] { display: none !important; }
 
-/* ---------- hero: the page is readable at once; the entrance is a short flourish that needs no script ---------- */
-/* fill-mode is "backwards" on purpose: once the entrance is over these elements are plain again, so the scroll fade
+/* ---------- hero entrance ---------- */
+/* Without the script the entrance plays as the page arrives. With it, the entrance waits for the loading screen to lift
+   (body.is-ready). No rule ever hides these elements: if the cue never came they would simply be sitting in place.
+   fill-mode is "backwards" on purpose: once the entrance is over these elements are plain again, so the scroll fade
    the script adds later is not overruled by a finished animation */
 @keyframes pvRise { from { transform: translateY(105%); } }
 @keyframes pvFade { from { opacity: 0; transform: translateY(14px); } }
-.hero__word { animation: pvRise 1.1s var(--ease) backwards; }
-.hero__line + .hero__line .hero__word { animation-delay: .12s; }
-.hero__eyebrow { animation: pvFade .8s var(--ease) backwards; }
-.hero__sub { animation: pvFade .9s var(--ease) .22s backwards; max-width: 46ch; text-wrap: balance; }
-.hero__cta { animation: pvFade .9s var(--ease) .32s backwards; }
-.hero__meta { animation: pvFade .9s var(--ease) .42s backwards; }
-.dock { animation: pvFade 1s var(--ease) .3s backwards; }
+:is(html:not(.js), html.js body.is-ready) .hero__word { animation: pvRise 1.1s var(--ease) .3s backwards; }
+:is(html:not(.js), html.js body.is-ready) .hero__line + .hero__line .hero__word { animation-delay: .42s; }
+:is(html:not(.js), html.js body.is-ready) .hero__eyebrow { animation: pvFade .8s var(--ease) .45s backwards; }
+:is(html:not(.js), html.js body.is-ready) .hero__sub { animation: pvFade .9s var(--ease) .62s backwards; }
+:is(html:not(.js), html.js body.is-ready) .hero__cta { animation: pvFade .9s var(--ease) .72s backwards; }
+:is(html:not(.js), html.js body.is-ready) .hero__meta { animation: pvFade .9s var(--ease) .82s backwards; }
+:is(html:not(.js), html.js body.is-ready) .dock { animation: pvFade 1s var(--ease) .7s backwards; }
+.hero__sub { max-width: 46ch; text-wrap: balance; }
+
+/* ---------- the loading screen ---------- */
+/* It exists only while the script is running the page: without the script there is nothing to wait for. If the script
+   stops for any reason the loaderGone rule takes the screen away by itself after six seconds, so it can never be left
+   standing over the page. With reduced motion there is no loading screen at all. */
+.loader { display: none; }
+html.js .loader { position: fixed; inset: 0; z-index: 999; overflow: hidden; display: grid; place-items: center; background: var(--ivory); color: var(--charcoal); transition: transform .9s cubic-bezier(.76, 0, .24, 1); animation: loaderGone 0s linear 6s forwards; }
+html.js .loader.is-up { transform: translateY(-101%); pointer-events: none; }
+html.js .loader.is-done { display: none; }
+@keyframes loaderGone { to { visibility: hidden; } }
+.loader__inner { text-align: center; }
+.loader__mark { width: min(190px, 60vw); height: 60px; margin: 0 auto 1.6rem; color: var(--forest); animation: ldMark .8s var(--ease) backwards; }
+.loader__word { font-family: "Montserrat", sans-serif; font-weight: 300; font-size: min(clamp(1.9rem, 5.6vw, 3.2rem), 9.6vw); letter-spacing: .34em; padding-left: .34em; display: flex; justify-content: center; color: var(--forest); }
+.loader__word span { display: inline-block; animation: ldLetter .6s var(--ease) backwards; animation-delay: calc(.14s + var(--i, 0) * .045s); }
+.loader__sub { font-family: "Montserrat", sans-serif; font-weight: 300; margin-top: .55rem; color: var(--earth); font-size: min(.7rem, 3.6vw); letter-spacing: .34em; padding-left: .34em; text-transform: uppercase; animation: ldFade .5s ease .72s backwards; }
+.loader__count { position: fixed; right: var(--pad); bottom: 1.3rem; font-family: "DM Sans", sans-serif; font-weight: 300; font-variant-numeric: tabular-nums; font-size: clamp(3rem, 9vw, 6rem); line-height: 1; letter-spacing: -.02em; color: var(--forest); }
+.loader__unit { font-size: .36em; color: var(--earth); margin-left: .08em; }
+.loader__bar { position: fixed; left: 0; right: 0; bottom: 0; height: 2px; background: var(--line); }
+.loader__bar i { display: block; height: 100%; background: var(--forest); transform-origin: left center; transform: scaleX(0); transition: transform .2s linear; }
+@keyframes ldMark { from { opacity: 0; transform: translateY(18px) scale(.97); } }
+@keyframes ldLetter { from { opacity: 0; transform: translateY(.55em) rotate(3deg); } }
+@keyframes ldFade { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { html.js .loader { display: none; } }
 
 /* ---------- navigation: Stay opens the suites, the comparison and pet-friendly stays ---------- */
 .menu { align-items: center; }

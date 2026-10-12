@@ -146,6 +146,8 @@
      an enhancement laid over it. If none of them can be played, the photograph, the headline and the booking bar
      are all still there. */
   const heroVideo = $("#heroVideo");
+  const loader = $("#loader");
+  let booted = false;                                 // has the loading screen lifted (see initLoader)
 
   /* hero slideshow: each clip crossfades into the next, the last back into the first.
      The slide control shows which film is on, how far through it is, and lets the visitor step or pause. */
@@ -216,6 +218,13 @@
     if (mem) ways.push({ kind: "memory", url: mem });
     return ways;
   }
+  // The opening film, when it is a plain file, starts playing behind the loading screen: a phone fetches nothing of a
+  // file until it is asked to play. As the screen lifts the film is wound back to its first frame (see clipPlay).
+  function prime(c) {
+    if (booted || reduced || c !== allClips[0]) return;
+    c._primed = true;
+    const p = c.play(); if (p) p.catch((e) => { if (e && e.name === "NotAllowedError") armGesture(); });
+  }
   // at: where to pick the film up (a film moved to a smaller file carries on from where it was)
   function setFile(c, url, at) {
     c._pv = null; c._stalls = 0; c._waitAt = 0; c._fileAt = performance.now();
@@ -247,7 +256,7 @@
       if (apple && /^data:/.test(w.url)) { nextWay(c, "this host cannot serve part of a file"); return; }
       // otherwise the file is asked for at once. Whether this host can serve part of a file is checked alongside, not
       // first: on a host that can, which is the usual case, the film starts a round trip sooner
-      setFile(c, w.url, at);
+      setFile(c, w.url, at); prime(c);
       if (apple) hostRanges(w.url).then((can) => { if (!can && c._way === w) nextWay(c, "this host cannot serve part of a file"); });
     } else {
       if (!apple || (await hostRanges(w.url))) { if (c._way === w) nextWay(c, "file would not play"); return; }
@@ -255,10 +264,10 @@
       try { blob = /^data:/.test(w.url) ? dataToBlob(w.url) : await (await fetch(w.url)).blob(); } catch (e) { blob = null; }
       if (c._way !== w) return;
       if (!blob) { nextWay(c, "could not fetch the file"); return; }
-      setFile(c, URL.createObjectURL(blob));
+      setFile(c, URL.createObjectURL(blob)); prime(c);
     }
     note(c, w.kind + (w.url && !/^data:|^blob:/.test(w.url) ? " " + w.url.split("/").pop().slice(0, 28) : ""));
-    if (c === activeClip()) playHero();
+    if (c === activeClip() && booted) playHero();
   }
   function nextWay(c, why, keepTime) {
     if (!c._ways || !c._ways.length) return;
@@ -292,6 +301,7 @@
   function clipPlay(v) {
     if (!v._asked || v.paused) v._asked = performance.now();
     if (v._pv) { v._pv.play(); return; }
+    if (v._primed) { v._primed = false; if (v.currentTime > .03) { try { v.currentTime = 0; } catch (e) { /* plays on from where it is */ } } }
     const p = v.play(); if (p) p.catch((e) => { if (e && e.name === "NotAllowedError") armGesture(); });
   }
   function clipPause(v) { if (v._pv) v._pv.pause(); else v.pause(); }
@@ -384,7 +394,7 @@
         if (rank != null) clips.forEach((c) => { if (c === v || !c._way || c._way.kind !== "file") return; let moved = false; while (c._ways[0] && c._ways[0].kind === "file" && c._ways[0].rank < rank && c._ways[1] && c._ways[1].kind === "file") { c._ways.shift(); moved = true; } if (moved) { note(c, "moved to the lighter file as well"); startWay(c); } });
         return;
       }
-      if (!heroSeen) return;
+      if (!booted || !heroSeen) return;
       if (v.currentTime !== v._lastT) { v._lastT = v.currentTime; v._moved = now; return; }
       const idle = now - Math.max(v._moved || 0, v._asked || 0);
       // a film that has never moved is still making its first start, which now happens in the open: it gets a little longer
@@ -397,10 +407,26 @@
     initHeroClips();
     new IntersectionObserver((en) => en.forEach((x) => {
       heroSeen = x.isIntersecting;
-      if (reduced) return;
+      if (!booted || reduced) return;
       if (x.isIntersecting) playHero(); else clips.forEach(clipPause);
     })).observe($("#hero") || heroVideo);
   }
+
+  /* ---------- the loading screen ----------
+     The screen is run by the small script that sits next to it in the page (see index.html), so it never waits for this
+     file. What this file adds: it says that it has started and when the first film holds a frame, and it is told when
+     the screen lifts, which is the cue to start the film. */
+  function initLoader() {
+    const L = window.PVLoad;
+    const start = () => { if (booted) return; booted = true; document.body.classList.add("is-ready"); playHero(); };
+    if (!L) { if (loader) loader.classList.add("is-done"); start(); return; }
+    L.mark("script");
+    const film = allClips[0];
+    if (!film || reduced || film.readyState >= 2) L.mark("film");
+    else ["loadeddata", "canplay", "playing"].forEach((t) => film.addEventListener(t, () => L.mark("film"), { once: true }));
+    L.onLift(start);
+  }
+  initLoader();
 
   /* ---------- scrolling ----------
      The browser scrolls the page. A jump to a section lands just under the fixed header, moves smoothly unless the
@@ -1578,7 +1604,7 @@
         const tail = ", decoded " + v.videoWidth + "x" + v.videoHeight + ", t " + v.currentTime.toFixed(1) + ", ready " + v.readyState + (v.paused ? ", paused" : "") + (v.error ? ", ERROR " + v.error.code : "");
         if (v._pv && !v._pv.dead) { const d = v._pv.info(); return on + "film " + (i + 1) + ": stream " + d.size + " " + d.mbps + " Mbps" + tail + ", ahead " + d.ahead + "s, net " + d.net + " Mbps, dropped " + d.dropped + ", " + d.via + (d.open ? "" : " (not open)") + ", shift " + d.shift; }
         return on + "film " + (i + 1) + ": " + way + " " + (v.currentSrc || "none").split("/").pop().slice(0, 24) + tail;
-      }).join("\n") + "\nscreen " + window.innerWidth + "x" + window.innerHeight + " @" + (window.devicePixelRatio || 1) + (gestureArmed ? " | WAITING FOR A TOUCH" : "") +
+      }).join("\n") + "\nscreen " + window.innerWidth + "x" + window.innerHeight + " @" + (window.devicePixelRatio || 1) + (gestureArmed ? " | WAITING FOR A TOUCH" : "") + (booted ? "" : " | loading") +
         "\n" + filmLog.join("\n") + "\n" + navigator.userAgent.replace(/Mozilla\/5\.0 /, "").slice(0, 110);
     }, 1000);
   }
@@ -1604,7 +1630,6 @@
     // figures the page counts up to are facts too
     $$("[data-count-fact]").forEach((el) => { const v = FACTS.val(el.dataset.countFact); if (v != null) { el.dataset.count = v; el.textContent = v; } });
     I18N.capture(); I18N.apply(initialLang());
-    document.body.classList.add("is-ready");
     initOffers(); initHall(); initMotion(); initStay(); initRadius(); initMap(); initReel(); initDrawers(); initBooking(); initEnquiry(); initPet(); initCopy(); initClock(); initSky(); initDining(); initNight(); initLang(); initDiag(); onScroll();
     // A link that names a section (…/#pet-friendly): the browser goes there as the page is parsed, and once everything
     // above it has taken its final size the landing is squared up, unless the visitor has already started to scroll

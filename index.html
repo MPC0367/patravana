@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300..800&family=Fraunces:ital,opsz,wght@1,9..144,300..500&family=DM+Sans:opsz,wght@9..40,300..600&family=Prompt:wght@300;400;500;600&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=f45c4395">
+<link rel="stylesheet" href="styles.css?v=8ee793d6">
 </head>
 <body>
 
@@ -34,6 +34,46 @@
 
 <a class="skip" href="#offers" data-i18n="a11y.skip">Skip to content</a>
 
+<!-- ===== loading screen: shown only when scripts run (see .loader in the stylesheet); the script right below runs it ===== -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__inner">
+    <i class="loader__mark pv-mark" aria-hidden="true"></i>
+    <div class="loader__word" aria-hidden="true"><span style="--i:0">P</span><span style="--i:1">A</span><span style="--i:2">T</span><span style="--i:3">R</span><span style="--i:4">A</span><span style="--i:5">V</span><span style="--i:6">A</span><span style="--i:7">N</span><span style="--i:8">A</span></div>
+    <p class="loader__sub">Resort <i aria-hidden="true"></i> Khao Yai</p>
+    <div class="loader__count" aria-hidden="true"><span id="loaderPct">0</span><span class="loader__unit">%</span></div>
+    <div class="loader__bar" aria-hidden="true"><i id="loaderBar"></i></div>
+  </div>
+</div>
+<script>
+/* The loading screen runs from here, next to its own markup, so it never waits for a script that is still on its way.
+   It lifts when the fonts, the hero photograph, the main script and the first film frame are all in, and in any case
+   2.5 seconds after the page was asked for (it stays at least 1.1 seconds, the time its wordmark takes to draw).
+   main.js reports the last two steps with PVLoad.mark and starts the film on the lift. The count follows the steps. */
+(function () {
+  var d = document, l = d.getElementById("loader"), pct = d.getElementById("loaderPct"), bar = d.getElementById("loaderBar");
+  var weight = { fonts: 20, photo: 25, script: 20, film: 35 }, done = {}, waiting = [], lifted = false, going = false, shown = 0, timer = 0;
+  var HOLD = 160, t0 = performance.now(), minAt = t0 + 1100, capAt = Math.max(2500 - HOLD, minAt);   /* HOLD: the count rests on 100 for a moment before the lift */
+  function target() { var a = 0, k; for (k in weight) if (done[k]) a += weight[k]; return a; }
+  function paint(v) { if (pct) pct.textContent = String(Math.round(v)); if (bar) bar.style.transform = "scaleX(" + (v / 100).toFixed(4) + ")"; }
+  function lift() {
+    if (lifted) return; lifted = api.lifted = true;
+    d.body.classList.add("is-ready");                       /* the hero's entrance takes its cue from this */
+    if (l) { l.classList.add("is-up"); setTimeout(function () { l.classList.add("is-done"); }, 950); }
+    waiting.splice(0).forEach(function (fn) { fn(); });
+  }
+  function go() { if (going) return; going = true; clearInterval(timer); paint(100); setTimeout(lift, HOLD); }
+  function check() { var t = performance.now(); if (!going && ((target() >= 100 && t >= minAt) || t >= capAt)) go(); }
+  var api = window.PVLoad = { lifted: false, mark: function (k) { done[k] = true; check(); }, onLift: function (fn) { if (lifted) fn(); else waiting.push(fn); } };
+  if (!l || (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) { if (l) l.classList.add("is-done"); lift(); return; }
+  /* a timer, not animation frames: a tab in the background still gets there */
+  timer = setInterval(function () {
+    if (!done.fonts && performance.now() - t0 > 200 && (!d.fonts || d.fonts.status === "loaded")) done.fonts = true;
+    if (!done.photo) { var p = d.querySelector(".hero__poster"); if (p && p.complete) done.photo = true; }
+    shown += (Math.min(99, target()) - shown) * .22; paint(shown); check();
+  }, 40);
+  setTimeout(go, Math.max(0, capAt - performance.now()));
+})();
+</script>
 <div class="veil" id="veil" aria-hidden="true"></div>
 <div class="progress" id="progress" aria-hidden="true"></div>
 
@@ -1089,6 +1129,6 @@
 <script src="film-manifest.js?v=1ca8444e" defer></script>
 <script src="film-stream.js?v=791d49af" defer></script>
 <!-- if the main script cannot be fetched, the page falls back to its plain form: panels open, script-only controls hidden -->
-<script src="main.js?v=1beb19ea" defer onerror="document.documentElement.classList.remove('js')"></script>
+<script src="main.js?v=290e1f30" defer onerror="document.documentElement.classList.remove('js')"></script>
 </body>
 </html>
