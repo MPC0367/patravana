@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300..800&family=Fraunces:ital,opsz,wght@1,9..144,300..500&family=DM+Sans:opsz,wght@9..40,300..600&family=Prompt:wght@300;400;500;600&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=8ee793d6">
+<link rel="stylesheet" href="styles.css?v=c6f68ee9">
 </head>
 <body>
 
@@ -46,14 +46,17 @@
 </div>
 <script>
 /* The loading screen runs from here, next to its own markup, so it never waits for a script that is still on its way.
-   It lifts when the fonts, the hero photograph, the main script and the first film frame are all in, and in any case
-   2.5 seconds after the page was asked for (it stays at least 1.1 seconds, the time its wordmark takes to draw).
-   main.js reports the last two steps with PVLoad.mark and starts the film on the lift. The count follows the steps. */
+   It lifts when the fonts, the hero photograph and the main script are in and the opening film is really moving behind
+   it, so the screen rises onto a film that is already running. It stays at least 1.1 seconds, the time its wordmark
+   takes to draw, and never longer than 5 seconds after the page was asked for: a film slower than that is met as its
+   still photograph. main.js reports the last two steps with PVLoad.mark. The count follows the steps, and while the
+   film is the only thing still to come it keeps creeping, so it never looks stuck. */
 (function () {
   var d = document, l = d.getElementById("loader"), pct = d.getElementById("loaderPct"), bar = d.getElementById("loaderBar");
   var weight = { fonts: 20, photo: 25, script: 20, film: 35 }, done = {}, waiting = [], lifted = false, going = false, shown = 0, timer = 0;
-  var HOLD = 160, t0 = performance.now(), minAt = t0 + 1100, capAt = Math.max(2500 - HOLD, minAt);   /* HOLD: the count rests on 100 for a moment before the lift */
+  var HOLD = 160, t0 = performance.now(), minAt = t0 + 1100, capAt = Math.max(5000 - HOLD, minAt);   /* HOLD: the count rests on 100 for a moment before the lift */
   function target() { var a = 0, k; for (k in weight) if (done[k]) a += weight[k]; return a; }
+  function estimate() { var a = target(); return done.film ? a : a + 30 * (1 - Math.exp(-(performance.now() - t0) / 1800)); }
   function paint(v) { if (pct) pct.textContent = String(Math.round(v)); if (bar) bar.style.transform = "scaleX(" + (v / 100).toFixed(4) + ")"; }
   function lift() {
     if (lifted) return; lifted = api.lifted = true;
@@ -69,7 +72,7 @@
   timer = setInterval(function () {
     if (!done.fonts && performance.now() - t0 > 200 && (!d.fonts || d.fonts.status === "loaded")) done.fonts = true;
     if (!done.photo) { var p = d.querySelector(".hero__poster"); if (p && p.complete) done.photo = true; }
-    shown += (Math.min(99, target()) - shown) * .22; paint(shown); check();
+    shown += (Math.min(99, estimate()) - shown) * .22; paint(shown); check();
   }, 40);
   setTimeout(go, Math.max(0, capAt - performance.now()));
 })();
@@ -1127,8 +1130,8 @@
 <script src="i18n.js?v=433f92fa" defer></script>
 <script src="scene.js?v=29086502" defer></script>
 <script src="film-manifest.js?v=1ca8444e" defer></script>
-<script src="film-stream.js?v=791d49af" defer></script>
+<script src="film-stream.js?v=488f7e3a" defer></script>
 <!-- if the main script cannot be fetched, the page falls back to its plain form: panels open, script-only controls hidden -->
-<script src="main.js?v=290e1f30" defer onerror="document.documentElement.classList.remove('js')"></script>
+<script src="main.js?v=2b670a0f" defer onerror="document.documentElement.classList.remove('js')"></script>
 </body>
 </html>

@@ -218,13 +218,16 @@
     if (mem) ways.push({ kind: "memory", url: mem });
     return ways;
   }
-  // The opening film, when it is a plain file, starts playing behind the loading screen: a phone fetches nothing of a
-  // file until it is asked to play. As the screen lifts the film is wound back to its first frame (see clipPlay).
+  // The opening film starts playing behind the loading screen, however it is played: a phone fetches nothing of a file
+  // until it is asked to play, and a film that is already running when the screen lifts needs no start in the open.
+  // It is not wound back at the lift (a seek is a pause on a phone): the screen lifts within a second or two of the
+  // film's first picture, so the film is simply met a moment in.
   function prime(c) {
     if (booted || reduced || c !== allClips[0]) return;
-    c._primed = true;
-    const p = c.play(); if (p) p.catch((e) => { if (e && e.name === "NotAllowedError") armGesture(); });
+    clipPlay(c);
   }
+  // tells the loading screen that the opening film is in: either it is really moving, or it is not going to (see initLoader)
+  const filmIn = () => { if (window.PVLoad) window.PVLoad.mark("film"); };
   // at: where to pick the film up (a film moved to a smaller file carries on from where it was)
   function setFile(c, url, at) {
     c._pv = null; c._stalls = 0; c._waitAt = 0; c._fileAt = performance.now();
@@ -236,6 +239,7 @@
     // nothing plays this film here: it leaves the rotation, and the other one (or the poster) carries the hero
     note(c, "cannot be played on this device");
     c._pv = null; c._way = null;
+    if (c === allClips[0]) filmIn();                    // the loading screen has nothing to wait for
     clips = clips.filter((x) => x !== c); c.classList.remove("is-on", "is-prev"); c.style.display = "none";
     clipIdx = Math.min(clipIdx, Math.max(0, clips.length - 1));
     if (clips.length === 1) { clips[0].loop = true; clips[0].classList.add("is-on"); playHero(); }
@@ -251,6 +255,7 @@
       c._pv = ctl;
       $$("source", c).forEach((s) => s.remove()); c.removeAttribute("src"); c.load();   // nothing of the single file is fetched
       if (c === allClips[0] || warmed) ctl.start();          // the opening film starts buffering at once; the others wait their turn
+      prime(c);
     } else if (w.kind === "file") {
       // a film carried inside the page itself can never be served in parts, which Safari insists on: straight to the next way
       if (apple && /^data:/.test(w.url)) { nextWay(c, "this host cannot serve part of a file"); return; }
@@ -280,6 +285,7 @@
   // a browser may refuse to start a film until the page has been touched (Low Power Mode does this): the first tap starts it
   function armGesture() {
     if (gestureArmed) return; gestureArmed = true;
+    filmIn();                                           // no film until a touch: the loading screen does not wait for it
     filmLog.push("playback waits for a first touch"); if (filmLog.length > 8) filmLog.shift();
     // the control shows as a play button with a line saying what to do, so the still hero reads as paused, not broken
     if (slidesEl) slidesEl.classList.add("is-film", "is-waiting");
@@ -301,7 +307,6 @@
   function clipPlay(v) {
     if (!v._asked || v.paused) v._asked = performance.now();
     if (v._pv) { v._pv.play(); return; }
-    if (v._primed) { v._primed = false; if (v.currentTime > .03) { try { v.currentTime = 0; } catch (e) { /* plays on from where it is */ } } }
     const p = v.play(); if (p) p.catch((e) => { if (e && e.name === "NotAllowedError") armGesture(); });
   }
   function clipPause(v) { if (v._pv) v._pv.pause(); else v.pause(); }
@@ -414,16 +419,35 @@
 
   /* ---------- the loading screen ----------
      The screen is run by the small script that sits next to it in the page (see index.html), so it never waits for this
-     file. What this file adds: it says that it has started and when the first film holds a frame, and it is told when
-     the screen lifts, which is the cue to start the film. */
+     file. What this file adds: it says that it has started and when the opening film is really moving, and it is told
+     when the screen lifts. The film is started behind the screen (see prime), so the screen lifts onto a film that is
+     already running: nothing has to start in the open. A first frame held still does not count as moving. */
   function initLoader() {
     const L = window.PVLoad;
-    const start = () => { if (booted) return; booted = true; document.body.classList.add("is-ready"); playHero(); };
+    const start = () => {
+      if (booted) return; booted = true; document.body.classList.add("is-ready");
+      if (heroSeen) playHero(); else clips.forEach(clipPause);   // arrived on a link to a section further down: no film off screen
+    };
     if (!L) { if (loader) loader.classList.add("is-done"); start(); return; }
     L.mark("script");
     const film = allClips[0];
-    if (!film || reduced || film.readyState >= 2) L.mark("film");
-    else ["loadeddata", "canplay", "playing"].forEach((t) => film.addEventListener(t, () => L.mark("film"), { once: true }));
+    if (!film || reduced || !clips.length) filmIn();
+    else {
+      // moving: a picture from a tenth of a second into the film has reached the screen (or, where the browser cannot
+      // say which picture is showing, the film's clock has passed that point while playing), and there is a second and
+      // a half of film in hand, so the screen does not lift on a film that is about to stop and wait for more
+      const inHand = () => { const b = film.buffered, t = film.currentTime; for (let i = 0; i < b.length; i++) if (b.start(i) <= t + .15 && b.end(i) > t) return b.end(i) - t; return 0; };
+      // (a browser that does not report what it has buffered, or reports it oddly, is taken at its word that it can
+      // play on: at once where it reports nothing, and after a good second of running film otherwise)
+      const moving = () => {
+        if (film.paused || film.currentTime < .1) return false;
+        if (inHand() < 1.5 && !(film.readyState >= 3 && (!film.buffered.length || film.currentTime >= 1.2))) return false;
+        filmIn(); return true;
+      };
+      if (film.requestVideoFrameCallback) { const seen = (now, m) => { if (booted) return; if (m.mediaTime >= .1 && moving()) return; film.requestVideoFrameCallback(seen); }; film.requestVideoFrameCallback(seen); }
+      const tick = () => { if (booted || moving()) film.removeEventListener("timeupdate", tick); };
+      film.addEventListener("timeupdate", tick);
+    }
     L.onLift(start);
   }
   initLoader();

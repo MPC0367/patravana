@@ -33,7 +33,7 @@
     // ti: the size the next part is fetched in. cap: the largest size this screen and this device should get.
     const S = { ti: want, cap: want, started: false, attached: false, dead: false, hold: false, loading: null, ctl: null, ms: null, sb: null, url: "",
       wantPlay: false, proved: false, fed: false, rate: 0, stalls: 0, stallsEver: 0, lowered: false, mixed: false, shownTi: -1, lastTi: -1,
-      lastKey: "", lastEnd: -1, f0: 0, d0: 0, bad: 0, timer: 0, placed: false, kept: [], shift: 0 };
+      lastKey: "", lastEnd: -1, f0: 0, d0: 0, bad: 0, timer: 0, placed: false, kept: [], shift: 0, guessed: false };
 
     const updated = () => new Promise((res) => S.sb.addEventListener("updateend", res, { once: true }));
     function aheadEnd(t) { const b = video.buffered; for (let i = 0; i < b.length; i++) if (b.start(i) <= t + .15 && b.end(i) > t) return b.end(i); return t; }
@@ -53,17 +53,41 @@
     // list that cancels it. Some browsers apply the edit list when streaming and some do not, and a film whose first
     // picture is not at zero never starts in Safari. So nothing is assumed: the first pictures are appended, the start
     // of the buffer is read back, and if it is not zero the film is pulled back by exactly that much and appended again.
+    //
+    // Taking the film out and putting it back is not free: a player that has already read the first pictures can then
+    // stutter for the first three seconds of the film (measured in Chrome and Edge: a third of the pictures shown).
+    // So where the answer is known beforehand the shift is set before the first append and nothing is taken out:
+    // Chromium (Chrome, Edge, Android browsers) never applies the edit list. The reading stays as the check on that.
+    // And where the film does have to go in a second time, in any other browser, it is followed by a seek to the
+    // start, which makes the player read the film afresh. (Nothing about this is stored on the visitor's device.)
+    function preset() {                                  // called once, before the first append
+      if (/[?&]film=measure\b/.test(location.search)) return;   // for testing: take the measuring path, as other browsers do
+      if (!(man.pts0 > .004) || !/Chrom(e|ium)\//.test(ua)) return;
+      // the manifest rounds the lead-in to five places: stop a hair short of it, so no first picture can land before zero
+      S.shift = -(man.pts0 - .00001); S.sb.timestampOffset = S.shift; S.guessed = true;
+    }
+    function afresh() { try { if (video.currentTime < .5) video.currentTime = 0; } catch (e) { /* not seekable yet */ } }
     async function place() {
-      let start = 0;
+      let start = 0, again = false;
       try { if (!S.sb.buffered.length) return false; start = S.sb.buffered.start(0); } catch (e) { return false; }
-      S.placed = true;
-      const kept = S.kept; S.kept = null;
-      if (start < .004) return true;
+      const kept = S.kept;
+      if (start >= .004 && S.guessed) {
+        // the shift set beforehand was wrong for this browser: start over with none, and read the buffer again
+        S.guessed = false;
+        S.sb.abort(); await clear(0, man.dur + 1);
+        S.shift = 0; S.sb.timestampOffset = 0;
+        for (const k of kept) await appendChunk(k);
+        try { start = S.sb.buffered.length ? S.sb.buffered.start(0) : 0; } catch (e) { start = 0; }
+        again = true;
+      }
+      S.placed = true; S.kept = null;
+      if (start < .004) { if (again) afresh(); return true; }
       if (start > .5) throw new Error("the film's first pictures were not accepted (buffer starts at " + start.toFixed(2) + " s)");
       S.sb.abort();
       await clear(0, man.dur + 1);
       S.shift = -start; S.sb.timestampOffset = S.shift;
       for (const k of kept) await appendChunk(k);
+      afresh();
       return true;
     }
     async function loadPart(ti, pi) {
@@ -150,6 +174,7 @@
         try {
           S.sb = ms.addSourceBuffer(tiers[S.ti].mime);
           ms.duration = man.dur;
+          preset();
         } catch (e) { fail(e); return; }
         setTimeout(() => { if (!S.fed) fail(new Error("no film data arrived")); }, 20000);
         pump();
