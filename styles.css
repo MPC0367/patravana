@@ -212,9 +212,17 @@ body.has-overlay .cindex { opacity: 0; pointer-events: none; }
    page's largest paint. While it waits it is kept to a few pixels (never hidden: Safari will not play a film it
    cannot see), and takes the full frame the moment it is brought on. */
 .hero__video:not(.is-on):not(.is-prev) { width: 4px; height: 4px; }
-.hero__shade { position: absolute; inset: 0; z-index: 2; pointer-events: none; background:
+.hero__shade { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.hero__shade::before, .hero__shade::after { content: ""; position: absolute; inset: 0; transition: opacity 1.4s linear; }
+.hero__shade::before { background:
   linear-gradient(180deg, rgba(27,31,28,.5) 0%, rgba(27,31,28,.1) 24%, rgba(27,31,28,.18) 46%, rgba(27,31,28,.62) 76%, rgba(27,31,28,.88) 100%),
   linear-gradient(90deg, rgba(27,31,28,.34) 0%, rgba(27,31,28,0) 58%); }
+/* the light film's shade (see "the hero's words follow the film"): the same dark ground under the lower words, but no
+   darkening at the top and left, where the words are dark */
+.hero__shade::after { opacity: 0; background:
+  linear-gradient(180deg, rgba(27,31,28,.08) 0%, rgba(27,31,28,0) 24%, rgba(27,31,28,.06) 50%, rgba(27,31,28,.6) 76%, rgba(27,31,28,.88) 100%); }
+[data-tone="light"] .hero__shade::before { opacity: 0; }
+[data-tone="light"] .hero__shade::after { opacity: 1; }
 .hero__grid { position: relative; z-index: 3; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 2rem clamp(2rem, 5vw, 5rem); }
 .hero__content { max-width: 1040px; text-shadow: 0 1px 22px rgba(27,31,28,.35); }
 .eyebrow { color: var(--forest); font-size: .8rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 500; }
@@ -222,7 +230,7 @@ body.has-overlay .cindex { opacity: 0; pointer-events: none; }
 html[lang="th"] .eyebrow { letter-spacing: .04em; }
 .hero__eyebrow { display: flex; align-items: center; gap: 1rem; }
 .hero__eyebrow i { display: block; width: clamp(2.2rem, 5vw, 4.5rem); height: 1px; background: currentColor; opacity: .75; transform-origin: left center; }
-.hero__h1 { margin-top: 1.1rem; font-family: var(--f-display); font-weight: 500; font-size: clamp(3.5rem, min(12.6vw, 19vh), 11.5rem); line-height: .9; letter-spacing: -.045em; color: var(--ivory); }
+.hero__h1 { position: relative; margin-top: 1.1rem; font-family: var(--f-display); font-weight: 500; font-size: clamp(3.5rem, min(12.6vw, 19vh), 11.5rem); line-height: .9; letter-spacing: -.045em; color: var(--ivory); }
 .hero__h1 .it { font-weight: 300; font-size: 1.07em; letter-spacing: -.035em; padding-right: .04em; }
 html[lang="th"] .hero__h1 { font-weight: 500; line-height: 1.22; letter-spacing: 0; font-size: clamp(2.8rem, min(9.4vw, 17vh), 8rem); }
 html[lang="th"] .hero__h1 .it { font-weight: 500; font-size: 1em; padding: 0; }
@@ -1234,3 +1242,30 @@ html:not(.js) .drawer__head { position: static; }
 html[lang="th"] .halfcap thead th { letter-spacing: 0; text-transform: none; font-size: .84rem; }
 .halfcap tbody th { color: var(--muted); font-weight: 400; }
 .halfcap td { color: var(--charcoal); }
+
+/* ---------- the hero's words follow the film ----------
+   The drone film is bright, hazy sky above dark hills. While it is on, body[data-tone="light"] (set by the film
+   rotation, half way into the crossfade, see setTone in main.js): the words that sit on the sky (the header, the line
+   above the heading, the heading) turn deep forest, and a soft mist gathers behind the heading so it stays clear where
+   it crosses the hills; the words lower down (the line under the heading, the buttons, the slide control, the facts)
+   stay ivory over the dark ground. Chosen by measuring the film behind each piece of text through its whole length
+   (_qa/hero-contrast.mjs). The header only follows while it is transparent, at the very top of the page. */
+.hero__h1::before { content: ""; position: absolute; z-index: -1; inset: -16% -5% -8% -4%; pointer-events: none;
+  background: rgba(244,240,231,.3); border-radius: 45%; filter: blur(clamp(22px, 3.6vw, 56px));
+  opacity: 0; transition: opacity .9s ease; }
+[data-tone="light"] .hero__h1::before { opacity: 1; }
+[data-tone="light"] .hero__h1 { color: var(--deep); text-shadow: 0 0 .28em rgba(244,240,231,.32); }
+[data-tone="light"] .hero__h1 .it { color: var(--forest); }
+[data-tone="light"] .hero .eyebrow { color: var(--deep); }
+[data-tone="light"] .top:not(.is-solid):not(.is-menu) :is(.brand, .lang__opt.is-on) { color: var(--deep); }
+[data-tone="light"] .top:not(.is-solid):not(.is-menu) :is(.menu a, .menu__more, .lang) { color: var(--charcoal); }
+[data-tone="light"] .top:not(.is-solid):not(.is-menu) .menu a:is(:hover, :focus-visible, .is-active) { color: var(--forest); }
+[data-tone="light"] .top:not(.is-solid):not(.is-menu) .burger span { background: var(--charcoal); }
+[data-tone="light"] .top:not(.is-solid):not(.is-menu) :focus-visible { outline-color: var(--forest); }
+[data-tone="light"] .hero [data-hero-up] :focus-visible { outline-color: var(--forest); }
+/* during the switch itself the colours take as long as the crossfade's second half */
+.is-toning :is(.hero__h1, .hero__h1 .it, .hero .eyebrow, .top .brand, .top .menu a, .top .menu__more, .top .lang, .top .lang__opt) { transition: color .9s ease, text-shadow .9s ease !important; }
+.is-toning .top .burger span { transition: background .9s ease !important; }
+@media (prefers-reduced-motion: reduce) { .hero__h1::before, .hero__shade::before, .hero__shade::after { transition: none; } }
+/* on a phone held upright the line under the heading sits on the bright haze too, so there it follows the heading */
+@media (max-width: 40em) and (orientation: portrait) { [data-tone="light"] .hero__sub { color: var(--deep); } .is-toning .hero__sub { transition: color .9s ease !important; } }

@@ -242,6 +242,7 @@
     clips = clips.filter((x) => x !== c); c.classList.remove("is-on", "is-prev"); c.style.display = "none";
     clipIdx = Math.min(clipIdx, Math.max(0, clips.length - 1));
     if (clips.length === 1) { clips[0].loop = true; clips[0].classList.add("is-on"); playHero(); }
+    setTone(activeClip());
     paintSlide();
   }
   async function startWay(c, at) {
@@ -325,6 +326,21 @@
       if (!playHero.warming) { playHero.warming = true; setTimeout(warm, 4000); }
     }
   }
+  // The hero's words follow the film on screen (see "the hero's words follow the film" in the stylesheet): the drone
+  // film is bright sky above dark hills, so while it is on the words that sit on the sky turn dark.
+  const TONE = { heroVideo2: "light" };
+  let toneTimer = 0, toningTimer = 0;
+  function setTone(c, later) {
+    clearTimeout(toneTimer);
+    const apply = () => {
+      const tone = (c && TONE[c.id]) || "dark";
+      if (document.body.dataset.tone === tone) return;
+      document.body.classList.add("is-toning"); clearTimeout(toningTimer);
+      document.body.dataset.tone = tone;
+      toningTimer = setTimeout(() => document.body.classList.remove("is-toning"), 1000);
+    };
+    if (later) toneTimer = setTimeout(apply, later); else apply();
+  }
   function handOver(toIdx) {
     if (handing || clips.length < 2) return;
     const next = toIdx == null ? (clipIdx + 1) % clips.length : toIdx;
@@ -335,6 +351,7 @@
     clipPlay(to);
     from.classList.remove("is-on"); from.classList.add("is-prev");   // held visible underneath while the next fades in
     to.classList.add("is-on");
+    setTone(to, FADE * 1000 * .35);                    // the words change over the second half of the crossfade
     clipIdx = next; paintSlide(); paintBars();
     setTimeout(() => {
       from.classList.remove("is-prev");
@@ -350,6 +367,7 @@
   }
   function initHeroClips() {
     if (!clips.length) return;
+    if (!reduced) setTone(activeClip());                // reduced motion shows the first film's still: its words stay as they are
     // Nothing here ever hides a film that is still trying to load: Safari will not start, and will pause, a film it
     // cannot see, so a hidden film would stay hidden for good. An unloaded film is transparent over the poster anyway.
     clips.forEach((c) => { c._ways = waysFor(c); });
