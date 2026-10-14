@@ -975,17 +975,31 @@ html.js .loader.is-up { transform: translateY(-101%); pointer-events: none; }
 html.js .loader.is-done { display: none; }
 @keyframes loaderGone { to { visibility: hidden; } }
 .loader__inner { text-align: center; }
-.loader__mark { width: min(190px, 60vw); height: 60px; margin: 0 auto 1.6rem; color: var(--forest); animation: ldMark .8s var(--ease) backwards; }
+/* The art inside (index.html, written by _qa/gen-loader.mjs): the mark is the real logo, uncovered by a band that is
+   painted along each brush stroke; the letters are single strokes on the centre lines of the typeface, each written
+   in turn (--d: when it starts, --t: how long it takes). Once they are written and the fonts are in, the script
+   adds .is-written: the real text fades in under the strokes and the strokes fade out, so what stays is the type. */
+.loader__mark { display: block; width: min(190px, 60vw); height: 60px; margin: 0 auto 1.6rem; color: var(--forest); overflow: visible; }
+.ld-band { fill: none; stroke: #fff; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1 2; stroke-dashoffset: 1; animation: ldDraw var(--t) cubic-bezier(.45, .05, .3, 1) var(--d) forwards; }
+.ld-full { opacity: 0; animation: ldShow .35s ease 1.3s forwards; }   /* the last dry-brush specks, outside the bands */
 .loader__word { font-family: "Montserrat", sans-serif; font-weight: 300; font-size: min(clamp(1.9rem, 5.6vw, 3.2rem), 9.6vw); letter-spacing: .34em; padding-left: .34em; display: flex; justify-content: center; color: var(--forest); }
-.loader__word span { display: inline-block; animation: ldLetter .6s var(--ease) backwards; animation-delay: calc(.14s + var(--i, 0) * .045s); }
-.loader__sub { font-family: "Montserrat", sans-serif; font-weight: 300; margin-top: .55rem; color: var(--earth); font-size: min(.7rem, 3.6vw); letter-spacing: .34em; padding-left: .34em; text-transform: uppercase; animation: ldFade .5s ease .72s backwards; }
+.loader__sub { font-family: "Montserrat", sans-serif; font-weight: 300; margin-top: .55rem; color: var(--earth); font-size: min(.7rem, 3.6vw); letter-spacing: .34em; padding-left: .34em; text-transform: uppercase; }
+.loader__sub i { width: .09em; }          /* in em, so the line keeps its place at every size */
+/* the boxes are sized in em from the typeface's own measure, so nothing moves while the fonts arrive */
+.loader__type, .loader__subtext { position: relative; display: inline-block; height: 1.6em; line-height: 1.6; white-space: nowrap; font-kerning: none; color: transparent; transition: color .4s ease; }   /* unkerned, as the name has always been set here: each letter on its own measure */
+.loader__write { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; transition: opacity .35s ease .3s; }
+.loader__write .ld-s { fill: none; stroke: var(--forest); stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 12; stroke-dasharray: 1 2; stroke-dashoffset: 1; animation: ldDraw var(--t) cubic-bezier(.4, 0, .25, 1) var(--d) forwards; }
+.loader__subtext .ld-s { stroke: var(--earth); }
+.loader__subtext .ld-bar { opacity: .6; }
+.loader.is-written .loader__type { color: var(--forest); }
+.loader.is-written .loader__subtext { color: var(--earth); }
+.loader.is-written .loader__write { opacity: 0; }
 .loader__count { position: fixed; right: var(--pad); bottom: 1.3rem; font-family: "DM Sans", sans-serif; font-weight: 300; font-variant-numeric: tabular-nums; font-size: clamp(3rem, 9vw, 6rem); line-height: 1; letter-spacing: -.02em; color: var(--forest); }
 .loader__unit { font-size: .36em; color: var(--earth); margin-left: .08em; }
 .loader__bar { position: fixed; left: 0; right: 0; bottom: 0; height: 2px; background: var(--line); }
 .loader__bar i { display: block; height: 100%; background: var(--forest); transform-origin: left center; transform: scaleX(0); transition: transform .2s linear; }
-@keyframes ldMark { from { opacity: 0; transform: translateY(18px) scale(.97); } }
-@keyframes ldLetter { from { opacity: 0; transform: translateY(.55em) rotate(3deg); } }
-@keyframes ldFade { from { opacity: 0; } }
+@keyframes ldDraw { to { stroke-dashoffset: 0; } }
+@keyframes ldShow { to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { html.js .loader { display: none; } }
 
 /* ---------- navigation: Stay opens the suites, the comparison and pet-friendly stays ---------- */
