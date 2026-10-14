@@ -218,10 +218,9 @@
     if (mem) ways.push({ kind: "memory", url: mem });
     return ways;
   }
-  // The opening film starts playing behind the loading screen, however it is played: a phone fetches nothing of a file
-  // until it is asked to play, and a film that is already running when the screen lifts needs no start in the open.
-  // It is not wound back at the lift (a seek is a pause on a phone): the screen lifts within a second or two of the
-  // film's first picture, so the film is simply met a moment in.
+  // The opening film is played behind the loading screen, however it is played: a phone fetches nothing of a file until
+  // it is asked to play. Once it is seen to run it is set back on its first picture and held there (see initLoader),
+  // and the screen starts it again the instant its drawing finishes, so the visitor sees it from the start.
   function prime(c) {
     if (booted || reduced || c !== allClips[0]) return;
     clipPlay(c);
@@ -419,9 +418,10 @@
 
   /* ---------- the loading screen ----------
      The screen is run by the small script that sits next to it in the page (see index.html), so it never waits for this
-     file. What this file adds: it says that it has started and when the opening film is really moving, and it is told
-     when the screen lifts. The film is started behind the screen (see prime), so the screen lifts onto a film that is
-     already running: nothing has to start in the open. A first frame held still does not count as moving. */
+     file. What this file adds: it says that it has started and when the opening film could start at once, and it is
+     told when the screen's drawing has finished, which is when the film starts. "Could start at once": the film has
+     been played behind the screen (see prime) and seen to run, so this device and this line can play it, and it has
+     been set back on its first picture, paused, with film in hand. A first frame held still does not count. */
   function initLoader() {
     const L = window.PVLoad;
     const start = () => {
@@ -439,13 +439,19 @@
       const inHand = () => { const b = film.buffered, t = film.currentTime; for (let i = 0; i < b.length; i++) if (b.start(i) <= t + .15 && b.end(i) > t) return b.end(i) - t; return 0; };
       // (a browser that does not report what it has buffered, or reports it oddly, is taken at its word that it can
       // play on: at once where it reports nothing, and after a good second of running film otherwise)
-      const moving = () => {
-        if (film.paused || film.currentTime < .1) return false;
-        if (inHand() < 1.5 && !(film.readyState >= 3 && (!film.buffered.length || film.currentTime >= 1.2))) return false;
-        filmIn(); return true;
+      let stage = "proving";                             // proving: playing behind the screen; winding: going back to the start; set
+      const proved = () => !film.paused && film.currentTime >= .1 && (inHand() >= 1.5 || (film.readyState >= 3 && (!film.buffered.length || film.currentTime >= 1.2)));
+      const set = () => { if (stage !== "winding") return; stage = "set"; filmIn(); };
+      const windBack = () => {
+        stage = "winding";
+        clipPause(film);
+        film.addEventListener("seeked", function back() { film.removeEventListener("seeked", back); if (film.readyState >= 3) set(); else film.addEventListener("canplay", set, { once: true }); });
+        try { film.currentTime = 0; } catch (e) { set(); }
+        setTimeout(set, 1500);                            // a seek that never reports back: it is ready enough
       };
-      if (film.requestVideoFrameCallback) { const seen = (now, m) => { if (booted) return; if (m.mediaTime >= .1 && moving()) return; film.requestVideoFrameCallback(seen); }; film.requestVideoFrameCallback(seen); }
-      const tick = () => { if (booted || moving()) film.removeEventListener("timeupdate", tick); };
+      const moving = () => { if (booted || stage !== "proving" || !proved()) return false; windBack(); return true; };
+      if (film.requestVideoFrameCallback) { const seen = (now, m) => { if (booted || stage !== "proving") return; if (m.mediaTime >= .1 && moving()) return; film.requestVideoFrameCallback(seen); }; film.requestVideoFrameCallback(seen); }
+      const tick = () => { if (booted || stage !== "proving" || moving()) film.removeEventListener("timeupdate", tick); };
       film.addEventListener("timeupdate", tick);
     }
     L.onLift(start);

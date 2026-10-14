@@ -967,10 +967,10 @@ html.no-pet #pet-friendly, html.no-pet [href="#pet-friendly"], html.no-pet [data
 
 /* ---------- the loading screen ---------- */
 /* It exists only while the script is running the page: without the script there is nothing to wait for. If the script
-   stops for any reason the loaderGone rule takes the screen away by itself after eight seconds, so it can never be left
+   stops for any reason the loaderGone rule takes the screen away by itself after twelve seconds, so it can never be left
    standing over the page. With reduced motion there is no loading screen at all. */
 .loader { display: none; }
-html.js .loader { position: fixed; inset: 0; z-index: 999; overflow: hidden; display: grid; place-items: center; background: var(--ivory); color: var(--charcoal); transition: transform .9s cubic-bezier(.76, 0, .24, 1); animation: loaderGone 0s linear 8s forwards; }
+html.js .loader { position: fixed; inset: 0; z-index: 999; overflow: hidden; display: grid; place-items: center; background: var(--ivory); color: var(--charcoal); transition: transform .9s cubic-bezier(.76, 0, .24, 1); animation: loaderGone 0s linear 12s forwards; }
 html.js .loader.is-up { transform: translateY(-101%); pointer-events: none; }
 html.js .loader.is-done { display: none; }
 @keyframes loaderGone { to { visibility: hidden; } }
