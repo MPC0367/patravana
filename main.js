@@ -250,7 +250,7 @@
     if (!w) { dropClip(c); return; }
     c._way = w; c._asked = performance.now(); c._moved = 0;
     if (w.kind === "stream") {
-      const ctl = window.PVStream(c, window.PV_STREAMS[c.id], (e) => { if (c._way === w) nextWay(c, "stream stopped: " + (e && e.message ? e.message : e)); }, armGesture);
+      const ctl = window.PVStream(c, window.PV_STREAMS[c.id], (e) => { if (c._way === w) nextWay(c, "stream stopped: " + (e && e.message ? e.message : e)); }, (e) => armGesture(c, e));
       if (!ctl) { nextWay(c, "this browser cannot stream"); return; }
       c._pv = ctl;
       $$("source", c).forEach((s) => s.remove()); c.removeAttribute("src"); c.load();   // nothing of the single file is fetched
@@ -283,10 +283,11 @@
     startWay(c, at);
   }
   // a browser may refuse to start a film until the page has been touched (Low Power Mode does this): the first tap starts it
-  function armGesture() {
+  // c and e, when known: which film the browser refused, and what it said (shown in the #diag readout)
+  function armGesture(c, e) {
     if (gestureArmed) return; gestureArmed = true;
     filmIn();                                           // no film until a touch: the loading screen does not wait for it
-    filmLog.push("playback waits for a first touch"); if (filmLog.length > 8) filmLog.shift();
+    filmLog.push("playback waits for a first touch" + (c ? ": film " + (allClips.indexOf(c) + 1) + " refused " + (booted ? "after" : "behind") + " the loading screen" : "") + (e && e.message ? " (" + String(e.message).slice(0, 90) + ")" : "")); if (filmLog.length > 8) filmLog.shift();
     // the control shows as a play button with a line saying what to do, so the still hero reads as paused, not broken
     if (slidesEl) slidesEl.classList.add("is-film", "is-waiting");
     if (pauseBtn) pauseBtn.setAttribute("aria-pressed", "true");
@@ -307,7 +308,7 @@
   function clipPlay(v) {
     if (!v._asked || v.paused) v._asked = performance.now();
     if (v._pv) { v._pv.play(); return; }
-    const p = v.play(); if (p) p.catch((e) => { if (e && e.name === "NotAllowedError") armGesture(); });
+    const p = v.play(); if (p) p.catch((e) => { if (e && e.name === "NotAllowedError") armGesture(v, e); });
   }
   function clipPause(v) { if (v._pv) v._pv.pause(); else v.pause(); }
   function playHero() {
@@ -348,9 +349,9 @@
     handing = true;
     const from = clips[clipIdx], to = clips[next];
     try { to.currentTime = 0; } catch (e) { /* not seekable yet */ }
-    clipPlay(to);
     from.classList.remove("is-on"); from.classList.add("is-prev");   // held visible underneath while the next fades in
-    to.classList.add("is-on");
+    to.classList.add("is-on");                          // full size first (it waits at 4 px): a browser may refuse to start a film it does not count as visible
+    clipPlay(to);
     setTone(to, FADE * 1000 * .35);                    // the words change over the second half of the crossfade
     clipIdx = next; paintSlide(); paintBars();
     setTimeout(() => {
@@ -422,7 +423,7 @@
       // a film that has never moved is still making its first start, which now happens in the open: it gets a little longer
       const limit = (v._way.kind === "stream" ? (v.readyState >= 3 ? 5000 : 10000) : v._way.kind === "memory" ? 45000 : lighter ? 7000 : 15000) + (v._moved ? 0 : 3500);
       if (idle > limit && v._ways.length > 1) nextWay(v, "asked to play and did not move for " + Math.round(idle / 1000) + " s");
-      else if (idle > 4000 && v.paused && !v._pv) { const p = v.play(); if (p) p.catch((e) => { if (e && e.name === "NotAllowedError") armGesture(); }); }   // a film stopped from outside is asked again, without restarting its clock
+      else if (idle > 4000 && v.paused && !v._pv) { const p = v.play(); if (p) p.catch((e) => { if (e && e.name === "NotAllowedError") armGesture(v, e); }); }   // a film stopped from outside is asked again, without restarting its clock
     }, 1000);
   }
   if (heroVideo) {

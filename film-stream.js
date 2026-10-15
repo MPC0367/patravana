@@ -165,7 +165,7 @@
       }
       S.ti = Math.min(S.ti, S.cap);
     }
-    function tryPlay() { const p = video.play(); if (p) p.catch((e) => { if (e && e.name === "NotAllowedError" && onBlocked) onBlocked(); }); }
+    function tryPlay() { const p = video.play(); if (p) p.catch((e) => { if (e && e.name === "NotAllowedError" && onBlocked) onBlocked(e); }); }
     function open() {
       if (S.dead) return;
       const ms = new MSImpl(); S.ms = ms;
