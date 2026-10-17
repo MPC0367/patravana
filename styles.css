@@ -1470,7 +1470,6 @@ html[lang="th"] .hub__head { letter-spacing: 0; line-height: 1.35; }
   html.js.pv-views .reelwrap__hint--still { display: block; }
   /* the guide on Home stays short: wide, low photographs, two lines under each name, and no second wordmark in the footer */
   html.js.pv-views .hub__img { aspect-ratio: 2 / 1; margin-bottom: .45rem; }
-  html.js.pv-views .hub__sub { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
   html.js.pv-views .foot__brand { display: none; }
 }
 
@@ -1496,3 +1495,5 @@ html[lang="th"] .hub__head { letter-spacing: 0; line-height: 1.35; }
 
 /* the hero's entrance plays once. Shown again (a phone coming back to Home), its parts are simply there */
 html.js body.is-ready.is-entered :is(.hero__word, .hero__eyebrow, .hero__sub, .hero__cta, .hero__meta, .dock) { animation: none; }
+/* the code keeps its own lower-case letters inside the capitalised label */
+.ticket__code { text-transform: none; letter-spacing: .03em; }
