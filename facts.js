@@ -79,9 +79,14 @@ window.PV_FACTS = {
     kitchen: { days: [0, 3, 4, 5, 6], open: "11:00", close: "21:00" }
   },
 
-  /* Offers, as read from the resort's booking page on the review date. `stayUntil` is the last night an offer covers;
-     an offer past that date shows as ended. The direct rate needs no code, so it has no copy button. */
+  /* Offers, as read from the resort's booking page. `stayUntil` is the last night an offer covers (Bangkok dates): from
+     the next day it shows as ended and steps back. The direct rate needs no code, so it has no copy button.
+     lastVerifiedAt: the last real check on the booking page. 18 October 2026: the audit's provider check found the 30%
+     direct offer on the night of 31 March 2027 (not 1 April) and refresh2026 taking 15% off an eligible direct rate,
+     with the cancellation turning non-refundable. Some plans take the code alone (15%), so "about 41%" stays conditional.
+     Do not move this date without a new check. No separate book-by date has been established: do not invent one. */
   offers: {
+    lastVerifiedAt: "2026-10-18",
     direct: { percent: 30, code: null, stayUntil: "2027-03-31", refundable: true, freeCancelHours: 48 },
     code: { percent: 15, code: "refresh2026", stayFrom: "2026-10-02", stayUntil: "2027-03-31", refundable: false, stacksOnDirect: true }
   },
@@ -105,7 +110,7 @@ window.PV_FACTS = {
     "hall.faq": { en: "Yes. The seminar hall is offsite, close to the resort: {hall.area} m², dividing into two rooms. With the full hall it takes {hall.theatre.full} guests in theatre rows, {hall.classroom.full} in classroom rows, {hall.banquet.full} for a banquet and {hall.ushape.full} in a U-shape.", th: "ได้ ห้องสัมมนาอยู่นอกพื้นที่รีสอร์ท ใกล้กับรีสอร์ท มีพื้นที่ {hall.area} ตร.ม. และแบ่งเป็นสองห้องได้ เมื่อใช้เต็มห้องรองรับ {hall.theatre.full} ท่านแบบเธียเตอร์ {hall.classroom.full} ท่านแบบคลาสรูม {hall.banquet.full} ท่านแบบโต๊ะจีน และ {hall.ushape.full} ท่านแบบตัวยู" },
     "hall.stat": { en: "of seminar hall nearby, offsite, up to {hall.theatre.full} guests", th: "ห้องสัมมนาใกล้รีสอร์ท นอกพื้นที่รีสอร์ท รองรับสูงสุด {hall.theatre.full} ท่าน" },
 
-    "dining.note": { en: "Thai cooking with a few international dishes. Up to {dining.seats} seats, indoors and outdoors.", th: "อาหารไทยพร้อมเมนูนานาชาติอีกไม่กี่จาน รองรับได้ถึง {dining.seats} ที่นั่ง ทั้งในร่มและกลางแจ้ง" },
+    "dining.note": { en: "Thai cooking with a few international dishes. Up to {dining.seats} seats, indoors and outdoors.", th: "อาหารไทยเป็นหลัก พร้อมเมนูนานาชาติบางรายการ รองรับได้ถึง {dining.seats} ที่นั่ง ทั้งในร่มและกลางแจ้ง" },
     "dining.fac": { en: "Thai cooking, up to {dining.seats} seats indoors and on the timber deck, breakfast daily from {dining.breakfast.open}.", th: "อาหารไทย รองรับได้ถึง {dining.seats} ที่นั่งในร่มและบนระเบียงไม้ อาหารเช้าทุกวันตั้งแต่ {dining.breakfast.open} น." },
     "dining.hot": { en: "Phu Yai Lee, the resort's restaurant. Thai cooking with a few international dishes, indoors and outdoors, up to {dining.seats} seats.", th: "ครัวผู้ใหญ่ลี ร้านอาหารของรีสอร์ท อาหารไทยพร้อมเมนูนานาชาติ ทั้งในร่มและกลางแจ้ง รองรับได้ถึง {dining.seats} ที่นั่ง" },
     // the weekday wording belongs with dining.breakfast.days and dining.kitchen.days above: change them together
@@ -126,15 +131,23 @@ window.PV_FACTS = {
     "dining.status.tomorrow": { en: "Breakfast tomorrow from {dining.breakfast.open}", th: "อาหารเช้าพรุ่งนี้เริ่ม {dining.breakfast.open} น." },
     "dining.status.rest": { en: "No lunch or dinner service today. Breakfast tomorrow from {dining.breakfast.open}", th: "วันนี้ไม่มีมื้อกลางวันและมื้อเย็น อาหารเช้าพรุ่งนี้เริ่ม {dining.breakfast.open} น." },
 
-    "offers.kicker": { en: "Offers as of {reviewed}", th: "ข้อเสนอ ณ วันที่ {reviewed}" },
-    "offers.direct.big": { en: "{offers.direct.percent}%", th: "{offers.direct.percent}%" },
-    "offers.direct.desc": { en: "The direct rate on the resort's booking page for stays through {offers.direct.until}. Free cancellation up to {offers.direct.freeCancelHours} hours before check-in.", th: "ราคาจองตรงในหน้าจองของรีสอร์ท สำหรับการเข้าพักถึง {offers.direct.until} ยกเลิกฟรีได้ถึง {offers.direct.freeCancelHours} ชั่วโมงก่อนเช็คอิน" },
-    "offers.code.tag": { en: "Until {offers.code.until}", th: "ถึง {offers.code.until}" },
-    "offers.code.big": { en: "{offers.code.percent}%", th: "{offers.code.percent}%" },
-    "offers.code.desc": { en: "Enter the code on the resort's booking page. It adds to the {offers.direct.percent}% direct rate, about {offers.code.total}% off in all. For stays until {offers.code.until}, non-refundable.", th: "กรอกโค้ดในหน้าจองของรีสอร์ท ลดเพิ่มจากราคาจองตรงที่ลด {offers.direct.percent}% แล้ว รวมประมาณ {offers.code.total}% สำหรับการเข้าพักถึง {offers.code.until} ไม่สามารถขอคืนเงินได้" },
+    "offers.kicker": { en: "Offers as of {offers.verified}", th: "ข้อเสนอ ณ วันที่ {offers.verified}" },
+    // the headlines say the whole benefit; the stay-through date is set in strong type on both cards
+    "offers.direct.head": { en: "<b class=\"num\">{offers.direct.percent}%</b> Off Direct Booking", th: "จองตรงลด <b class=\"num\">{offers.direct.percent}%</b>" },
+    "offers.direct.until": { en: "Stays through <time datetime=\"{offers.direct.stayUntil}\">{offers.direct.until}</time>", th: "สำหรับการเข้าพักถึง <time datetime=\"{offers.direct.stayUntil}\">{offers.direct.until}</time>" },
+    "offers.direct.desc": { en: "On the resort's own booking page. Its flexible rates can be cancelled free of charge up to {offers.direct.freeCancelHours} hours before check-in; check the terms of the rate you choose.", th: "ในหน้าจองของรีสอร์ทเอง ราคาแบบยืดหยุ่นยกเลิกได้ฟรีถึง {offers.direct.freeCancelHours} ชั่วโมงก่อนเช็คอิน กรุณาตรวจสอบเงื่อนไขของราคาที่คุณเลือก" },
+    "offers.code.tag": { en: "With code {offers.code.code}", th: "ด้วยโค้ด {offers.code.code}" },
+    "offers.code.head": { en: "Extra <b class=\"num\">{offers.code.percent}%</b> Off", th: "ลดเพิ่ม <b class=\"num\">{offers.code.percent}%</b>" },
+    "offers.code.until": { en: "Stays through <time datetime=\"{offers.code.stayUntil}\">{offers.code.until}</time>", th: "สำหรับการเข้าพักถึง <time datetime=\"{offers.code.stayUntil}\">{offers.code.until}</time>" },
+    "offers.code.desc": { en: "Taken off an eligible direct rate that is already discounted. Where the {offers.direct.percent}% direct rate applies too, that is about {offers.code.total}% off in all.", th: "ลดเพิ่มจากราคาจองตรงที่ร่วมรายการซึ่งลดราคาแล้ว หากราคานั้นได้ส่วนลดจองตรง {offers.direct.percent}% ด้วย จะรวมเป็นส่วนลดประมาณ {offers.code.total}%" },
+    "offers.code.terms": { en: "Non-refundable with this code", th: "ไม่สามารถขอคืนเงินได้เมื่อใช้โค้ดนี้" },
+    // the Home guide's offer line, on a phone
+    "hub.offer.code": { en: "Extra {offers.code.percent}% with code {offers.code.code}", th: "ลดเพิ่ม {offers.code.percent}% ด้วยโค้ด {offers.code.code}" },
 
     "book.note": { en: "Opens in a new tab with your dates, adults and room choice. A promo code is copied for you to paste there. Children and extra rooms are added on that page. You can also book by phone on {contact.phone.local} or on LINE.", th: "เปิดในแท็บใหม่พร้อมวันที่ จำนวนผู้ใหญ่ และห้องที่คุณเลือก โค้ดส่วนลดจะถูกคัดลอกไว้ให้นำไปวางในหน้านั้น ส่วนเด็กและห้องเพิ่มให้เลือกในหน้าจอง จองทางโทรศัพท์ {contact.phone.local} หรือ LINE ก็ได้เช่นกัน" },
-    "book.more": { en: "Each suite takes up to {booking.adultsMax} adults. Your dates carry over. Add rooms and guests on the booking page, or ask the team.", th: "หนึ่งห้องสวีทพักได้สูงสุด {booking.adultsMax} ท่าน วันที่ของคุณจะถูกส่งต่อไป เพิ่มห้องและผู้เข้าพักได้ในหน้าจอง หรือสอบถามทีมงาน" },
+    // a party of four or more: the dates and the room choice go over, the party itself is set up on the booking page
+    "book.notemore": { en: "Opens in a new tab with your dates and room choice. The rooms and guests for your whole party are chosen on that page. A promo code is copied for you to paste there. You can also book by phone on {contact.phone.local} or on LINE.", th: "เปิดในแท็บใหม่พร้อมวันที่และห้องที่คุณเลือก ห้องพักและผู้เข้าพักทั้งหมดของคณะให้เลือกในหน้านั้น โค้ดส่วนลดจะถูกคัดลอกไว้ให้นำไปวาง จองทางโทรศัพท์ {contact.phone.local} หรือ LINE ก็ได้เช่นกัน" },
+    "book.more": { en: "Each suite takes up to {booking.adultsMax} adults. Your dates and room choice carry over; the rooms and guests for your party are chosen on the booking page, or ask the team.", th: "หนึ่งห้องสวีทพักได้สูงสุด {booking.adultsMax} ท่าน วันที่และห้องที่เลือกจะถูกส่งต่อไป ส่วนห้องพักและผู้เข้าพักทั้งหมดของคณะให้เลือกในหน้าจอง หรือสอบถามทีมงาน" },
     "stay.faq.beds": { en: "Each suite is set up for two adults, and one extra bed can be added for a third. Children are added on the resort's booking page, which shows what each room can take for your party.", th: "แต่ละห้องสวีทจัดไว้สำหรับผู้ใหญ่สองท่าน และเสริมเตียงได้หนึ่งเตียงสำหรับท่านที่สาม ส่วนเด็กให้เพิ่มในหน้าจองของรีสอร์ท ซึ่งจะแสดงว่าแต่ละห้องรองรับผู้เข้าพักของคุณได้อย่างไร" },
 
     "visit.address": { en: "{contact.address.br}", th: "{contact.address.br}" },
@@ -146,9 +159,14 @@ window.PV_FACTS = {
       th: "สวัสดีทีมงานภัทราวานา\nขอสอบถามเรื่องการเข้าพักพร้อมสัตว์เลี้ยงในอาคารที่รีสอร์ทกำหนดไว้\nวันที่: {dates}\nผู้เข้าพัก: {guests}\nห้องที่สนใจ: {suite}\nรายละเอียดสัตว์เลี้ยง: {pet}{question}\nรบกวนยืนยันห้องที่เข้าพักพร้อมสัตว์เลี้ยงได้ และเงื่อนไขการเข้าพักพร้อมสัตว์เลี้ยงในปัจจุบันด้วย ขอบคุณ"
     },
     "enq.group.msg": {
-      en: "Hello Patravana team.\nI would like to ask about a group event at the resort.\nDates: {dates}\nOccasion: {purpose}\nLayout: {layout}\nAttendees: {people}\nRooms needed: {rooms}{question}\nCould you send availability and a quote?",
-      th: "สวัสดีทีมงานภัทราวานา\nขอสอบถามเรื่องการจัดงานแบบหมู่คณะที่รีสอร์ท\nวันที่: {dates}\nประเภทงาน: {purpose}\nรูปแบบการจัดห้อง: {layout}\nจำนวนผู้เข้าร่วม: {people}\nจำนวนห้องพักที่ต้องการ: {rooms}{question}\nรบกวนแจ้งวันว่างและใบเสนอราคาด้วย ขอบคุณ"
+      en: "Hello Patravana team.\nI would like to ask about a group event at the resort.\nDates: {dates}\nOccasion: {purpose}\nVenue: {venue}\nLayout: {layout}\nAttendees: {people}\nRooms needed: {rooms}{question}\nCould you send availability and a quote?",
+      th: "สวัสดีทีมงานภัทราวานา\nขอสอบถามเรื่องการจัดงานแบบหมู่คณะที่รีสอร์ท\nวันที่: {dates}\nประเภทงาน: {purpose}\nห้องที่ต้องการ: {venue}\nรูปแบบการจัดห้อง: {layout}\nจำนวนผู้เข้าร่วม: {people}\nจำนวนห้องพักที่ต้องการ: {rooms}{question}\nรบกวนแจ้งวันว่างและใบเสนอราคาด้วย ขอบคุณ"
     },
+    "enq.general.msg": {
+      en: "Hello Patravana team.\n{question}\nDates, if it helps: {dates}\nThank you.",
+      th: "สวัสดีทีมงานภัทราวานา\n{question}\nวันที่เข้าพัก (ถ้ามี): {dates}\nขอบคุณ"
+    },
+    "enq.general.subject": { en: "A question for the resort", th: "สอบถามข้อมูลรีสอร์ท" },
     "enq.pet.subject": { en: "Pet-friendly stay enquiry", th: "สอบถามการเข้าพักพร้อมสัตว์เลี้ยง" },
     "enq.group.subject": { en: "Group event enquiry", th: "สอบถามการจัดงานแบบหมู่คณะ" }
   }

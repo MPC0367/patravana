@@ -1269,3 +1269,230 @@ html[lang="th"] .halfcap thead th { letter-spacing: 0; text-transform: none; fon
 @media (prefers-reduced-motion: reduce) { .hero__h1::before, .hero__shade::before, .hero__shade::after { transition: none; } }
 /* on a phone held upright the line under the heading sits on the bright haze too, so there it follows the heading */
 @media (max-width: 40em) and (orientation: portrait) { [data-tone="light"] .hero__sub { color: var(--deep); } .is-toning .hero__sub { transition: color .9s ease !important; } }
+
+/* ============================================================
+   18 October 2026: phone destinations, the facilities place card, offer headlines, comparison cards
+   ============================================================ */
+
+/* ---------- offers: the benefit is the headline, the stay-through date is bold, the terms sit beside it ---------- */
+.ticket__head { font-family: var(--f-display); font-weight: 500; font-size: clamp(1.6rem, 2.4vw, 2.15rem); line-height: 1.1; letter-spacing: -.035em; color: var(--charcoal); text-wrap: balance; }
+.ticket__head b { font-weight: 500; font-size: 1.3em; letter-spacing: -.045em; color: var(--forest); }
+html[lang="th"] .ticket__head { letter-spacing: 0; line-height: 1.32; }
+.ticket--hot .ticket__head, .ticket--hot .ticket__head b { color: var(--ivory); }
+.ticket__until { font-size: 1rem; line-height: 1.4; color: var(--charcoal); }
+.ticket__until strong { font-weight: 600; }
+.ticket--hot .ticket__until { color: var(--ivory); }
+.ticket__desc { min-height: 0; }
+.ticket__terms { display: inline-flex; align-items: center; gap: .5rem; padding: .32rem .85rem; border-radius: 999px; border: 1px solid var(--line-on-dark-2); font-size: .86rem; font-weight: 500; color: var(--ivory); }
+.ticket__terms::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--sand); flex: none; }
+.ticket__acts { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .2rem; }
+.ticket__help { font-size: .8rem; line-height: 1.45; color: rgba(244,240,231,.8); }
+.ticket.is-ended .ticket__head, .ticket.is-ended .ticket__head b { color: var(--earth); text-decoration: line-through; text-decoration-thickness: 1px; }
+/* the offers are whole cards on a phone, one under another: never a sliver of the next one at the edge */
+@media (max-width: 40em) {
+  .tickets { display: grid; grid-template-columns: 1fr; overflow: visible; scroll-snap-type: none; margin-inline: 0; padding: 0; }
+  .ticket { flex: none; }
+}
+
+/* ---------- facilities, up to 1000 px: the chosen place in a card under the map, never over it ---------- */
+.pcard, .pindex { display: none; }
+.map__panel-nav { display: flex; gap: .4rem; }
+.map__tour-go { display: none; }
+.map.is-paused .map__tour-go { display: inline; }
+.map.is-paused .map__tour-on, .map.is-paused .map__tour-off { display: none; }
+@media (max-width: 62.5em) {
+  html.js .map__panel { display: none; }
+  .map__tour, .map__step, .map__prog { display: none !important; }
+  .map__bar { grid-template-columns: 1fr; }
+  html.js .pcard { display: grid; grid-template-columns: minmax(0, 1fr); overflow: clip; border-radius: 18px; background: var(--ivory); color: var(--charcoal); box-shadow: 0 24px 60px rgba(20,30,23,.3); }
+  .pcard__media { position: relative; aspect-ratio: 16 / 10; overflow: clip; background: var(--mist); }
+  .pcard__media img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .5s var(--ease); }
+  .pcard__media img.is-in { opacity: 1; }
+  .pcard.is-hall .pcard__media img { position: absolute; left: 0; bottom: 0; width: 130%; height: 130%; max-width: none; }
+  .pcard__body { display: flex; flex-direction: column; align-items: flex-start; gap: .55rem; min-width: 0; padding: 1rem 1.15rem 1.25rem; }
+  .pcard__top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: 100%; }
+  .pcard__step { font-size: .8rem; letter-spacing: .04em; color: var(--earth); }
+  .pcard__nav { display: flex; gap: .45rem; }
+  .pcard__title { font-family: var(--f-display); font-weight: 500; font-size: 1.45rem; line-height: 1.2; letter-spacing: var(--ls-display); color: var(--charcoal); }
+  .pcard__desc { font-size: .95rem; color: var(--charcoal); }
+  .pcard__more { width: 100%; padding-top: .65rem; border-top: 1px solid var(--line); font-size: .88rem; color: var(--muted); }
+  .pcard__more strong { font-weight: 500; color: var(--charcoal); }
+  .pcard__go { margin-top: .3rem; }
+  .pcard :focus-visible { outline-color: var(--forest); }
+  html.js .pindex { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .45rem; list-style: none; }
+  .pindex__b { display: flex; align-items: center; gap: .6rem; width: 100%; height: 100%; min-height: 44px; padding: .45rem .7rem; border-radius: 12px; border: 1px solid var(--line-on-dark); color: var(--ivory); font-size: .86rem; line-height: 1.25; text-align: left; transition: background .3s, border-color .3s, color .3s; }
+  .pindex__b:hover { border-color: var(--line-on-dark-2); background: rgba(244,240,231,.07); }
+  .pindex__b[aria-current] { background: var(--ivory); border-color: var(--ivory); color: var(--forest); }
+  .pindex__n { flex: none; display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: rgba(244,240,231,.14); font-size: .66rem; }
+  .pindex__b[aria-current] .pindex__n { background: var(--forest); color: var(--ivory); }
+  .pindex__b--off .pindex__n { background: none; border: 1px dashed var(--line-on-dark-2); }
+  .pindex__b--off[aria-current] .pindex__n { border-color: var(--forest); }
+  .pindex__t { min-width: 0; }
+  .pindex__t small { display: block; margin-top: .1rem; font-size: .72rem; opacity: .78; }
+}
+@media (max-width: 22.5em) { html.js .pindex { grid-template-columns: 1fr; } }
+
+/* ---------- stay: the main photograph opens full size from a real button under the arrows ---------- */
+.stay-stage__open { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; padding: 0; border-radius: inherit; cursor: zoom-in; }
+.stay-stage__open:focus-visible { outline: 2px solid var(--forest); outline-offset: 3px; }
+
+/* ---------- the comparison: one card per suite on a phone ---------- */
+.cmpc { display: none; }
+.cmpc__card { display: flex; flex-direction: column; align-items: flex-start; gap: .7rem; padding: 1rem 1.1rem 1.1rem; border: 1px solid var(--line); border-radius: 16px; background: var(--panel); }
+.drawer.is-open .cmpc__card { animation: rowIn .6s var(--ease) both; animation-delay: calc(.12s + var(--i, 0) * 70ms); }
+.cmpc__name { font-family: var(--f-display); font-weight: 500; font-size: 1.2rem; letter-spacing: -.02em; color: var(--forest); }
+html[lang="th"] .cmpc__name { letter-spacing: 0; }
+.cmpc__facts { width: 100%; }
+.cmpc__facts div { display: grid; grid-template-columns: minmax(6.2rem, 38%) minmax(0, 1fr); gap: .8rem; padding: .5rem 0; border-top: 1px solid var(--line); font-size: .9rem; }
+.cmpc__facts dt { color: var(--muted); }
+.cmpc__facts dd { color: var(--charcoal); }
+.cmpc__facts dd.cmp__no { color: var(--muted); }
+
+/* ---------- nearby, contact, enquiries ---------- */
+.place__note { grid-column: 1 / -1; margin-top: -.4rem; font-size: .8rem; color: var(--earth); }
+.card--forest .textlink { color: var(--ivory); }
+.card__ask { margin-top: .5rem; font-size: .92rem; }
+.enq__cap { margin-top: -.5rem; }
+.enq__cap:empty { display: none; }
+
+/* ---------- the phone's bottom bar: Explore, LINE, Book ---------- */
+.mbar__explore { flex: 1.6 1 0; min-width: 0; min-height: 44px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: .05rem; padding: .3rem .95rem; border-radius: 14px; border: 1px solid var(--line-2); text-align: left; line-height: 1.15; transition: background .3s, border-color .3s, color .3s; }
+.mbar__k { font-size: .9rem; font-weight: 500; color: var(--charcoal); }
+.mbar__now { max-width: 100%; font-size: .72rem; color: var(--forest); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mbar__now:empty { display: none; }
+.mbar__explore[aria-expanded="true"] { background: var(--forest); border-color: var(--forest); }
+.mbar__explore[aria-expanded="true"] :is(.mbar__k, .mbar__now) { color: var(--ivory); }
+.mbar .pill--ghost { flex: 0 0 auto; padding-inline: 1rem; }
+.mbar .pill--solid { flex: 1 1 0; }
+.mnav nav a[aria-current="page"]::before { content: ""; display: inline-block; width: .36em; height: .36em; margin-right: .45em; border-radius: 50%; background: currentColor; vertical-align: .2em; }
+
+/* ---------- the phone's Home guide, the "you are here" line, and "show the whole page" (only in the phone's mode) ---------- */
+.hub, .vcrumb, .foot__all { display: none; }
+.hub__intro { max-width: 34rem; }
+.hub__lede { margin-top: .6rem; font-family: var(--f-display); font-weight: 400; font-size: 1.18rem; line-height: 1.38; letter-spacing: -.02em; color: var(--charcoal); text-wrap: pretty; }
+html[lang="th"] .hub__lede { letter-spacing: 0; line-height: 1.65; font-size: 1.08rem; }
+.hub__title { margin: 1.9rem 0 1rem; font-family: var(--f-display); font-weight: 500; font-size: 1.55rem; line-height: 1.15; letter-spacing: -.03em; color: var(--forest); }
+html[lang="th"] .hub__title { letter-spacing: 0; line-height: 1.4; }
+.hub__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; list-style: none; }
+.hub__card { display: flex; flex-direction: column; gap: .2rem; height: 100%; padding-bottom: .85rem; overflow: clip; border-radius: 16px; border: 1px solid var(--line); background: var(--panel); transition: border-color .3s, background .3s; }
+.hub__card:hover { border-color: var(--line-2); background: var(--panel-2); }
+.hub__img { position: relative; display: block; aspect-ratio: 3 / 2; margin-bottom: .5rem; overflow: clip; background: var(--mist); }
+.hub__img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }   /* the frame keeps its shape whatever the photograph's own */
+.hub__name { padding-inline: .8rem; font-family: var(--f-display); font-weight: 500; font-size: 1.04rem; line-height: 1.25; letter-spacing: -.015em; color: var(--charcoal); }
+html[lang="th"] .hub__name { letter-spacing: 0; }
+.hub__sub { padding-inline: .8rem; font-size: .8rem; line-height: 1.4; color: var(--muted); }
+.hub__card--offer { gap: .4rem; padding: 1rem .95rem 1rem; border-color: var(--forest); background: var(--forest); color: var(--ivory); }
+.hub__card--offer:hover { border-color: var(--forest); background: var(--deep); }
+.hub__k { font-size: .7rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--mist); }
+html[lang="th"] .hub__k { letter-spacing: .02em; }
+.hub__deal { display: flex; flex-direction: column; gap: .3rem; }
+.hub__head { font-family: var(--f-display); font-weight: 500; font-size: 1.22rem; line-height: 1.15; letter-spacing: -.025em; }
+.hub__head b { font-weight: 500; font-size: 1.35em; letter-spacing: -.04em; }
+html[lang="th"] .hub__head { letter-spacing: 0; line-height: 1.35; }
+.hub__until { font-size: .82rem; font-weight: 600; line-height: 1.35; }
+.hub__extra { font-size: .8rem; line-height: 1.4; color: rgba(244,240,231,.86); }
+.hub__go { display: inline-flex; align-items: center; gap: .45rem; margin-top: auto; padding-top: .3rem; font-size: .86rem; font-weight: 500; }
+.hub__go svg { width: 1em; height: 1em; transition: transform .45s var(--ease); }
+.hub__card--offer:hover .hub__go svg { transform: translateX(4px); }
+.vcrumb a { display: inline-flex; align-items: center; min-height: 44px; color: var(--forest); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.vcrumb__sep { opacity: .55; }
+.vcrumb__now { font-weight: 500; color: var(--charcoal); }
+.vcrumb.is-dark { background: var(--forest); color: rgba(244,240,231,.78); }
+.vcrumb.is-dark a, .vcrumb.is-dark .vcrumb__now { color: var(--ivory); }
+.vcrumb.is-dark :focus-visible { outline-color: var(--ivory); }
+
+@media (max-width: 47.99em), (pointer: coarse) and (max-width: 62.5em) and (max-height: 37.5em) {
+  html.js .foot__all { display: inline-block; }
+  /* phones read the comparison as cards */
+  html.js .cmp { display: none; }
+  html.js .cmpc { display: grid; gap: .8rem; }
+
+  /* one destination at a time: the others take no room, no keyboard stops and nothing for a screen reader */
+  html.js.pv-views .is-away { display: none !important; }
+  html.js.pv-views .hub { display: block; padding: 2.1rem var(--pad) 2.6rem; }
+  html.js.pv-views:not([data-view="home"]) .vcrumb { display: flex; align-items: center; flex-wrap: wrap; gap: 0 .6rem; padding: calc(4.5rem + env(safe-area-inset-top, 0px)) var(--pad) 0; font-size: .86rem; color: var(--muted); }
+  /* the first block of a destination sits right under that line */
+  html.js.pv-views .is-lead { padding-top: 1.1rem; border-top: 0; }
+  html.js.pv-views .night.is-lead { padding-top: 3rem; }
+  /* Home: a hero a little over half a screen, the booking bar, then the guide */
+  html.js.pv-views .hero { min-height: max(56svh, 25rem); padding-top: 5.4rem; padding-bottom: calc(var(--dock-lap) + 1.5rem); }
+  html.js.pv-views .hero__meta { display: none; }
+  html.js.pv-views .hero__cta .pill--lg { padding: .72rem 1.15rem; font-size: .94rem; }
+  /* the bottom bar is always there, and stays live over the menu, where Explore closes it again */
+  html.js.pv-views .mbar { display: flex; }
+  html.js.pv-views body.is-menu-open .mbar { transform: none; visibility: visible; }
+  html.js.pv-views .mnav { padding-top: calc(5rem + env(safe-area-inset-top, 0px)); padding-bottom: calc(6.2rem + env(safe-area-inset-bottom, 0px)); }
+  html.js.pv-views .mnav nav { margin-block: auto; gap: .15rem; }
+  html.js.pv-views .mnav nav a { font-size: clamp(1.5rem, 6.6vw, 2.25rem); line-height: 1.25; }
+  html.js.pv-views .mnav nav a.mnav__sub { font-size: clamp(1rem, 4.2vw, 1.25rem); margin-block: 0 .2rem; }
+  html.js.pv-views .mnav__book { display: none; }
+  /* Facilities: the map and its index say everything the image cards did */
+  html.js.pv-views .fac { display: none; }
+  /* Events: the pool photograph lives in Facilities */
+  html.js.pv-views .duo { grid-template-columns: 1fr; }
+  html.js.pv-views .duo .frame:nth-child(2) { display: none; }
+  html.js.pv-views .progress { display: none; }
+  /* a compact footer: what is here, the way round, and the studio credit */
+  html.js.pv-views .foot { gap: 1.5rem; padding-top: 2.4rem; padding-bottom: calc(5.8rem + env(safe-area-inset-bottom, 0px)); }
+  html.js.pv-views .foot__word, html.js.pv-views .foot__sky { display: none; }
+  html.js.pv-views .foot__cols { grid-template-columns: minmax(0, 1fr); gap: 1.3rem; }
+  html.js.pv-views .foot__cols > div:not(.foot__brand) { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: .35rem 1.15rem; }
+  html.js.pv-views .foot__cols .card__k { flex: 0 0 100%; margin-bottom: 0; }
+  html.js.pv-views .foot__base { gap: .5rem 1.4rem; }
+  html.js.pv-views .toast { bottom: calc(5.4rem + env(safe-area-inset-bottom, 0px)); }
+}
+/* a phone on its side: the hero takes its own height, and the guide sets its places four across */
+@media (pointer: coarse) and (max-width: 62.5em) and (max-height: 37.5em) {
+  html.js.pv-views .hero { min-height: 0; padding-top: 4.6rem; }
+  html.js.pv-views .hub__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* ---------- print: the whole page, still, in ink ---------- */
+@media print {
+  html.js .is-away { display: revert !important; }
+  .top, .mbar, .mnav, .cindex, .toast, .veil, .progress, .loader, .vcrumb, .hub, .bookscrim, .book, .lightbox, #enquiry, .slides, .dockwrap, .map__panel, .pcard, .pindex, .hero__media, .band__img, .band__scrim, .night__media, .map__bar, .reel__ctrl, .foot__all, #toTop, .skip { display: none !important; }
+  *, *::before, *::after { color: #222 !important; background: transparent !important; box-shadow: none !important; text-shadow: none !important; animation: none !important; transition: none !important; }
+  html.js .drawer:not(#enquiry) { position: static; display: block; visibility: visible; padding: 0 var(--pad); }
+  html.js .drawer:not(#enquiry)::before { display: none; }
+  html.js .drawer__panel { transform: none; width: auto; height: auto; overflow: visible; border: 0; }
+  html.js .acc__panel { height: auto !important; visibility: visible !important; }
+  [data-rv], [data-mr], .st-line { opacity: 1 !important; transform: none !important; clip-path: none !important; }
+  .hero, .band, .night { min-height: 0 !important; height: auto !important; padding-block: 1.5rem !important; }
+  .chapter__side { position: static; }
+}
+
+/* a heading that takes the keyboard after a move to it does not draw a box round itself (it is not a control) */
+:is(h1, h2, h3, main)[tabindex="-1"]:focus { outline: none; }
+/* the gallery's line of help says how it behaves here: drifting, or still until moved (a phone's Gallery) */
+.reelwrap__hint--still { display: none; }
+@media (max-width: 47.99em), (pointer: coarse) and (max-width: 62.5em) and (max-height: 37.5em) {
+  html.js.pv-views .reelwrap__hint--drift { display: none; }
+  html.js.pv-views .reelwrap__hint--still { display: block; }
+  /* the guide on Home stays short: wide, low photographs, two lines under each name, and no second wordmark in the footer */
+  html.js.pv-views .hub__img { aspect-ratio: 2 / 1; margin-bottom: .45rem; }
+  html.js.pv-views .hub__sub { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+  html.js.pv-views .foot__brand { display: none; }
+}
+
+/* Home stays near three screens on a phone: the welcome a size down, the offer tile a little tighter, and the language
+   choice left to the header, where it always is */
+@media (max-width: 47.99em), (pointer: coarse) and (max-width: 62.5em) and (max-height: 37.5em) {
+  html.js.pv-views .hub__lede { font-size: 1.06rem; line-height: 1.42; }
+  html.js.pv-views[lang="th"] .hub__lede { line-height: 1.6; }
+  html.js.pv-views .hub__head { font-size: 1.1rem; }
+  html.js.pv-views .hub__until, html.js.pv-views .hub__extra { font-size: .78rem; }
+  html.js.pv-views .foot__langk, html.js.pv-views .foot [data-lang-set] { display: none; }
+}
+
+/* offers on a wide screen: the heading above, three cards across the full width (the cards carry a headline, a date,
+   terms and two actions, more than a third of the narrow column could hold) */
+.chapter--offers.chapter--stack .chapter__side { align-items: end; }
+.tickets { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ticket { min-width: 0; }
+.ticket__acts .pill { max-width: 100%; }
+@media (max-width: 62.5em) { .tickets { grid-template-columns: minmax(0, 1fr); } }
+/* every link in the phone menu is a comfortable target */
+.mnav nav a { display: flex; align-items: center; min-height: 44px; }
+
+/* the hero's entrance plays once. Shown again (a phone coming back to Home), its parts are simply there */
+html.js body.is-ready.is-entered :is(.hero__word, .hero__eyebrow, .hero__sub, .hero__cta, .hero__meta, .dock) { animation: none; }

@@ -13,6 +13,13 @@
   const $ = (s, c) => (c || document).querySelector(s);
   const $$ = (s, c) => Array.from((c || document).querySelectorAll(s));
   const pad2 = (n) => String(n).padStart(2, "0");
+  // phones read the page one destination at a time (see "phone destinations"). The same test is in the stylesheet and
+  // in the small script near the end of index.html, which picks the destination before the page is first drawn
+  const VIEW_Q = "(max-width: 47.99em), (pointer: coarse) and (max-width: 62.5em) and (max-height: 37.5em)";
+  const viewsOn = () => document.documentElement.classList.contains("pv-views");
+  // away from Home on a phone the hero is not on the page at all
+  const heroAway = () => viewsOn() && document.documentElement.dataset.view !== "home";
+  const headerH = () => (document.getElementById("topbar") || {}).offsetHeight || 60;
   // the resort's wall clock wherever the visitor is: read the result with getUTC*()
   const bkk = () => new Date(Date.now() + 7 * 3600 * 1000);
 
@@ -53,6 +60,7 @@
       if (path === "pet.reviewed") return longDate(FX.pet.lastReviewedAt, L);
       if (p[0] === "hall") { if (p[1] === "area") return hall.areaSqm; const l = lay(p[1]); return l ? l[p[2]] : null; }
       if (p[0] === "dining") { if (p[1] === "seats") return FX.dining.seats; const sv = FX.dining[p[1]]; return sv && sv[p[2]] ? clock(sv[p[2]]) : null; }
+      if (path === "offers.verified") return longDate(FX.offers.lastVerifiedAt || FX.reviewed, L);
       if (p[0] === "offers") {
         const o = FX.offers[p[1]]; if (!o) return null;
         if (p[2] === "until") return longDate(o.stayUntil, L);
@@ -116,6 +124,10 @@
     try { const s = localStorage.getItem("pv2-lang"); if (s === "th" || s === "en") return s; } catch (e) { /* ignore */ }
     return (navigator.language || "").toLowerCase().startsWith("th") ? "th" : "en";
   }
+
+  // a word from the page's own navigation in the current language, as plain text (the menu's "Contact & FAQs")
+  const plain = (h) => { const t = document.createElement("span"); t.innerHTML = h || ""; return t.textContent.trim(); };
+  const navWord = (k) => plain((I18N.lang === "th" && (window.PV_TH || {})[k]) || I18N.en[k] || "");
 
   /* ---------- split registry ---------- */
   const splits = [];
@@ -222,7 +234,7 @@
   // it is asked to play. Once it is seen to run it is set back on its first picture and held there (see initLoader),
   // and the screen starts it again the instant its drawing finishes, so the visitor sees it from the start.
   function prime(c) {
-    if (booted || reduced || c !== allClips[0]) return;
+    if (booted || reduced || c !== allClips[0] || heroAway()) return;
     clipPlay(c);
   }
   // tells the loading screen that the opening film is in: either it is really moving, or it is not going to (see initLoader)
@@ -254,7 +266,7 @@
       if (!ctl) { nextWay(c, "this browser cannot stream"); return; }
       c._pv = ctl;
       $$("source", c).forEach((s) => s.remove()); c.removeAttribute("src"); c.load();   // nothing of the single file is fetched
-      if (c === allClips[0] || warmed) ctl.start();          // the opening film starts buffering at once; the others wait their turn
+      if ((c === allClips[0] && !heroAway()) || warmed) ctl.start();   // the opening film starts buffering at once (unless the hero is not on the page); the others wait their turn
       prime(c);
     } else if (w.kind === "file") {
       // a film carried inside the page itself can never be served in parts, which Safari insists on: straight to the next way
@@ -315,12 +327,14 @@
     if (reduced || userPaused || !clips.length) return;
     const v = activeClip(); if (!v) return;
     clipPlay(v);
-    // the queued clips only buffer once the first one is running and its own download has gone quiet,
-    // so a phone never pulls two films at once
+    // the queued clips only buffer once the first one is running and its own download has gone quiet, so a phone never
+    // pulls two films at once; and only when they are about to be needed: the hero on screen, the film playing in its
+    // last fifteen seconds. A visitor who scrolls straight on, or reads another destination, never fetches the second film
     if (!warmed && clips.length > 1) {
       const warm = () => {
         const a = activeClip();
         if (a && a._pv && a._pv.busy()) { setTimeout(warm, 1500); return; }
+        if (!heroSeen || (a && a.duration && isFinite(a.duration) && a.duration - a.currentTime > 15)) { setTimeout(warm, 2000); return; }
         warmed = true;
         clips.forEach((c) => { if (c === a) return; if (c._pv) c._pv.start(); else { c.preload = "auto"; c.load(); } });
       };
@@ -445,12 +459,14 @@
     const L = window.PVLoad;
     const start = () => {
       if (booted) return; booted = true; document.body.classList.add("is-ready");
+      // the entrance plays once: a phone coming back to Home finds the hero as it left it
+      setTimeout(() => document.body.classList.add("is-entered"), 2600);
       if (heroSeen) playHero(); else clips.forEach(clipPause);   // arrived on a link to a section further down: no film off screen
     };
     if (!L) { if (loader) loader.classList.add("is-done"); start(); return; }
     L.mark("script");
     const film = allClips[0];
-    if (!film || reduced || !clips.length) filmIn();
+    if (!film || reduced || !clips.length || heroAway()) filmIn();
     else {
       // moving: a picture from a tenth of a second into the film has reached the screen (or, where the browser cannot
       // say which picture is showing, the film's clock has passed that point while playing), and there is a second and
@@ -480,10 +496,10 @@
   /* ---------- scrolling ----------
      The browser scrolls the page. A jump to a section lands just under the fixed header, moves smoothly unless the
      visitor has asked for less motion, and (see the link handler below) leaves a real address behind it. */
-  function scrollToEl(target, offset) {
+  function scrollToEl(target, offset, instant) {
     const el = typeof target === "string" ? $(target) : target; if (!el) return;
     const top = el.getBoundingClientRect().top + window.scrollY + (offset == null ? -60 : offset);
-    window.scrollTo({ top: Math.max(0, top), behavior: reduced ? "auto" : "smooth" });
+    window.scrollTo({ top: Math.max(0, top), behavior: reduced || instant ? "instant" : "smooth" });
   }
   /* While a dialog is open the page behind it holds still. The scrollbar is left alone (hiding it would nudge the whole
      layout sideways): instead a wheel, a swipe or a scroll key that would move the page is turned away, anything that
@@ -542,7 +558,7 @@
   }
 
   /* ---------- top bar, chapter index, the Stay submenu, the phone menu ---------- */
-  const top = $("#topbar"), burger = $("#burger"), mnav = $("#mnav");
+  const top = $("#topbar"), burger = $("#burger"), mnav = $("#mnav"), exploreBtn = $("#mbarExplore");
   let menuOpen = false, menuReturn = null;
   const mbar = $("#mbar");
   const cindex = $("#cindex"), cLinks = cindex ? $$("a", cindex) : [];
@@ -550,10 +566,12 @@
   const darkEls = $$("section[data-dark], footer[data-dark]");
   const wide = window.matchMedia("(min-width: 80em) and (min-height: 40em)");
   function onScroll() {
-    const y = window.scrollY, h = ($(".hero") || {}).offsetHeight || 600;
-    top.classList.toggle("is-solid", y > 40);            // header never hides: the Book entry stays within reach
-    // the bottom bar is only there for the keyboard and for screen readers while it is on screen
-    if (mbar) { const on = y > h * .5; if (on !== mbar.classList.contains("is-on")) { mbar.classList.toggle("is-on", on); setInert(mbar, !on); } }
+    const y = window.scrollY, h = ($(".hero") || {}).offsetHeight || 600, views = viewsOn();
+    // header never hides: the Book entry stays within reach. Away from the hero it is solid
+    top.classList.toggle("is-solid", y > 40 || heroAway());
+    // the bottom bar is only there for the keyboard and for screen readers while it is on screen. On a phone's
+    // destinations it is always there: Explore, LINE and Book
+    if (mbar) { const on = views || y > h * .5; if (on !== mbar.classList.contains("is-on")) { mbar.classList.toggle("is-on", on); setInert(mbar, !on); } }
     if (cindex && wide.matches) {
       // the dot for the chapter under the middle of the screen, and light dots while that middle sits on a dark band
       const mid = window.innerHeight * .5;
@@ -575,9 +593,10 @@
   function toggleMenu(open, opts) {
     if (!burger || !mnav || open === menuOpen) return;
     if (open) menuReturn = document.activeElement;
-    menuOpen = open; burger.setAttribute("aria-expanded", String(open)); top.classList.toggle("is-menu", open); setOverlay(open); lockPage("menu", open);
+    menuOpen = open; burger.setAttribute("aria-expanded", String(open)); if (exploreBtn) exploreBtn.setAttribute("aria-expanded", String(open));
+    top.classList.toggle("is-menu", open); setOverlay(open); document.body.classList.toggle("is-menu-open", open); lockPage("menu", open);
     setInert(mnav, !open);
-    setBehind(mnav, open, [top]);
+    setBehind(mnav, open, viewsOn() ? [top, mbar] : [top]);
     if (hasGSAP && !reduced) {
       if (open) { gsap.set(mnav, { visibility: "visible" }); gsap.to(mnav, { clipPath: "inset(0% 0 0% 0)", duration: .6, ease: "power4.inOut", overwrite: true }); gsap.fromTo(".mnav nav a", { yPercent: 40, opacity: 0 }, { yPercent: 0, opacity: 1, stagger: .04, duration: .55, delay: .12, overwrite: true, clearProps: "transform,opacity" }); }
       else gsap.to(mnav, { clipPath: "inset(0 0 100% 0)", duration: .5, ease: "power4.inOut", overwrite: true, onComplete: () => { if (!menuOpen) gsap.set(mnav, { visibility: "hidden" }); } });
@@ -587,6 +606,7 @@
   }
   setInert(mnav, true); setInert(mbar, true);
   if (burger) burger.addEventListener("click", () => toggleMenu(!menuOpen));
+  if (exploreBtn) exploreBtn.addEventListener("click", () => toggleMenu(!menuOpen));
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && menuOpen) toggleMenu(false); });
   // a phone turned on its side, or a window made wide: the burger is gone, so its menu goes with it
   try { window.matchMedia("(min-width: 62.5625em)").addEventListener("change", (e) => { if (e.matches && menuOpen) toggleMenu(false, { keepFocus: true }); }); } catch (e) { /* older browsers keep the menu until it is closed */ }
@@ -616,8 +636,202 @@
     links.forEach((a) => a.addEventListener("click", () => set(false)));
   });
 
+  /* ---------- phone destinations ----------
+     On a phone (narrower than 768 px, or a phone on its side) the page is read one destination at a time: Home (the hero,
+     the booking bar and a short guide to the rest), Offers, Stay, Facilities, Dining, Events, Nearby, Gallery, and
+     Contact & FAQs. Each block of the page names its destination in data-owner, and only the blocks of the current one
+     are shown; the others take no room and no keyboard stops. The addresses are the page's own section links
+     (…/#stay, …/#fac-pool, …/#pet-details): a link opens the destination that holds its target and lands on the target,
+     opening it if it is folded away. One choice of destination is one step in the browser's history, so Back and
+     Forward move between destinations and come back to the same place in each, and a reload stays where it was.
+     The menu, the bottom bar (Explore, LINE, Book) and the guide on Home all lead to the same destinations. Wider
+     screens, and "Show the whole page", keep the one continuous page. Dialogs (booking, comparison, amenities, enquiry,
+     photo viewer) sit outside every destination, so they open from any of them. */
+  const Views = (function () {
+    const html = document.documentElement, mq = window.matchMedia(VIEW_Q);
+    const LABEL = { home: "nav.home", offers: "nav.offers", stay: "nav.stay", facilities: "nav.facilities", dining: "nav.dining", events: "nav.gather", nearby: "nav.roam", gallery: "nav.gallery", contact: "nav.contactfaq" };
+    const HEAD = { home: "#hero .hero__h1", offers: "#offers .chapter__title", stay: "#stay .chapter__title", facilities: "#facilities .chapter__title", dining: "#dining .chapter__title", events: "#gather .chapter__title", nearby: "#roam .chapter__title", gallery: "#galleryTitle", contact: "#visit .chapter__title" };
+    const ROOT = { home: "#hero", offers: "#offers", stay: "#stay", facilities: "#facilities", dining: "#dining", events: "#gather", nearby: "#roam", gallery: "#gallery", contact: "#visit" };
+    const crumb = $("#vcrumb"), crumbNow = $("#vcrumbNow"), mbarNow = $("#mbarNow"), viewAll = $("#viewAll");
+    const blocks = $$("[data-owner]");
+    const ID = /^#[A-Za-z][A-Za-z0-9_-]*$/;
+    let cur = html.dataset.view || "home", whole = false, saveTimer = 0, lastHash = location.hash, marks = null, landing = false;
+
+    // a phone reads Facilities map first, then the estate story; and Gallery photographs first, then the evening.
+    // Those blocks are moved into that order for the phone, and put back for the whole page
+    const MOVES = [["#facilities", "#air"], ["#gallery", "#band-pool"], ["#tonight", "#band-pool"]];
+    function arrange(on) {
+      if (on && !marks) marks = MOVES.map((m) => { const el = $(m[0]), before = $(m[1]); if (!el || !before) return null; const mark = document.createComment(""); el.parentNode.insertBefore(mark, el); before.parentNode.insertBefore(el, before); return [el, mark]; });
+      else if (!on && marks) { marks.slice().reverse().forEach((p) => { if (p) { p[1].parentNode.insertBefore(p[0], p[1]); p[1].remove(); } }); marks = null; }
+    }
+    // the destination that holds a section link's target (Home for the hero, an empty or unknown link)
+    function ownerOf(id) {
+      const el = ID.test(id || "") ? $(id) : null; if (!el) return "home";
+      const o = el.closest("[data-owner]");
+      return o ? o.dataset.owner : el.closest("#main") ? "home" : cur;   // the footer belongs to every destination
+    }
+    const isRoot = (el, view) => el.id === "hero" || el.id === "explore" || "#" + el.id === ROOT[view];
+    function text() {
+      const on = viewsOn(), name = navWord(LABEL[cur] || "nav.home"), ex = $("#mbarExplore");
+      if (crumbNow) crumbNow.textContent = name;
+      if (mbarNow) mbarNow.textContent = on ? name : "";
+      if (ex) { if (on) ex.setAttribute("aria-label", I18N.t("exploreAria", { name: name })); else ex.removeAttribute("aria-label"); }
+      document.title = on && cur !== "home" ? I18N.t("viewTitle", { name: name }) : I18N.t("docTitle");
+      $$("[data-view-link]").forEach((a) => { if (on && a.dataset.viewLink === cur) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+      if (viewAll) { const sp = $("span", viewAll); if (sp) sp.textContent = I18N.t(whole ? "oneAtATime" : "wholePage"); viewAll.setAttribute("aria-pressed", String(whole)); }
+    }
+    function paint() {
+      html.dataset.view = cur;
+      blocks.forEach((b) => { b.classList.toggle("is-away", b.dataset.owner !== cur); b.classList.remove("is-lead"); });
+      // the first block of an inner destination sits right under the "you are here" line, which takes its ground
+      const lead = cur === "home" ? null : $$("[data-owner]").find((b) => b.dataset.owner === cur);
+      if (lead) lead.classList.add("is-lead");
+      if (crumb) crumb.classList.toggle("is-dark", !!(lead && lead.hasAttribute("data-dark")));
+      text(); onScroll();
+    }
+    // where the visitor is in this destination, kept with this step of the history
+    function saveY() { if (!viewsOn() || landing) return; try { history.replaceState(Object.assign({}, history.state, { view: cur, y: Math.round(window.scrollY) }), ""); } catch (e) { /* a sandboxed frame may refuse */ } }
+    // a target folded away is opened: the pet-stay details, a facility (shown in the map's place card on a phone)
+    function reveal(el) {
+      const d = el.tagName === "DETAILS" ? el : el.closest("details"); if (d && !d.open) d.open = true;
+      if (el.classList.contains("fac__item") && !el.offsetParent && mapApi) { mapApi.select(el.dataset.hot || "hall"); return $("#placeCard") || el; }
+      return el;
+    }
+    function focusOn(el) {
+      if (!el) return;
+      const f = el.tagName === "DETAILS" ? $("summary", el) || el : el;
+      if (!f.matches('a[href], button, input, select, textarea, summary, [tabindex]')) f.setAttribute("tabindex", "-1");
+      f.focus({ preventScroll: true });
+    }
+    // dialogs and the menu close when the visitor moves with Back or Forward, or the screen changes mode
+    function closeAll() {
+      if (menuOpen) toggleMenu(false, { keepFocus: true });
+      if (Drawers.current()) Drawers.close({ keepFocus: true });
+      closeBookPanel({ keepFocus: true });
+      lightbox.shut();
+    }
+    // id: a section link ("#stay", "#fac-pool"), or "" for Home. opts.push: a new step in history; opts.y: the place to
+    // come back to (Back and Forward); opts.focus: false leaves the keyboard where it is
+    function go(id, opts) {
+      opts = opts || {};
+      if (!viewsOn()) return false;
+      if (!ID.test(id || "")) id = "";
+      const el = id ? $(id) : null, view = ownerOf(id), moved = view !== cur;
+      if (moved) saveY();
+      cur = view; paint();
+      // the address: one step per choice, and choosing the same thing again adds none
+      const want = el && el.id !== "hero" ? id : "";
+      if (opts.push && (location.hash || "") !== want) { try { history.pushState({ view: view, y: 0 }, "", want || location.pathname + location.search); } catch (e) { /* a sandboxed frame may refuse */ } }
+      lastHash = location.hash;
+      const target = el && !isRoot(el, view) ? reveal(el) : null;
+      const settle = () => {
+        if (opts.y != null) window.scrollTo({ top: opts.y, behavior: "instant" });
+        else if (target) scrollToEl(target, -(headerH() + 14), moved);
+        else window.scrollTo({ top: 0, behavior: moved || reduced ? "instant" : "smooth" });
+        if (opts.focus !== false) focusOn(target || $(HEAD[view]) || $("#main"));
+      };
+      if (moved) requestAnimationFrame(settle); else settle();
+      document.dispatchEvent(new CustomEvent("pv:view", { detail: { view: view } }));
+      return true;
+    }
+    window.addEventListener("popstate", (e) => {
+      if (!viewsOn()) return;
+      closeAll();
+      const st = e.state;
+      go(location.hash, { y: st && st.view && typeof st.y === "number" ? st.y : null });
+    });
+    // an address typed or edited by hand
+    window.addEventListener("hashchange", () => { if (!viewsOn() || location.hash === lastHash) return; closeAll(); go(location.hash); });
+    window.addEventListener("scroll", () => { if (!viewsOn()) return; clearTimeout(saveTimer); saveTimer = setTimeout(saveY, 300); }, { passive: true });
+
+    // ---- changing mode: the phone's destinations, or the whole page ----
+    function enter(view) {
+      html.classList.add("pv-views"); arrange(true); settleMotion();
+      try { history.scrollRestoration = "manual"; } catch (e) { /* ignore */ }
+      cur = view; paint();
+    }
+    function leave() {
+      html.classList.remove("pv-views"); delete html.dataset.view; arrange(false);
+      blocks.forEach((b) => b.classList.remove("is-away", "is-lead"));
+      try { history.scrollRestoration = "auto"; } catch (e) { /* ignore */ }
+      text(); onScroll();
+      if (hasST) ScrollTrigger.refresh();
+    }
+    // the destination of whatever is in the middle of the screen. The closing band and the footer belong to no one
+    // destination: there it is the one the visitor was reading before (fallback)
+    function visibleOwner(fallback) {
+      const mid = window.innerHeight / 2, b = $$("[data-owner]").find((x) => { const r = x.getBoundingClientRect(); return x.id !== "closing" && r.height > 0 && r.top <= mid && r.bottom >= mid; });
+      return b ? b.dataset.owner : fallback || "home";
+    }
+    // to the whole page, at what the visitor was reading
+    function toWhole() {
+      const v = cur; leave();
+      const at = v === "home" ? null : $(ROOT[v]);
+      if (at) scrollToEl(at, -(headerH() + 8), true); else window.scrollTo({ top: 0, behavior: "instant" });
+      focusOn($(HEAD[v]) || $("#main"));
+    }
+    // back to one destination at a time: the one the visitor was reading
+    function toViews() {
+      const v = visibleOwner(cur); enter(v);
+      try { history.replaceState({ view: v, y: 0 }, "", v === "home" ? location.pathname + location.search : ROOT[v]); } catch (e) { /* ignore */ }
+      lastHash = location.hash;
+      window.scrollTo({ top: 0, behavior: "instant" });
+      focusOn($(HEAD[v]) || $("#main"));
+    }
+    const onChange = (m, fn) => { try { m.addEventListener("change", fn); } catch (e) { m.addListener(fn); } };
+    onChange(mq, () => {
+      closeAll();
+      if (mq.matches && !whole && !viewsOn()) toViews();
+      else if (!mq.matches && viewsOn()) toWhole();
+      text();
+    });
+    if (viewAll) viewAll.addEventListener("click", () => {
+      whole = !whole;
+      if (whole) { if (viewsOn()) toWhole(); } else if (mq.matches) toViews();
+      text();
+    });
+    document.addEventListener("pv:lang", text);
+
+    // the small script in index.html has already shown the right destination; this takes over from it
+    function init() {
+      if (!mq.matches) { if (viewsOn()) leave(); window.PVViewsReady = true; text(); return; }
+      html.classList.add("pv-views");
+      cur = ownerOf(location.hash);
+      arrange(true);
+      try { history.scrollRestoration = "manual"; } catch (e) { /* ignore */ }
+      paint();
+      window.PVViewsReady = true;
+    }
+    // The first landing, once every part of the page is set up: the place a reload left, else the section the address
+    // names, else the top of the destination. It is squared up again as the page settles, unless the visitor has moved.
+    function land() {
+      if (!viewsOn()) return false;
+      const st = history.state, el = ID.test(location.hash) ? $(location.hash) : null;
+      const y = st && st.view === cur && typeof st.y === "number" && st.y > 0 ? st.y : null;
+      try { history.replaceState({ view: cur, y: y || 0 }, ""); } catch (e) { /* ignore */ }
+      const target = el && !isRoot(el, cur) ? reveal(el) : null;
+      if (y == null && !target) { window.scrollTo(0, 0); return true; }
+      let moved = false;
+      ["wheel", "touchstart", "keydown", "mousedown"].forEach((t) => window.addEventListener(t, () => { moved = true; }, { once: true, passive: true }));
+      const put = () => { if (moved) return; if (y != null) window.scrollTo(0, y); else window.scrollTo(0, Math.max(0, target.getBoundingClientRect().top + window.scrollY - headerH() - 14)); };
+      // a browser may jump to the section in the address on its own a little later (Safari does, at load): while the
+      // page settles, any scroll the visitor did not make is put back, and nothing of it is saved as their place
+      landing = true;
+      const hold = () => { if (!moved) requestAnimationFrame(put); };
+      window.addEventListener("scroll", hold, { passive: true });
+      const settled = () => { window.removeEventListener("scroll", hold); landing = false; };
+      put(); setTimeout(put, 350);
+      window.addEventListener("load", () => { put(); setTimeout(() => { put(); setTimeout(settled, 400); }, 500); }, { once: true });
+      setTimeout(settled, 8000);
+      return true;
+    }
+    const focusHead = () => focusOn($(HEAD[cur]) || $("#main"));
+    return { init: init, land: land, go: go, focusHead: focusHead, current: () => cur };
+  })();
+
   /* In-page links: a smooth move that lands under the header, takes the keyboard along, and leaves an address behind
-     it, so a section can be shared (…/#pet-friendly) and the Back button returns to where the visitor was. */
+     it, so a section can be shared (…/#pet-friendly) and the Back button returns to where the visitor was. On a phone's
+     destinations the same links go through the destinations (see above). */
   function goTo(id, push) {
     const el = id === "#hero" ? document.body : $(id); if (!el) return false;
     if (id === "#hero") window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
@@ -632,9 +846,15 @@
   $$('a[href^="#"]:not(.skip):not([data-enquiry]):not([data-compare-open]):not([data-pet-details])').forEach((a) => a.addEventListener("click", (e) => {
     const id = a.getAttribute("href"); if (id.length < 2) { e.preventDefault(); return; }
     if (!$(id)) return; e.preventDefault(); if (menuOpen) toggleMenu(false, { keepFocus: true });
+    if (viewsOn()) { Views.go(id, { push: true }); return; }
     goTo(id, true);
   }));
-  const toTop = $("#toTop"); if (toTop) toTop.addEventListener("click", () => goTo("#hero", true));
+  // "Skip to content": the main content, whichever destination of it is showing
+  const skip = $(".skip"); if (skip) skip.addEventListener("click", (e) => { if (!viewsOn()) return; e.preventDefault(); Views.focusHead(); });
+  const toTop = $("#toTop"); if (toTop) toTop.addEventListener("click", () => {
+    if (viewsOn()) { window.scrollTo({ top: 0, behavior: reduced ? "instant" : "smooth" }); Views.focusHead(); return; }
+    goTo("#hero", true);
+  });
 
   /* ---------- motion ---------- */
   function setStaticState() {
@@ -644,8 +864,20 @@
     $$(".st-lines").forEach((el) => { el.dataset.revealed = "1"; });
     $$("[data-rv], [data-mr]").forEach((el) => el.classList.add("is-in"));
   }
+  let motionOn = false;
+  // a window narrowed into the phone's destinations: what was still waiting for its cue is shown as it ends, every
+  // scroll-linked effect is undone, and the page is left still
+  function settleMotion() {
+    if (!motionOn) return; motionOn = false;
+    if (hasST) ScrollTrigger.getAll().forEach((st) => { const an = st.animation; if (an) { if (st.vars && st.vars.scrub) an.revert(); else an.progress(1); } st.kill(); });
+    splits.forEach((r) => r.destroy()); splits.length = 0;
+    revealCheck = null; setStaticState();
+  }
   function initMotion() {
-    if (!hasGSAP || !hasST || reduced) { setStaticState(); return; }
+    // a phone's destinations are read without scroll-driven motion: hidden destinations have no place on the page to
+    // measure, and every figure shows its real value at once
+    if (!hasGSAP || !hasST || reduced || viewsOn()) { setStaticState(); return; }
+    motionOn = true;
     gsap.to("#progress", { scaleX: 1, ease: "none", scrollTrigger: { trigger: document.body, start: "top top", end: "max", scrub: .4 } });
 
     // hero exit: the footage stays full-bleed (no shrink-into-frame, per client); only the copy lifts and fades as you scroll
@@ -744,7 +976,9 @@
     const capOf = (shot) => I18N.t("cap" + shot.dataset.cap.charAt(0).toUpperCase() + shot.dataset.cap.slice(1));
     // a room is called what the booking panel's list calls it, so the two always agree
     const roomLabel = (id) => { const o = $('#bookRoom option[value="' + id + '"]'); return o ? o.textContent.trim() : ""; };
-    const fullList = (item) => shotsOf(item).map((s) => s.dataset.full);
+    // the photographs for the viewer, each with its own description ("Vana Suite, lake view: Bedroom")
+    const itemsOf = (item) => shotsOf(item).map((s) => ({ src: s.dataset.full, alt: s.getAttribute("aria-label") || "" }));
+    const openBtn = $("#stayOpen");
 
     // a folded panel is out of reach for everyone: no tab stops in it, nothing for a screen reader to wander into
     const shut = (panel, on) => { panel.classList.toggle("is-shut", on); setInert(panel, on); };
@@ -776,6 +1010,7 @@
       if (capEl) capEl.textContent = capOf(s);
       if (roomLine) roomLine.textContent = room;
       if (cur) cur.alt = room + ": " + capOf(s);
+      if (openBtn) openBtn.setAttribute("aria-label", I18N.t("openPhoto", { what: room + ": " + capOf(s) }));
       $$(".stay-thumb", thumbs).forEach((t, k) => { t.classList.toggle("is-on", k === idx); if (k === idx) t.setAttribute("aria-current", "true"); else t.removeAttribute("aria-current"); t.setAttribute("aria-label", capOf(shots[k])); });
       // every photograph of the set carries a real description too (the small-screen strip shows them directly)
       items.forEach((it) => $$(".rg__set", it).forEach((set) => { const name = roomLabel(set.dataset.room); $$(".rg__shot", set).forEach((b) => { const t = name + ": " + capOf(b); b.setAttribute("aria-label", t); const im = $("img", b); if (im) im.alt = t; }); }));
@@ -805,14 +1040,14 @@
       shotsOf(shown).forEach((s, k) => {
         const b = document.createElement("button"); b.type = "button"; b.className = "stay-thumb";
         const im = document.createElement("img"); im.alt = ""; im.src = ($("img", s) || {}).src || s.dataset.full; b.appendChild(im);
-        b.addEventListener("click", () => { if (k === idx) lightbox.open(fullList(shown), idx); else show(k); });   // the photo already showing opens full size
+        b.addEventListener("click", () => { if (k === idx) lightbox.open(itemsOf(shown), idx); else show(k); });   // the photo already showing opens full size
         thumbs.appendChild(b);
       });
     }
     function showRoom(item, instant) { shown = item; idx = 0; buildThumbs(); show(0, instant); }
     if ($("#stayPrev")) $("#stayPrev").addEventListener("click", (e) => { e.stopPropagation(); show(idx - 1); });
     if ($("#stayNext")) $("#stayNext").addEventListener("click", (e) => { e.stopPropagation(); show(idx + 1); });
-    if (view) view.addEventListener("click", () => lightbox.open(fullList(shown), idx));
+    if (openBtn) openBtn.addEventListener("click", () => lightbox.open(itemsOf(shown), idx));
     if (stage) stage.addEventListener("keydown", (e) => { if (e.key === "ArrowLeft") show(idx - 1); else if (e.key === "ArrowRight") show(idx + 1); });
 
     items.forEach((item) => {
@@ -828,13 +1063,16 @@
         $$(".rg__set", item).forEach((s) => { s.hidden = s.dataset.view !== v; });
         const id = setOf(item).dataset.room;
         if (book) { book.dataset.bookRoom = id; book.href = ENGINE + "?roomtype=" + id; }
+        // the comparison's "Check dates" for this suite asks for the same room
+        const cl = $('[data-cmp-family="' + item.dataset.roomFamily + '"]');
+        if (cl) { cl.dataset.bookRoom = id; cl.href = ENGINE + "?roomtype=" + id; document.dispatchEvent(new CustomEvent("pv:cmp")); }
         if (item === shown) showRoom(item); else paintText();
         if (hasST) ScrollTrigger.refresh();
       };
       chips.forEach((c) => c.addEventListener("click", () => pickView(c.dataset.view)));
       // small screens: the photographs sit in the panel; a tap opens them full size
       $$(".rg__shot", item).forEach((s) => s.addEventListener("focus", () => { try { s.scrollIntoView({ block: "nearest", inline: "nearest" }); } catch (e) { /* older browsers scroll it themselves */ } }));
-      $$(".rg__shot", item).forEach((s) => s.addEventListener("click", () => { const set = s.closest(".rg__set"), list = $$(".rg__shot", set); lightbox.open(list.map((x) => x.dataset.full), list.indexOf(s)); }));
+      $$(".rg__shot", item).forEach((s) => s.addEventListener("click", () => { const set = s.closest(".rg__set"), list = $$(".rg__shot", set); lightbox.open(list.map((x) => ({ src: x.dataset.full, alt: x.getAttribute("aria-label") || "" })), list.indexOf(s)); }));
     });
     items.forEach((it) => { if (!it.classList.contains("is-open")) shut($(".acc__panel", it), true); });
     showRoom(shown, true);
@@ -881,7 +1119,16 @@
     apply(false);
   }
 
-  /* ---------- facilities map: hotspots, panel, legend sync, and a guided tour of the eight places ---------- */
+  /* ---------- facilities map: the eight places on the aerial photograph ----------
+     Wide screens: a marker opens the panel beside it, and the tour walks through the places by itself. The tour waits the
+     moment the visitor reaches into the panel (a pointer over it, the keyboard in it, a tap), so its button never changes
+     under them; Previous and Next step by hand, and "Continue the tour" carries on. It stops when the panel closes, and
+     waits while the tab is in the background.
+     Up to 1000 px wide: the chosen place is shown in a card in the page, under the map, never over anything, with an
+     index of every place (and the seminar hall, which is nearby and off the grounds), and Previous and Next. Nothing
+     moves by itself there. One place is chosen at a time, and its photograph, name, words, marker, count and link always
+     change together. */
+  let mapApi = null;
   function initMap() {
     const map = $("[data-map]"); if (!map) return;
     const stage = $("#mapStage", map), panel = $("#mapPanel"), pImg = $("#mapPanelImg"), pTitle = $("#mapPanelTitle"), pDesc = $("#mapPanelDesc"), goBtn = $("#mapGo"), closeBtn = $("#mapClose");
@@ -889,125 +1136,248 @@
     const hots = $$(".hot", stage), facItems = $$("[data-fac] .fac__item");
     const copy = $("#hotCopy");
     const descFor = (key) => { const n = copy && copy.querySelector('[data-hot="' + key + '"]'); return n ? n.innerHTML : ""; };
+    const narrow = window.matchMedia("(max-width: 62.5em)");
     let active = null, lastFocus = null;
 
     function light(key, on) {
       hots.forEach((h) => h.classList.toggle("is-lit", on && h.dataset.hot === key));
       facItems.forEach((f) => f.classList.toggle("is-lit", on && f.dataset.hot === key));
     }
-    function open(hot, fromTour) {
-      if (!fromTour) { stopTour(); lastFocus = document.activeElement; }
+
+    // ---- wide screens: the panel ----
+    // how: "tour" (the tour moved on) or "step" (Previous or Next): the keyboard stays where it is. Otherwise a marker was
+    // chosen, and the panel takes the keyboard
+    function open(hot, how) {
+      if (!how) lastFocus = document.activeElement;
       active = hot;
       hots.forEach((h) => h.classList.toggle("is-active", h === hot));
       const key = hot.dataset.hot;
       pTitle.textContent = $(".hot__label", hot).textContent;
       pDesc.innerHTML = descFor(key);
+      goBtn.dataset.go = hot.dataset.go;                  // "Take me there" goes where the panel's own place is, fixed as it is shown
       pImg.classList.remove("is-swap"); void pImg.offsetWidth;
       pImg.src = hot.dataset.img; pImg.alt = pTitle.textContent; pImg.classList.add("is-swap");
       if (stepNow) stepNow.textContent = pad2(hots.indexOf(hot) + 1);
-      setInert(panel, false); panel.classList.add("is-open"); panel.setAttribute("aria-hidden", "false"); setOverlay(true);
+      if (!panel.classList.contains("is-open")) setOverlay(true);
+      setInert(panel, false); panel.classList.add("is-open"); panel.setAttribute("aria-hidden", "false");
       // lean the photograph toward the chosen place
       const x = parseFloat(hot.style.getPropertyValue("--x")), y = parseFloat(hot.style.getPropertyValue("--y"));
       $(".map__img", stage).style.transformOrigin = x + "% " + y + "%";
       map.classList.add("is-zoomed");
-      if (!fromTour) closeBtn.focus();
+      if (!how) closeBtn.focus();
     }
     function close() {
       stopTour();
+      const was = panel.classList.contains("is-open"), had = panel.contains(document.activeElement);
       active = null;
       hots.forEach((h) => h.classList.remove("is-active"));
-      const had = panel.contains(document.activeElement);
-      panel.classList.remove("is-open"); panel.setAttribute("aria-hidden", "true"); setInert(panel, true); setOverlay(false);
+      panel.classList.remove("is-open"); panel.setAttribute("aria-hidden", "true"); setInert(panel, true);
+      if (was) setOverlay(false);
       map.classList.remove("is-zoomed");
       if (stepNow) stepNow.textContent = "00";
+      markCard();
       if (had && lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
     }
     setInert(panel, true);
 
-    // the tour: the map walks through its own markers, a few seconds each, and stops the moment the visitor takes over
+    // the tour: the map walks through its own markers, a few seconds each
     const STEP = 4600;
-    let touring = false, tourTimer = null, tourI = -1;
+    let touring = false, paused = false, tourTimer = null, tourI = -1;
     function setProg(p, ms) { if (!prog) return; prog.style.transition = ms ? "transform " + ms + "ms linear" : "none"; prog.style.transform = "scaleX(" + p + ")"; }
+    function tourUi() { if (tourBtn) tourBtn.setAttribute("aria-pressed", String(touring && !paused)); map.classList.toggle("is-touring", touring); map.classList.toggle("is-paused", touring && paused); }
+    function next() { tourTimer = setTimeout(tourStep, STEP); setProg(tourI / hots.length, 0); if (prog) void prog.offsetWidth; setProg((tourI + 1) / hots.length, STEP); }
     function tourStep() {
       const r = stage.getBoundingClientRect();
       tourI++;
       if (tourI >= hots.length || r.bottom < 0 || r.top > window.innerHeight) { close(); return; }
-      open(hots[tourI], true);
-      setProg(tourI / hots.length, 0); if (prog) void prog.offsetWidth; setProg((tourI + 1) / hots.length, STEP);
-      tourTimer = setTimeout(tourStep, STEP);
+      open(hots[tourI], "tour");
+      next();
     }
     function startTour() {
       if (active) close();
-      touring = true; tourI = -1;
-      tourBtn.setAttribute("aria-pressed", "true"); map.classList.add("is-touring");
+      lastFocus = tourBtn;                                 // when the tour ends, the keyboard goes back to its button
+      touring = true; paused = false; tourI = -1; tourUi();
       scrollToEl(map, -84);
       tourStep();
     }
+    function pauseTour() {
+      if (!touring || paused) return;
+      paused = true; clearTimeout(tourTimer); tourUi();
+      if (prog) { const m = getComputedStyle(prog).transform; prog.style.transition = "none"; if (m && m !== "none") prog.style.transform = m; }
+    }
+    function resumeTour() {
+      if (!touring || !paused || !active) return;
+      paused = false; tourUi();
+      tourI = hots.indexOf(active);                        // the place on show gets its full turn, then the tour moves on
+      next();
+    }
     function stopTour() {
       if (!touring) return;
-      touring = false; clearTimeout(tourTimer);
-      tourBtn.setAttribute("aria-pressed", "false"); map.classList.remove("is-touring");
+      touring = false; paused = false; clearTimeout(tourTimer); tourUi();
       setProg(0, 500);
     }
-    if (tourBtn) tourBtn.addEventListener("click", () => (touring ? close() : startTour()));
-
-    hots.forEach((h) => {
-      h.addEventListener("click", () => (active === h && !touring ? close() : open(h)));
-      h.addEventListener("mouseenter", () => { light(h.dataset.hot, true); const pre = new Image(); pre.src = h.dataset.img; });
-      h.addEventListener("mouseleave", () => light(h.dataset.hot, false));
-    });
-    // the markers introduce themselves once, then rest (no loops)
-    if (hasGSAP && hasST && !reduced) gsap.from(hots, { opacity: 0, scale: .6, duration: .7, stagger: .06, ease: "power3.out", transformOrigin: "50% 50%", clearProps: "opacity,scale,transform", scrollTrigger: { trigger: stage, start: "top 75%", once: true } });
-    // "Find on the map" backlinks in other chapters
-    $$("[data-map-open]").forEach((b) => b.addEventListener("click", () => { const h = hots.find((x) => x.dataset.hot === b.dataset.mapOpen); if (!h) return; scrollToEl(stage, -90); setTimeout(() => { open(h); lastFocus = b; }, 500); }));
-    facItems.forEach((f) => {
-      const key = f.dataset.hot; if (!key) return;
-      f.addEventListener("mouseenter", () => light(key, true));
-      f.addEventListener("mouseleave", () => light(key, false));
-      f.addEventListener("click", () => { const h = hots.find((x) => x.dataset.hot === key); if (h) { scrollToEl(stage, -90); open(h); } });
-    });
+    if (tourBtn) tourBtn.addEventListener("click", () => (!touring ? startTour() : paused ? resumeTour() : close()));
+    // the visitor reaching into the panel holds the tour
+    panel.addEventListener("focusin", pauseTour);
+    panel.addEventListener("pointerdown", pauseTour);
+    panel.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") pauseTour(); });
+    document.addEventListener("visibilitychange", () => { if (document.hidden) pauseTour(); });
+    const stepPanel = (d) => { if (!active) return; pauseTour(); open(hots[(hots.indexOf(active) + d + hots.length) % hots.length], "step"); };
+    if ($("#mapPrev")) $("#mapPrev").addEventListener("click", () => stepPanel(-1));
+    if ($("#mapNext")) $("#mapNext").addEventListener("click", () => stepPanel(1));
     goBtn.addEventListener("click", () => {
-      if (!active) return;
-      const target = $(active.dataset.go); close();
+      const to = goBtn.dataset.go; if (!active || !to) return;
+      const target = $(to); close();
       if (target) { scrollToEl(target); if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1"); target.focus({ preventScroll: true }); }
     });
     closeBtn.addEventListener("click", close);
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && panel.classList.contains("is-open")) close(); });
-    // language switch re-renders the open panel text
-    document.addEventListener("pv:lang", () => { if (active) { pTitle.textContent = $(".hot__label", active).textContent; pDesc.innerHTML = descFor(active.dataset.hot); } });
+
+    // ---- up to 1000 px: the place card ----
+    const card = $("#placeCard"), cImg = $("#pcardImg"), cStep = $("#pcardStep"), cTitle = $("#pcardTitle"), cDesc = $("#pcardDesc"), cMore = $("#pcardMore"), cGo = $("#pcardGo"), cGoText = $("#pcardGoText"), index = $("#placeIndex"), hall = $("#fac-hall");
+    // where a place's link leads: always somewhere the visitor can see. The pool, the lake and the loop are described
+    // right here in the card, so they have none
+    const GO = { suites: ["#stay", "nav.stay"], amphi: ["#gather", "nav.gather"], deck: ["#dining", "nav.dining"], kitchen: ["#dining", "nav.dining"], arrival: ["#visit", "nav.contactfaq"], hall: ["#gather", "nav.gather"] };
+    const facFor = (key) => facItems.find((f) => f.dataset.hot === (key === "deck" ? "kitchen" : key));
+    const places = hots.map((h) => ({ key: h.dataset.hot, hot: h })).concat(hall ? [{ key: "hall", hot: null }] : []);
+    let sel = 0, cardToken = 0;
+    const hallNote = () => (($(".fac__n", hall) || {}).textContent || "").trim();
+    function placeOf(p) {
+      if (p.hot) return { title: $(".hot__label", p.hot).textContent.trim(), desc: descFor(p.key), img: p.hot.dataset.img };
+      const im = $("img", hall);
+      return { title: $("h3", hall).textContent.trim(), desc: $("p", hall).innerHTML, img: im ? im.src : "" };
+    }
+    function markCard() {
+      if (!card) return;
+      const p = places[sel];
+      hots.forEach((h) => { const on = narrow.matches && h === p.hot; if (narrow.matches) h.classList.toggle("is-active", on); if (on) h.setAttribute("aria-current", "true"); else h.removeAttribute("aria-current"); });
+      if (index) $$(".pindex__b", index).forEach((b, k) => { if (k === sel) b.setAttribute("aria-current", "true"); else b.removeAttribute("aria-current"); });
+    }
+    function select(i) {
+      if (!card) return;
+      sel = (i + places.length) % places.length;
+      const p = places[sel], t = placeOf(p), my = ++cardToken, go = GO[p.key], f = p.hot ? facFor(p.key) : null;
+      cTitle.textContent = t.title;
+      cDesc.innerHTML = t.desc;
+      cStep.textContent = p.hot ? I18N.t("placeOf", { i: sel + 1, n: hots.length }) : hallNote();
+      cMore.textContent = "";
+      if (f) { const b = document.createElement("strong"); b.textContent = $("h3", f).textContent.trim(); cMore.append(b, " " + $("p", f).textContent.trim()); }
+      cMore.hidden = !f;
+      cGo.hidden = !go;
+      if (go) { cGo.setAttribute("href", go[0]); cGoText.textContent = I18N.t("goTo", { name: navWord(go[1]) }); }
+      card.classList.toggle("is-hall", !p.hot);
+      // a photograph that arrives after the visitor has moved on is not shown
+      cImg.classList.remove("is-in", "is-failed");
+      cImg.onload = () => { if (my === cardToken) cImg.classList.add("is-in"); };
+      cImg.onerror = () => { if (my === cardToken) cImg.classList.add("is-failed"); };
+      if (cImg.getAttribute("src") !== t.img) cImg.src = t.img; else if (cImg.complete && cImg.naturalWidth) cImg.classList.add("is-in");
+      markCard();
+    }
+    function buildIndex() {
+      if (!index) return;
+      index.textContent = "";
+      places.forEach((p, k) => {
+        const li = document.createElement("li"), b = document.createElement("button"), n = document.createElement("span"), tx = document.createElement("span");
+        b.type = "button"; b.className = "pindex__b" + (p.hot ? "" : " pindex__b--off");
+        n.className = "pindex__n num"; n.setAttribute("aria-hidden", "true"); n.textContent = p.hot ? pad2(k + 1) : "";
+        tx.className = "pindex__t"; tx.textContent = placeOf(p).title;
+        if (!p.hot) { const sm = document.createElement("small"); sm.textContent = hallNote(); tx.append(" ", sm); }
+        b.append(n, tx);
+        b.addEventListener("click", () => select(k));
+        li.appendChild(b); index.appendChild(li);
+      });
+      markCard();
+    }
+    if (card) {
+      buildIndex(); select(0);
+      $("#pcardPrev").addEventListener("click", () => select(sel - 1));
+      $("#pcardNext").addEventListener("click", () => select(sel + 1));
+    }
+    const onNarrow = () => {
+      if (narrow.matches) { const k = active ? hots.indexOf(active) : -1; stopTour(); if (panel.classList.contains("is-open")) close(); if (k > -1) select(k); else markCard(); }
+      else hots.forEach((h) => { h.classList.remove("is-active"); h.removeAttribute("aria-current"); });
+    };
+    try { narrow.addEventListener("change", onNarrow); } catch (e) { narrow.addListener(onNarrow); }
+
+    hots.forEach((h, k) => {
+      h.addEventListener("click", () => {
+        if (narrow.matches) { select(k); return; }
+        if (touring) { pauseTour(); open(h); return; }   // a marker chosen during the tour holds it there
+        if (active === h) close(); else open(h);
+      });
+      h.addEventListener("mouseenter", () => { light(h.dataset.hot, true); const pre = new Image(); pre.src = h.dataset.img; });
+      h.addEventListener("mouseleave", () => light(h.dataset.hot, false));
+    });
+    // the markers introduce themselves once, then rest (no loops)
+    if (hasGSAP && hasST && !reduced && motionOn) gsap.from(hots, { opacity: 0, scale: .6, duration: .7, stagger: .06, ease: "power3.out", transformOrigin: "50% 50%", clearProps: "opacity,scale,transform", scrollTrigger: { trigger: stage, start: "top 75%", once: true } });
+    // "Find on the map" in other chapters: on a phone it opens Facilities with that place chosen
+    $$("[data-map-open]").forEach((b) => b.addEventListener("click", () => {
+      const k = places.findIndex((p) => p.key === b.dataset.mapOpen); if (k < 0 || !places[k].hot) return;
+      if (viewsOn()) {
+        Views.go("#facilities", { push: true, focus: false }); select(k);
+        requestAnimationFrame(() => { scrollToEl(stage, -(headerH() + 12), true); hots[k].focus({ preventScroll: true }); });
+        return;
+      }
+      if (narrow.matches) { select(k); scrollToEl(stage, -(headerH() + 12)); hots[k].focus({ preventScroll: true }); return; }
+      scrollToEl(stage, -90); setTimeout(() => { open(hots[k]); lastFocus = b; }, 500);
+    }));
+    facItems.forEach((f) => {
+      const key = f.dataset.hot || "hall";
+      f.addEventListener("mouseenter", () => light(key, true));
+      f.addEventListener("mouseleave", () => light(key, false));
+      f.addEventListener("click", () => {
+        const k = places.findIndex((p) => p.key === key);
+        if (narrow.matches) { if (k > -1) { select(k); scrollToEl(card, -(headerH() + 12)); } return; }
+        if (k > -1 && places[k].hot) { scrollToEl(stage, -90); open(places[k].hot); }
+      });
+    });
+    // a language switch re-words the open panel and the card
+    document.addEventListener("pv:lang", () => {
+      if (active) { pTitle.textContent = $(".hot__label", active).textContent; pDesc.innerHTML = descFor(active.dataset.hot); }
+      if (card) { buildIndex(); select(sel); }
+    });
+    mapApi = {
+      select: (key) => { const k = places.findIndex((p) => p.key === key); if (k < 0) return; if (narrow.matches) select(k); else if (places[k].hot) open(places[k].hot, "step"); },
+      reset: () => { stopTour(); if (panel.classList.contains("is-open")) close(); }
+    };
   }
 
   /* ---------- lightbox: one viewer, used by the gallery reel and by the room galleries ---------- */
   const lightbox = (function () {
     const box = $("#lightbox"), img = $("#lbImg"), count = $("#lbCount");
-    if (!box || !img) return { open() {} };
+    if (!box || !img) return { open() {}, shut() {} };
     let list = [], idx = 0, isOpen = false, lastFocus = null, onToggle = null;
-    function render() { img.src = list[idx]; count.textContent = (idx + 1) + " / " + list.length; if (hasGSAP && !reduced) gsap.fromTo(img, { opacity: .2, scale: .97 }, { opacity: 1, scale: 1, duration: .45 }); }
-    // items: the addresses of the full-size photographs. cb(true|false) tells the caller when the viewer opens and closes
+    // the photograph, its own description and the count change together
+    function render() { const it = list[idx]; img.src = it.src; img.alt = it.alt || I18N.t("photoGeneric"); count.textContent = (idx + 1) + " / " + list.length; if (hasGSAP && !reduced) gsap.fromTo(img, { opacity: .2, scale: .97 }, { opacity: 1, scale: 1, duration: .45 }); }
+    // items: the full-size photographs, each { src, alt } (a plain address is taken as a photograph with no description of
+    // its own). cb(true|false) tells the caller when the viewer opens and closes
     function open(items, i, cb) {
       if (!items || !items.length) return;
-      list = items; idx = Math.max(0, i || 0); onToggle = cb || null; isOpen = true; lastFocus = document.activeElement;
+      list = items.map((x) => (typeof x === "string" ? { src: x, alt: "" } : x)); idx = Math.max(0, i || 0); onToggle = cb || null; isOpen = true; lastFocus = document.activeElement;
       if (onToggle) onToggle(true);
       box.classList.add("is-open"); box.setAttribute("aria-hidden", "false"); setOverlay(true); render();
       if (hasGSAP && !reduced) gsap.to(box, { opacity: 1, duration: .35 }); else box.style.opacity = "1";
       lockPage("lightbox", true); setBehind(box, true);
       $("#lbClose").focus();
     }
-    function close() {
+    // keep: the keyboard stays where it is (the visitor is moving to another destination)
+    function close(keep) {
+      if (!isOpen) return;
       isOpen = false; if (onToggle) onToggle(false);
       const done = () => { box.classList.remove("is-open"); box.setAttribute("aria-hidden", "true"); };
       if (hasGSAP && !reduced) gsap.to(box, { opacity: 0, duration: .3, onComplete: done }); else { box.style.opacity = "0"; done(); }
-      setOverlay(false); lockPage("lightbox", false); setBehind(box, false); if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+      setOverlay(false); lockPage("lightbox", false); setBehind(box, false); if (keep !== true && lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
     }
     const step = (d) => { idx = (idx + d + list.length) % list.length; render(); };
-    $("#lbClose").addEventListener("click", close); $("#lbPrev").addEventListener("click", () => step(-1)); $("#lbNext").addEventListener("click", () => step(1));
+    $("#lbClose").addEventListener("click", () => close()); $("#lbPrev").addEventListener("click", () => step(-1)); $("#lbNext").addEventListener("click", () => step(1));
     box.addEventListener("click", (e) => { if (e.target === box || e.target.classList.contains("lightbox__stage")) close(); });
+    document.addEventListener("pv:lang", () => { if (isOpen) render(); });
     document.addEventListener("keydown", (e) => {
       if (!isOpen) return;
       if (e.key === "Escape") close(); else if (e.key === "ArrowLeft") step(-1); else if (e.key === "ArrowRight") step(1);
       else if (e.key === "Tab") { const f = [$("#lbClose"), $("#lbPrev"), $("#lbNext")]; const i = f.indexOf(document.activeElement); e.preventDefault(); f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus(); }
     });
-    return { open: open };
+    return { open: open, shut: () => close(true) };
   })();
 
   /* ---------- gallery: a strip of photographs that drifts slowly ----------
@@ -1017,9 +1387,11 @@
     const reel = $("#reel"), track = $("#reelTrack"); if (!reel || !track) return;
     const originals = $$(".reel__item", track);
     const gallery = originals.map((b) => b.dataset.full);
+    // each photograph's description is its button's name after "Open photo n of 8: ", in the language being read
+    const items = () => originals.map((b) => ({ src: b.dataset.full, alt: (b.getAttribute("aria-label") || "").replace(/^[^:]*:\s*/, "") }));
     const pauseBtn = $("#reelPause"), prevBtn = $("#reelPrev"), nextBtn = $("#reelNext");
     const state = { paused: false, mouse: false, focus: false, held: false, open: false, seen: false, dragged: false, caught: false };
-    const openAt = (b) => lightbox.open(gallery, Math.max(0, gallery.indexOf(b.dataset.full)), (on) => { state.open = on; kick(); });
+    const openAt = (b) => lightbox.open(items(), Math.max(0, gallery.indexOf(b.dataset.full)), (on) => { state.open = on; kick(); });
     let kick = function () {};
     if (reduced) {
       // nothing drifts, so there is nothing to pause: the strip scrolls natively and the arrows step it
@@ -1031,6 +1403,8 @@
       return;
     }
     reel.classList.add("is-drift");
+    // on a phone's Gallery the strip holds still until the visitor moves it (drag, the arrows, or Play)
+    if (viewsOn()) { state.paused = true; if (pauseBtn) pauseBtn.setAttribute("aria-pressed", "true"); }
     // a copy of the set on both sides makes the loop seamless, including the left gutter. The copies are for the eye only
     const mk = () => originals.map((b) => { const c = b.cloneNode(true); c.setAttribute("aria-hidden", "true"); c.tabIndex = -1; c.classList.add("is-clone"); c.removeAttribute("data-i18n-attr"); return c; });
     const before = mk(), after = mk();
@@ -1061,7 +1435,8 @@
       if (state.seen && !document.hidden && busy()) raf = requestAnimationFrame(frame); else last = 0;
     }
     kick = function () { if (!raf && state.seen && !document.hidden && busy()) raf = requestAnimationFrame(frame); };
-    new IntersectionObserver((en) => en.forEach((e) => { state.seen = e.isIntersecting; kick(); }), { rootMargin: "10% 0px" }).observe(reel);
+    // a strip first measured while its destination was hidden is measured again when it comes into view
+    new IntersectionObserver((en) => en.forEach((e) => { state.seen = e.isIntersecting; if (state.seen && !setW) { measure(); if (setW && x > -setW) { x = -setW; paint(); } } kick(); }), { rootMargin: "10% 0px" }).observe(reel);
     document.addEventListener("visibilitychange", kick);
 
     // pause is the visitor's decision and it stays: hovering, focusing or dragging never switches the drift back on
@@ -1126,7 +1501,7 @@
       if (!d) return;
       let back = from || (cur ? origin : document.activeElement);
       if (cur) close({ keepFocus: true });
-      if (menuOpen) { toggleMenu(false, { keepFocus: true }); back = burger; }
+      if (menuOpen) { toggleMenu(false, { keepFocus: true }); back = menuReturn && menuReturn.isConnected ? menuReturn : burger; }
       cur = d; origin = back;
       setInert(d, false); setBehind(d, true); d.classList.add("is-open"); d.setAttribute("aria-hidden", "false"); setOverlay(true); lockPage("drawer", true);
       const c = focusEl || $("[data-drawer-close]", d); if (c) setTimeout(() => { if (cur === d) c.focus({ preventScroll: true }); }, 60);
@@ -1141,6 +1516,47 @@
   function initDrawers() {
     $$("[data-amen-open]").forEach((b) => b.addEventListener("click", (e) => { e.preventDefault(); Drawers.open($("#amen")); }));
     $$("[data-compare-open]").forEach((b) => b.addEventListener("click", (e) => { e.preventDefault(); Drawers.open($("#compare")); }));
+    initCompareCards();
+  }
+  /* On a phone the comparison is three cards, one per suite, with the same facts in the same order. They are made from
+     the table, so the facts are written once; each card's "Check dates" is the table's own link, which follows the view
+     chosen for that suite (lake, garden or country) and so asks for exactly that room. */
+  function initCompareCards() {
+    const box = $("#cmpCards"), table = $(".cmp__t"); if (!box || !table) return;
+    const names = $$("thead th", table), rows = $$("tbody tr", table), acts = $$("tfoot a", table);
+    const roomName = (id) => { const o = $('#bookRoom option[value="' + id + '"]'); return o ? o.textContent.trim() : ""; };
+    function build() {
+      // every link that checks dates says which room it asks for
+      acts.forEach((a) => a.setAttribute("aria-label", plain($("span", a).innerHTML) + ": " + roomName(a.dataset.bookRoom)));
+      box.textContent = "";
+      names.forEach((th, c) => {
+        const card = document.createElement("article"), h = document.createElement("h4"), dl = document.createElement("dl");
+        card.className = "cmpc__card"; card.style.setProperty("--i", c);
+        h.className = "cmpc__name"; h.textContent = th.textContent.trim(); card.appendChild(h);
+        dl.className = "cmpc__facts";
+        rows.forEach((tr) => {
+          const cell = tr.children[c + 1]; if (!cell) return;
+          const row = document.createElement("div"), dt = document.createElement("dt"), dd = document.createElement("dd");
+          dt.textContent = $("th", tr).textContent.trim(); dd.innerHTML = cell.innerHTML; dd.className = cell.className;
+          $$("[data-i18n]", dd).forEach((x) => x.removeAttribute("data-i18n"));
+          row.append(dt, dd); dl.appendChild(row);
+        });
+        card.appendChild(dl);
+        const src = acts[c];
+        if (src) {
+          const a = document.createElement("a");
+          a.className = src.className; a.href = src.href; a.target = "_blank"; a.rel = "noopener"; a.innerHTML = src.innerHTML;
+          $$("[data-i18n]", a).forEach((x) => x.removeAttribute("data-i18n"));
+          a.setAttribute("aria-label", src.getAttribute("aria-label"));
+          a.addEventListener("click", (e) => { e.preventDefault(); src.click(); });
+          card.appendChild(a);
+        }
+        box.appendChild(card);
+      });
+    }
+    build();
+    document.addEventListener("pv:lang", build);
+    document.addEventListener("pv:cmp", build);
   }
 
   /* ---------- booking: one stay, wherever it is shown ----------
@@ -1193,6 +1609,7 @@
     const panel = $("#bookPanel"), scrim = $("#bookScrim"), form = $("#bookForm"); if (!panel || !form) return;
     const inEl = $("#bookIn"), outEl = $("#bookOut"), adults = $("#bookAdults"), promo = $("#bookPromo"), summary = $("#bookSummary"), roomSel = $("#bookRoom"), go = $("#bookGo"), more = $("#bookMore");
     const dock = $("#dock"), dIn = $("#dockIn"), dOut = $("#dockOut"), dAdults = $("#dockAdults"), dGo = $("#dockGo"), dErr = $("#dockErr"), dMore = $("#dockMore");
+    const note = $(".book__note"), dNote = $("#dockNote"), dNoteMore = $("#dockNoteMore");
     const S = Booking.state, KEYS = ["checkin", "checkout", "adults"];
     const fields = { panel: { checkin: inEl, checkout: outEl, adults: adults }, dock: { checkin: dIn, checkout: dOut, adults: dAdults } };
     // a field shows its message once the visitor has changed it, or once they have tried to continue
@@ -1215,6 +1632,10 @@
         if (msg) { msg.hidden = !key; msg.textContent = key ? errText(key) : ""; }
       });
       if (more) more.hidden = String(S.adults) !== "more";
+      // the line under the button says what goes over: for four or more, the dates and the room, not the party
+      const four = String(S.adults) === "more", nk = four ? "book.notemore" : "book.note";
+      if (note && note.dataset.fact !== nk) { note.dataset.fact = nk; note.innerHTML = FACTS.t(nk); }
+      if (dNote && dNoteMore) { dNote.hidden = four; dNoteMore.hidden = !four; }
       if (go) go.href = href;
       // the bar under the hero: the field at fault is marked, and one line under the bar says what is wrong
       if (dock) {
@@ -1285,7 +1706,7 @@
       const from = e && e.currentTarget;
       let back = document.activeElement;
       if (Drawers.current()) { back = Drawers.origin() || back; Drawers.close({ keepFocus: true }); }
-      if (menuOpen) { toggleMenu(false, { keepFocus: true }); back = burger; }
+      if (menuOpen) { toggleMenu(false, { keepFocus: true }); back = menuReturn && menuReturn.isConnected ? menuReturn : burger; }
       // opened from a room ("Check dates for this room"): the planner starts on that room
       if (from && from.dataset && from.dataset.bookRoom) Booking.set({ room: from.dataset.bookRoom }, "open");
       if (isOpen) return;
@@ -1309,7 +1730,7 @@
   }
 
   /* ---------- enquiries: a message written here, sent by the guest ----------
-     Two kinds: a pet-friendly stay, and a group event. The form writes a plain message from what the guest enters.
+     Three kinds: a pet-friendly stay, a group event, and a general question. The form writes a plain message from what the guest enters.
      The guest copies it, or opens it in their own mail app, and sends it to the resort themselves. Nothing leaves this
      page on its own, nothing is stored, and preparing a message confirms nothing: the page says so. */
   let hallLayout = "theatre", hallPicked = false;          // the layout chosen in the hall planner, for a group enquiry
@@ -1318,12 +1739,13 @@
     const el = (id) => $("#" + id);
     const inEl = el("enqIn"), outEl = el("enqOut"), und = el("enqUndecided"), adults = el("enqAdults"), kids = el("enqKids"), suite = el("enqSuite"), pet = el("enqPet"), petN = el("enqPetN"), petSize = el("enqPetSize"),
       purpose = el("enqPurpose"), layout = el("enqLayout"), people = el("enqPeople"), rooms = el("enqRooms"), note = el("enqNote"),
-      text = el("enqText"), status = el("enqStatus"), copyBtn = el("enqCopy"), mail = el("enqMail"), title = el("enqTitle"), lead = el("enqLead"), help = el("enqHelp"), layoutHint = el("enqLayoutHint");
+      text = el("enqText"), status = el("enqStatus"), copyBtn = el("enqCopy"), mail = el("enqMail"), title = el("enqTitle"), lead = el("enqLead"), help = el("enqHelp"), layoutHint = el("enqLayoutHint"),
+      venue = el("enqVenue"), noteLabel = el("enqNoteLabel");
     const S = Booking.state, MAIL = "mailto:" + FX.contact.email;
     let mode = "pet", tried = false, touched = {}, saidUndecided = null;   // saidUndecided: the guest's own answer to "dates not decided yet", once given
     const whole = (v, min, max) => (/^\d+$/.test(String(v).trim()) && +v >= min && +v <= max ? +v : null);
     const clean = (v) => String(v || "").replace(/\s+/g, " ").trim();
-    const order = { pet: ["enqIn", "enqOut", "enqAdults", "enqKids", "enqPet", "enqPetN"], group: ["enqIn", "enqOut", "enqPeople", "enqRooms"] };
+    const order = { pet: ["enqIn", "enqOut", "enqAdults", "enqKids", "enqPet", "enqPetN"], group: ["enqIn", "enqOut", "enqPeople", "enqRooms"], general: ["enqIn", "enqOut", "enqNote"] };
 
     function errors() {
       const e = {};
@@ -1333,10 +1755,10 @@
         if (kids.value !== "" && whole(kids.value, 0, 30) == null) e.enqKids = "errCount0";
         if (!clean(pet.value)) e.enqPet = "errPet";
         if (petN.value !== "" && whole(petN.value, 1, 20) == null) e.enqPetN = "errCount";
-      } else {
+      } else if (mode === "group") {
         if (whole(people.value, 1, 2000) == null) e.enqPeople = "errPeople";
         if (rooms.value !== "" && whole(rooms.value, 0, 64) == null) e.enqRooms = "errCount0";
-      }
+      } else if (!clean(note.value)) e.enqNote = "errQuestion";
       return e;
     }
     // the message, in the language the guest is reading. Every part comes from what they entered; nothing is left as a blank to fill
@@ -1350,18 +1772,32 @@
         const petLine = clean(pet.value) + (petN.value ? "; " + I18N.t("enqPetCount") + ": " + petN.value : "") + (clean(petSize.value) ? "; " + I18N.t("enqPetSize") + ": " + clean(petSize.value) : "");
         return FACTS.t("enq.pet.msg", { dates: dates, guests: guests, suite: suite.value ? suite.options[suite.selectedIndex].textContent.trim() : I18N.t("enqNoPref"), pet: petLine, question: question });
       }
-      return FACTS.t("enq.group.msg", { dates: dates, purpose: clean(purpose.value) || I18N.t("enqNotSaid"), layout: layout.value ? layout.options[layout.selectedIndex].textContent.trim() : I18N.t("enqNoLayout"), people: String(+people.value), rooms: rooms.value === "" ? I18N.t("enqNotSaid") : String(+rooms.value), question: question });
+      if (mode === "general") return FACTS.t("enq.general.msg", { question: q, dates: dates });
+      return FACTS.t("enq.group.msg", { dates: dates, purpose: clean(purpose.value) || I18N.t("enqNotSaid"), venue: venue && venue.value ? venue.options[venue.selectedIndex].textContent.trim() : I18N.t("enqNoVenue"), layout: layout.value ? layout.options[layout.selectedIndex].textContent.trim() : I18N.t("enqNoLayout"), people: String(+people.value), rooms: rooms.value === "" ? I18N.t("enqNotSaid") : String(+rooms.value), question: question });
     }
     const say = (msg, bad) => { status.textContent = msg || ""; status.classList.toggle("is-bad", !!bad); };
+    // the hall's own figure for the chosen room and layout (never a share of the full hall), and a word when the party
+    // is larger than that
+    function capHint() {
+      if (!layoutHint) return;
+      const lay = layout.value, ven = venue ? venue.value : "", n = whole(people.value, 1, 2000), part = ven || "full";
+      let msg = "", limit = null;
+      if (lay) {
+        limit = FACTS.val("hall." + lay + "." + part);
+        msg = ven ? I18N.t("enqVenueCap", { venue: venue.options[venue.selectedIndex].textContent.trim(), n: limit }) : I18N.t("enqLayoutCap", { n: limit });
+      } else if (FX.hall && FX.hall.layouts) limit = Math.max.apply(null, FX.hall.layouts.map((l) => l[part]).filter((v) => typeof v === "number"));
+      if (n != null && limit != null && isFinite(limit) && n > limit) msg = (msg ? msg + " " : "") + I18N.t("enqOverCap", { n: limit });
+      layoutHint.textContent = msg;
+    }
     function update() {
       const e = errors(), valid = !Object.keys(e).length;
-      order.pet.concat(order.group).forEach((id) => {
+      order.pet.concat(order.group, ["enqNote"]).forEach((id) => {
         const input = el(id), msg = el(id + "Err"), key = (tried || touched[id]) && e[id]; if (!input) return;
         input.setAttribute("aria-invalid", String(!!key));
         if (msg) { msg.hidden = !key; msg.textContent = key ? I18N.t(key, { max: A_MAX }) : ""; }
       });
       inEl.disabled = outEl.disabled = und.checked;
-      if (layoutHint) layoutHint.textContent = layout.value ? I18N.t("enqLayoutCap", { n: FACTS.val("hall." + layout.value + ".full") }) : "";
+      capHint();
       // the draft follows the form while the form is in order. When it is not, the last good draft stays as it was,
       // and the mail link carries no stale text
       if (valid) {
@@ -1372,13 +1808,16 @@
       return e;
     }
     function label() {
-      title.textContent = I18N.t(mode === "pet" ? "enqPetTitle" : "enqGroupTitle");
-      lead.textContent = mode === "pet" ? FACTS.t("pet.summary") + " " + I18N.t("enqPetLead") : I18N.t("enqGroupLead");
-      help.textContent = I18N.t(mode === "pet" ? "enqPetHelp" : "enqGroupHelp");
+      title.textContent = I18N.t(mode === "pet" ? "enqPetTitle" : mode === "group" ? "enqGroupTitle" : "enqGenTitle");
+      lead.textContent = mode === "pet" ? FACTS.t("pet.summary") + " " + I18N.t("enqPetLead") : I18N.t(mode === "group" ? "enqGroupLead" : "enqGenLead");
+      help.textContent = I18N.t(mode === "pet" ? "enqPetHelp" : mode === "group" ? "enqGroupHelp" : "enqGenHelp");
+      // a general question is the message itself; elsewhere this box is for anything else, optional
+      if (noteLabel) noteLabel.textContent = I18N.t(mode === "general" ? "enqGenNote" : "enqNoteLabel");
+      note.rows = mode === "general" ? 5 : 2;
       text.placeholder = I18N.t("enqEmpty");
     }
     function open(kind, opts) {
-      const next = kind === "group" ? "group" : "pet";
+      const next = kind === "group" || kind === "general" ? kind : "pet";
       if (next !== mode) text.value = "";                  // a draft for the other kind of enquiry is not carried over
       mode = next; tried = false; touched = {};
       $$("[data-enq-mode]", box).forEach((d) => { d.hidden = d.dataset.enqMode !== mode; });
@@ -1399,8 +1838,8 @@
     outEl.addEventListener("input", () => Booking.set({ checkout: outEl.value }, "enquiry"));
     adults.addEventListener("input", () => { const n = whole(adults.value, 1, 30); if (n != null) Booking.set({ adults: n <= A_MAX ? String(n) : "more" }, "enquiry"); else update(); });
     Booking.onChange(() => { if (Drawers.current() !== box) return; if (inEl !== document.activeElement) inEl.value = S.checkin; if (outEl !== document.activeElement) outEl.value = S.checkout; update(); });
-    [und, kids, suite, pet, petN, petSize, purpose, layout, people, rooms, note].forEach((f) => f.addEventListener("input", update));
-    [adults, kids, pet, petN, people, rooms].forEach((f) => { const mark = () => { touched[f.id] = true; update(); }; f.addEventListener("change", mark); f.addEventListener("blur", mark); });
+    [und, kids, suite, pet, petN, petSize, purpose, venue, layout, people, rooms, note].filter(Boolean).forEach((f) => f.addEventListener("input", update));
+    [adults, kids, pet, petN, people, rooms, note].forEach((f) => { const mark = () => { touched[f.id] = true; update(); }; f.addEventListener("change", mark); f.addEventListener("blur", mark); });
     und.addEventListener("change", () => { saidUndecided = und.checked; });
     el("enqForm").addEventListener("submit", (e) => e.preventDefault());
 
@@ -1428,7 +1867,7 @@
     document.addEventListener("pv:lang", () => { label(); update(); });
     label();
     // a link can ask for the form directly (…/?enquiry=pet). Nothing personal is ever put in the address
-    try { const want = new URLSearchParams(location.search).get("enquiry"); if (want === "pet" || want === "group") setTimeout(() => open(want), 400); } catch (e) { /* ignore */ }
+    try { const want = new URLSearchParams(location.search).get("enquiry"); if (want === "pet" || want === "group" || want === "general") setTimeout(() => open(want), 400); } catch (e) { /* ignore */ }
   }
 
   /* ---------- pet-friendly stays: the details list, and what happens if the policy changes ---------- */
@@ -1447,6 +1886,7 @@
     paint(); document.addEventListener("pv:lang", paint);
     $$("[data-pet-details]").forEach((a) => a.addEventListener("click", (e) => {
       if (!details) return; e.preventDefault();
+      if (viewsOn()) { Views.go("#pet-details", { push: true }); return; }
       details.open = true; scrollToEl(details, -96);
       const sm = $("summary", details); if (sm) sm.focus({ preventScroll: true });
       try { history.pushState(null, "", "#pet-details"); } catch (err) { /* ignore */ }
@@ -1456,14 +1896,24 @@
 
   /* ---------- copy, share, toast, clock ---------- */
   let toastTimer = null;
-  function toast(msg) { const el = $("#toast"); if (!el) return; el.textContent = msg; el.classList.add("is-on"); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("is-on"), 2400); }
+  function toast(msg, ms) { const el = $("#toast"); if (!el) return; el.textContent = msg; el.classList.add("is-on"); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("is-on"), ms || 2400); }
+  // Copy, and say what really happened. "Copied" only when the browser confirms it: the clipboard's own answer, or the
+  // older copy command reporting success. Refused both ways, the message says so and shows the text to copy by hand,
+  // for long enough to read, and the keyboard stays where it was.
   function copyText(v, okMsg, btn) {
     const done = () => {
       toast(okMsg);
       if (btn && btn.classList.contains("pill--copy")) { btn.classList.add("is-done"); setTimeout(() => btn.classList.remove("is-done"), 1900); }
     };
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(v).then(done, () => toast(I18N.t("copyFail")));
-    else { const ta = document.createElement("textarea"); ta.value = v; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); done(); } catch (e) { toast(I18N.t("copyFail")); } ta.remove(); }
+    const byHand = () => {
+      const back = document.activeElement, ta = document.createElement("textarea");
+      ta.value = v; ta.setAttribute("readonly", ""); ta.style.cssText = "position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none";
+      document.body.appendChild(ta); ta.select();
+      let ok = false; try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+      ta.remove(); if (back && back.focus) back.focus({ preventScroll: true });
+      if (ok) done(); else toast(I18N.t("copyFail", { v: v }), 6000);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(v).then(done, byHand); else byHand();
   }
   function initCopy() {
     $$("[data-copy], [data-copy-el]").forEach((btn) => btn.addEventListener("click", () => {
@@ -1627,6 +2077,7 @@
         t.classList.add("is-ended"); t.classList.remove("ticket--hot");
         $$("button", t).forEach((b) => { b.disabled = true; });
         const s = document.createElement("span"); s.className = "ticket__state"; s.dataset.key = "offerEnded"; t.insertBefore(s, t.firstChild);
+        $$('[data-offer-teaser="' + t.dataset.offer + '"]').forEach((x) => { x.hidden = true; });
       }
     });
     // the featured card is always one that is still running; ended ones go to the back
@@ -1636,7 +2087,7 @@
     if (sorted.some((t, i) => t !== tickets[i])) sorted.forEach((t) => wrap.appendChild(t));
     const paint = () => {
       $$(".ticket__state").forEach((s) => { s.textContent = I18N.t(s.dataset.key); });
-      $$(".ticket [data-copy]").forEach((b) => b.setAttribute("aria-label", I18N.t("copyCode", { code: b.dataset.copy })));
+      $$(".ticket [data-copy]").forEach((b) => b.removeAttribute("aria-label"));   // its words ("Copy code refresh2026") are its name
     };
     paint(); document.addEventListener("pv:lang", paint);
   }
@@ -1679,11 +2130,14 @@
     // figures the page counts up to are facts too
     $$("[data-count-fact]").forEach((el) => { const v = FACTS.val(el.dataset.countFact); if (v != null) { el.dataset.count = v; el.textContent = v; } });
     I18N.capture(); I18N.apply(initialLang());
+    Views.init();
     initOffers(); initHall(); initMotion(); initStay(); initRadius(); initMap(); initReel(); initDrawers(); initBooking(); initEnquiry(); initPet(); initCopy(); initClock(); initSky(); initDining(); initNight(); initLang(); initDiag(); onScroll();
     // A link that names a section (…/#pet-friendly): the browser goes there as the page is parsed, and once everything
-    // above it has taken its final size the landing is squared up, unless the visitor has already started to scroll
+    // above it has taken its final size the landing is squared up, unless the visitor has already started to scroll.
+    // On a phone's destinations the destination does its own landing
+    const landed = Views.land();
     try {
-      const target = location.hash.length > 1 && /^#[A-Za-z][A-Za-z0-9_-]*$/.test(location.hash) ? $(location.hash) : null;
+      const target = !landed && location.hash.length > 1 && /^#[A-Za-z][A-Za-z0-9_-]*$/.test(location.hash) ? $(location.hash) : null;
       if (target) {
         let moved = false;
         ["wheel", "touchstart", "keydown", "mousedown"].forEach((t) => window.addEventListener(t, () => { moved = true; }, { once: true, passive: true }));
