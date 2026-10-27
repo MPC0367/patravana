@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300..800&family=Fraunces:ital,opsz,wght@1,9..144,300..500&family=DM+Sans:opsz,wght@9..40,300..600&family=Prompt:wght@300;400;500;600&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=63e2cbaa">
+<link rel="stylesheet" href="styles.css?v=58f79504">
 </head>
 <body>
 
@@ -28,6 +28,7 @@
     <symbol id="i-check" viewBox="0 0 16 16"><path d="M3 8.6 6.4 12 13 4.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-share" viewBox="0 0 16 16"><path d="M8 10V2.6M5.2 5.2 8 2.4l2.8 2.8M3 9v3.4a1.1 1.1 0 0 0 1.1 1.1h7.8a1.1 1.1 0 0 0 1.1-1.1V9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-x" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></symbol>
+    <symbol id="i-up" viewBox="0 0 16 16"><path d="M8 13.5v-11M3.5 7 8 2.5 12.5 7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-down" viewBox="0 0 16 16"><path d="M3.5 6 8 10.5 12.5 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   </defs>
 </svg>
@@ -254,15 +255,30 @@
     <img class="hero__poster" fetchpriority="high" src="assets/web/hero-first-2400.jpg" srcset="assets/web/hero-first-800.jpg 800w, assets/web/hero-first-1600.jpg 1600w, assets/web/hero-first-2400.jpg 2400w, assets/web/hero-first-4k.jpg 3840w" sizes="100vw" alt="">
     <!-- the script decides how each film is played (streamed in parts, or one of these files), so nothing preloads here -->
     <video class="hero__video is-on" id="heroVideo" muted playsinline preload="none"
-      poster="assets/web/hero-first-2400.jpg"
-      data-hq="assets/video/film-pav-1080.mp4" data-uhd="assets/video/film-pav-1440.mp4" data-uhd-touch="1">
+      poster="assets/web/hero-first-1600.jpg"
+      data-hq="assets/video/film-pav-1080.mp4" data-uhd="assets/video/film-pav-1440.mp4" data-uhd-touch="1" data-phone="assets/video/film-pav-phone.mp4">
       <source src="assets/video/film-pav-720.mp4" type="video/mp4">
     </video>
     <video class="hero__video" id="heroVideo2" muted playsinline preload="none"
-      data-hq="assets/video/film-hill-1080.mp4" data-uhd="assets/video/film-hill-1440.mp4" data-uhd-touch="1">
+      data-hq="assets/video/film-hill-1080.mp4" data-uhd="assets/video/film-hill-1440.mp4" data-uhd-touch="1" data-phone="assets/video/film-hill-phone.mp4">
       <source src="assets/video/film-hill-720.mp4" type="video/mp4">
     </video>
     <div class="hero__shade"></div>
+    <script>
+    /* A phone held upright, on Home: the opening film (the upright cut made for phones) is asked for here, while the rest
+       of the page is still arriving, instead of once the scripts are in. main.js takes the film over as it is (see setFile). */
+    (function () {
+      var v = document.getElementById("heroVideo"), mm = window.matchMedia, h = location.hash;
+      if (!v || !v.getAttribute("data-phone") || !/(^|\s)js(\s|$)/.test(document.documentElement.className) || !mm) return;
+      if (mm("(prefers-reduced-motion: reduce)").matches || (navigator.connection && navigator.connection.saveData)) return;
+      var touch = mm("(pointer: coarse)").matches || /iP(hone|ad|od)|Android/.test(navigator.userAgent);
+      if (!touch || Math.min(screen.width, screen.height) >= 600 || innerHeight <= innerWidth) return;
+      if (h && h !== "#hero" && h !== "#explore") return;
+      if (/[?&]film=/.test(location.search)) return;
+      v.preload = "auto"; v.src = v.getAttribute("data-phone");
+      try { var p = v.play(); if (p && p.catch) p.catch(function () {}); } catch (e) { /* main.js asks again */ }
+    })();
+    </script>
   </div>
 
   <div class="hero__grid">
@@ -434,7 +450,7 @@
         <p class="map__hint" data-i18n="fac.hint">Eight places on one aerial photograph. Choose a facility below to find it on the map.</p>
       </div>
       <div class="map__stage" id="mapStage">
-        <img class="map__img" src="assets/web/aerial-map-edited-2400.jpg" srcset="assets/web/aerial-map-edited-800.jpg 800w, assets/web/aerial-map-edited-1600.jpg 1600w, assets/web/aerial-map-edited-2400.jpg 2400w, assets/web/aerial-map-edited-4k.jpg 3582w" sizes="100vw" alt="Drone view of the whole Patravana estate: the suite wings, amphitheatre, lake, pool and Phu Yai Lee kitchen" data-i18n-attr="alt:fac.mapalt" loading="eager" decoding="async" width="2000" height="1122">
+        <img class="map__img" src="assets/web/aerial-map-edited-2400.jpg" srcset="assets/web/aerial-map-edited-800.jpg 800w, assets/web/aerial-map-edited-1600.jpg 1600w, assets/web/aerial-map-edited-2400.jpg 2400w, assets/web/aerial-map-edited-4k.jpg 3582w" sizes="100vw" alt="Drone view of the whole Patravana estate: the suite wings, amphitheatre, lake, pool and Phu Yai Lee kitchen" data-i18n-attr="alt:fac.mapalt" loading="lazy" decoding="async" width="2000" height="1122">
         <button class="hot" style="--x:21%;--y:34%" data-hot="suites" data-go="#stay" data-img="assets/web/vana-bedroom-1600.jpg" aria-label="Suite wings" data-i18n-attr="aria-label:fac.h1.t"><span class="hot__dot"><span class="hot__n num">01</span></span><span class="hot__label" data-i18n="fac.h1.t">Suite wings</span></button>
         <button class="hot" style="--x:28.5%;--y:47%" data-hot="amphi" data-go="#gather" data-img="assets/web/amphitheatre-1600.jpg" aria-label="Amphitheatre" data-i18n-attr="aria-label:fac.h2.t"><span class="hot__dot"><span class="hot__n num">02</span></span><span class="hot__label" data-i18n="fac.h2.t">Amphitheatre</span></button>
         <button class="hot" style="--x:37%;--y:58%" data-hot="lake" data-go="#gallery" data-img="assets/web/lake-dusk-1600.jpg" aria-label="The lake and the sign" data-i18n-attr="aria-label:fac.h3.t"><span class="hot__dot"><span class="hot__n num">03</span></span><span class="hot__label" data-i18n="fac.h3.t">The lake and the sign</span></button>
@@ -689,7 +705,7 @@
     <!-- the gallery of the open room in its chosen view -->
     <figure class="stay-stage js-only" id="stayStage" aria-label="Photographs of the selected room" data-i18n-attr="aria-label:stay.stagelabel">
       <div class="stay-stage__view" id="stayView">
-        <img id="stayImg" src="assets/web/room-vana-lake-bedroom-1600.jpg" alt=""><img id="stayImgNext" src="" alt="">
+        <img id="stayImg" src="assets/web/room-vana-lake-bedroom-1600.jpg" alt="" loading="lazy"><img id="stayImgNext" src="" alt="">
         <button class="stay-stage__open" type="button" id="stayOpen" aria-label="Open this photo full size" data-i18n-attr="aria-label:stay.open"></button>
         <button class="iconbtn iconbtn--glass stay-stage__nav stay-stage__nav--prev" id="stayPrev" aria-label="Previous photo" data-i18n-attr="aria-label:lb.prev"><svg aria-hidden="true"><use href="#i-back"/></svg></button>
         <button class="iconbtn iconbtn--glass stay-stage__nav stay-stage__nav--next" id="stayNext" aria-label="Next photo" data-i18n-attr="aria-label:lb.next"><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
@@ -1159,6 +1175,13 @@
   </p>
 </footer>
 
+<!-- floating actions: they pop up once the visitor has scrolled on. Book at the bottom right (only where the phone's
+     bottom bar does not already carry it), back to the top at the bottom left -->
+<div class="fab js-only" id="fab">
+  <button class="fab__top" type="button" id="fabTop" aria-label="Back to the top" data-i18n-attr="aria-label:foot.top" inert><svg aria-hidden="true"><use href="#i-up"/></svg></button>
+  <a class="pill pill--solid pill--lg fab__book" id="fabBook" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open inert><span data-i18n="nav.book">Book a suite</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+</div>
+
 <!-- enquiry composer: a message the guest writes here and sends to the resort themselves, by LINE, email or phone.
      Nothing is sent from this page, and no quotation, reservation or pet approval is created by it. -->
 <div class="drawer drawer--form js-only" id="enquiry" role="dialog" aria-modal="true" aria-labelledby="enqTitle" aria-hidden="true">
@@ -1278,8 +1301,8 @@
 <script src="i18n.js?v=f4e0cf95" defer></script>
 <script src="scene.js?v=29086502" defer></script>
 <script src="film-manifest.js?v=1ca8444e" defer></script>
-<script src="film-stream.js?v=73f87ae5" defer></script>
+<script src="film-stream.js?v=65575688" defer></script>
 <!-- if the main script cannot be fetched, the page falls back to its plain form: panels open, script-only controls hidden -->
-<script src="main.js?v=b3e4a9c1" defer onerror="document.documentElement.classList.remove('js')"></script>
+<script src="main.js?v=7b6528bd" defer onerror="document.documentElement.classList.remove('js')"></script>
 </body>
 </html>

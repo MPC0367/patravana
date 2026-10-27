@@ -207,26 +207,34 @@
     return rangeProbe;
   }
   function dataToBlob(u) { const bin = atob(u.slice(u.indexOf(",") + 1)), a = new Uint8Array(bin.length); for (let k = 0; k < bin.length; k++) a[k] = bin.charCodeAt(k); return new Blob([a], { type: "video/mp4" }); }
+  // a phone held upright, with the hero taller than it is wide: it shows a slice of the frame, so it gets the upright film
+  const isPhone = () => { const touch = window.matchMedia("(pointer: coarse)").matches || /iP(hone|ad|od)|Android/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1); return touch && Math.min(screen.width, screen.height) < 600; };
+  const upright = () => { const h = $("#hero"), r = h && h.getBoundingClientRect(); return r && r.width ? r.height > r.width : window.innerHeight > window.innerWidth; };
   function waysFor(c) {
     const srcEl = c.querySelector("source");
-    const files = { sd: (srcEl && srcEl.getAttribute("src")) || c.getAttribute("src") || "", hq: c.dataset.hq || "", uhd: c.dataset.uhd || "" };
+    const files = { sd: (srcEl && srcEl.getAttribute("src")) || c.getAttribute("src") || "", hq: c.dataset.hq || "", uhd: c.dataset.uhd || "", phone: c.dataset.phone || "" };
     const saveData = !!(navigator.connection && navigator.connection.saveData);
     const touch = window.matchMedia("(pointer: coarse)").matches || /iP(hone|ad|od)|Android/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
-    const phone = touch && Math.min(screen.width, screen.height) < 600;
+    const phone = isPhone();
     // the film is cover-fitted: on a tall screen it is the height, not the width, that decides how big the frame is drawn
     const px = Math.max(window.innerWidth, window.innerHeight * 16 / 9) * (window.devicePixelRatio || 1);
     const stream = forced !== "nostream" && forced !== "memory" && !reduced && typeof window.PVStream === "function" && (window.PV_STREAMS || {})[c.id] ? { kind: "stream" } : null;
     // the largest single file: where the page marks it as fit for tablets (a 1440p file) anything but a phone may have it;
     // otherwise it is a 4K file and only a large desktop screen gets it. Phones stop at the 1080p file.
     const top = !!files.uhd && (c.dataset.uhdTouch === "1" ? !phone : !touch);
-    const order = saveData ? ["sd"] : px >= 2200 && top ? ["uhd", "hq", "sd"] : px >= 1400 ? ["hq", "sd"] : ["sd"];
+    // a phone never starts on more than the 720p file: a phone's line and its slice of the frame are better served small
+    const order = saveData || phone ? ["sd"] : px >= 2200 && top ? ["uhd", "hq", "sd"] : px >= 1400 ? ["hq", "sd"] : ["sd"];
     const fileWays = [];
     const sizeRank = { uhd: 0, hq: 1, sd: 2 };          // a larger number is a lighter file
     order.forEach((k) => { if (files[k] && !fileWays.some((w) => w.url === files[k])) fileWays.push({ kind: "file", url: files[k], rank: sizeRank[k] }); });
     // Safari (every browser on an iPhone or iPad) plays a plain file natively, starts it quickly and is strict about
     // streams, so there the file comes first and the stream is the fallback. Everywhere else the stream comes first.
-    const ways = apple ? fileWays.concat(stream ? [stream] : []) : (stream ? [stream] : []).concat(fileWays);
-    const mem = (px >= 1400 && !saveData && files.hq) || files.sd;
+    let ways = apple ? fileWays.concat(stream ? [stream] : []) : (stream ? [stream] : []).concat(fileWays);
+    // a phone held upright plays the upright film first, as a plain file, everywhere: about a quarter of the 1080p file,
+    // and sharper on that screen than the 720p one
+    const tall = phone && files.phone && upright() && forced !== "nostream" && forced !== "memory";
+    if (tall) ways = [{ kind: "file", url: files.phone, rank: 3, upright: true }].concat(ways);
+    const mem = (tall && files.phone) || (px >= 1400 && !saveData && !phone && files.hq) || files.sd;
     if (mem) ways.push({ kind: "memory", url: mem });
     return ways;
   }
@@ -243,6 +251,8 @@
   function setFile(c, url, at) {
     c._pv = null; c._stalls = 0; c._waitAt = 0; c._fileAt = performance.now();
     $$("source", c).forEach((s) => s.remove());
+    // already on its way: the page asked for this film as it was read (a phone held upright, see index.html)
+    if (c.getAttribute("src") === url && !c.error && !at) return;
     c.src = url; c.load();
     if (at > .3) c.addEventListener("loadedmetadata", () => { try { c.currentTime = at; } catch (e) { /* starts from the top */ } }, { once: true });
   }
@@ -273,7 +283,10 @@
       if (apple && /^data:/.test(w.url)) { nextWay(c, "this host cannot serve part of a file"); return; }
       // otherwise the file is asked for at once. Whether this host can serve part of a file is checked alongside, not
       // first: on a host that can, which is the usual case, the film starts a round trip sooner
-      setFile(c, w.url, at); prime(c);
+      // a film that is not the opening one gets its address only when it is about to be needed (see playHero and
+      // clipPlay): some browsers fetch part of a file the moment it has an address, whatever "preload" says
+      if (c !== allClips[0] && !warmed && !at) c._later = w.url; else { c._later = null; setFile(c, w.url, at); }
+      prime(c);
       if (apple) hostRanges(w.url).then((can) => { if (!can && c._way === w) nextWay(c, "this host cannot serve part of a file"); });
     } else {
       if (!apple || (await hostRanges(w.url))) { if (c._way === w) nextWay(c, "file would not play"); return; }
@@ -320,6 +333,7 @@
   function clipPlay(v) {
     if (!v._asked || v.paused) v._asked = performance.now();
     if (v._pv) { v._pv.play(); return; }
+    if (v._later) { const u = v._later; v._later = null; v.preload = "auto"; setFile(v, u); }   // asked for before its turn (Next pressed early)
     const p = v.play(); if (p) p.catch((e) => { if (e && e.name === "NotAllowedError") armGesture(v, e); });
   }
   function clipPause(v) { if (v._pv) v._pv.pause(); else v.pause(); }
@@ -336,7 +350,7 @@
         if (a && a._pv && a._pv.busy()) { setTimeout(warm, 1500); return; }
         if (!heroSeen || (a && a.duration && isFinite(a.duration) && a.duration - a.currentTime > 15)) { setTimeout(warm, 2000); return; }
         warmed = true;
-        clips.forEach((c) => { if (c === a) return; if (c._pv) c._pv.start(); else { c.preload = "auto"; c.load(); } });
+        clips.forEach((c) => { if (c === a) return; if (c._pv) c._pv.start(); else if (c._later) { const u = c._later; c._later = null; c.preload = "auto"; setFile(c, u); } else { c.preload = "auto"; c.load(); } });
       };
       if (!playHero.warming) { playHero.warming = true; setTimeout(warm, 4000); }
     }
@@ -399,6 +413,9 @@
       v.addEventListener("error", (e) => { if (!v._way) return; if (e.target === v && !v.error) return; if (v._pv && !v._pv.dead) v._pv.fail(new Error("the browser reported a media error")); else nextWay(v, "the browser reported a media error"); }, true);
     });
     paintSlide();
+    // a phone turned on its side while an upright film plays: that film would be stretched across a wide hero, so each
+    // film moves on to its next way, from where it was
+    window.addEventListener("resize", () => { if (upright()) return; clips.forEach((c) => { if (c._way && c._way.upright && c._ways.length > 1) nextWay(c, "turned on its side", true); }); }, { passive: true });
     const step = (d) => { if (clips.length < 2 || handing) return; if (userPaused) setPaused(false); handOver((clipIdx + d + clips.length) % clips.length); };
     const prevBtn = $("#slidePrev"), nextBtn = $("#slideNext");
     if (prevBtn) prevBtn.addEventListener("click", () => step(-1));
@@ -560,7 +577,7 @@
   /* ---------- top bar, chapter index, the Stay submenu, the phone menu ---------- */
   const top = $("#topbar"), burger = $("#burger"), mnav = $("#mnav"), exploreBtn = $("#mbarExplore");
   let menuOpen = false, menuReturn = null;
-  const mbar = $("#mbar");
+  const mbar = $("#mbar"), fabTop = $("#fabTop"), fabBook = $("#fabBook");
   const cindex = $("#cindex"), cLinks = cindex ? $$("a", cindex) : [];
   const cSecs = cLinks.map((a) => $(a.getAttribute("href")));
   const darkEls = $$("section[data-dark], footer[data-dark]");
@@ -572,6 +589,13 @@
     // the bottom bar is only there for the keyboard and for screen readers while it is on screen. On a phone's
     // destinations it is always there: Explore, LINE and Book
     if (mbar) { const on = views || y > h * .5; if (on !== mbar.classList.contains("is-on")) { mbar.classList.toggle("is-on", on); setInert(mbar, !on); } }
+    // the floating buttons: back to the top once a screen has gone by; Book once the booking bar under the hero has gone
+    // by, and only where the bottom bar does not already carry it. Out of reach while they are out of sight
+    const barShown = !!mbar && mbar.classList.contains("is-on") && mbar.getBoundingClientRect().height > 0;
+    const dock = $(".dockwrap"), dockGone = !dock || dock.getBoundingClientRect().bottom < 0 || heroAway();
+    const pop = (b, on) => { if (b && on !== b.classList.contains("is-on")) { b.classList.toggle("is-on", on); setInert(b, !on); } };
+    pop(fabTop, y > window.innerHeight * .9);
+    pop(fabBook, !barShown && dockGone && y > 40);
     if (cindex && wide.matches) {
       // the dot for the chapter under the middle of the screen, and light dots while that middle sits on a dark band
       const mid = window.innerHeight * .5;
@@ -851,10 +875,14 @@
   }));
   // "Skip to content": the main content, whichever destination of it is showing
   const skip = $(".skip"); if (skip) skip.addEventListener("click", (e) => { if (!viewsOn()) return; e.preventDefault(); Views.focusHead(); });
-  const toTop = $("#toTop"); if (toTop) toTop.addEventListener("click", () => {
+  // back to the top: of the destination on a phone, of the page elsewhere. The keyboard goes to the heading there
+  const backToTop = (keepAddress) => {
     if (viewsOn()) { window.scrollTo({ top: 0, behavior: reduced ? "instant" : "smooth" }); Views.focusHead(); return; }
-    goTo("#hero", true);
-  });
+    if (keepAddress) window.scrollTo({ top: 0, behavior: reduced ? "instant" : "smooth" }); else goTo("#hero", true);
+    const h1 = $("#hero .hero__h1"); if (h1) { if (!h1.hasAttribute("tabindex")) h1.setAttribute("tabindex", "-1"); h1.focus({ preventScroll: true }); }
+  };
+  const toTop = $("#toTop"); if (toTop) toTop.addEventListener("click", () => backToTop(false));
+  if (fabTop) fabTop.addEventListener("click", () => backToTop(true));
 
   /* ---------- motion ---------- */
   function setStaticState() {
@@ -1039,7 +1067,7 @@
       thumbs.textContent = "";
       shotsOf(shown).forEach((s, k) => {
         const b = document.createElement("button"); b.type = "button"; b.className = "stay-thumb";
-        const im = document.createElement("img"); im.alt = ""; im.src = ($("img", s) || {}).src || s.dataset.full; b.appendChild(im);
+        const im = document.createElement("img"); im.alt = ""; im.loading = "lazy"; im.decoding = "async"; im.src = ($("img", s) || {}).src || s.dataset.full; b.appendChild(im);
         b.addEventListener("click", () => { if (k === idx) lightbox.open(itemsOf(shown), idx); else show(k); });   // the photo already showing opens full size
         thumbs.appendChild(b);
       });
@@ -1406,7 +1434,13 @@
     // on a phone's Gallery the strip holds still until the visitor moves it (drag, the arrows, or Play)
     if (viewsOn()) { state.paused = true; if (pauseBtn) pauseBtn.setAttribute("aria-pressed", "true"); }
     // a copy of the set on both sides makes the loop seamless, including the left gutter. The copies are for the eye only
-    const mk = () => originals.map((b) => { const c = b.cloneNode(true); c.setAttribute("aria-hidden", "true"); c.tabIndex = -1; c.classList.add("is-clone"); c.removeAttribute("data-i18n-attr"); return c; });
+    const mk = () => originals.map((b) => {
+      const c = b.cloneNode(false), o = $("img", b), im = document.createElement("img");
+      im.loading = "lazy"; im.decoding = "async"; im.alt = "";
+      ["sizes", "srcset", "src"].forEach((a) => { const v = o && o.getAttribute(a); if (v != null) im.setAttribute(a, v); });
+      c.appendChild(im);
+      c.setAttribute("aria-hidden", "true"); c.tabIndex = -1; c.classList.add("is-clone"); c.removeAttribute("data-i18n-attr"); return c;
+    });
     const before = mk(), after = mk();
     before.forEach((c) => track.insertBefore(c, originals[0]));
     after.forEach((c) => track.appendChild(c));

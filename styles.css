@@ -1497,3 +1497,32 @@ html[lang="th"] .hub__head { letter-spacing: 0; line-height: 1.35; }
 html.js body.is-ready.is-entered :is(.hero__word, .hero__eyebrow, .hero__sub, .hero__cta, .hero__meta, .dock) { animation: none; }
 /* the code keeps its own lower-case letters inside the capitalised label */
 .ticket__code { text-transform: none; letter-spacing: .03em; }
+
+/* ---------- floating actions: back to the top (bottom left) and Book (bottom right) ----------
+   They pop up once the visitor has scrolled on, step aside for any dialog, and keep clear of the safe area. Where the
+   phone's bottom bar is showing, Book stays in the bar and the back-to-top button rides just above it. */
+.fab { position: fixed; left: 0; right: 0; bottom: 0; z-index: 870; display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; padding: 0 clamp(1rem, 2.4vw, 1.75rem) calc(clamp(1rem, 2.4vw, 1.75rem) + env(safe-area-inset-bottom, 0px)); pointer-events: none; }
+.fab__top, .fab__book { pointer-events: auto; opacity: 0; visibility: hidden; transform: translateY(22px) scale(.9);
+  transition: opacity .45s var(--ease), transform .7s var(--ease), visibility 0s .7s, color .35s, background .35s, border-color .35s; }
+.fab__top.is-on, .fab__book.is-on { opacity: 1; visibility: visible; transform: none;
+  transition: opacity .45s var(--ease), transform .7s var(--ease), visibility 0s, color .35s, background .35s, border-color .35s; }
+.fab__top { flex: none; display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; color: var(--forest); background: rgba(244,240,231,.94); border: 1px solid var(--line-2); box-shadow: 0 14px 34px rgba(27,31,28,.2); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.fab__top svg { width: 18px; height: 18px; transition: transform .45s var(--ease); }
+.fab__top:hover, .fab__top:focus-visible { color: var(--ivory); background: var(--forest); border-color: var(--forest); }
+.fab__top:hover svg { transform: translateY(-3px); }
+.fab__book { margin-left: auto; box-shadow: 0 0 0 1px rgba(244,240,231,.3), 0 18px 42px rgba(27,31,28,.3); }
+.fab :focus-visible { outline-color: var(--forest); }
+body.has-overlay .fab__top, body.has-overlay .fab__book { opacity: 0; visibility: hidden; transform: translateY(22px) scale(.9); pointer-events: none; }
+/* the last line of the page stays clear of them */
+.foot { padding-bottom: calc(1.6rem + 4.8rem + env(safe-area-inset-bottom, 0px)); }
+/* above the phone's bottom bar */
+@media (max-width: 51.25em) {
+  .fab { padding-bottom: calc(4.9rem + env(safe-area-inset-bottom, 0px)); padding-inline: var(--pad); }
+  .fab__top { width: 46px; height: 46px; }
+}
+@media (max-width: 47.99em), (pointer: coarse) and (max-width: 62.5em) and (max-height: 37.5em) {
+  html.js.pv-views .fab { padding-bottom: calc(4.9rem + env(safe-area-inset-bottom, 0px)); padding-inline: var(--pad); }
+  html.js.pv-views .fab__top { width: 46px; height: 46px; }
+}
+@media (prefers-reduced-motion: reduce) { .fab__top, .fab__book { transform: none !important; } }
+@media print { .fab { display: none !important; } }

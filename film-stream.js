@@ -28,10 +28,13 @@
     let want = tiers.findIndex((t) => t.w >= needW * .85); if (want < 0) want = tiers.length - 1;
     // phones and tablets stop at 1440p: their slice of the frame shows no more, and it keeps two films inside what they decode at once
     if (touch) { const cap = tiers.findIndex((t) => t.h >= 1440); if (cap >= 0) want = Math.min(want, cap); }
+    // phones: at most 1080p, and they start on the smallest size, stepping up only once the line has shown it has room
+    const phone = touch && Math.min(screen.width, screen.height) < 600;
+    if (phone) { const cap = tiers.findIndex((t) => t.h >= 1080); if (cap >= 0) want = Math.min(want, cap); }
     if (conn.saveData || /(^|-)2g$|^3g$/.test(conn.effectiveType || "")) want = 0;
 
     // ti: the size the next part is fetched in. cap: the largest size this screen and this device should get.
-    const S = { ti: want, cap: want, started: false, attached: false, dead: false, hold: false, loading: null, ctl: null, ms: null, sb: null, url: "",
+    const S = { ti: phone ? 0 : want, cap: want, started: false, attached: false, dead: false, hold: false, loading: null, ctl: null, ms: null, sb: null, url: "",
       wantPlay: false, proved: false, fed: false, rate: 0, stalls: 0, stallsEver: 0, lowered: false, mixed: false, shownTi: -1, lastTi: -1,
       lastKey: "", lastEnd: -1, f0: 0, d0: 0, bad: 0, timer: 0, placed: false, kept: [], shift: 0, guessed: false };
 
