@@ -1584,6 +1584,9 @@ body.has-overlay .fab__top, body.has-overlay .fab__book { opacity: 0; visibility
 /* V02: Facilities, a broad, quiet forest ramp: the current green at the top (where the light text sits nearest it and
    where the phone's "you are here" line joins), deepening toward the bottom right */
 .chapter--dark { background: linear-gradient(170deg, var(--forest) 0%, var(--forest-mid) 48%, var(--forest-depth) 100%); }
+/* its small numbers and the "Nearby, offsite" note: stone measured 3.5:1 on this green; a lighter sand gives 4.9:1 at
+   the lightest point of the ramp (_qa/contrast.mjs) */
+.chapter--dark .chapter__num, .chapter--dark .fac__n { color: #D4C6B0; }
 /* the featured offer, a much milder sibling of it */
 .ticket--hot, .hub__card--offer { background: linear-gradient(160deg, var(--forest) 0%, var(--forest-mid) 100%); }
 .hub__card--offer:hover { background: linear-gradient(160deg, var(--forest-mid) 0%, var(--forest-depth) 100%); }
@@ -1597,21 +1600,23 @@ body.has-overlay .fab__top, body.has-overlay .fab__book { opacity: 0; visibility
 .pair__a, .stay-stage__view, #gather > .chapter__body > .frame--wide, .dining__img, .petsec__img { box-shadow: var(--shadow-photo); }
 
 /* V01: the aerial map's top edge dissolves into the green. A mask on the photograph alone (never the markers, their
-   labels, the focus rings or the panel), finishing above the first label painted into the picture. The stage drops its
-   own dark fill and outer shadow so the fade shows the section behind it, not a dark rectangle. Where masks are not
-   supported the photograph stays whole, as before */
+   labels, the focus rings or the panel), finishing above the first label painted into the picture (9.6% down). Since
+   29 October (the user: "bring the blur down a bit more so it doesn't see the top rounded corners") the fade reaches a
+   little lower, and each top corner has a small round fade of its own, clear for 26 px and whole by 54 px, so the
+   frame's 20 px rounded corners never show; on a phone the painted label starts inside that height, but in the middle,
+   well away from either corner. The stage drops its own dark fill and outer shadow so the fade shows the section
+   behind it, not a dark rectangle. Where masks are not supported the photograph stays whole, as before */
 @supports ((mask-image: linear-gradient(#000, #000)) or (-webkit-mask-image: linear-gradient(#000, #000))) {
   .map__stage { background: transparent; box-shadow: none; }
   .map__img {
-    -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .28) 2%, rgba(0, 0, 0, .8) 5%, #000 7.5%, #000 100%);
-    mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .28) 2%, rgba(0, 0, 0, .8) 5%, #000 7.5%, #000 100%);
+    --map-fade: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .3) 3%, rgba(0, 0, 0, .82) 6%, #000 8.5%, #000 100%);
+    --map-corners: radial-gradient(circle at 0 0, transparent 26px, #000 54px), radial-gradient(circle at 100% 0, transparent 26px, #000 54px);
+    -webkit-mask-image: var(--map-fade), var(--map-corners); -webkit-mask-composite: source-in;
+    mask-image: var(--map-fade), var(--map-corners); mask-composite: intersect;
   }
-  /* smaller maps, where the painted labels sit closer to the edge: a shallower fade */
+  /* smaller maps, where the painted labels sit closer to the edge: a shallower top fade (the corners as above) */
   @media (max-width: 62.5em) {
-    .map__img {
-      -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .5) 1.5%, rgba(0, 0, 0, .88) 3%, #000 4.5%, #000 100%);
-      mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .5) 1.5%, rgba(0, 0, 0, .88) 3%, #000 4.5%, #000 100%);
-    }
+    .map__img { --map-fade: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .45) 2%, rgba(0, 0, 0, .85) 4%, #000 6%, #000 100%); }
   }
 }
 @media print { .map__img { -webkit-mask-image: none; mask-image: none; } }
@@ -1624,3 +1629,6 @@ body.has-overlay .fab__top, body.has-overlay .fab__book { opacity: 0; visibility
 
 /* a production build keeps only its own notes (export-pages.mjs removes the others); the source page shows the preview's */
 [data-env="production"] { display: none; }
+
+/* a long address may wrap where a reader's text size leaves it no room, instead of pushing the page sideways */
+.foot a[href^="mailto:"], .foot a[href^="https://maps"] { overflow-wrap: anywhere; }

@@ -7,9 +7,8 @@
 (function () {
   "use strict";
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const hasGSAP = typeof gsap !== "undefined";
-  const hasST = hasGSAP && typeof ScrollTrigger !== "undefined";
-  const hasSplit = hasGSAP && typeof SplitText !== "undefined";
+  // the animation scripts arrive on their own (see startMotion): until they are taken, everything runs without them
+  let hasGSAP = false, hasST = false, hasSplit = false;
   const $ = (s, c) => (c || document).querySelector(s);
   const $$ = (s, c) => Array.from((c || document).querySelectorAll(s));
   const pad2 = (n) => String(n).padStart(2, "0");
@@ -23,10 +22,13 @@
   // the resort's wall clock wherever the visitor is: read the result with getUTC*()
   const bkk = () => new Date(Date.now() + 7 * 3600 * 1000);
 
-  if (hasGSAP) {
+  function takeLibs() {
+    if (hasGSAP || typeof gsap === "undefined") return hasGSAP;
+    hasGSAP = true; hasST = typeof ScrollTrigger !== "undefined"; hasSplit = typeof SplitText !== "undefined";
     gsap.registerPlugin.apply(gsap, [hasST && ScrollTrigger, hasSplit && SplitText].filter(Boolean));
     gsap.defaults({ ease: "power3.out", duration: 1 });
     if (hasST) ScrollTrigger.config({ ignoreMobileResize: true });   // a phone's address bar sliding away is not a reason to re-measure the page
+    return true;
   }
 
   /* ---------- calendar dates ----------
@@ -909,6 +911,26 @@
     $$("[data-rv], [data-mr]").forEach((el) => el.classList.add("is-in"));
   }
   let motionOn = false;
+  // what other parts add to the scroll motion once it is on (it may start a moment after they are set up)
+  const motionHooks = [];
+  const onMotion = (fn) => { if (motionOn) fn(); else motionHooks.push(fn); };
+  /* The scroll motion needs the animation scripts, which load on their own from the CDN; nothing else waits for them.
+     If all three are in while the loading screen still covers the page, the motion is set up behind it. If the screen
+     lifts first (or there is none), the page stays still for this visit: content that is already showing never
+     disappears to be animated in. */
+  function startMotion() {
+    let decided = false;
+    const decide = (libs) => {
+      if (decided) return; decided = true;
+      if (libs) takeLibs();
+      initMotion();
+      if (motionOn) motionHooks.splice(0).forEach((fn) => fn()); else motionHooks.length = 0;
+    };
+    const M = window.PVMotion, L = window.PVLoad;
+    if (!M) { decide(typeof gsap !== "undefined"); return; }
+    M.onReady(() => decide(true));
+    if (L) L.onLift(() => decide(false)); else decide(false);
+  }
   // a window narrowed into the phone's destinations: what was still waiting for its cue is shown as it ends, every
   // scroll-linked effect is undone, and the page is left still
   function settleMotion() {
@@ -1357,7 +1379,7 @@
       h.addEventListener("mouseleave", () => light(h.dataset.hot, false));
     });
     // the markers introduce themselves once, then rest (no loops)
-    if (hasGSAP && hasST && !reduced && motionOn) gsap.from(hots, { opacity: 0, scale: .6, duration: .7, stagger: .06, ease: "power3.out", transformOrigin: "50% 50%", clearProps: "opacity,scale,transform", scrollTrigger: { trigger: stage, start: "top 75%", once: true } });
+    onMotion(() => { if (hasST && !reduced) gsap.from(hots, { opacity: 0, scale: .6, duration: .7, stagger: .06, ease: "power3.out", transformOrigin: "50% 50%", clearProps: "opacity,scale,transform", scrollTrigger: { trigger: stage, start: "top 75%", once: true } }); });
     // "Find on the map" in other chapters: on a phone it opens Facilities with that place chosen
     $$("[data-map-open]").forEach((b) => b.addEventListener("click", () => {
       const k = places.findIndex((p) => p.key === b.dataset.mapOpen); if (k < 0 || !places[k].hot) return;
@@ -2207,7 +2229,8 @@
     $$("[data-count-fact]").forEach((el) => { const v = FACTS.val(el.dataset.countFact); if (v != null) { el.dataset.count = v; el.textContent = v; } });
     I18N.capture(); I18N.apply(initialLang());
     Views.init();
-    initOffers(); initHall(); initMotion(); initStay(); initRadius(); initMap(); initReel(); initDrawers(); initBooking(); initEnquiry(); initPet(); initCopy(); initClock(); initSky(); initDining(); initNight(); initLang(); initDiag(); onScroll();
+    initOffers(); initHall(); initStay(); initRadius(); initMap(); initReel(); initDrawers(); initBooking(); initEnquiry(); initPet(); initCopy(); initClock(); initSky(); initDining(); initNight(); initLang(); initDiag(); onScroll();
+    startMotion();
     // A link that names a section (…/#pet-friendly): the browser goes there as the page is parsed, and once everything
     // above it has taken its final size the landing is squared up, unless the visitor has already started to scroll.
     // On a phone's destinations the destination does its own landing

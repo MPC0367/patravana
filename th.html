@@ -29,7 +29,7 @@ document.documentElement.className += " js";
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300..800&amp;family=Fraunces:ital,opsz,wght@1,9..144,300..500&amp;family=DM+Sans:opsz,wght@9..40,300..600&amp;family=Prompt:wght@300;400;500;600&amp;family=Sarabun:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=91f7984a">
+<link rel="stylesheet" href="styles.css?v=163a9b2f">
 </head>
 <body>
 
@@ -269,9 +269,13 @@ document.documentElement.className += " js";
 <!-- ===== hero: two films, one line, and the way in ===== -->
 <section class="hero" id="hero" data-dark="" data-owner="home">
   <div class="hero__media" aria-hidden="true">
-    <img class="hero__poster" fetchpriority="high" src="assets/web/hero-first-2400.jpg" srcset="assets/web/hero-first-800.jpg 800w, assets/web/hero-first-1600.jpg 1600w, assets/web/hero-first-2400.jpg 2400w, assets/web/hero-first-4k.jpg 3840w" sizes="100vw" alt="">
+    <!-- WebP where the browser takes it (a third to a half lighter, measured 42 dB against the JPEG), the JPEG otherwise -->
+    <picture>
+      <source type="image/webp" srcset="assets/web/hero-first-800.webp 800w, assets/web/hero-first-1600.webp 1600w, assets/web/hero-first-2400.webp 2400w, assets/web/hero-first-4k.webp 3840w" sizes="100vw">
+      <img class="hero__poster" fetchpriority="high" src="assets/web/hero-first-2400.jpg" srcset="assets/web/hero-first-800.jpg 800w, assets/web/hero-first-1600.jpg 1600w, assets/web/hero-first-2400.jpg 2400w, assets/web/hero-first-4k.jpg 3840w" sizes="100vw" alt="">
+    </picture>
     <!-- the script decides how each film is played (streamed in parts, or one of these files), so nothing preloads here -->
-    <video class="hero__video is-on" id="heroVideo" muted="" playsinline="" preload="none" poster="assets/web/hero-first-1600.jpg" data-hq="assets/video/film-pav-1080.mp4" data-uhd="assets/video/film-pav-1440.mp4" data-uhd-touch="1" data-phone="assets/video/film-pav-phone.mp4">
+    <video class="hero__video is-on" id="heroVideo" muted="" playsinline="" preload="none" poster="assets/web/hero-first-1600.webp" data-hq="assets/video/film-pav-1080.mp4" data-uhd="assets/video/film-pav-1440.mp4" data-uhd-touch="1" data-phone="assets/video/film-pav-phone.mp4">
       <source src="assets/video/film-pav-720.mp4" type="video/mp4">
     </video>
     <video class="hero__video" id="heroVideo2" muted="" playsinline="" preload="none" data-hq="assets/video/film-hill-1080.mp4" data-uhd="assets/video/film-hill-1440.mp4" data-uhd-touch="1" data-phone="assets/video/film-hill-phone.mp4">
@@ -359,13 +363,13 @@ document.documentElement.className += " js";
       <span class="hub__extra" data-offer-teaser="code" data-fact="hub.offer.code">ลดเพิ่ม 15% ด้วยโค้ด refresh2026</span>
       <span class="hub__go"><span data-i18n="hub.offergo">ดูข้อเสนอ</span><svg aria-hidden="true"><use href="#i-arrow"></use></svg></span>
     </a></li>
-    <li><a class="hub__card" href="#stay" data-view-link="stay"><span class="hub__img"><img src="assets/web/room-vana-lake-bedroom-800.jpg" alt="" loading="lazy" width="800" height="600"></span><span class="hub__name" data-i18n="nav.stay">ห้องพัก</span><span class="hub__sub" data-i18n="hub.stay">สวีทสามแบบ วิวบึงน้ำ สวน หรือทุ่งเขา</span></a></li>
-    <li><a class="hub__card" href="#facilities" data-view-link="facilities"><span class="hub__img"><img src="assets/web/aerial-estate-800.jpg" alt="" loading="lazy" width="800" height="450"></span><span class="hub__name" data-i18n="nav.facilities">สิ่งอำนวยความสะดวก</span><span class="hub__sub" data-i18n="hub.fac">รีสอร์ทจากมุมสูง สระว่ายน้ำ และบึงน้ำ</span></a></li>
-    <li><a class="hub__card" href="#dining" data-view-link="dining"><span class="hub__img"><img src="assets/web/dining-terrace-800.jpg" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.dining">ห้องอาหาร</span><span class="hub__sub" data-i18n="hub.dining">ครัวผู้ใหญ่ลี ริมบึงน้ำ</span></a></li>
-    <li><a class="hub__card" href="#gather" data-view-link="events"><span class="hub__img"><img src="assets/web/amphitheatre-800.jpg" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.gather">สัมมนา</span><span class="hub__sub" data-i18n="hub.events">อัฒจันทร์ และห้องสัมมนาใกล้รีสอร์ท</span></a></li>
-    <li><a class="hub__card" href="#roam" data-view-link="nearby"><span class="hub__img"><img src="assets/web/hero-poster-800.jpg" alt="" loading="lazy" width="800" height="450"></span><span class="hub__name" data-i18n="nav.roam">ที่เที่ยว</span><span class="hub__sub" data-i18n="hub.nearby">ไร่องุ่น สนามกอล์ฟ และอุทยานแห่งชาติ</span></a></li>
-    <li><a class="hub__card" href="#gallery" data-view-link="gallery"><span class="hub__img"><img src="assets/web/moonrise-800.jpg" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.gallery">แกลเลอรี</span><span class="hub__sub" data-i18n="hub.gallery">ภาพถ่าย และยามค่ำ</span></a></li>
-    <li><a class="hub__card" href="#visit" data-view-link="contact"><span class="hub__img"><img src="assets/web/building-sky-800.jpg" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.contactfaq">ติดต่อและคำถาม</span><span class="hub__sub" data-i18n="hub.contact">เส้นทาง การติดต่อ และคำตอบ</span></a></li>
+    <li><a class="hub__card" href="#stay" data-view-link="stay"><span class="hub__img"><img src="assets/web/room-vana-lake-bedroom-800.jpg" srcset="assets/web/room-vana-lake-bedroom-560.jpg 560w, assets/web/room-vana-lake-bedroom-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="600"></span><span class="hub__name" data-i18n="nav.stay">ห้องพัก</span><span class="hub__sub" data-i18n="hub.stay">สวีทสามแบบ วิวบึงน้ำ สวน หรือทุ่งเขา</span></a></li>
+    <li><a class="hub__card" href="#facilities" data-view-link="facilities"><span class="hub__img"><img src="assets/web/aerial-estate-800.jpg" srcset="assets/web/aerial-estate-560.jpg 560w, assets/web/aerial-estate-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="450"></span><span class="hub__name" data-i18n="nav.facilities">สิ่งอำนวยความสะดวก</span><span class="hub__sub" data-i18n="hub.fac">รีสอร์ทจากมุมสูง สระว่ายน้ำ และบึงน้ำ</span></a></li>
+    <li><a class="hub__card" href="#dining" data-view-link="dining"><span class="hub__img"><img src="assets/web/dining-terrace-800.jpg" srcset="assets/web/dining-terrace-560.jpg 560w, assets/web/dining-terrace-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.dining">ห้องอาหาร</span><span class="hub__sub" data-i18n="hub.dining">ครัวผู้ใหญ่ลี ริมบึงน้ำ</span></a></li>
+    <li><a class="hub__card" href="#gather" data-view-link="events"><span class="hub__img"><img src="assets/web/amphitheatre-800.jpg" srcset="assets/web/amphitheatre-560.jpg 560w, assets/web/amphitheatre-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.gather">สัมมนา</span><span class="hub__sub" data-i18n="hub.events">อัฒจันทร์ และห้องสัมมนาใกล้รีสอร์ท</span></a></li>
+    <li><a class="hub__card" href="#roam" data-view-link="nearby"><span class="hub__img"><img src="assets/web/hero-poster-800.jpg" srcset="assets/web/hero-poster-560.jpg 560w, assets/web/hero-poster-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="450"></span><span class="hub__name" data-i18n="nav.roam">ที่เที่ยว</span><span class="hub__sub" data-i18n="hub.nearby">ไร่องุ่น สนามกอล์ฟ และอุทยานแห่งชาติ</span></a></li>
+    <li><a class="hub__card" href="#gallery" data-view-link="gallery"><span class="hub__img"><img src="assets/web/moonrise-800.jpg" srcset="assets/web/moonrise-560.jpg 560w, assets/web/moonrise-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.gallery">แกลเลอรี</span><span class="hub__sub" data-i18n="hub.gallery">ภาพถ่าย และยามค่ำ</span></a></li>
+    <li><a class="hub__card" href="#visit" data-view-link="contact"><span class="hub__img"><img src="assets/web/building-sky-800.jpg" srcset="assets/web/building-sky-560.jpg 560w, assets/web/building-sky-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.contactfaq">ติดต่อและคำถาม</span><span class="hub__sub" data-i18n="hub.contact">เส้นทาง การติดต่อ และคำตอบ</span></a></li>
   </ul>
 </section>
 
@@ -1308,9 +1312,21 @@ document.documentElement.className += " js";
   setTimeout(giveBack, 20000);
 })();
 </script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer=""></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer=""></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js" defer=""></script>
+<!-- the animation scripts load on their own: the page's own script never waits for them. A phone reading one destination
+     at a time has no scroll motion, so it fetches only the core (its menu and panels use it). PVMotion.onReady runs once
+     they have all arrived or failed. (The artifact build writes all three into the page in place of this block.) -->
+<!-- motion-libs -->
+<script>
+(function () {
+  var base = "https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/", names = ["gsap.min.js"], cbs = [];
+  if (!document.documentElement.classList.contains("pv-views")) names.push("ScrollTrigger.min.js", "SplitText.min.js");
+  var left = names.length, M = window.PVMotion = { ready: false, libs: names.length, onReady: function (fn) { if (M.ready) fn(); else cbs.push(fn); } };
+  function one() { if (--left > 0) return; M.ready = true; cbs.splice(0).forEach(function (fn) { fn(); }); }
+  /* in order (the plugins after the core), without holding up the page */
+  names.forEach(function (n) { var s = document.createElement("script"); s.src = base + n; s.async = false; s.onload = s.onerror = one; document.body.appendChild(s); });
+})();
+</script>
+<!-- /motion-libs -->
 <script src="facts.js?v=8646023d" defer=""></script>
 <script src="i18n.js?v=235c3ecc" defer=""></script>
 <script src="scene.js?v=29086502" defer=""></script>
@@ -1318,7 +1334,7 @@ document.documentElement.className += " js";
 <script src="film-stream.js?v=65575688" defer=""></script>
 <!-- if the main script cannot be fetched, the page falls back to its plain form: panels open, script-only controls hidden -->
 <script src="i18n-en.js?v=8a60f1a1" defer></script>
-<script src="main.js?v=7df43b8c" defer="" onerror="document.documentElement.classList.remove('js')"></script>
+<script src="main.js?v=a1bc65b5" defer="" onerror="document.documentElement.classList.remove('js')"></script>
 
 
 </body></html>
