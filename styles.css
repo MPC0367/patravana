@@ -975,10 +975,10 @@ html.no-pet #pet-friendly, html.no-pet [href="#pet-friendly"], html.no-pet [data
 
 /* ---------- the loading screen ---------- */
 /* It exists only while the script is running the page: without the script there is nothing to wait for. If the script
-   stops for any reason the loaderGone rule takes the screen away by itself after twelve seconds, so it can never be left
+   stops for any reason the loaderGone rule takes the screen away by itself after six seconds, so it can never be left
    standing over the page. With reduced motion there is no loading screen at all. */
 .loader { display: none; }
-html.js .loader { position: fixed; inset: 0; z-index: 999; overflow: hidden; display: grid; place-items: center; background: var(--ivory); color: var(--charcoal); transition: transform .9s cubic-bezier(.76, 0, .24, 1); animation: loaderGone 0s linear 12s forwards; }
+html.js .loader { position: fixed; inset: 0; z-index: 999; overflow: hidden; display: grid; place-items: center; background: var(--ivory); color: var(--charcoal); transition: transform .9s cubic-bezier(.76, 0, .24, 1); animation: loaderGone 0s linear 6s forwards; }
 html.js .loader.is-up { transform: translateY(-101%); pointer-events: none; }
 html.js .loader.is-done { display: none; }
 @keyframes loaderGone { to { visibility: hidden; } }
@@ -1526,3 +1526,101 @@ body.has-overlay .fab__top, body.has-overlay .fab__book { opacity: 0; visibility
 }
 @media (prefers-reduced-motion: reduce) { .fab__top, .fab__book { transform: none !important; } }
 @media print { .fab { display: none !important; } }
+
+/* ============================================================
+   Phase 2 (29 October 2026): repairs
+   ============================================================ */
+/* the phone's destinations from the very first picture: the page's first script sets the destination on <html>, so
+   these rules hide the others before main.js has marked anything (the .is-away rules above take over from there) */
+@media (max-width: 47.99em), (pointer: coarse) and (max-width: 62.5em) and (max-height: 37.5em) {
+  html.js.pv-views[data-view="home"] [data-owner]:not([data-owner="home"]),
+  html.js.pv-views[data-view="offers"] [data-owner]:not([data-owner="offers"]),
+  html.js.pv-views[data-view="stay"] [data-owner]:not([data-owner="stay"]),
+  html.js.pv-views[data-view="facilities"] [data-owner]:not([data-owner="facilities"]),
+  html.js.pv-views[data-view="dining"] [data-owner]:not([data-owner="dining"]),
+  html.js.pv-views[data-view="events"] [data-owner]:not([data-owner="events"]),
+  html.js.pv-views[data-view="nearby"] [data-owner]:not([data-owner="nearby"]),
+  html.js.pv-views[data-view="gallery"] [data-owner]:not([data-owner="gallery"]),
+  html.js.pv-views[data-view="contact"] [data-owner]:not([data-owner="contact"]) { display: none !important; }
+  /* the first block of each destination, under the "you are here" line, from the first picture too */
+  html.js.pv-views[data-view="offers"] #offers,
+  html.js.pv-views[data-view="stay"] #stay,
+  html.js.pv-views[data-view="facilities"] #facilities,
+  html.js.pv-views[data-view="dining"] #dining,
+  html.js.pv-views[data-view="events"] #gather,
+  html.js.pv-views[data-view="nearby"] #roam,
+  html.js.pv-views[data-view="gallery"] #gallery,
+  html.js.pv-views[data-view="contact"] #visit { padding-top: 1.1rem; border-top: 0; }
+  html.js.pv-views[data-view="facilities"] .vcrumb { background: var(--forest); color: rgba(244,240,231,.78); }
+  html.js.pv-views[data-view="facilities"] .vcrumb :is(a, .vcrumb__now) { color: var(--ivory); }
+}
+/* A01: the guide's small line stays at 4.5:1 or better on the card's hover fill too */
+.hub__sub { color: #6B5C4D; }
+/* A02: the booking bar's fields show the keyboard clearly: a forest ring inside the field, no change of size */
+.dock__f:focus-within { box-shadow: inset 0 0 0 2px var(--forest); }
+.dock__f.is-bad:focus-within { box-shadow: inset 0 0 0 2px #9A3324; }
+/* F03: a facility photograph that could not be loaded: its frame says so, quietly, and everything else stays usable */
+.pcard__media.is-failed::after, .map__panel-media.is-failed::after { content: attr(data-fallback); position: absolute; inset: 0; display: grid; place-items: center; padding: 1rem; text-align: center; font-size: .86rem; color: var(--earth); background: var(--mist); }
+.map__panel-media { position: relative; }
+.map__panel-media.is-failed img { visibility: hidden; }
+
+/* ============================================================
+   Phase 2 (29 October 2026): paint and depth
+   Static paint only: no animated gradients, masks or shadows, no textures, no new layers. Geometry is untouched.
+   ============================================================ */
+:root {
+  --forest-mid: #304E3B;
+  --forest-depth: #263D2E;
+  --paper-hi: #FAF7F0;
+  --paper-lo: #F1ECE1;
+  --line-paper: rgba(181, 165, 141, .55);
+  --shadow-photo: 0 1px 2px rgba(31, 51, 39, .055), 0 10px 24px rgba(31, 51, 39, .10);
+  --shadow-card: 0 1px 2px rgba(31, 51, 39, .035), 0 6px 16px rgba(31, 51, 39, .045);
+}
+/* the loading screen's count keeps one width and height while its digits and its font arrive */
+.loader__count #loaderPct { display: inline-block; min-width: 2.2ch; text-align: right; }
+.loader__count { height: 1.02em; }
+
+/* V02: Facilities, a broad, quiet forest ramp: the current green at the top (where the light text sits nearest it and
+   where the phone's "you are here" line joins), deepening toward the bottom right */
+.chapter--dark { background: linear-gradient(170deg, var(--forest) 0%, var(--forest-mid) 48%, var(--forest-depth) 100%); }
+/* the featured offer, a much milder sibling of it */
+.ticket--hot, .hub__card--offer { background: linear-gradient(160deg, var(--forest) 0%, var(--forest-mid) 100%); }
+.hub__card--offer:hover { background: linear-gradient(160deg, var(--forest-mid) 0%, var(--forest-depth) 100%); }
+/* warm paper for the pale panels that sit on the page: offers, the contact cards, the hall planner, the Air figures */
+.ticket:not(.ticket--hot):not(.is-ended), .card:not(.card--forest), .hall { background: linear-gradient(180deg, var(--paper-hi) 0%, var(--ivory) 55%, var(--paper-lo) 100%); border-color: var(--line-paper); }
+.stat { background: linear-gradient(180deg, var(--paper-hi) 0%, var(--ivory) 60%, var(--paper-lo) 100%); }
+:where(.ticket:not(.ticket--hot):not(.is-ended), .card:not(.card--forest), .hall) { box-shadow: var(--shadow-card); }
+
+/* V03: a soft shadow under the photographs that stand on their own (the frame casts it, not the picture). Not on the
+   aerial map, the full-width bands, the hero, the evening photograph or the moving gallery */
+.pair__a, .stay-stage__view, #gather > .chapter__body > .frame--wide, .dining__img, .petsec__img { box-shadow: var(--shadow-photo); }
+
+/* V01: the aerial map's top edge dissolves into the green. A mask on the photograph alone (never the markers, their
+   labels, the focus rings or the panel), finishing above the first label painted into the picture. The stage drops its
+   own dark fill and outer shadow so the fade shows the section behind it, not a dark rectangle. Where masks are not
+   supported the photograph stays whole, as before */
+@supports ((mask-image: linear-gradient(#000, #000)) or (-webkit-mask-image: linear-gradient(#000, #000))) {
+  .map__stage { background: transparent; box-shadow: none; }
+  .map__img {
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .28) 2%, rgba(0, 0, 0, .8) 5%, #000 7.5%, #000 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .28) 2%, rgba(0, 0, 0, .8) 5%, #000 7.5%, #000 100%);
+  }
+  /* smaller maps, where the painted labels sit closer to the edge: a shallower fade */
+  @media (max-width: 62.5em) {
+    .map__img {
+      -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .5) 1.5%, rgba(0, 0, 0, .88) 3%, #000 4.5%, #000 100%);
+      mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .5) 1.5%, rgba(0, 0, 0, .88) 3%, #000 4.5%, #000 100%);
+    }
+  }
+}
+@media print { .map__img { -webkit-mask-image: none; mask-image: none; } }
+
+/* decorative lifts and zooms belong to a mouse: a touch screen never leaves them stuck on */
+@media (hover: none) {
+  .frame.is-in:hover img:not([data-parallax]), .fac__item:hover .fac__media img, .reel__item:hover img { transform: none; }
+  .ticket:hover, .fac__item:hover { translate: none; }
+}
+
+/* a production build keeps only its own notes (export-pages.mjs removes the others); the source page shows the preview's */
+[data-env="production"] { display: none; }

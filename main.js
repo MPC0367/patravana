@@ -90,11 +90,13 @@
   const I18N = {
     en: {}, enAttr: new Map(), lang: "en",
     capture() {
-      $$("[data-i18n]").forEach((el) => { const k = el.getAttribute("data-i18n"); if (!(k in this.en)) this.en[k] = el.innerHTML; });
+      // a page written in Thai (th.html) brings its English along in i18n-en.js; the English page reads its own text
+      const E = window.PV_EN || null;
+      $$("[data-i18n]").forEach((el) => { const k = el.getAttribute("data-i18n"); if (!(k in this.en)) this.en[k] = E && E.t && k in E.t ? E.t[k] : el.innerHTML; });
       $$("[data-i18n-attr]").forEach((el) => {
         const map = {};
         el.getAttribute("data-i18n-attr").split(";").forEach((pair) => {
-          const i = pair.indexOf(":"); if (i > 0) { const attr = pair.slice(0, i).trim(), key = pair.slice(i + 1).trim(); map[attr] = { key, en: el.getAttribute(attr) || "" }; }
+          const i = pair.indexOf(":"); if (i > 0) { const attr = pair.slice(0, i).trim(), key = pair.slice(i + 1).trim(); map[attr] = { key, en: E && E.a && key in E.a ? E.a[key] : el.getAttribute(attr) || "" }; }
         });
         this.enAttr.set(el, map);
       });
@@ -113,16 +115,25 @@
       const desc = $('meta[name="description"]'); if (desc && this.t("docDesc")) desc.setAttribute("content", this.t("docDesc"));
       $$(".lang__opt").forEach((o) => o.classList.toggle("is-on", o.dataset.langOpt === lang));
       const tg = $("#langToggle"); if (tg && window.PV_JS) tg.setAttribute("aria-label", PV_JS.langAria[lang]);
-      try { localStorage.setItem("pv2-lang", lang); } catch (e) { /* private mode */ }
       document.dispatchEvent(new CustomEvent("pv:lang"));
     },
     // a string the scripts speak (i18n.js, PV_JS); {slots} are filled from the object given
     t(key, slots) { const d = (window.PV_JS || {})[key]; let v = d ? d[this.lang] || d.en : ""; if (slots) v = v.replace(/\{(\w+)\}/g, (m, k) => (k in slots ? slots[k] : m)); return v; }
   };
+  // The language of a page is the language of its address: the English page (/), the Thai page (/th), or an old
+  // ?lang=th / ?lang=en link. Nothing remembered in the browser and nothing the browser says about itself changes it,
+  // so a shared link, a search result and a returning visitor all see the same page
   function initialLang() {
     try { const q = new URLSearchParams(location.search).get("lang"); if (q === "th" || q === "en") return q; } catch (e) { /* ignore */ }
-    try { const s = localStorage.getItem("pv2-lang"); if (s === "th" || s === "en") return s; } catch (e) { /* ignore */ }
-    return (navigator.language || "").toLowerCase().startsWith("th") ? "th" : "en";
+    return document.documentElement.getAttribute("data-locale") === "th" ? "th" : "en";
+  }
+  // the address of each language: on an exported page, its own page (…/ and …/th); on the source page, ?lang=
+  function langAddress(lang) {
+    const u = new URL(location.href);
+    u.searchParams.delete("lang");
+    if (document.documentElement.hasAttribute("data-locale")) u.pathname = u.pathname.replace(/(th|th\.html|index\.html)$/, "") + (lang === "th" ? "th" : "");
+    else u.searchParams.set("lang", lang);
+    return u.pathname + u.search + u.hash;
   }
 
   // a word from the page's own navigation in the current language, as plain text (the menu's "Contact & FAQs")
@@ -605,7 +616,10 @@
       cindex.classList.toggle("is-light", darkEls.some((d) => { const r = d.getBoundingClientRect(); return r.top <= mid && r.bottom >= mid; }));
     }
   }
-  function setOverlay(on) { document.body.classList.toggle("has-overlay", on); }
+  // which overlays are open (menu, map panel, photo viewer, drawer, planner): the page is "under an overlay" while any is,
+  // and one closing can never clear another's
+  const overlays = new Set();
+  function setOverlay(on, who) { if (on) overlays.add(who || "x"); else overlays.delete(who || "x"); document.body.classList.toggle("has-overlay", overlays.size > 0); }
   let scrollTick = false, revealCheck = null;             // revealCheck: set by initMotion, see "belt and braces" there
   const queueScroll = () => { if (scrollTick) return; scrollTick = true; requestAnimationFrame(() => { scrollTick = false; onScroll(); if (revealCheck) revealCheck(); }); };
   window.addEventListener("scroll", queueScroll, { passive: true });
@@ -618,7 +632,7 @@
     if (!burger || !mnav || open === menuOpen) return;
     if (open) menuReturn = document.activeElement;
     menuOpen = open; burger.setAttribute("aria-expanded", String(open)); if (exploreBtn) exploreBtn.setAttribute("aria-expanded", String(open));
-    top.classList.toggle("is-menu", open); setOverlay(open); document.body.classList.toggle("is-menu-open", open); lockPage("menu", open);
+    top.classList.toggle("is-menu", open); setOverlay(open, "menu"); document.body.classList.toggle("is-menu-open", open); lockPage("menu", open);
     setInert(mnav, !open);
     setBehind(mnav, open, viewsOn() ? [top, mbar] : [top]);
     if (hasGSAP && !reduced) {
@@ -741,7 +755,8 @@
       if (!viewsOn()) return false;
       if (!ID.test(id || "")) id = "";
       const el = id ? $(id) : null, view = ownerOf(id), moved = view !== cur;
-      if (moved) saveY();
+      clearTimeout(saveTimer);
+      if (moved && opts.push) saveY();                    // the current entry is still the one being left only when this choice adds a step
       cur = view; paint();
       // the address: one step per choice, and choosing the same thing again adds none
       const want = el && el.id !== "hero" ? id : "";
@@ -760,12 +775,13 @@
     }
     window.addEventListener("popstate", (e) => {
       if (!viewsOn()) return;
+      clearTimeout(saveTimer);                             // a save still waiting belongs to the entry just left: drop it
       closeAll();
       const st = e.state;
       go(location.hash, { y: st && st.view && typeof st.y === "number" ? st.y : null });
     });
     // an address typed or edited by hand
-    window.addEventListener("hashchange", () => { if (!viewsOn() || location.hash === lastHash) return; closeAll(); go(location.hash); });
+    window.addEventListener("hashchange", () => { if (!viewsOn() || location.hash === lastHash) return; clearTimeout(saveTimer); closeAll(); go(location.hash); });
     window.addEventListener("scroll", () => { if (!viewsOn()) return; clearTimeout(saveTimer); saveTimer = setTimeout(saveY, 300); }, { passive: true });
 
     // ---- changing mode: the phone's destinations, or the whole page ----
@@ -1184,9 +1200,13 @@
       pDesc.innerHTML = descFor(key);
       goBtn.dataset.go = hot.dataset.go;                  // "Take me there" goes where the panel's own place is, fixed as it is shown
       pImg.classList.remove("is-swap"); void pImg.offsetWidth;
-      pImg.src = hot.dataset.img; pImg.alt = pTitle.textContent; pImg.classList.add("is-swap");
+      // a photograph that cannot be loaded says so in its frame (only for the place still shown)
+      const want = hot.dataset.img, media = pImg.parentElement;
+      media.classList.remove("is-failed");
+      pImg.onerror = () => { if (pImg.getAttribute("src") !== want) return; media.classList.add("is-failed"); media.setAttribute("data-fallback", I18N.t("photoUnavailable")); };
+      pImg.src = want; pImg.alt = pTitle.textContent; pImg.classList.add("is-swap");
       if (stepNow) stepNow.textContent = pad2(hots.indexOf(hot) + 1);
-      if (!panel.classList.contains("is-open")) setOverlay(true);
+      if (!panel.classList.contains("is-open")) setOverlay(true, "map");
       setInert(panel, false); panel.classList.add("is-open"); panel.setAttribute("aria-hidden", "false");
       // lean the photograph toward the chosen place
       const x = parseFloat(hot.style.getPropertyValue("--x")), y = parseFloat(hot.style.getPropertyValue("--y"));
@@ -1200,7 +1220,7 @@
       active = null;
       hots.forEach((h) => h.classList.remove("is-active"));
       panel.classList.remove("is-open"); panel.setAttribute("aria-hidden", "true"); setInert(panel, true);
-      if (was) setOverlay(false);
+      if (was) setOverlay(false, "map");
       map.classList.remove("is-zoomed");
       if (stepNow) stepNow.textContent = "00";
       markCard();
@@ -1295,9 +1315,9 @@
       if (go) { cGo.setAttribute("href", go[0]); cGoText.textContent = I18N.t("goTo", { name: navWord(go[1]) }); }
       card.classList.toggle("is-hall", !p.hot);
       // a photograph that arrives after the visitor has moved on is not shown
-      cImg.classList.remove("is-in", "is-failed");
+      cImg.classList.remove("is-in", "is-failed"); cImg.parentElement.classList.remove("is-failed");
       cImg.onload = () => { if (my === cardToken) cImg.classList.add("is-in"); };
-      cImg.onerror = () => { if (my === cardToken) cImg.classList.add("is-failed"); };
+      cImg.onerror = () => { if (my !== cardToken) return; cImg.classList.add("is-failed"); cImg.parentElement.classList.add("is-failed"); cImg.parentElement.setAttribute("data-fallback", I18N.t("photoUnavailable")); };
       if (cImg.getAttribute("src") !== t.img) cImg.src = t.img; else if (cImg.complete && cImg.naturalWidth) cImg.classList.add("is-in");
       markCard();
     }
@@ -1379,12 +1399,17 @@
     function render() { const it = list[idx]; img.src = it.src; img.alt = it.alt || I18N.t("photoGeneric"); count.textContent = (idx + 1) + " / " + list.length; if (hasGSAP && !reduced) gsap.fromTo(img, { opacity: .2, scale: .97 }, { opacity: 1, scale: 1, duration: .45 }); }
     // items: the full-size photographs, each { src, alt } (a plain address is taken as a photograph with no description of
     // its own). cb(true|false) tells the caller when the viewer opens and closes
+    let gen = 0;                                           // each open or close takes the next number; a finishing fade checks it still holds the latest
     function open(items, i, cb) {
       if (!items || !items.length) return;
-      list = items.map((x) => (typeof x === "string" ? { src: x, alt: "" } : x)); idx = Math.max(0, i || 0); onToggle = cb || null; isOpen = true; lastFocus = document.activeElement;
+      gen++;
+      list = items.map((x) => (typeof x === "string" ? { src: x, alt: "" } : x)); idx = Math.max(0, i || 0); onToggle = cb || null;
+      if (!isOpen) lastFocus = document.activeElement;
+      isOpen = true;
       if (onToggle) onToggle(true);
-      box.classList.add("is-open"); box.setAttribute("aria-hidden", "false"); setOverlay(true); render();
-      if (hasGSAP && !reduced) gsap.to(box, { opacity: 1, duration: .35 }); else box.style.opacity = "1";
+      if (hasGSAP) gsap.killTweensOf(box);
+      box.classList.add("is-open"); box.setAttribute("aria-hidden", "false"); setOverlay(true, "lightbox"); render();
+      if (hasGSAP && !reduced) gsap.to(box, { opacity: 1, duration: .35, overwrite: true }); else box.style.opacity = "1";
       lockPage("lightbox", true); setBehind(box, true);
       $("#lbClose").focus();
     }
@@ -1392,9 +1417,11 @@
     function close(keep) {
       if (!isOpen) return;
       isOpen = false; if (onToggle) onToggle(false);
-      const done = () => { box.classList.remove("is-open"); box.setAttribute("aria-hidden", "true"); };
-      if (hasGSAP && !reduced) gsap.to(box, { opacity: 0, duration: .3, onComplete: done }); else { box.style.opacity = "0"; done(); }
-      setOverlay(false); lockPage("lightbox", false); setBehind(box, false); if (keep !== true && lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+      const my = ++gen;
+      const done = () => { if (my !== gen || isOpen) return; box.classList.remove("is-open"); box.setAttribute("aria-hidden", "true"); };
+      box.setAttribute("aria-hidden", "true");
+      if (hasGSAP && !reduced) gsap.to(box, { opacity: 0, duration: .3, overwrite: true, onComplete: done }); else { box.style.opacity = "0"; done(); }
+      setOverlay(false, "lightbox"); lockPage("lightbox", false); setBehind(box, false); if (keep !== true && lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
     }
     const step = (d) => { idx = (idx + d + list.length) % list.length; render(); };
     $("#lbClose").addEventListener("click", () => close()); $("#lbPrev").addEventListener("click", () => step(-1)); $("#lbNext").addEventListener("click", () => step(1));
@@ -1527,7 +1554,7 @@
       if (!cur) return;
       const d = cur; cur = null;
       d.classList.remove("is-open"); d.setAttribute("aria-hidden", "true"); setInert(d, true); setBehind(d, false);
-      setOverlay(false); lockPage("drawer", false);
+      setOverlay(false, "drawer"); lockPage("drawer", false);
       if (!(opts && opts.keepFocus) && origin && origin.focus) origin.focus({ preventScroll: true });
     }
     // from: what to give the keyboard back to on close, when that is not simply whatever has it now
@@ -1537,7 +1564,7 @@
       if (cur) close({ keepFocus: true });
       if (menuOpen) { toggleMenu(false, { keepFocus: true }); back = menuReturn && menuReturn.isConnected ? menuReturn : burger; }
       cur = d; origin = back;
-      setInert(d, false); setBehind(d, true); d.classList.add("is-open"); d.setAttribute("aria-hidden", "false"); setOverlay(true); lockPage("drawer", true);
+      setInert(d, false); setBehind(d, true); d.classList.add("is-open"); d.setAttribute("aria-hidden", "false"); setOverlay(true, "drawer"); lockPage("drawer", true);
       const c = focusEl || $("[data-drawer-close]", d); if (c) setTimeout(() => { if (cur === d) c.focus({ preventScroll: true }); }, 60);
     }
     drawers.forEach((d) => {
@@ -1637,6 +1664,19 @@
     }
     return { state: state, check: check, ok: ok, url: url, set: set, nights: () => dayNum(state.checkout) - dayNum(state.checkin), onChange: (fn) => subs.push(fn) };
   })();
+  // Back from the booking page in the same tab (in-app browsers open it there), the stay is found again even when the
+  // browser reloads this page: it rides on this page's own history entry, written as a booking link is followed. Nothing
+  // is stored on the device, and a stay that has since gone stale is dropped.
+  try {
+    const h = history.state && history.state.stay;
+    if (h && Booking.ok(Booking.check(Object.assign({}, Booking.state, h)))) Booking.set({ checkin: h.checkin, checkout: h.checkout, adults: h.adults, room: h.room || "" }, "history");
+  } catch (e) { /* no history entry to read */ }
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest && e.target.closest("a[href]");
+    if (!a || a.href.indexOf(ENGINE) !== 0 || !Booking.state.chosen) return;
+    const s = Booking.state;
+    try { history.replaceState(Object.assign({}, history.state, { stay: { checkin: s.checkin, checkout: s.checkout, adults: s.adults, room: s.room } }), ""); } catch (x) { /* a sandboxed frame may refuse */ }
+  }, true);
   let closeBookPanel = function () { return null; };       // set by initBooking: closes the planner and says what had opened it
 
   function initBooking() {
@@ -1746,13 +1786,13 @@
       if (isOpen) return;
       isOpen = true; lastFocus = back;
       if (lastCode && promo && !promo.value) promo.value = lastCode;
-      setInert(panel, false); setBehind(panel, true, [scrim]); panel.classList.add("is-open"); panel.setAttribute("aria-hidden", "false"); scrim.classList.add("is-on"); setOverlay(true); lockPage("book", true);
+      setInert(panel, false); setBehind(panel, true, [scrim]); panel.classList.add("is-open"); panel.setAttribute("aria-hidden", "false"); scrim.classList.add("is-on"); setOverlay(true, "book"); lockPage("book", true);
       render(); setTimeout(() => { if (isOpen) inEl.focus({ preventScroll: true }); }, 250);
     }
     function close(opts) {
       if (!isOpen) return null;
       isOpen = false;
-      panel.classList.remove("is-open"); panel.setAttribute("aria-hidden", "true"); setInert(panel, true); setBehind(panel, false, [scrim]); scrim.classList.remove("is-on"); setOverlay(false); lockPage("book", false);
+      panel.classList.remove("is-open"); panel.setAttribute("aria-hidden", "true"); setInert(panel, true); setBehind(panel, false, [scrim]); scrim.classList.remove("is-on"); setOverlay(false, "book"); lockPage("book", false);
       if (!(opts && opts.keepFocus) && lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
       return lastFocus;
     }
@@ -2149,14 +2189,16 @@
     const veil = $("#veil");
     const swap = () => {
       releaseSplits(); I18N.apply(lang); remakeSplits(); if (hasST) ScrollTrigger.refresh();
-      try { const u = new URL(location.href); u.searchParams.set("lang", lang); history.replaceState(history.state, "", u.pathname + u.search + u.hash); } catch (e) { /* a sandboxed frame may refuse */ }
+      try { history.replaceState(history.state, "", langAddress(lang)); } catch (e) { /* a sandboxed frame may refuse */ }
     };
     if (!hasGSAP || reduced || !veil) { swap(); return; }
     gsap.timeline().set(veil, { transformOrigin: "left", scaleX: 0 }).to(veil, { scaleX: 1, duration: .45, ease: "power3.in" }).add(swap).set(veil, { transformOrigin: "right" }, "+=0.06").to(veil, { scaleX: 0, duration: .55, ease: "power3.out" });
   }
   function initLang() {
     const tg = $("#langToggle"); if (tg) tg.addEventListener("click", () => switchLang(I18N.lang === "en" ? "th" : "en"));
-    $$("[data-lang-set]").forEach((b) => b.addEventListener("click", () => switchLang(b.dataset.langSet)));
+    // the footer's language links lead to each language's own page; with the script the page switches in place and keeps
+    // the visitor's dates, choices and drafts
+    $$("[data-lang-set]").forEach((b) => b.addEventListener("click", (e) => { e.preventDefault(); switchLang(b.dataset.langSet); }));
   }
 
   /* ---------- boot ---------- */

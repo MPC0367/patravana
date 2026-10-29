@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-locale="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -7,12 +7,30 @@
 <title>Patravana, Khao Yai</title>
 <meta name="description" content="Patravana Resort Khao Yai. Suites, open lawns and a lakeside setting in the hills. An unofficial bilingual concept redesign.">
 <!-- everything below works as a plain page; this class only switches on the parts that need the script -->
-<script>document.documentElement.className += " js";</script>
+<script>
+document.documentElement.className += " js";
+/* A phone reads the page one destination at a time (see "phone destinations" in main.js). Deciding that here, before
+   anything is drawn, means the first picture is already the phone's layout: nothing jumps when it switches. The
+   destination comes from the address; an address this list does not know is settled by the script at the end of the
+   page. Without the script the page is one continuous page, as before. */
+(function () {
+  var de = document.documentElement, mm = window.matchMedia;
+  try {
+    var sq = new URLSearchParams(location.search).get("section");
+    if (sq && /^[A-Za-z][A-Za-z0-9_-]*$/.test(sq)) { var uq = new URL(location.href); uq.searchParams.delete("section"); uq.hash = sq; history.replaceState(history.state, "", uq.pathname + uq.search + uq.hash); }
+  } catch (e) { /* kept as it is */ }
+  if (!mm || !mm("(max-width: 47.99em), (pointer: coarse) and (max-width: 62.5em) and (max-height: 37.5em)").matches) return;
+  var h = location.hash.slice(1), own = { hero: "home", explore: "home", offers: "offers", closing: "offers", air: "facilities", "band-lawn": "facilities", facilities: "facilities", placeCard: "facilities",
+    stay: "stay", "pet-friendly": "stay", "pet-details": "stay", dining: "dining", gather: "events", roam: "nearby", tonight: "gallery", "band-pool": "gallery", gallery: "gallery", visit: "contact", talk: "contact", essentials: "contact", "about-preview": "contact", privacy: "contact" };
+  de.setAttribute("data-view", own[h] || (/^fac-/.test(h) ? "facilities" : "home"));
+  de.className += " pv-views";
+})();
+</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 40'%3E%3Cg fill='none' stroke='%2335543F' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 31 L12 26 L18 20 L25 9 L31 18 L34 23'/%3E%3Cpath d='M30 25 L35 21 L40 14 L46 21 L53 27 L60 31'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300..800&family=Fraunces:ital,opsz,wght@1,9..144,300..500&family=DM+Sans:opsz,wght@9..40,300..600&family=Prompt:wght@300;400;500;600&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=58f79504">
+<link rel="stylesheet" href="styles.css?v=91f7984a">
 </head>
 <body>
 
@@ -63,7 +81,7 @@
 (function () {
   var d = document, l = d.getElementById("loader"), pct = d.getElementById("loaderPct"), bar = d.getElementById("loaderBar");
   var done = {}, waiting = [], lifted = false, going = false, written = false, timer = 0, anims = null, D = 0, t = 0, last = 0, due = 0, shown = 0;
-  var HOLD = 120, t0 = performance.now(), capAt = t0 + 7600, FLOOR = 1100, FINISH = 450;   /* milliseconds */
+  var HOLD = 120, t0 = performance.now(), capAt = t0 + 3200, FLOOR = 1100, FINISH = 450;   /* milliseconds */
   function ready() { return (done.fonts && done.photo && done.script && done.film) || performance.now() >= capAt; }
   function paint(v) { if (pct) pct.textContent = String(Math.round(v)); if (bar) bar.style.transform = "scaleX(" + (v / 100).toFixed(4) + ")"; }
   function curtain() { if (l) { l.classList.add("is-up"); setTimeout(function () { l.classList.add("is-done"); }, 950); } }
@@ -121,8 +139,8 @@
   var raf = window.requestAnimationFrame || function (fn) { return setTimeout(fn, 16); };
   (function frame() { tick(); if (!going) raf(frame); })();
   timer = setInterval(tick, 40);
-  setTimeout(function () { if (!going) { done.film = true; tick(); } }, 9000);   /* the last word, should the clock be held back */
-  setTimeout(function () { if (!going) go(); }, 10000);
+  setTimeout(function () { if (!going) { done.film = true; tick(); } }, 4500);   /* the last word, should the clock be held back */
+  setTimeout(function () { if (!going) go(); }, 5000);
 })();
 </script>
 <div class="veil" id="veil" aria-hidden="true"></div>
@@ -936,7 +954,7 @@
     </div>
     <ul class="places" role="list" data-places>
       <li class="place" data-km="1.4" data-cat="food"><span class="place__n" data-i18n="roam.p1">Pirom Cafe</span><span class="place__k" data-i18n="roam.k.cafe">cafe</span><span class="place__d num">1.4 km</span><a class="place__m" href="https://www.google.com/maps/search/?api=1&amp;query=Pirom+Cafe+Khao+Yai" target="_blank" rel="noopener" aria-label="Pirom Cafe: search on Google Maps"><span data-i18n="roam.map">Map</span></a></li>
-      <li class="place" data-km="2" data-cat="nature"><span class="place__n" data-i18n="roam.p2">The Bloom flower park</span><span class="place__k" data-i18n="roam.k.garden">garden</span><span class="place__d num">2 km</span><a class="place__m" href="https://www.google.com/maps/search/?api=1&amp;query=The+Bloom+Khao+Yai" target="_blank" rel="noopener" aria-label="The Bloom flower park: search on Google Maps"><span data-i18n="roam.map">Map</span></a><span class="place__note" data-i18n="roam.seasonal">Seasonal. Check it is open before you go.</span></li>
+      <li class="place" data-km="2" data-cat="nature"><span class="place__n" data-i18n="roam.p2">The Bloom flower park</span><span class="place__k" data-i18n="roam.k.garden">garden</span><span class="place__d num">2 km</span><a class="place__m" href="https://www.google.com/maps/search/?api=1&amp;query=The+Bloom+Khao+Yai" target="_blank" rel="noopener" aria-label="The Bloom flower park: search on Google Maps"><span data-i18n="roam.map">Map</span></a><span class="place__note" data-i18n="roam.seasonal">Check current opening before you go.</span></li>
       <li class="place" data-km="3" data-cat="wine"><span class="place__n" data-i18n="roam.p3">P.B. Valley winery</span><span class="place__k" data-i18n="roam.k.wine">wine</span><span class="place__d num">3 km</span><a class="place__m" href="https://www.google.com/maps/search/?api=1&amp;query=PB+Valley+Khao+Yai+Winery" target="_blank" rel="noopener" aria-label="P.B. Valley winery: search on Google Maps"><span data-i18n="roam.map">Map</span></a></li>
       <li class="place" data-km="3" data-cat="wine"><span class="place__n" data-i18n="roam.p4">GranMonte vineyard</span><span class="place__k" data-i18n="roam.k.wine">wine</span><span class="place__d num">3 km</span><a class="place__m" href="https://www.google.com/maps/search/?api=1&amp;query=GranMonte+Vineyard+and+Winery" target="_blank" rel="noopener" aria-label="GranMonte vineyard: search on Google Maps"><span data-i18n="roam.map">Map</span></a></li>
       <li class="place" data-km="12.5" data-cat="golf"><span class="place__n" data-i18n="roam.p6">Sir James Country Club</span><span class="place__k" data-i18n="roam.k.golf">golf</span><span class="place__d num">12.5 km</span><a class="place__m" href="https://www.google.com/maps/search/?api=1&amp;query=Sir+James+Country+Club" target="_blank" rel="noopener" aria-label="Sir James Country Club: search on Google Maps"><span data-i18n="roam.map">Map</span></a></li>
@@ -1120,7 +1138,7 @@
       <p class="card__k" id="aboutK" data-i18n="about.k">About this preview</p>
       <p data-i18n="about.p1">This is an unofficial concept redesign, not the resort's own website. Photographs and information belong to Patravana Resort.</p>
       <p data-i18n="about.p2">Dates, guest numbers and enquiry text stay in this page on your device. Nothing leaves it until you choose to copy an enquiry, open LINE, your mail app or your phone, or continue to the resort's booking page, which is run by the resort's own provider under its own terms.</p>
-      <p data-i18n="about.p3">This preview runs no analytics and sets no cookies of its own. It remembers your language in this browser, and loads its fonts from Google Fonts and its animation scripts from jsDelivr.</p>
+      <p data-i18n="about.p3">This preview runs no analytics, sets no cookies of its own and stores nothing on your device. It loads its fonts from Google Fonts and its animation scripts from jsDelivr.</p>
     </aside>
   </div>
 </section>
@@ -1154,7 +1172,7 @@
     </div>
     <div><p class="card__k" data-i18n="foot.here">Here</p><a href="https://maps.app.goo.gl/nnPAtFGH4KwDBAJA9" target="_blank" rel="noopener" data-fact="foot.address">88/1, 88/88-93 Moo 5, Phayayen, Pak Chong, Nakhon Ratchasima 30320</a><a href="tel:+66885041888" class="num">+66 88 504 1888</a><a href="https://www.patravana.com/line-qr-code" target="_blank" rel="noopener">LINE @patravana</a><a href="mailto:info@patravanaresort.com">info@patravanaresort.com</a></div>
     <div><p class="card__k" data-i18n="foot.explore">Explore</p><a href="#offers" data-i18n="nav.offers">Offers</a><a href="#facilities" data-i18n="nav.facilities">Facilities</a><a href="#stay" data-i18n="nav.stay">Stay</a><a href="#pet-friendly" data-i18n="nav.pet">Pet-friendly stays</a><a href="#dining" data-i18n="nav.dining">Dining</a><a href="#gather" data-i18n="nav.gather">Events</a><a href="#roam" data-i18n="nav.roam">Nearby</a><a href="#gallery" data-i18n="nav.gallery">Gallery</a><a href="#visit" data-i18n="nav.visit">Contact</a><a href="#essentials" data-i18n="faq.title">Essentials</a></div>
-    <div><p class="card__k" data-i18n="foot.follow">Follow</p><a href="https://www.facebook.com/patravanaresort/" target="_blank" rel="noopener">Facebook</a><a href="https://www.instagram.com/patravana_khaoyai/" target="_blank" rel="noopener">Instagram</a><p class="card__k foot__langk js-only" data-i18n="foot.lang">Language</p><button class="textlink js-only" type="button" data-lang-set="en" lang="en">English</button><button class="textlink js-only" type="button" data-lang-set="th" lang="th">ภาษาไทย</button></div>
+    <div><p class="card__k" data-i18n="foot.follow">Follow</p><a href="https://www.facebook.com/patravanaresort/" target="_blank" rel="noopener">Facebook</a><a href="https://www.instagram.com/patravana_khaoyai/" target="_blank" rel="noopener">Instagram</a><p class="card__k foot__langk" data-i18n="foot.lang">Language</p><a class="textlink" href="./" data-lang-set="en" hreflang="en" lang="en">English</a><a class="textlink" href="th" data-lang-set="th" hreflang="th" lang="th">ภาษาไทย</a></div>
     <div class="foot__sky js-only">
       <p class="card__k" data-i18n="foot.timek">Local time at the resort</p><p class="foot__fig num" data-clock>--:--</p>
       <p class="card__k" data-i18n="foot.sunsetk">Sunset today</p><p class="foot__fig"><span class="foot__pre" data-i18n="sky.about">about</span> <span class="num" data-sky="sunset">--:--</span></p>
@@ -1298,11 +1316,11 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js" defer></script>
 <script src="facts.js?v=8646023d" defer></script>
-<script src="i18n.js?v=f4e0cf95" defer></script>
+<script src="i18n.js?v=235c3ecc" defer></script>
 <script src="scene.js?v=29086502" defer></script>
-<script src="film-manifest.js?v=1ca8444e" defer></script>
+<script src="film-manifest.js?v=05536fc9" defer></script>
 <script src="film-stream.js?v=65575688" defer></script>
 <!-- if the main script cannot be fetched, the page falls back to its plain form: panels open, script-only controls hidden -->
-<script src="main.js?v=7b6528bd" defer onerror="document.documentElement.classList.remove('js')"></script>
+<script src="main.js?v=7df43b8c" defer onerror="document.documentElement.classList.remove('js')"></script>
 </body>
 </html>
