@@ -2469,13 +2469,13 @@
     // strength, radius (share of the window's long side), home x, home y, swing x, swing y, speed x, speed y;
     // pools 0 to 4 take the mood's colours, 5 is the glow, 6 the shade
     const F = [
-      [.85, .58, .82, .16, .30, .30, 1.3, .9],
-      [.85, .68, .16, .80, .32, .30, .8, 1.1],
-      [.80, .44, .58, .52, .26, .30, 1.7, 1.4],
-      [.80, .74, .30, .22, .28, .26, 1.1, .7],
-      [.70, .50, .86, .86, .22, .28, .6, 1.6],
-      [.75, .40, .55, .40, .30, .28, .9, 1.2],
-      [.70, .50, .30, .65, .26, .24, 1.4, .8]
+      [.66, .72, .82, .16, .30, .30, 1.3, .9],          // softer and wider than the first cut (user, 5 Nov 2026)
+      [.66, .84, .16, .80, .32, .30, .8, 1.1],
+      [.60, .56, .58, .52, .26, .30, 1.7, 1.4],
+      [.62, .90, .30, .22, .28, .26, 1.1, .7],
+      [.54, .64, .86, .86, .22, .28, .6, 1.6],
+      [.58, .54, .55, .40, .30, .28, .9, 1.2],
+      [.44, .64, .30, .65, .26, .24, 1.4, .8]
     ];
     const PH = F.map(() => [0, 1, 2, 3].map(() => Math.random() * 6.283));
     const G = new Float32Array(1025); for (let i = 0; i < 1025; i++) G[i] = Math.exp(-i / 128 * 3);   // four steps per unit: no rings
@@ -2498,7 +2498,7 @@
         const cx = (f[2] + f[4] * (.62 * Math.sin(ax + ph[0]) + .38 * Math.sin(ax * 1.618 + ph[1])) + .035 * Math.sin(t * .31 + k * 1.9) + v * .02 * Math.sin(k * 2.4 + ph[2])) * W;
         const cy = (f[3] + f[5] * (.62 * Math.sin(ay + ph[2]) + .38 * Math.sin(ay * 1.618 + ph[3])) + .03 * Math.cos(t * .27 + k * 2.3) - v * depth) * H;
         const r = f[1] * m * (1 + .12 * Math.sin((ax + ay) / 2 + ph[1]) + .1 * Math.sin(t * .5 + k * 1.7));
-        const oval = .2 * Math.sin(t * .21 + k * 1.1 + ph[3]), rx = r * (1 + oval), ry = r * (1 - oval);
+        const oval = .12 * Math.sin(t * .17 + k * 1.1 + ph[3]), rx = r * (1 + oval), ry = r * (1 - oval);
         let px = cx, py = cy;
         if (k === 5) {                                 // the glow: its own path, pulled toward the pointer when there is one
           glow.w += ((glow.tx != null ? 1 : 0) - glow.w) * .06;
@@ -2538,7 +2538,7 @@
     const shown = () => hosts.filter((x) => x.vis);
     const drawAll = (t, v) => { const q = pools(tau, t, v); shown().forEach((x) => paint(x, q)); };
     const still = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
-    const IDLE = 1 / 55, SCROLL = .22;                 // about one wander a minute on its own; scrolling pushes it along
+    const IDLE = 1 / 75, SCROLL = .18;                 // a slow wander (about 75 s) on its own; scrolling pushes it along, gently
     function frame(now) {
       running = false;
       if (document.hidden || !shown().length) { lastT = 0; return; }   // no green section on screen: nothing is drawn
