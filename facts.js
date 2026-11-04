@@ -79,19 +79,24 @@ window.PV_FACTS = {
     kitchen: { days: [0, 3, 4, 5, 6], open: "11:00", close: "21:00" }
   },
 
-  /* Offers, as read from the resort's booking page. `stayUntil` is the last night an offer covers (Bangkok dates): from
-     the next day it shows as ended and steps back. The direct rate needs no code, so it has no copy button.
-     lastVerifiedAt: the last real check on the booking page. 18 October 2026: the audit's provider check found the 30%
-     direct offer on the night of 31 March 2027 (not 1 April) and refresh2026 taking 15% off an eligible direct rate,
-     with the cancellation turning non-refundable. Some plans take the code alone (15%), so "about 41%" stays conditional.
-     Do not move this date without a new check. No separate book-by date has been established: do not invent one. */
+  /* Offers (4 November 2026). The owner withdrew the codeless direct-booking discount campaign and the combined saving
+     claimed on top of it, and the refresh2026 code needs a fresh check at the booking page before it is shown again. So the page itself
+     promises no saving: its Offers card points to the resort's booking page, which shows the current offers and rates for
+     the guest's dates. Verified offers reach the page only through the offer sync (tools/offers/sync.mjs), which reads a
+     supported source, validates it and writes offers.json; the page shows an offer only while that file is fresh and the
+     offer's own windows are open at the resort, and sends nothing about the visitor to fetch it.
+     withdrawn: kept out by the sync and by the page, even if an old feed, cache or import brings one back. Bringing one
+     back needs a new instruction from the owner. */
   offers: {
-    lastVerifiedAt: "2026-10-18",
-    direct: { percent: 30, code: null, stayUntil: "2027-03-31", refundable: true, freeCancelHours: 48 },
-    code: { percent: 15, code: "refresh2026", stayFrom: "2026-10-02", stayUntil: "2027-03-31", refundable: false, stacksOnDirect: true }
+    source: "offers.json",
+    maxAgeMinutes: 30,
+    withdrawn: [
+      { id: "direct-30", percent: 30, codeless: true, note: "the codeless direct-booking discount, withdrawn by the owner on 4 November 2026" },
+      { code: "welcome2024", note: "an old code the booking page no longer honours" }
+    ]
   },
 
-  /* The sentences that quote the facts. {path} is filled from the data above ({hall.theatre.full}, {offers.code.until},
+  /* The sentences that quote the facts. {path} is filled from the data above ({hall.theatre.full}, {dining.breakfast.open},
      {contact.phone.show}); the same sentence is used wherever the page needs it. */
   text: {
     "pet.summary": { en: "Pet-friendly stays are available in one designated building.", th: "รีสอร์ทรับสัตว์เลี้ยงเข้าพักได้ในอาคารที่กำหนดไว้หนึ่งอาคาร" },
@@ -131,18 +136,6 @@ window.PV_FACTS = {
     "dining.status.tomorrow": { en: "Breakfast tomorrow from {dining.breakfast.open}", th: "อาหารเช้าพรุ่งนี้เริ่ม {dining.breakfast.open} น." },
     "dining.status.rest": { en: "No lunch or dinner service today. Breakfast tomorrow from {dining.breakfast.open}", th: "วันนี้ไม่มีมื้อกลางวันและมื้อเย็น อาหารเช้าพรุ่งนี้เริ่ม {dining.breakfast.open} น." },
 
-    "offers.kicker": { en: "Offers as of {offers.verified}", th: "ข้อเสนอ ณ วันที่ {offers.verified}" },
-    // the headlines say the whole benefit; the stay-through date is set in strong type on both cards
-    "offers.direct.head": { en: "<b class=\"num\">{offers.direct.percent}%</b> Off Direct Booking", th: "จองตรงลด <b class=\"num\">{offers.direct.percent}%</b>" },
-    "offers.direct.until": { en: "Stays through <time datetime=\"{offers.direct.stayUntil}\">{offers.direct.until}</time>", th: "สำหรับการเข้าพักถึง <time datetime=\"{offers.direct.stayUntil}\">{offers.direct.until}</time>" },
-    "offers.direct.desc": { en: "On the resort's own booking page. Its flexible rates can be cancelled free of charge up to {offers.direct.freeCancelHours} hours before check-in; check the terms of the rate you choose.", th: "ในหน้าจองของรีสอร์ทเอง ราคาแบบยืดหยุ่นยกเลิกได้ฟรีถึง {offers.direct.freeCancelHours} ชั่วโมงก่อนเช็คอิน กรุณาตรวจสอบเงื่อนไขของราคาที่คุณเลือก" },
-    "offers.code.tag": { en: "With code <span class=\"ticket__code\">{offers.code.code}</span>", th: "ด้วยโค้ด <span class=\"ticket__code\">{offers.code.code}</span>" },
-    "offers.code.head": { en: "Extra <b class=\"num\">{offers.code.percent}%</b> Off", th: "ลดเพิ่ม <b class=\"num\">{offers.code.percent}%</b>" },
-    "offers.code.until": { en: "Stays through <time datetime=\"{offers.code.stayUntil}\">{offers.code.until}</time>", th: "สำหรับการเข้าพักถึง <time datetime=\"{offers.code.stayUntil}\">{offers.code.until}</time>" },
-    "offers.code.desc": { en: "Taken off an eligible direct rate that is already discounted. Where the {offers.direct.percent}% direct rate applies too, that is about {offers.code.total}% off in all.", th: "ลดเพิ่มจากราคาจองตรงที่ร่วมรายการซึ่งลดราคาแล้ว หากราคานั้นได้ส่วนลดจองตรง {offers.direct.percent}% ด้วย จะรวมเป็นส่วนลดประมาณ {offers.code.total}%" },
-    "offers.code.terms": { en: "Non-refundable with this code", th: "ไม่สามารถขอคืนเงินได้เมื่อใช้โค้ดนี้" },
-    // the Home guide's offer line, on a phone
-    "hub.offer.code": { en: "Extra {offers.code.percent}% with code {offers.code.code}", th: "ลดเพิ่ม {offers.code.percent}% ด้วยโค้ด {offers.code.code}" },
 
     "book.note": { en: "Opens in a new tab with your dates, adults and room choice. A promo code is copied for you to paste there. Children and extra rooms are added on that page. You can also book by phone on {contact.phone.local} or on LINE.", th: "เปิดในแท็บใหม่พร้อมวันที่ จำนวนผู้ใหญ่ และห้องที่คุณเลือก โค้ดส่วนลดจะถูกคัดลอกไว้ให้นำไปวางในหน้านั้น ส่วนเด็กและห้องเพิ่มให้เลือกในหน้าจอง จองทางโทรศัพท์ {contact.phone.local} หรือ LINE ก็ได้เช่นกัน" },
     // a party of four or more: the dates and the room choice go over, the party itself is set up on the booking page

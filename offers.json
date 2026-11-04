@@ -1,0 +1,10 @@
+{
+ "schema": "patravana.offers/1",
+ "source": "none",
+ "sourceRevision": "none",
+ "status": "unconfigured",
+ "fetchedAt": "2026-11-04T15:31:58.825Z",
+ "validUntil": "2026-11-04T16:01:58.825Z",
+ "lastSuccessAt": null,
+ "offers": []
+}

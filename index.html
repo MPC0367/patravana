@@ -15,13 +15,23 @@ document.documentElement.className += " js";
    page. Without the script the page is one continuous page, as before. */
 (function () {
   var de = document.documentElement, mm = window.matchMedia;
+  /* an old language address on an exported page (…/?lang=th): that language's own page opens at once, before anything
+     is drawn; the page's own language just drops the parameter. (The production host redirects these as well.) */
+  try {
+    var loc = de.getAttribute("data-locale"), lq = new URLSearchParams(location.search).get("lang");
+    if (loc && (lq === "th" || lq === "en")) {
+      var lu = new URL(location.href); lu.searchParams.delete("lang");
+      if (lq !== loc) { lu.pathname = lu.pathname.replace(/(th|th\.html|index\.html)$/, "") + (lq === "th" ? "th" : ""); location.replace(lu.pathname + lu.search + lu.hash); return; }
+      history.replaceState(history.state, "", lu.pathname + lu.search + lu.hash);
+    }
+  } catch (e) { /* kept as it is */ }
   try {
     var sq = new URLSearchParams(location.search).get("section");
     if (sq && /^[A-Za-z][A-Za-z0-9_-]*$/.test(sq)) { var uq = new URL(location.href); uq.searchParams.delete("section"); uq.hash = sq; history.replaceState(history.state, "", uq.pathname + uq.search + uq.hash); }
   } catch (e) { /* kept as it is */ }
   if (!mm || !mm("(max-width: 47.99em), (pointer: coarse) and (max-width: 62.5em) and (max-height: 37.5em)").matches) return;
   var h = location.hash.slice(1), own = { hero: "home", explore: "home", offers: "offers", closing: "offers", air: "facilities", "band-lawn": "facilities", facilities: "facilities", placeCard: "facilities",
-    stay: "stay", "pet-friendly": "stay", "pet-details": "stay", dining: "dining", gather: "events", roam: "nearby", tonight: "gallery", "band-pool": "gallery", gallery: "gallery", visit: "contact", talk: "contact", essentials: "contact", "about-preview": "contact", privacy: "contact" };
+    stay: "stay", "pet-friendly": "stay", "pet-details": "stay", dining: "dining", gather: "events", roam: "nearby", tonight: "gallery", "band-pool": "gallery", gallery: "gallery", visit: "contact", "getting-here": "contact", talk: "contact", essentials: "contact", "about-preview": "contact", privacy: "contact" };
   de.setAttribute("data-view", own[h] || (/^fac-/.test(h) ? "facilities" : "home"));
   de.className += " pv-views";
 })();
@@ -30,7 +40,7 @@ document.documentElement.className += " js";
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300..800&family=Fraunces:ital,opsz,wght@1,9..144,300..500&family=DM+Sans:opsz,wght@9..40,300..600&family=Prompt:wght@300;400;500;600&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=163a9b2f">
+<link rel="stylesheet" href="styles.css?v=1f2566ec">
 </head>
 <body>
 
@@ -70,21 +80,20 @@ document.documentElement.className += " js";
    Its drawing (the mark painting itself, the name writing itself: CSS animations, see .loader in the stylesheet) is
    run on this script's own clock: every animation is paused and set to the clock each frame, which behaves the same
    in every browser. The clock runs at the drawing's own speed while the page gets ready, slows near the end if the
-   page is not ready yet, and holds the last stroke until it is. "Ready" means the fonts, the hero photograph and the
-   main script are in, and the opening film could start at once (main.js has played it behind the screen, seen it
-   run, and set it back on its first picture). Then the drawing finishes within about half a second, and at that
-   instant the film starts and the curtain rises. At its quickest the whole drawing takes 1.1 seconds; if the film is
-   not ready 8 seconds after the page was asked for, the drawing finishes anyway and the hero shows its still
-   photograph until the film can play. The count is the drawing's own progress. main.js reports its two steps with
+   page is not ready yet, and holds the last stroke until it is. "Ready" means the hero photograph and the main script
+   are in: nothing else holds the page (4 November 2026: no minimum time, and neither the fonts nor the film are waited
+   for). Then the drawing completes at once and the curtain rises; from that moment the page takes every tap and key,
+   while the curtain slides away. The film starts when it can play, over its still photograph. If the photograph or the
+   script is slow, the screen still lifts 3.2 seconds after the page was asked for. The count is the drawing's own progress. main.js reports its two steps with
    PVLoad.mark and starts the film through PVLoad.onLift. As the curtain rises, .is-written hands the drawn name over
    to the real type. */
 (function () {
   var d = document, l = d.getElementById("loader"), pct = d.getElementById("loaderPct"), bar = d.getElementById("loaderBar");
-  var done = {}, waiting = [], lifted = false, going = false, written = false, timer = 0, anims = null, D = 0, t = 0, last = 0, due = 0, shown = 0;
-  var HOLD = 120, t0 = performance.now(), capAt = t0 + 3200, FLOOR = 1100, FINISH = 450;   /* milliseconds */
-  function ready() { return (done.fonts && done.photo && done.script && done.film) || performance.now() >= capAt; }
+  var done = {}, waiting = [], lifted = false, going = false, written = false, timer = 0, anims = null, D = 0, t = 0, last = 0, shown = 0;
+  var t0 = performance.now(), capAt = t0 + 3200;   /* milliseconds */
+  function ready() { return (done.photo && done.script) || performance.now() >= capAt; }
   function paint(v) { if (pct) pct.textContent = String(Math.round(v)); if (bar) bar.style.transform = "scaleX(" + (v / 100).toFixed(4) + ")"; }
-  function curtain() { if (l) { l.classList.add("is-up"); setTimeout(function () { l.classList.add("is-done"); }, 950); } }
+  function curtain() { if (l) { l.style.pointerEvents = "none"; l.classList.add("is-up"); setTimeout(function () { l.classList.add("is-done"); }, 950); } }
   function lift() {                                         /* the drawing is done: the film starts now, the curtain follows */
     if (lifted) return; lifted = api.lifted = true;
     d.removeEventListener("keydown", guard, true); d.removeEventListener("focusin", guard, true);
@@ -94,7 +103,7 @@ document.documentElement.className += " js";
   function go() {
     if (going) return; going = true; clearInterval(timer); paint(100);
     if (done.fonts && !written) { written = true; l.classList.add("is-written"); }   /* the real type takes over as the curtain rises */
-    lift(); setTimeout(curtain, HOLD);
+    lift(); curtain();
   }
   /* the drawing's animations, once the style sheet has made them (the screen's own safety net is left to run) */
   function drawing() {
@@ -115,17 +124,11 @@ document.documentElement.className += " js";
     var list = drawing();
     if (!list) {                                            /* no drawing to follow: the steps decide, after the drawing's usual length */
       shown += (99 - shown) * .03; paint(shown);
-      if (ready() && el >= 2150) go();
+      if (ready()) go();
       return;
     }
-    var r;
-    if (ready()) {                                          /* all in: the drawing is given a moment to finish, fixed once */
-      if (!due) due = Math.max(now + FINISH, t0 + FLOOR);
-      r = Math.max(1, (D - t) / Math.max(16, due - now));
-    } else if (t < D * .78) r = 1;
-    else if (t < D - 140) r = .2;                           /* still waiting: slow right down near the end */
-    else r = 0;                                             /* and hold the last stroke until the film could start */
-    t = Math.min(D, t + step * r);
+    if (ready()) t = D;                                     /* ready: the drawing completes on this frame */
+    else t = Math.min(D, t + step * (t < D * .78 ? 1 : t < D - 140 ? .2 : 0));   /* still waiting: slow right down near the end, then hold the last stroke */
     list.forEach(function (x) { try { x.currentTime = t; } catch (e) { /* ignore */ } });
     paint(Math.min(99, t / D * 100));
     if (t >= D) go();
@@ -174,7 +177,7 @@ document.documentElement.className += " js";
     <button class="lang js-only" id="langToggle" aria-label="เปลี่ยนภาษาเป็นไทย">
       <span class="lang__opt is-on" data-lang-opt="en">EN</span><span class="lang__sep" aria-hidden="true"></span><span class="lang__opt" data-lang-opt="th" lang="th">ไทย</span>
     </button>
-    <a class="pill pill--solid top__book" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span class="top__book-long" data-i18n="nav.book">Book a suite</span><span class="top__book-short" data-i18n="nav.bookshort">Book</span></a>
+    <a class="pill pill--solid top__book" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span class="top__book-long" data-i18n="nav.book">Book your stay</span><span class="top__book-short" data-i18n="nav.bookshort">Book</span></a>
     <button class="burger js-only" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="mnav" data-i18n-attr="aria-label:nav.menu"><span></span><span></span></button>
   </div>
 </header>
@@ -183,7 +186,7 @@ document.documentElement.className += " js";
 <nav class="cindex" id="cindex" aria-label="On this page" data-i18n-attr="aria-label:ci.label">
   <a href="#hero"><span data-i18n="ci.top">Top</span></a>
   <a href="#offers"><span data-i18n="nav.offers">Offers</span></a>
-  <a href="#air"><span data-i18n="air.title">Air</span></a>
+  <a href="#air"><span data-i18n="air.title">Fresh Air</span></a>
   <a href="#facilities"><span data-i18n="nav.facilities">Facilities</span></a>
   <a href="#stay"><span data-i18n="nav.stay">Stay</span></a>
   <a href="#pet-friendly"><span data-i18n="nav.pet">Pet-friendly stays</span></a>
@@ -223,7 +226,7 @@ document.documentElement.className += " js";
         <select id="bookAdults" name="adults" aria-describedby="bookAdultsErr bookMore"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="more" data-i18n="book.adultsmore">4 or more</option></select>
         <span class="field__err" id="bookAdultsErr" hidden></span>
       </div>
-      <label class="field field--promo"><span data-i18n="book.promo">Promo code, optional</span><input type="text" id="bookPromo" placeholder="refresh2026" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+      <label class="field field--promo"><span data-i18n="book.promo">Promo code, optional</span><input type="text" id="bookPromo" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
       <p class="book__more" id="bookMore" data-fact="book.more" hidden>Each suite takes up to 3 adults. Your dates and room choice carry over; the rooms and guests for your party are chosen on the booking page, or ask the team.</p>
       <div class="book__actions">
         <a class="pill pill--solid pill--lg" id="bookGo" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener"><span data-i18n="book.go">Continue to the resort's booking page</span><svg class="pill__ic" aria-hidden="true"><use href="#i-out"/></svg></a>
@@ -255,7 +258,7 @@ document.documentElement.className += " js";
     <a href="#visit" data-i18n="nav.contactfaq" data-view-link="contact">Contact &amp; FAQs</a>
     <a href="#essentials" class="mnav__sub" data-i18n="nav.faqs">FAQs</a>
   </nav>
-  <a class="pill pill--solid mnav__book" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="nav.book">Book a suite</span></a>
+  <a class="pill pill--solid mnav__book" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="nav.book">Book your stay</span></a>
 </div>
 
 <main id="main">
@@ -308,11 +311,11 @@ document.documentElement.className += " js";
       <p class="eyebrow hero__eyebrow"><span data-i18n="hero.eyebrow1">Patravana Resort</span><i aria-hidden="true"></i><span data-i18n="hero.eyebrow2">Khao Yai</span></p>
       <h1 class="hero__h1">
         <span class="hero__line"><span class="hero__word" data-i18n="hero.h1a">Come up</span></span>
-        <span class="hero__line"><span class="hero__word" data-i18n="hero.h1b">for <em class="it">air.</em></span></span>
+        <span class="hero__line"><span class="hero__word" data-i18n="hero.h1b">for <em class="it">fresh air.</em></span></span>
       </h1>
-      <p class="hero__sub" data-i18n="hero.sub">Suites, open lawns and a lakeside setting in the hills of Khao Yai.</p>
+      <p class="hero__sub" data-i18n="hero.sub">Sixty-four suites and rooms in the verdant hills of Khao Yai.</p>
       <div class="hero__cta">
-        <a class="pill pill--solid pill--lg" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="hero.book">Book a suite</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="pill pill--solid pill--lg" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="hero.book">Book your stay</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         <a class="pill pill--ghost pill--lg" href="#air"><span data-i18n="hero.explore">Explore the hills</span></a>
       </div>
     </div>
@@ -331,7 +334,7 @@ document.documentElement.className += " js";
   </div>
 
   <ul class="hero__meta" role="list">
-    <li data-i18n="hero.meta2">Phayayen, Pak Chong</li>
+    <li data-i18n="hero.meta2">Phayayen, Pak Chong, Nakhon Ratchasima</li>
     <li class="js-only"><span class="num" id="heroTime" data-clock>--:--</span> <span data-i18n="hero.meta3">local time</span></li>
     <li class="js-only"><span data-i18n="hero.sunset">Sunset today about</span> <span class="num" data-sky="sunset">--:--</span></li>
   </ul>
@@ -363,8 +366,8 @@ document.documentElement.className += " js";
   <ul class="hub__grid" role="list">
     <li class="hub__offer"><a class="hub__card hub__card--offer" href="#offers" data-view-link="offers">
       <span class="hub__k" data-i18n="hub.offerk">Offers</span>
-      <span class="hub__deal" data-offer-teaser="direct"><span class="hub__head" data-fact="offers.direct.head"><b class="num">30%</b> Off Direct Booking</span><strong class="hub__until" data-fact="offers.direct.until">Stays through <time datetime="2027-03-31">31 March 2027</time></strong></span>
-      <span class="hub__extra" data-offer-teaser="code" data-fact="hub.offer.code">Extra 15% with code refresh2026</span>
+      <span class="hub__deal" data-offer-teaser><span class="hub__head" data-offer-head data-i18n="hub.offerhead">Current offers and rates</span></span>
+      <span class="hub__extra" data-offer-extra data-i18n="hub.offerextra">On the resort's own booking page, for your dates</span>
       <span class="hub__go"><span data-i18n="hub.offergo">See the offers</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
     </a></li>
     <li><a class="hub__card" href="#stay" data-view-link="stay"><span class="hub__img"><img src="assets/web/room-vana-lake-bedroom-800.jpg" srcset="assets/web/room-vana-lake-bedroom-560.jpg 560w, assets/web/room-vana-lake-bedroom-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="600"></span><span class="hub__name" data-i18n="nav.stay">Stay</span><span class="hub__sub" data-i18n="hub.stay">Three suites with lake, garden or country views</span></a></li>
@@ -381,32 +384,20 @@ document.documentElement.className += " js";
 <section class="chapter chapter--offers chapter--stack" id="offers" data-owner="offers">
   <div class="chapter__side">
     <p class="chapter__num num" aria-hidden="true">01</p>
-    <p class="chapter__kicker" data-fact="offers.kicker">Offers as of 18 October 2026</p>
+    <p class="chapter__kicker" data-i18n="offers.kicker">Offers and rates</p>
     <h2 class="chapter__title" data-i18n="offers.title">Offers</h2>
-    <p class="chapter__note" data-i18n="offers.note">Direct rates on the resort's own booking page. Tap the code to copy it, then enter it there.</p>
+    <p class="chapter__note" data-i18n="offers.note">The resort's own booking page shows its current offers and rates for your dates. Offers appear here only once they have been checked against it.</p>
   </div>
   <div class="chapter__body">
-    <!-- every figure, date and code on these cards is printed from facts.js (offers) -->
-    <div class="tickets">
-      <article class="ticket ticket--hot" data-rv data-offer="code">
-        <p class="ticket__tag" data-fact="offers.code.tag">With code <span class="ticket__code">refresh2026</span></p>
-        <h3 class="ticket__head" data-fact="offers.code.head">Extra <b class="num">15%</b> Off</h3>
-        <p class="ticket__until"><strong data-fact="offers.code.until">Stays through <time datetime="2027-03-31">31 March 2027</time></strong></p>
-        <p class="ticket__desc" data-fact="offers.code.desc">Taken off an eligible direct rate that is already discounted. Where the 30% direct rate applies too, that is about 41% off in all.</p>
-        <p class="ticket__terms" data-fact="offers.code.terms">Non-refundable with this code</p>
+    <!-- the page promises no saving of its own (4 November 2026): this card points to the resort's booking page, and only
+         verified offers from offers.json are added in front of it by the script (see initOffers in main.js) -->
+    <div class="tickets" id="offerList">
+      <article class="ticket ticket--hot" data-rv data-offer="current">
+        <p class="ticket__tag" data-i18n="offers.cur.tag">Book direct</p>
+        <h3 class="ticket__head" data-i18n="offers.cur.head">Current offers and rates</h3>
+        <p class="ticket__desc" data-i18n="offers.cur.desc">Choose your dates to see the resort's current offers and rates on its own booking page. Each rate shows its cancellation and payment terms before you confirm.</p>
         <div class="ticket__acts">
-          <button class="pill pill--light pill--copy js-only" type="button" data-copy="refresh2026"><span data-i18n="offers.copy">Copy code</span> <span class="num" data-offer-code>refresh2026</span><svg class="pill__ic pill__ic--copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="pill__ic pill__ic--done" aria-hidden="true"><use href="#i-check"/></svg></button>
-          <a class="pill pill--ghost" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="stay.book">Check dates</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-        </div>
-        <p class="ticket__help" data-i18n="offers.codehelp">Enter the code on the resort's booking page. Copying it does not apply it.</p>
-      </article>
-      <article class="ticket" data-rv data-offer="direct">
-        <p class="ticket__tag" data-i18n="offers.o2.tag">No code needed</p>
-        <h3 class="ticket__head" data-fact="offers.direct.head"><b class="num">30%</b> Off Direct Booking</h3>
-        <p class="ticket__until"><strong data-fact="offers.direct.until">Stays through <time datetime="2027-03-31">31 March 2027</time></strong></p>
-        <p class="ticket__desc" data-fact="offers.direct.desc">On the resort's own booking page. Its flexible rates can be cancelled free of charge up to 48 hours before check-in; check the terms of the rate you choose.</p>
-        <div class="ticket__acts">
-          <a class="pill pill--ghost" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="stay.book">Check dates</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="pill pill--light" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open><span data-i18n="offers.cur.go">See current offers and rates</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </div>
       </article>
       <article class="ticket" data-rv data-offer="group">
@@ -425,11 +416,11 @@ document.documentElement.className += " js";
   <div class="chapter__side">
     <p class="chapter__num num" aria-hidden="true">02</p>
     <p class="chapter__kicker" data-i18n="air.kicker">The place</p>
-    <h2 class="chapter__title" data-i18n="air.title">Air</h2>
-    <p class="chapter__note" data-i18n="air.note">Part of the Phu Patra estate in Phayayen, in the hills of Pak Chong.</p>
+    <h2 class="chapter__title" data-i18n="air.title">Fresh Air</h2>
+    <p class="chapter__note" data-i18n="air.note">Part of the Phu Patra estate, nestled in the valleys of Pak Chong in the foothills of the Khao Yai National Park.</p>
   </div>
   <div class="chapter__body">
-    <p class="statement st-lines" data-i18n="air.statement">The itinerary here is short. Wake up to the hills, walk the lawns down to the lake, and let the day <em class="it">set its own pace.</em></p>
+    <p class="statement st-lines" data-i18n="air.statement">Wake up among the clouds, breathe air from a national park, and let the hills <em class="it">set the pace of the day.</em></p>
     <ul class="stats" role="list">
       <li class="stat" data-rv><span class="stat__n num"><span data-count="64">64</span></span><span class="stat__l" data-i18n="air.s1">suites and rooms in three suite types, each with a balcony</span></li>
       <li class="stat" data-rv><span class="stat__n num"><span data-count="20">20</span><small>km</small></span><span class="stat__l" data-i18n="air.s3">to Khao Yai National Park, by the resort's own listing</span></li>
@@ -1088,6 +1079,47 @@ document.documentElement.className += " js";
           <li><b data-i18n="visit.k1k">Accessibility</b><span data-i18n="visit.k1v">Please ask the team about step-free routes, room locations and bathrooms before you book, and they will advise on what suits you.</span></li>
         </ul>
       </div>
+
+      <!-- how to get here (4 November 2026): checked against the resort's own directions and the rail and airport
+           operators' sites on that date. No fares, timetables or transfers are promised; the map pin leads the last stretch -->
+      <div class="card card--wide ways" id="getting-here" data-rv>
+        <p class="card__k" data-i18n="ways.k">How to get here</p>
+        <p class="ways__intro" data-i18n="ways.intro">Patravana is in Phayayen, Pak Chong, in Nakhon Ratchasima province. Choose how you are travelling.</p>
+        <div class="ways__list">
+          <details class="ways__item">
+            <summary><h3 data-i18n="ways.car.t">By car</h3><svg aria-hidden="true"><use href="#i-down"/></svg></summary>
+            <div class="ways__a">
+              <p data-i18n="ways.car.p1">From Bangkok, take Phahonyothin Road (Route 1) north past Rangsit toward Saraburi, then turn onto Mittraphap Road (Route 2) toward Pak Chong and Nakhon Ratchasima.</p>
+              <p data-i18n="ways.car.p2">The resort is off Mittraphap Road in Phayayen, and the way in depends on your direction of travel, so let the map pin guide the last stretch. Travel time depends on where you start, the traffic and your stops. Parking is free on site.</p>
+              <p class="ways__links"><a class="textlink" href="https://maps.app.goo.gl/nnPAtFGH4KwDBAJA9" target="_blank" rel="noopener" data-i18n="ways.car.nav">Navigate with Google Maps</a><button class="textlink js-only" type="button" data-copy-el="#addrText" data-copy-msg="addrCopied" data-i18n="visit.copyaddr">Copy address</button></p>
+            </div>
+          </details>
+          <details class="ways__item">
+            <summary><h3 data-i18n="ways.train.t">By train</h3><svg aria-hidden="true"><use href="#i-down"/></svg></summary>
+            <div class="ways__a">
+              <p data-i18n="ways.train.p1">No train runs to the resort itself, so the last part of the journey is by road. The resort's own directions use Muak Lek. The railway now lists two stations there, Muak Lek and Muak Lek New, so check which one your train stops at, and where it leaves from in Bangkok, in the current State Railway of Thailand timetable.</p>
+              <p data-i18n="ways.train.p2">Contact the resort before you travel to confirm the best arrival point for your train and to arrange the onward journey.</p>
+              <p class="ways__links"><a class="textlink" href="https://dticket.railway.co.th/DTicketPublicWeb/home/Home" target="_blank" rel="noopener" data-i18n="ways.train.link">State Railway of Thailand timetables and tickets</a><span data-i18n="ways.train.call">SRT call centre 1690</span></p>
+            </div>
+          </details>
+          <details class="ways__item">
+            <summary><h3 data-i18n="ways.coach.t">By coach or minivan</h3><svg aria-hidden="true"><use href="#i-down"/></svg></summary>
+            <div class="ways__a">
+              <p data-i18n="ways.coach.p1">If you plan to come by coach or minivan, check with your operator where it leaves from and whether it can set you down near Pak Chong or Muak Lek, as not every service stops along the way.</p>
+              <p data-i18n="ways.coach.p2">Then contact the resort to arrange the last stretch to Patravana.</p>
+            </div>
+          </details>
+          <details class="ways__item">
+            <summary><h3 data-i18n="ways.air.t">From the airport</h3><svg aria-hidden="true"><use href="#i-down"/></svg></summary>
+            <div class="ways__a">
+              <p data-i18n="ways.air.p1">Bangkok has two airports, Suvarnabhumi (BKK) and Don Mueang (DMK). From either one, continue by car as above, or ask the resort about transfer options before you travel, including availability, notice and any charge.</p>
+              <p class="ways__links"><a class="textlink" href="https://suvarnabhumi.airportthai.co.th/" target="_blank" rel="noopener" data-i18n="ways.air.bkk">Suvarnabhumi Airport</a><a class="textlink" href="https://donmueang.airportthai.co.th/service/transportation" target="_blank" rel="noopener" data-i18n="ways.air.dmk">Don Mueang Airport transport</a></p>
+              <a class="pill pill--ghost" href="#talk" data-enquiry="general" data-enquiry-topic="transfer"><span data-i18n="ways.ask">Ask the resort about transfer options</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            </div>
+          </details>
+        </div>
+        <p class="card__small ways__checked" data-i18n="ways.checked">Travel details checked on 4 November 2026. Routes, timetables and services change, so check them before you travel.</p>
+      </div>
     </div>
     <figure class="frame frame--wide" data-mr>
       <img src="assets/web/entrance-dusk-2400.jpg" srcset="assets/web/entrance-dusk-800.jpg 800w, assets/web/entrance-dusk-1600.jpg 1600w, assets/web/entrance-dusk-2400.jpg 2400w, assets/web/entrance-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="The resort entrance and its sign at blue hour" data-i18n-attr="alt:visit.alt" loading="lazy" data-parallax="8">
@@ -1127,7 +1159,7 @@ document.documentElement.className += " js";
       </details>
       <details class="faq__item">
         <summary><span class="faq__n num" aria-hidden="true">06</span><h3 data-i18n="faq.q6">How do I get there, and is there parking?</h3><svg aria-hidden="true"><use href="#i-down"/></svg></summary>
-        <div class="faq__a"><p data-i18n="faq.a6">The resort is in Phayayen, Pak Chong, off Mittraphap Road. Open the map pin for directions from where you are. Parking is free on site.</p><p data-i18n="visit.nocar">Travelling without a car? Contact the resort before making travel arrangements to ask about current transfer or pickup options.</p><p class="faq__links"><a class="textlink" href="https://maps.app.goo.gl/nnPAtFGH4KwDBAJA9" target="_blank" rel="noopener" data-i18n="visit.maps">Open in Google Maps</a></p></div>
+        <div class="faq__a"><p data-i18n="faq.a6">The resort is in Phayayen, Pak Chong, off Mittraphap Road. Open the map pin for directions from where you are. Parking is free on site.</p><p data-i18n="visit.nocar">Travelling without a car? Contact the resort before making travel arrangements to ask about current transfer or pickup options.</p><p class="faq__links"><a class="textlink" href="#getting-here" data-i18n="ways.link">How to get here by car, train or coach</a><a class="textlink" href="https://maps.app.goo.gl/nnPAtFGH4KwDBAJA9" target="_blank" rel="noopener" data-i18n="visit.maps">Open in Google Maps</a></p></div>
       </details>
       <details class="faq__item">
         <summary><span class="faq__n num" aria-hidden="true">07</span><h3 data-i18n="faq.q7">Is the resort accessible?</h3><svg aria-hidden="true"><use href="#i-down"/></svg></summary>
@@ -1141,8 +1173,8 @@ document.documentElement.className += " js";
     <aside class="about" id="about-preview" aria-labelledby="aboutK">
       <p class="card__k" id="aboutK" data-i18n="about.k">About this preview</p>
       <p data-i18n="about.p1">This is an unofficial concept redesign, not the resort's own website. Photographs and information belong to Patravana Resort.</p>
-      <p data-i18n="about.p2">Dates, guest numbers and enquiry text stay in this page on your device. Nothing leaves it until you choose to copy an enquiry, open LINE, your mail app or your phone, or continue to the resort's booking page, which is run by the resort's own provider under its own terms.</p>
-      <p data-i18n="about.p3">This preview runs no analytics, sets no cookies of its own and stores nothing on your device. It loads its fonts from Google Fonts and its animation scripts from jsDelivr.</p>
+      <p data-i18n="about.p2">Dates, guest numbers and enquiry text stay in this page on your device. Nothing you choose or type is sent anywhere until you copy an enquiry, open LINE, your mail app or your phone, or continue to the resort's booking page, which is run by the resort's own provider under its own terms. The offers shown here are read from this site's own offers file, which sends nothing about you.</p>
+      <p data-i18n="about.p3">This preview runs no analytics, sets no cookies of its own and does not use local storage. Your selected dates, adults and room may be kept in this browser tab's history entry, so they are still there when you come back to the page. Fonts load from Google Fonts and animation scripts from jsDelivr.</p>
     </aside>
   </div>
 </section>
@@ -1201,7 +1233,7 @@ document.documentElement.className += " js";
      bottom bar does not already carry it), back to the top at the bottom left -->
 <div class="fab js-only" id="fab">
   <button class="fab__top" type="button" id="fabTop" aria-label="Back to the top" data-i18n-attr="aria-label:foot.top" inert><svg aria-hidden="true"><use href="#i-up"/></svg></button>
-  <a class="pill pill--solid pill--lg fab__book" id="fabBook" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open inert><span data-i18n="nav.book">Book a suite</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+  <a class="pill pill--solid pill--lg fab__book" id="fabBook" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open inert><span data-i18n="nav.book">Book your stay</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
 </div>
 
 <!-- enquiry composer: a message the guest writes here and sends to the resort themselves, by LINE, email or phone.
@@ -1331,12 +1363,12 @@ document.documentElement.className += " js";
 })();
 </script>
 <!-- /motion-libs -->
-<script src="facts.js?v=8646023d" defer></script>
-<script src="i18n.js?v=235c3ecc" defer></script>
+<script src="facts.js?v=d78edad3" defer></script>
+<script src="i18n.js?v=1bad3179" defer></script>
 <script src="scene.js?v=29086502" defer></script>
 <script src="film-manifest.js?v=05536fc9" defer></script>
 <script src="film-stream.js?v=65575688" defer></script>
 <!-- if the main script cannot be fetched, the page falls back to its plain form: panels open, script-only controls hidden -->
-<script src="main.js?v=a1bc65b5" defer onerror="document.documentElement.classList.remove('js')"></script>
+<script src="main.js?v=9e54e315" defer onerror="document.documentElement.classList.remove('js')"></script>
 </body>
 </html>

@@ -62,13 +62,6 @@
       if (path === "pet.reviewed") return longDate(FX.pet.lastReviewedAt, L);
       if (p[0] === "hall") { if (p[1] === "area") return hall.areaSqm; const l = lay(p[1]); return l ? l[p[2]] : null; }
       if (p[0] === "dining") { if (p[1] === "seats") return FX.dining.seats; const sv = FX.dining[p[1]]; return sv && sv[p[2]] ? clock(sv[p[2]]) : null; }
-      if (path === "offers.verified") return longDate(FX.offers.lastVerifiedAt || FX.reviewed, L);
-      if (p[0] === "offers") {
-        const o = FX.offers[p[1]]; if (!o) return null;
-        if (p[2] === "until") return longDate(o.stayUntil, L);
-        if (p[2] === "total") return Math.round((1 - (1 - FX.offers.direct.percent / 100) * (1 - o.percent / 100)) * 100);   // 30% then 15% is 40.5% in all
-        return o[p[2]];
-      }
       if (path === "contact.phone.show") return FX.contact.phone.show;
       if (path === "contact.phone.local") return FX.contact.phone.local;
       if (path === "contact.dining.show") return FX.contact.diningPhones[0].show;
@@ -916,20 +909,22 @@
   const onMotion = (fn) => { if (motionOn) fn(); else motionHooks.push(fn); };
   /* The scroll motion needs the animation scripts, which load on their own from the CDN; nothing else waits for them.
      If all three are in while the loading screen still covers the page, the motion is set up behind it. If the screen
-     lifts first (or there is none), the page stays still for this visit: content that is already showing never
-     disappears to be animated in. */
+     lifts first (it now lifts as soon as the first photograph and this script are in), the page shows still, and when
+     the scripts arrive the motion starts late: whatever is on the screen or already scrolled past stays exactly as it
+     is, and only what is still below rises in when the visitor reaches it. Content that is showing never disappears
+     to be animated in. */
+  let motionLate = false;
+  // in a late start, only what has not been reached yet is animated
+  const unseen = (el, at) => !motionLate || el.getBoundingClientRect().top >= window.innerHeight * (at || .92);
+  const offScreen = (el) => { if (!motionLate) return true; const r = el.getBoundingClientRect(); return r.bottom <= 0 || r.top >= window.innerHeight; };
   function startMotion() {
-    let decided = false;
-    const decide = (libs) => {
-      if (decided) return; decided = true;
-      if (libs) takeLibs();
-      initMotion();
-      if (motionOn) motionHooks.splice(0).forEach((fn) => fn()); else motionHooks.length = 0;
-    };
+    let state = 0;                                       // 0 waiting, 1 motion on, 2 still for now (the screen lifted first)
     const M = window.PVMotion, L = window.PVLoad;
-    if (!M) { decide(typeof gsap !== "undefined"); return; }
-    M.onReady(() => decide(true));
-    if (L) L.onLift(() => decide(false)); else decide(false);
+    const go = (late) => { takeLibs(); motionLate = late; initMotion(); if (motionOn) motionHooks.splice(0).forEach((fn) => fn()); };
+    if (!M) { if (typeof gsap !== "undefined") go(false); else initMotion(); return; }
+    M.onReady(() => { if (state === 1) return; const late = state === 2; state = 1; go(late); });
+    const still = () => { if (state) return; state = 2; initMotion(); };
+    if (L) L.onLift(still); else still();
   }
   // a window narrowed into the phone's destinations: what was still waiting for its cue is shown as it ends, every
   // scroll-linked effect is undone, and the page is left still
@@ -947,8 +942,10 @@
     gsap.to("#progress", { scaleX: 1, ease: "none", scrollTrigger: { trigger: document.body, start: "top top", end: "max", scrub: .4 } });
 
     // hero exit: the footage stays full-bleed (no shrink-into-frame, per client); only the copy lifts and fades as you scroll
-    gsap.to(".hero__grid, .hero__meta", { opacity: 0, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "42% top", scrub: true } });
-    gsap.to(".hero__content", { y: -70, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "60% top", scrub: true } });
+    if (!motionLate || window.scrollY < 8) {
+      gsap.to(".hero__grid, .hero__meta", { opacity: 0, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "42% top", scrub: true } });
+      gsap.to(".hero__content", { y: -70, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "60% top", scrub: true } });
+    }
 
     // active menu link
     $$(".menu > a, .menu__group > a").forEach((a) => {
@@ -959,16 +956,20 @@
     // headline lines are measured once the web fonts are in, so a line never breaks where the fallback font would have
     // broken it. If the fonts are slow the headlines are simply split a moment later; they are readable the whole time
     let splitDone = false;
+    // (in a late start the still page has marked every headline as shown: those not reached yet are taken back)
+    if (motionLate) $$(".st-lines").forEach((el) => { if (unseen(el, .86)) delete el.dataset.revealed; });
     const splitAll = () => { if (splitDone) return; splitDone = true; $$(".st-lines").forEach(buildSplit); ScrollTrigger.refresh(); };
     if (document.fonts && document.fonts.ready) { document.fonts.ready.then(splitAll); setTimeout(splitAll, 1500); } else splitAll();
     const waiting = new Map();                           // what is still hidden, and the tweens that will show it
     // cards and tiles rise in; siblings follow one another by a beat
     $$("[data-rv]").forEach((el) => {
+      if (!unseen(el)) { el._seen = true; return; }
       const sibs = $$(":scope > [data-rv]", el.parentElement), i = Math.max(0, sibs.indexOf(el));
       waiting.set(el, [gsap.from(el, { opacity: 0, y: 40, duration: 1.1, delay: i * .09, scrollTrigger: { trigger: el, start: "top 88%", once: true, onEnter: () => { el._seen = true; el.classList.add("is-in"); } } })]);
     });
     // photographs open from the bottom edge while the image settles back into its frame
     $$("[data-mr]").forEach((fig) => {
+      if (!unseen(fig)) { fig._seen = true; return; }
       const img = $("img", fig), st = { trigger: fig, start: "top 88%", once: true, onEnter: () => { fig._seen = true; } };
       const tweens = [gsap.fromTo(fig, { clipPath: "inset(100% 0% 0% 0% round 16px)" }, { clipPath: "inset(0% 0% 0% 0% round 16px)", duration: 1.4, ease: "power4.inOut", scrollTrigger: st, clearProps: "clipPath" })];
       if (img && !img.hasAttribute("data-parallax")) tweens.push(gsap.fromTo(img, { scale: 1.2 }, { scale: 1, duration: 1.9, ease: "power3.out", scrollTrigger: st, clearProps: "transform", onComplete: () => fig.classList.add("is-in") }));
@@ -1005,15 +1006,15 @@
       // the visitor may have stopped scrolling: look once more when the half second is up
       if (pending) { clearTimeout(again); again = setTimeout(() => { lastCheck = 0; revealCheck(); }, 560); }
     };
-    $$(".chapter__side").forEach((el) => gsap.from(el.children, { opacity: 0, x: -16, stagger: .1, duration: .9, scrollTrigger: { trigger: el.parentElement, start: "top 80%", once: true } }));
-    $$("[data-parallax]").forEach((img) => {
+    $$(".chapter__side").filter((el) => unseen(el.parentElement, .8)).forEach((el) => gsap.from(el.children, { opacity: 0, x: -16, stagger: .1, duration: .9, scrollTrigger: { trigger: el.parentElement, start: "top 80%", once: true } }));
+    $$("[data-parallax]").filter(offScreen).forEach((img) => {
       const d = parseFloat(img.dataset.parallax) || 8;
       gsap.set(img, { scale: 1 + d / 70 });
       gsap.fromTo(img, { yPercent: -d / 2 }, { yPercent: d / 2, ease: "none", scrollTrigger: { trigger: img.parentElement, start: "top bottom", end: "bottom top", scrub: true } });
     });
     // the full-bleed bands drift behind their pull line
-    $$("[data-band]").forEach((img) => gsap.fromTo(img, { yPercent: -6 }, { yPercent: 6, ease: "none", scrollTrigger: { trigger: img.parentElement, start: "top bottom", end: "bottom top", scrub: true } }));
-    $$(".band__cap, .closing__mark").forEach((el) => gsap.from(el, { opacity: 0, y: 14, duration: 1, delay: .3, scrollTrigger: { trigger: el, start: "top 92%", once: true } }));
+    $$("[data-band]").filter(offScreen).forEach((img) => gsap.fromTo(img, { yPercent: -6 }, { yPercent: 6, ease: "none", scrollTrigger: { trigger: img.parentElement, start: "top bottom", end: "bottom top", scrub: true } }));
+    $$(".band__cap, .closing__mark").filter((el) => unseen(el)).forEach((el) => gsap.from(el, { opacity: 0, y: 14, duration: 1, delay: .3, scrollTrigger: { trigger: el, start: "top 92%", once: true } }));
     $$("[data-count]").forEach((el) => {
       // the page carries the real figure; it only counts up from nought if it has not been seen yet
       if (el.getBoundingClientRect().top < window.innerHeight * .88) { el.textContent = el.dataset.count; return; }
@@ -1379,7 +1380,7 @@
       h.addEventListener("mouseleave", () => light(h.dataset.hot, false));
     });
     // the markers introduce themselves once, then rest (no loops)
-    onMotion(() => { if (hasST && !reduced) gsap.from(hots, { opacity: 0, scale: .6, duration: .7, stagger: .06, ease: "power3.out", transformOrigin: "50% 50%", clearProps: "opacity,scale,transform", scrollTrigger: { trigger: stage, start: "top 75%", once: true } }); });
+    onMotion(() => { if (hasST && !reduced && unseen(stage, .75)) gsap.from(hots, { opacity: 0, scale: .6, duration: .7, stagger: .06, ease: "power3.out", transformOrigin: "50% 50%", clearProps: "opacity,scale,transform", scrollTrigger: { trigger: stage, start: "top 75%", once: true } }); });
     // "Find on the map" in other chapters: on a phone it opens Facilities with that place chosen
     $$("[data-map-open]").forEach((b) => b.addEventListener("click", () => {
       const k = places.findIndex((p) => p.key === b.dataset.mapOpen); if (k < 0 || !places[k].hot) return;
@@ -1422,14 +1423,19 @@
     // items: the full-size photographs, each { src, alt } (a plain address is taken as a photograph with no description of
     // its own). cb(true|false) tells the caller when the viewer opens and closes
     let gen = 0;                                           // each open or close takes the next number; a finishing fade checks it still holds the latest
+    // Safari does not focus a button or link it clicks, so the viewer also remembers what was just pressed, and the
+    // keyboard goes back there when it closes
+    let pressed = null, pressedAt = 0;
+    document.addEventListener("click", (e) => { const t = e.target && e.target.closest ? e.target.closest("button, a[href], [tabindex]") : null; if (t && !box.contains(t)) { pressed = t; pressedAt = performance.now(); } }, true);
     function open(items, i, cb) {
       if (!items || !items.length) return;
       gen++;
       list = items.map((x) => (typeof x === "string" ? { src: x, alt: "" } : x)); idx = Math.max(0, i || 0); onToggle = cb || null;
-      if (!isOpen) lastFocus = document.activeElement;
+      if (!isOpen) { const a = document.activeElement; lastFocus = a && a !== document.body && a !== document.documentElement ? a : (pressed && performance.now() - pressedAt < 1000 ? pressed : null); }
       isOpen = true;
       if (onToggle) onToggle(true);
       if (hasGSAP) gsap.killTweensOf(box);
+      box.classList.remove("is-closing"); box.removeAttribute("inert");   // a viewer opened during an earlier close takes taps and keys again
       box.classList.add("is-open"); box.setAttribute("aria-hidden", "false"); setOverlay(true, "lightbox"); render();
       if (hasGSAP && !reduced) gsap.to(box, { opacity: 1, duration: .35, overwrite: true }); else box.style.opacity = "1";
       lockPage("lightbox", true); setBehind(box, true);
@@ -1440,8 +1446,9 @@
       if (!isOpen) return;
       isOpen = false; if (onToggle) onToggle(false);
       const my = ++gen;
-      const done = () => { if (my !== gen || isOpen) return; box.classList.remove("is-open"); box.setAttribute("aria-hidden", "true"); };
-      box.setAttribute("aria-hidden", "true");
+      const done = () => { if (my !== gen || isOpen) return; box.classList.remove("is-open", "is-closing"); box.removeAttribute("inert"); box.setAttribute("aria-hidden", "true"); };   // inert only while it fades; once gone it is hidden anyway
+      // from the moment it starts to close, the fading viewer takes no tap, click or key: the next action reaches the page
+      box.setAttribute("aria-hidden", "true"); box.classList.add("is-closing"); box.setAttribute("inert", "");
       if (hasGSAP && !reduced) gsap.to(box, { opacity: 0, duration: .3, overwrite: true, onComplete: done }); else { box.style.opacity = "0"; done(); }
       setOverlay(false, "lightbox"); lockPage("lightbox", false); setBehind(box, false); if (keep !== true && lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
     }
@@ -1712,7 +1719,7 @@
     const shown = { panel: {}, dock: {} };
     const errText = (key) => I18N.t(key, { max: A_MAX });
     const put = (el, v) => { if (el && el !== document.activeElement && el.value !== v) el.value = v; };
-    if (promo && FX && FX.offers.code.code) promo.placeholder = FX.offers.code.code;
+
 
     function render() {
       const today = todayBkk(), e = Booking.check(), valid = Booking.ok(e), href = valid ? Booking.url() : ENGINE;
@@ -1818,7 +1825,7 @@
       if (!(opts && opts.keepFocus) && lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
       return lastFocus;
     }
-    closeBookPanel = close;
+    closeBookPanel = close; openBookPanel = open;
     $$("[data-book-open]").forEach((b) => b.addEventListener("click", open));
     $("#bookClose").addEventListener("click", () => close()); scrim.addEventListener("click", () => close());
     document.addEventListener("keydown", (e) => { if (!isOpen) return; if (e.key === "Escape") { e.preventDefault(); close(); } else trapTab(e, panel); });
@@ -1922,6 +1929,9 @@
       inEl.value = S.checkin; outEl.value = S.checkout; inEl.min = todayBkk();
       if (mode === "pet") { if (adults.value === "" && String(S.adults) !== "more") adults.value = String(S.adults); if (S.room) suite.value = S.room; }
       else if (opts && opts.layout) layout.value = opts.layout;
+      // asked from "How to get here": the question starts with the travel intent, and only in an empty message box (what
+      // the guest has written is never replaced). Nothing is sent: the guest copies it or opens LINE or mail themselves
+      if (mode === "general" && opts && opts.topic === "transfer" && note && !note.value.trim()) note.value = I18N.t("enqTransfer");
       say(""); label(); update();
       const back = closeBookPanel({ keepFocus: true });    // asked from inside the planner: the planner steps aside
       Drawers.open(box, null, back || undefined);
@@ -1958,7 +1968,7 @@
 
     $$("[data-enquiry]").forEach((b) => b.addEventListener("click", (e) => {
       e.preventDefault();
-      open(b.dataset.enquiry, { layout: b.hasAttribute("data-enquiry-layout") || hallPicked ? hallLayout : "" });
+      open(b.dataset.enquiry, { layout: b.hasAttribute("data-enquiry-layout") || hallPicked ? hallLayout : "", topic: b.dataset.enquiryTopic || "" });
     }));
     document.addEventListener("pv:lang", () => { label(); update(); });
     label();
@@ -2160,32 +2170,101 @@
     }));
   }
 
-  /* ---------- offers: the cards are printed from facts.js; one that has run out says so and steps back ---------- */
-  function initOffers() {
-    const tickets = $$(".ticket"); if (!tickets.length || !FX) return;
-    const today = todayBkk();
-    tickets.forEach((t) => {
-      const o = FX.offers[t.dataset.offer]; if (!o) return;
-      const codeEl = $("[data-offer-code]", t), btn = $("[data-copy]", t);
-      if (o.code && codeEl) codeEl.textContent = o.code;
-      if (o.code && btn) btn.dataset.copy = o.code;
-      if (o.stayUntil && today > o.stayUntil) {
-        t.classList.add("is-ended"); t.classList.remove("ticket--hot");
-        $$("button", t).forEach((b) => { b.disabled = true; });
-        const s = document.createElement("span"); s.className = "ticket__state"; s.dataset.key = "offerEnded"; t.insertBefore(s, t.firstChild);
-        $$('[data-offer-teaser="' + t.dataset.offer + '"]').forEach((x) => { x.hidden = true; });
+  /* ---------- offers: only verified ones (4 November 2026) ----------
+     The page promises no saving of its own: its Offers card and the Home guide's line point to the resort's booking page.
+     Verified offers come from this site's own offers.json, written by the offer sync (tools/offers/sync.mjs) after it has
+     validated a supported source. One is shown only while the file is fresh (status "ok", fetched within maxAgeMinutes and
+     before its validUntil), the offer is not withdrawn, and its booking and stay windows are open at the resort (Bangkok
+     dates). The check runs again every minute, so an offer leaves at its deadline without a reload. Anything slow, failed,
+     stale or malformed leaves the neutral card as it is; feed text is set as text, never as markup. Fetching the file
+     sends nothing about the visitor. */
+  const OFFER_SCHEMA = "patravana.offers/1";
+  function usableOffers(doc, nowMs) {
+    const cfg = FX && FX.offers; if (!cfg || !doc || doc.schema !== OFFER_SCHEMA || doc.status !== "ok" || !Array.isArray(doc.offers)) return [];
+    const fetched = Date.parse(doc.fetchedAt), until = Date.parse(doc.validUntil);
+    if (!(fetched <= nowMs && nowMs - fetched <= (cfg.maxAgeMinutes || 30) * 60000 && nowMs < until)) return [];
+    const today = todayBkk(), withdrawn = cfg.withdrawn || [], str = (v, n) => typeof v === "string" && v.trim() && v.length <= n;
+    const isDay = (s) => !isNaN(dayNum(s));
+    return doc.offers.filter((o) => {
+      if (!o || !str(o.id, 64) || !o.title || !str(o.title.en, 90)) return false;
+      const pct = o.discount && o.discount.type === "percent" ? o.discount.value : null;
+      if (pct != null && !(typeof pct === "number" && pct > 0 && pct < 90)) return false;
+      if (o.code != null && !(typeof o.code === "string" && /^[A-Za-z0-9-]{3,32}$/.test(o.code))) return false;
+      if (withdrawn.some((w) => (w.id && w.id === o.id) || (w.code && o.code && w.code.toLowerCase() === o.code.toLowerCase()) || (w.codeless && !o.code && w.percent === pct))) return false;
+      // a text may only quote the offer's own figure: no combined or borrowed savings
+      const texts = [o.title, o.description].filter(Boolean).flatMap((t) => [t.en, t.th]).filter(Boolean).join(" ");
+      if ((texts.match(/\d+(?:\.\d+)?\s*%/g) || []).some((m) => parseFloat(m) !== pct)) return false;
+      for (const w of [o.bookingWindow, o.stayWindow]) {
+        if (!w) continue;
+        if ((w.from && !isDay(w.from)) || (w.to && !isDay(w.to))) return false;
+        if (w.to && w.to < today) return false;                      // its last day has passed at the resort
       }
+      if (o.bookingWindow && o.bookingWindow.from && o.bookingWindow.from > today) return false;   // not bookable yet
+      return true;
     });
-    // the featured card is always one that is still running; ended ones go to the back
-    if (!$(".ticket--hot")) { const d = $('.ticket[data-offer="direct"]:not(.is-ended)'); if (d) d.classList.add("ticket--hot"); }
-    const wrap = tickets[0].parentElement, weight = (t) => (t.classList.contains("is-ended") ? 2 : t.classList.contains("ticket--hot") ? 0 : 1);
-    const sorted = tickets.slice().sort((a, b) => weight(a) - weight(b));
-    if (sorted.some((t, i) => t !== tickets[i])) sorted.forEach((t) => wrap.appendChild(t));
-    const paint = () => {
-      $$(".ticket__state").forEach((s) => { s.textContent = I18N.t(s.dataset.key); });
-      $$(".ticket [data-copy]").forEach((b) => b.removeAttribute("aria-label"));   // its words ("Copy code refresh2026") are its name
-    };
-    paint(); document.addEventListener("pv:lang", paint);
+  }
+  let openBookPanel = null;                                    // set by initBooking
+  function initOffers() {
+    const list = $("#offerList"), neutral = $('.ticket[data-offer="current"]'); if (!list || !neutral || !FX || !FX.offers || !window.fetch) return;
+    const teaser = $("[data-offer-teaser]"), teaserHead = teaser && $("[data-offer-head]", teaser), teaserExtra = teaser && $("[data-offer-extra]", teaser);
+    let doc = null, shownIds = "";
+    const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+    const pick = (t, e) => { const L = I18N.lang; if (t && t[L]) e.textContent = t[L]; else if (t && t.en) { e.textContent = t.en; if (L !== "en") e.lang = "en"; } return e; };
+    function card(o) {
+      const a = el("article", "ticket"); a.dataset.offer = "feed"; a.dataset.offerId = o.id;
+      const tag = el("p", "ticket__tag");
+      if (o.code) { tag.append(I18N.t("offerWithCode") + " "); tag.append(el("span", "ticket__code", o.code)); } else tag.textContent = I18N.t("offerNoCode");
+      a.append(tag, pick(o.title, el("h3", "ticket__head")));
+      if (o.stayWindow && o.stayWindow.to) {
+        const p = el("p", "ticket__until"), s = el("strong"), t = el("time", null, longDate(o.stayWindow.to, I18N.lang)); t.dateTime = o.stayWindow.to;
+        s.append(I18N.t("offerStayThrough") + " ", t); p.append(s); a.append(p);
+      }
+      if (o.description) a.append(pick(o.description, el("p", "ticket__desc")));
+      if (o.terms && o.terms.cancellation) a.append(pick(o.terms.cancellation, el("p", "ticket__terms")));
+      const acts = el("div", "ticket__acts");
+      if (o.code) {
+        const b = el("button", "pill pill--light pill--copy"); b.type = "button";
+        b.append(el("span", null, I18N.t("offerCopy")), " ", el("span", "num", o.code));
+        b.addEventListener("click", () => { lastCode = o.code; copyText(o.code, I18N.t("copied") + ": " + o.code, b); });
+        acts.append(b);
+      }
+      const go = el("a", "pill pill--ghost"); go.href = (FX.booking && FX.booking.engine) || "https://letsbook.me/booking/patravanaresortkhaoyai"; go.target = "_blank"; go.rel = "noopener";
+      go.append(el("span", null, I18N.t("offerCheck"))); go.addEventListener("click", (e) => { if (openBookPanel) openBookPanel(e); });
+      acts.append(go); a.append(acts);
+      if (o.code) a.append(el("p", "ticket__help", I18N.t("offerCodeHelp")));
+      return a;
+    }
+    function render() {
+      const offers = usableOffers(doc, Date.now()), ids = offers.map((o) => o.id).join("|") + "@" + I18N.lang;
+      if (ids === shownIds) return; shownIds = ids;
+      $$('.ticket[data-offer="feed"], .offers__checked', list).forEach((x) => x.remove());
+      neutral.classList.toggle("ticket--hot", !offers.length);
+      offers.forEach((o, i) => { const c = card(o); if (i === 0) c.classList.add("ticket--hot"); list.insertBefore(c, neutral); });
+      if (offers.length) {
+        const at = new Intl.DateTimeFormat(I18N.lang === "th" ? "th-TH" : "en-GB", { timeZone: "Asia/Bangkok", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(doc.fetchedAt));
+        list.append(el("p", "offers__checked", I18N.t("offerChecked", { at })));
+      }
+      if (teaserHead) {
+        teaserHead.textContent = offers.length ? (offers[0].title[I18N.lang] || offers[0].title.en) : I18N.t("offerHubHead");
+        if (teaserExtra) teaserExtra.textContent = offers.length > 1 ? I18N.t("offerMore", { n: offers.length - 1 }) : I18N.t("offerHubExtra");
+      }
+    }
+    let loadedAt = 0;
+    function load() {
+      loadedAt = Date.now();
+      const ctl = window.AbortController ? new AbortController() : null;
+      const stop = setTimeout(() => { if (ctl) ctl.abort(); }, 8000);
+      fetch(FX.offers.source, { cache: "no-store", credentials: "omit", signal: ctl ? ctl.signal : undefined })
+        .then((r) => (r.ok ? r.json() : null)).then((d) => { clearTimeout(stop); if (d) doc = d; render(); })
+        .catch(() => { clearTimeout(stop); render(); /* no file, unreadable or too slow: what is already here is judged again by its own freshness */ });
+    }
+    load();
+    // the file is read again every five minutes while the page is in view, so a change at the source (an offer
+    // withdrawn, a new one) reaches an open page within one sync plus five minutes; render() re-judges every minute
+    setInterval(() => { if (!document.hidden) load(); }, 5 * 60000);
+    setInterval(render, 60000);
+    document.addEventListener("visibilitychange", () => { if (document.hidden) return; if (Date.now() - loadedAt > 5 * 60000) load(); else render(); });
+    document.addEventListener("pv:lang", () => { shownIds = ""; render(); });
   }
 
   /* ---------- film readout: add #diag to the address to see what is really being played ---------- */

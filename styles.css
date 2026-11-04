@@ -1632,3 +1632,27 @@ body.has-overlay .fab__top, body.has-overlay .fab__book { opacity: 0; visibility
 
 /* a long address may wrap where a reader's text size leaves it no room, instead of pushing the page sideways */
 .foot a[href^="mailto:"], .foot a[href^="https://maps"] { overflow-wrap: anywhere; }
+
+/* offers (4 November 2026): when verified offers are shown, one quiet line says when they were last checked */
+.offers__checked { grid-column: 1 / -1; margin: 0; font-size: .78rem; color: var(--muted); }
+
+/* how to get here (4 November 2026): the FAQ's disclosure pattern, at the size of the "Good to know" list beside it */
+.ways__intro { color: var(--muted); font-size: .95rem; max-width: 62ch; }
+.ways__list { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1.8rem; }
+.ways__item { border-top: 1px solid var(--line); min-width: 0; }
+.ways__item summary { cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 44px; padding: .55rem 0; }
+.ways__item summary::-webkit-details-marker { display: none; }
+.ways__item summary:focus-visible { outline: 2px solid var(--forest); outline-offset: 3px; border-radius: 4px; }
+.ways__item h3 { font-family: var(--f-body); font-size: 1rem; font-weight: 500; line-height: 1.35; color: var(--charcoal); }
+.ways__item summary svg { width: 14px; height: 14px; flex: none; color: var(--forest); transition: transform .4s var(--ease); }
+.ways__item[open] summary svg { transform: rotate(180deg); }
+.ways__a { display: grid; gap: .55rem; padding: 0 0 1rem; color: var(--muted); font-size: .92rem; }
+.ways__a .pill { justify-self: start; }
+.ways__links { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; }
+.ways__links .textlink { color: var(--forest); }
+.ways__checked { margin-top: .3rem; }
+@media (max-width: 47.99em) { .ways__list { grid-template-columns: 1fr; } }
+
+
+/* the photo viewer while it fades out (4 November 2026): it no longer takes taps, so the page behind answers at once */
+.lightbox.is-closing { pointer-events: none; }
