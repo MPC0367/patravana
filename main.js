@@ -2466,6 +2466,18 @@
       return { el, cv, ctx: cv.getContext && cv.getContext("2d"), mood: MOODS[el.classList.contains("foot") ? "deep" : "forest"], w: 0, h: 0, img: null, on: false };
     }).filter((x) => x.ctx);
     if (!hosts.length) return;
+    // a dither over the green: noise of a level or two at screen resolution (triangular, so it averages to nothing). A slow,
+    // dark gradient only changes one of the screen's 256 steps every 60 px or so, which shows as ripples; the dither
+    // blends the steps so the eye sees a continuous wash (user, 5 Nov 2026)
+    if (!document.documentElement.style.getPropertyValue("--pv-dither")) {
+      const nz = document.createElement("canvas"); nz.width = nz.height = 128;
+      const nc = nz.getContext("2d"), nd = nc && nc.createImageData(128, 128);
+      if (nd) {
+        for (let i = 0; i < nd.data.length; i += 4) { const v = Math.round((Math.random() + Math.random()) * 127.5); nd.data[i] = nd.data[i + 1] = nd.data[i + 2] = v; nd.data[i + 3] = 255; }
+        nc.putImageData(nd, 0, 0);
+        try { document.documentElement.style.setProperty("--pv-dither", "url(" + nz.toDataURL("image/png") + ")"); } catch (e) { /* no dither: the green still works */ }
+      }
+    }
     // strength, radius (share of the window's long side), home x, home y, swing x, swing y, speed x, speed y;
     // pools 0 to 4 take the mood's colours, 5 is the glow, 6 the shade
     const F = [
@@ -2483,7 +2495,7 @@
     const S = () => (window.innerWidth > 900 ? 12 : 9);   // one field pixel per 12 screen pixels (9 on phones); the blur hides the grain of it
     // the pools for this moment, in field pixels over the window
     // the glow drifts toward the pointer while it is over a green section (mouse and pen only), and back to its own path
-    const glow = { x: null, y: null, tx: null, ty: null, w: 0 };
+    const glow = { x: null, y: null, tx: null, ty: null, w: 0, t: 0 };
     window.addEventListener("pointermove", (e) => {
       if (e.pointerType === "touch") return;
       const over = hosts.some((x) => { if (!x.vis) return false; const r = x.el.getBoundingClientRect(); return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom; });
@@ -2501,8 +2513,11 @@
         const oval = .12 * Math.sin(t * .17 + k * 1.1 + ph[3]), rx = r * (1 + oval), ry = r * (1 - oval);
         let px = cx, py = cy;
         if (k === 5) {                                 // the glow: its own path, pulled toward the pointer when there is one
-          glow.w += ((glow.tx != null ? 1 : 0) - glow.w) * .06;
-          if (glow.tx != null) { glow.x = glow.x == null ? cx : glow.x + (glow.tx - glow.x) * .08; glow.y = glow.y == null ? cy : glow.y + (glow.ty - glow.y) * .08; }
+          // eased by elapsed time, not by frames, so it moves at the same pace on every device
+          const now = performance.now(), gdt = glow.t ? Math.min(.25, (now - glow.t) / 1000) : 0; glow.t = now;
+          const kw = 1 - Math.exp(-gdt * 3.5), kp = 1 - Math.exp(-gdt * 5);
+          glow.w += ((glow.tx != null ? 1 : 0) - glow.w) * kw;
+          if (glow.tx != null) { glow.x = glow.x == null ? cx : glow.x + (glow.tx - glow.x) * kp; glow.y = glow.y == null ? cy : glow.y + (glow.ty - glow.y) * kp; }
           if (glow.x != null) { px = cx + (glow.x - cx) * glow.w; py = cy + (glow.y - cy) * glow.w; }
         }
         q.push(px, py, 32 / (rx * rx), 32 / (ry * ry), Math.min(.9, f[0] * (1 + (k === 5 ? .3 + .25 * glow.w : .12) * rush) * (k === 5 ? 1 + .7 * glow.w : 1)), k);
@@ -2566,7 +2581,7 @@
     document.addEventListener("visibilitychange", () => { if (!document.hidden && shown().length) go(); });
     let refit = 0;
     window.addEventListener("resize", () => { clearTimeout(refit); refit = setTimeout(() => { if (shown().length) drawAll(performance.now() / 1000, 0); }, 150); });
-    window.PVBackdrop = { draws: () => lastDraw, shown: () => shown().length, hosts: () => hosts.map((x) => x.el.id || x.el.className), set: (tauAt) => { if (tauAt != null) tau = tauAt; hosts.forEach((x) => { const r = x.el.getBoundingClientRect(); if (r.bottom > 0 && r.top < innerHeight) paint(x, pools(tau, 0, 0)); }); } };
+    window.PVBackdrop = { glow: () => ({ x: glow.x == null ? null : glow.x * S(), y: glow.y == null ? null : glow.y * S(), w: glow.w }), draws: () => lastDraw, shown: () => shown().length, hosts: () => hosts.map((x) => x.el.id || x.el.className), set: (tauAt) => { if (tauAt != null) tau = tauAt; hosts.forEach((x) => { const r = x.el.getBoundingClientRect(); if (r.bottom > 0 && r.top < innerHeight) paint(x, pools(tau, 0, 0)); }); } };
   }
 
   function initLang() {
