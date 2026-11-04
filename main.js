@@ -2480,7 +2480,7 @@
     const PH = F.map(() => [0, 1, 2, 3].map(() => Math.random() * 6.283));
     const G = new Float32Array(1025); for (let i = 0; i < 1025; i++) G[i] = Math.exp(-i / 128 * 3);   // four steps per unit: no rings
     const LIN = new Float32Array(256); for (let i = 0; i < 256; i++) { const c = i / 255; LIN[i] = c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); }
-    const S = () => (window.innerWidth > 900 ? 10 : 7);   // one field pixel per 10 screen pixels (7 on phones)
+    const S = () => (window.innerWidth > 900 ? 12 : 9);   // one field pixel per 12 screen pixels (9 on phones); the blur hides the grain of it
     // the pools for this moment, in field pixels over the window
     // the glow drifts toward the pointer while it is over a green section (mouse and pen only), and back to its own path
     const glow = { x: null, y: null, tx: null, ty: null, w: 0 };
@@ -2505,7 +2505,7 @@
           if (glow.tx != null) { glow.x = glow.x == null ? cx : glow.x + (glow.tx - glow.x) * .08; glow.y = glow.y == null ? cy : glow.y + (glow.ty - glow.y) * .08; }
           if (glow.x != null) { px = cx + (glow.x - cx) * glow.w; py = cy + (glow.y - cy) * glow.w; }
         }
-        q.push(px, py, 32 / (rx * rx), 32 / (ry * ry), Math.min(.9, f[0] * (1 + (k === 5 ? .3 + .25 * glow.w : .12) * rush) * (k === 5 ? 1 + .3 * glow.w : 1)), k);
+        q.push(px, py, 32 / (rx * rx), 32 / (ry * ry), Math.min(.9, f[0] * (1 + (k === 5 ? .3 + .25 * glow.w : .12) * rush) * (k === 5 ? 1 + .7 * glow.w : 1)), k);
       }
       return q;
     }
