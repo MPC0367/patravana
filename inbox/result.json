@@ -1,18 +1,18 @@
 {
  "schema": "patravana.publish-result/1",
- "at": "2026-11-04T19:26:53.725Z",
+ "at": "2026-11-04T19:29:00.216Z",
  "status": "deployed, the Sheet confirms it live",
- "generation": 11,
+ "generation": 12,
  "problems": [],
- "revision": 11,
- "buildId": "f9931702ab40-c11",
- "sha256": "d1f8661ae9e91ab17cc91c429646a07bdee32e19268a6f01e9fb477a25b8ddbe",
- "sentAt": "2026-11-04T19:26:38.280Z",
+ "revision": 12,
+ "buildId": "f9931702ab40-c12",
+ "sha256": "85f09fef498b4c140499d98a3b8447a4bde7fb7380273eae37d943a1d2c3fea4",
+ "sentAt": "2026-11-04T19:28:48.725Z",
  "changed": [],
- "run": "41896985637",
+ "run": "41897322551",
  "outcome": "success",
  "timings": {
-  "receivedAt": "2026-11-04T19:26:53Z",
-  "committedAt": "2026-11-04T19:26:56Z"
+  "receivedAt": "2026-11-04T19:29:00Z",
+  "committedAt": "2026-11-04T19:29:02Z"
  }
 }
