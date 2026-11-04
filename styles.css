@@ -17,7 +17,7 @@
   --stone: #B5A58D;
   --sand: #E6DAC2;
   --mist: #D9DBD4;
-  --earth: #6C5B4B;                              /* deepened from #766554 on 5 Nov 2026: small notes stay at 4.8:1 or more over the moving backdrop */
+  --earth: #766554;
 
   --bg: var(--ivory);
   --text: var(--charcoal);
@@ -583,7 +583,7 @@ html[lang="th"] .card__foot dt { letter-spacing: 0; text-transform: none; font-s
 .closing__mark { width: 132px; height: 42px; color: var(--sand); margin-bottom: .6rem; }
 .closing__line { font-family: var(--f-display); font-weight: 400; font-size: clamp(2.4rem, 7.6vw, 6.8rem); line-height: .98; letter-spacing: -.05em; max-width: 13ch; text-wrap: balance; }
 .closing__acts { display: flex; flex-wrap: wrap; justify-content: center; gap: .8rem; margin-top: 1.2rem; }
-.closing__note { font-size: .8rem; color: rgba(244,240,231,.72); }
+.closing__note { font-size: .8rem; color: rgba(244,240,231,.82); }   /* .82 (was .72) so it stays above 4.5:1 over the moving green */
 
 /* ---------- footer (ivory on deep pine) ---------- */
 .foot { background: var(--deep); color: var(--ivory); padding: clamp(3rem, 8vh, 6rem) var(--pad) 1.6rem; display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
@@ -1657,7 +1657,13 @@ body.has-overlay .fab__top, body.has-overlay .fab__book { opacity: 0; visibility
 /* the photo viewer while it fades out (4 November 2026): it no longer takes taps, so the page behind answers at once */
 .lightbox.is-closing { pointer-events: none; }
 
-/* 5 November 2026: the backdrop. A soft field of hill light behind the plain sections (main.js initBackdrop), drawn on
-   a small canvas and stretched to the window. Without the script it is the plain ivory ground it always was. */
-.bgfx { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: var(--bg); }
-.bgfx canvas { display: block; width: 100%; height: 100%; }
+/* 5 November 2026: the living green. Facilities, the closing band and the footer each get a canvas behind their
+   content (main.js initBackdrop) with a slowly moving field of green; the cream ground stays one flat colour. Without
+   the script, or before the first frame, each section keeps its own green. */
+.has-gfx { position: relative; isolation: isolate; }
+.gfx { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity .6s ease; }
+.is-gfx > .gfx { opacity: 1; }
+.gfx canvas { display: block; width: 100%; height: 100%; filter: blur(14px); transform: scale(1.04); }   /* the stretched field, softened (scaled so the blur keeps the edges filled) */
+/* a fine, still film grain over the moving green: the modern finish for soft gradients (and it hides any banding) */
+.gfx::after { content: ""; position: absolute; inset: 0; opacity: .14; mix-blend-mode: soft-light; background-size: 220px 220px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27220%27 height=%27220%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%27.85%27 numOctaves=%272%27 stitchTiles=%27stitch%27/%3E%3CfeColorMatrix values=%270 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 1.4 -.2%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23n)%27/%3E%3C/svg%3E"); }
