@@ -70,11 +70,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: gh api -X POST "repos/${{ github.repository }}/pages/builds" --silent || echo "Pages build request not accepted (a push build may already be running)"
 
+      # GitHub Pages can take longer than usual to serve a new deployment (its own incidents); the release is already
+      # committed and deployed by then, so a slow edge is reported, not treated as a failed publication
       - name: Wait until the live site serves this revision
         if: steps.build.outputs.changed == 'true'
+        continue-on-error: true
         run: |
           want=${{ steps.build.outputs.generation }}
-          for i in $(seq 1 120); do
+          for i in $(seq 1 180); do
             got=$(curl -fsS "${SITE}content/manifest.json?check=$(date +%s%N)" | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{try{console.log(JSON.parse(s).revision)}catch(e){console.log(0)}})" || echo 0)
             if [ "$got" -ge "$want" ] 2>/dev/null; then
               page=$(curl -fsS "${SITE}?check=$(date +%s%N)" | grep -o '<meta name="pv-content" content="[0-9]*"' | grep -o '[0-9]*$' || echo 0)
@@ -82,7 +85,7 @@ jobs:
             fi
             sleep 5
           done
-          echo "the live site did not show revision $want within 10 minutes"; exit 1
+          echo "the live site did not show revision $want within 15 minutes (GitHub Pages slow); the release is deployed"; exit 1
 
       - name: Report back to the Sheet
         if: always()
@@ -95,7 +98,7 @@ jobs:
             const fs=require('fs'); const r=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));
             r.run=process.env.GITHUB_RUN_ID; r.outcome=process.env.OUTCOME;
             r.timings={ receivedAt:process.env.RECEIVED_AT||null, committedAt:process.env.COMMITTED_AT||null, liveAt:process.env.LIVE_AT||null };
-            if (r.status==='built') r.status = process.env.LIVE_AT ? 'live' : 'built, not yet live';
+            if (r.status==='built') r.status = process.env.LIVE_AT ? 'live' : 'deployed, live not confirmed yet';
             fs.writeFileSync(process.argv[1], JSON.stringify(r,null,1));" "$f"
           sha=$(gh api "repos/${{ github.repository }}/contents/inbox/result.json?ref=cms-inbox" --jq .sha 2>/dev/null || echo "")
           args=(-X PUT "repos/${{ github.repository }}/contents/inbox/result.json" -f message="Publication result" -f branch=cms-inbox -f content="$(base64 -w0 "$f")")
