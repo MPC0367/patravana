@@ -8,11 +8,11 @@
  "contentHash": "7cf4ab82799ba24cdcfaed998dcac23aa04266399a96f38e18022de90f1696f0",
  "contentSchema": "patravana.content/1",
  "registryVersion": "17d6d23cd768",
- "builtAt": "2026-11-04T20:51:53.941Z",
+ "builtAt": "2026-11-04T21:40:02.257Z",
  "liveUrl": "https://script.google.com/macros/s/AKfycbzUB0wwKaD7KskTFDWAxMB_kcaBExYeVBPkADWCVvrliZ0Tt8rdQpBARE51c_UGg0Pj/exec",
  "newerThanContent": [],
  "pages": {
-  "index.html": "26461c8bfc53dfbd49c496487b76ba6119c946d673b95dae8660a0402d9f9189",
-  "th.html": "84eb1fea62f42980a4137e3e15133d181ecae510deaae5725841fcc7cde77243"
+  "index.html": "95f7c4b4816f46df8c85d3a6c008470c5877411d4483c306d59f0e64db9bdcd8",
+  "th.html": "dccb93f0f37955f66fac6f84da551abab02ed990db10a37bdf1728540199db6b"
  }
 }
