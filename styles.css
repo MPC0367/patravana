@@ -17,7 +17,7 @@
   --stone: #B5A58D;
   --sand: #E6DAC2;
   --mist: #D9DBD4;
-  --earth: #766554;
+  --earth: #6C5B4B;                              /* deepened from #766554 on 5 Nov 2026: small notes stay at 4.8:1 or more over the moving backdrop */
 
   --bg: var(--ivory);
   --text: var(--charcoal);
@@ -1656,3 +1656,8 @@ body.has-overlay .fab__top, body.has-overlay .fab__book { opacity: 0; visibility
 
 /* the photo viewer while it fades out (4 November 2026): it no longer takes taps, so the page behind answers at once */
 .lightbox.is-closing { pointer-events: none; }
+
+/* 5 November 2026: the backdrop. A soft field of hill light behind the plain sections (main.js initBackdrop), drawn on
+   a small canvas and stretched to the window. Without the script it is the plain ivory ground it always was. */
+.bgfx { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: var(--bg); }
+.bgfx canvas { display: block; width: 100%; height: 100%; }

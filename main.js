@@ -2439,6 +2439,109 @@
     if (!hasGSAP || reduced || !veil) { swap(); return; }
     gsap.timeline().set(veil, { transformOrigin: "left", scaleX: 0 }).to(veil, { scaleX: 1, duration: .45, ease: "power3.in" }).add(swap).set(veil, { transformOrigin: "right" }, "+=0.06").to(veil, { scaleX: 0, duration: .55, ease: "power3.out" });
   }
+  /* ---------- the backdrop: a soft field of hill light behind the page (5 November 2026) ----------
+     The plain sections sit on it. Five pale pools of colour and three of brighter light, each with a soft falloff, are
+     drawn on a small canvas and stretched to the window, so it stays smooth and costs almost nothing. Every pool wanders
+     its own uneven path (two out-of-step waves per axis), breathes and stretches into an oval and back, so the page is
+     never quite still; scrolling pushes the drift along and the pools lag behind it at different depths (the same
+     mechanics as the studio's Certified V10 site). The colours follow a day in the hills down the page: morning mist and
+     sage at the top, warm afternoon sand in the middle, a soft dusk before the night. A floor keeps every pixel light
+     enough that the smallest brown text keeps its contrast (4.55 or more). It draws only while a plain section is on
+     screen (never under the hero film or the night), and holds still for reduced motion. */
+  function initBackdrop() {
+    const wrap = $(".bgfx"), cv = wrap && wrap.querySelector("canvas"), ctx = cv && cv.getContext && cv.getContext("2d");
+    if (!ctx || window.PVLeaving || !("IntersectionObserver" in window)) return;
+    const hx = (s) => [parseInt(s.slice(1, 3), 16), parseInt(s.slice(3, 5), 16), parseInt(s.slice(5, 7), 16)];
+    // one colour per pool for each time of day: morning, afternoon, dusk
+    const DAY = [
+      ["#DFEDD3", "#D6EDE8", "#E4F0D6", "#DCEAF0", "#E0EEDC"],
+      ["#FCE4B8", "#F8E1BE", "#F6EBC2", "#FBE0C4", "#F9E8C9"],
+      ["#FCDDCD", "#F7DBDE", "#EBDDF0", "#FADBC6", "#F6DED6"]
+    ].map((row) => row.map(hx));
+    const LIGHT = hx("#FFFDF6"), BASE = hx("#F4F0E7");
+    // strength, radius (share of the long side), home x, home y, swing x, swing y, speed x, speed y; the last three are light
+    const F = [
+      [.82, .55, .82, .16, .30, .30, 1.3, .9],
+      [.85, .66, .16, .80, .32, .30, .8, 1.1],
+      [.70, .42, .58, .52, .26, .30, 1.7, 1.4],
+      [.80, .72, .30, .22, .28, .26, 1.1, .7],
+      [.65, .50, .86, .86, .22, .28, .6, 1.6],
+      [.70, .44, .55, .40, .30, .28, .9, 1.2],
+      [.62, .40, .30, .65, .26, .24, 1.4, .8],
+      [.58, .36, .75, .70, .24, .26, 1.2, 1.0]
+    ];
+    const PH = F.map(() => [0, 1, 2, 3].map(() => Math.random() * 6.283));
+    const G = new Float32Array(257); for (let i = 0; i < 257; i++) G[i] = Math.exp(-i / 32 * 3);
+    const LIN = new Float32Array(256); for (let i = 0; i < 256; i++) { const c = i / 255; LIN[i] = c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); }
+    const FLOOR = .81, LB = .2126 * LIN[LIGHT[0]] + .7152 * LIN[LIGHT[1]] + .0722 * LIN[LIGHT[2]];
+    let w = 0, h = 0, img = null;
+    const fit = () => { const W = window.innerWidth, H = window.innerHeight, s = W > 900 ? 10 : 7; w = Math.max(24, Math.ceil(W / s)); h = Math.max(24, Math.ceil(H / s)); cv.width = w; cv.height = h; img = ctx.createImageData(w, h); };
+    const mix = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+    const tint = (k, p) => (p < .5 ? mix(DAY[0][k], DAY[1][k], p * 2) : mix(DAY[1][k], DAY[2][k], (p - .5) * 2));
+    function draw(tau, t, v, p) {
+      if (!img) fit();
+      v = Math.max(-2, Math.min(2, v || 0));
+      const TAU = Math.PI * 2, m = Math.max(w, h), q = [], d = img.data, rush = Math.min(1, Math.abs(v));
+      for (let k = 0; k < F.length; k++) {
+        const f = F[k], ph = PH[k], ax = TAU * tau * f[6], ay = TAU * tau * f[7], light = k >= 5, depth = .05 + .035 * (k % 3);
+        const cx = (f[2] + f[4] * (.62 * Math.sin(ax + ph[0]) + .38 * Math.sin(ax * 1.618 + ph[1])) + .035 * Math.sin(t * .31 + k * 1.9) + v * .02 * Math.sin(k * 2.4 + ph[2])) * w;
+        const cy = (f[3] + f[5] * (.62 * Math.sin(ay + ph[2]) + .38 * Math.sin(ay * 1.618 + ph[3])) + .03 * Math.cos(t * .27 + k * 2.3) - v * depth) * h;
+        const r = f[1] * m * (1 + .12 * Math.sin((ax + ay) / 2 + ph[1]) + .1 * Math.sin(t * .5 + k * 1.7));
+        const oval = .2 * Math.sin(t * .21 + k * 1.1 + ph[3]), rx = r * (1 + oval), ry = r * (1 - oval);
+        const c = light ? LIGHT : tint(k, p);
+        q.push(cx, cy, 32 / (rx * rx), 32 / (ry * ry), Math.min(.85, f[0] * (1 + (light ? .3 : .15) * rush)), c[0], c[1], c[2]);
+      }
+      let o = 0;
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+        let R = BASE[0], Gc = BASE[1], B = BASE[2];
+        for (let k = 0; k < q.length; k += 8) {
+          const dx = x - q[k], dy = y - q[k + 1], j = dx * dx * q[k + 2] + dy * dy * q[k + 3];
+          if (j >= 256) continue;
+          const al = q[k + 4] * G[j | 0];
+          R += (q[k + 5] - R) * al; Gc += (q[k + 6] - Gc) * al; B += (q[k + 7] - B) * al;
+        }
+        const Y = .2126 * LIN[R | 0] + .7152 * LIN[Gc | 0] + .0722 * LIN[B | 0];
+        if (Y < FLOOR) { const s = Math.min(1, (FLOOR - Y) / (LB - Y) * 1.15); R += (LIGHT[0] - R) * s; Gc += (LIGHT[1] - Gc) * s; B += (LIGHT[2] - B) * s; }
+        d[o++] = R; d[o++] = Gc; d[o++] = B; d[o++] = 255;
+      }
+      ctx.putImageData(img, 0, 0);
+    }
+    const still = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+    const IDLE = 1 / 55, SCROLL = .22;                 // about one wander a minute on its own; scrolling pushes it along
+    let held = null;                                   // a time of day held for checks (window.PVBackdrop.set)
+    const progress = () => (held != null ? held : Math.min(1, Math.max(0, window.scrollY / Math.max(1, document.documentElement.scrollHeight - window.innerHeight))));
+    let tau = Math.random() * 20, boost = 0, vel = 0, lastY = window.scrollY, lastT = 0, lastDraw = 0, shown = 0, running = false;
+    function frame(now) {
+      running = false;
+      if (document.hidden || !shown) { lastT = 0; return; }   // nothing plain on screen: no drawing at all
+      const dt = lastT ? Math.min(.1, (now - lastT) / 1000) : 0; lastT = now;
+      const y = window.scrollY, H = Math.max(1, window.innerHeight), dy = y - lastY; lastY = y;
+      boost += (Math.abs(dy) / H * SCROLL - boost) * .15;
+      vel += ((dt > 0 ? Math.max(-3, Math.min(3, dy / H / dt)) : 0) - vel) * .12;
+      if (Math.abs(vel) < .002) vel = 0;
+      tau += dt * IDLE + boost;
+      // idle about 25 times a second (the drift is slow); while scrolling, every frame
+      if (boost > .00005 || vel !== 0 || now - lastDraw > 40) { draw(tau, now / 1000, vel, progress()); lastDraw = now; }
+      go();
+    }
+    const go = () => { if (!running) { running = true; requestAnimationFrame(frame); } };
+    let quiet = 0;
+    const settle = () => { clearTimeout(quiet); quiet = setTimeout(() => { if (shown) draw(tau, 0, 0, progress()); }, 120); };
+    const vis = new Set();
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) vis.add(e.target); else vis.delete(e.target); });
+      shown = vis.size;
+      if (shown) { if (still) settle(); else go(); }
+    }, { rootMargin: "-2px 0px -2px 0px" });           // a section that only touches the edge does not count
+    $$(".chapter:not(.chapter--dark), .hub, .petsec, .reelwrap").forEach((el) => io.observe(el));
+    // reduced motion: the field holds still and only takes the time of day of where the page is
+    if (still) window.addEventListener("scroll", settle, { passive: true });
+    document.addEventListener("visibilitychange", () => { if (!document.hidden && shown && !still) go(); });
+    let refit = 0;
+    window.addEventListener("resize", () => { clearTimeout(refit); refit = setTimeout(() => { fit(); if (shown) draw(tau, performance.now() / 1000, 0, progress()); }, 150); });
+    window.PVBackdrop = { draws: () => lastDraw, shown: () => shown, set: (p, tauAt) => { held = p; if (tauAt != null) tau = tauAt; draw(tau, 0, 0, p); }, release: () => { held = null; } };
+  }
+
   function initLang() {
     const tg = $("#langToggle"); if (tg) tg.addEventListener("click", () => switchLang(I18N.lang === "en" ? "th" : "en"));
     // the footer's language links lead to each language's own page; with the script the page switches in place and keeps
@@ -2455,6 +2558,7 @@
     initOffers(); initHall(); initStay(); initRadius(); initMap(); initReel(); initDrawers(); initBooking(); initEnquiry(); initPet(); initCopy(); initClock(); initSky(); initDining(); initNight(); initLang(); initDiag(); onScroll();
     startMotion();
     initContent();
+    initBackdrop();
     // A link that names a section (…/#pet-friendly): the browser goes there as the page is parsed, and once everything
     // above it has taken its final size the landing is squared up, unless the visitor has already started to scroll.
     // On a phone's destinations the destination does its own landing
