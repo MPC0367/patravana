@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="th" data-locale="th"><head>
 <meta charset="UTF-8">
+<meta name="pv-build" content="4db245f7bb20-c0">
+<meta name="pv-content" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <title>ภัทราวานา เขาใหญ่</title>
@@ -20,7 +22,7 @@ document.documentElement.className += " js";
     var loc = de.getAttribute("data-locale"), lq = new URLSearchParams(location.search).get("lang");
     if (loc && (lq === "th" || lq === "en")) {
       var lu = new URL(location.href); lu.searchParams.delete("lang");
-      if (lq !== loc) { lu.pathname = lu.pathname.replace(/(th|th\.html|index\.html)$/, "") + (lq === "th" ? "th" : ""); location.replace(lu.pathname + lu.search + lu.hash); return; }
+      if (lq !== loc) { lu.pathname = lu.pathname.replace(/(th|th\.html|index\.html)$/, "") + (lq === "th" ? "th" : ""); window.PVLeaving = true; location.replace(lu.pathname + lu.search + lu.hash); return; }
       history.replaceState(history.state, "", lu.pathname + lu.search + lu.hash);
     }
   } catch (e) { /* kept as it is */ }
@@ -1169,7 +1171,7 @@ document.documentElement.className += " js";
     <aside class="about" id="about-preview" aria-labelledby="aboutK">
       <p class="card__k" id="aboutK" data-i18n="about.k">เกี่ยวกับเว็บตัวอย่างนี้</p>
       <p data-i18n="about.p1">นี่คืองานออกแบบแนวคิด ไม่ใช่เว็บไซต์ทางการของรีสอร์ท ภาพถ่ายและข้อมูลเป็นของภัทราวานา รีสอร์ท</p>
-      <p data-i18n="about.p2">วันที่ จำนวนผู้เข้าพัก และข้อความสอบถาม จะอยู่ในหน้านี้บนอุปกรณ์ของคุณ สิ่งที่คุณเลือกหรือพิมพ์จะไม่ถูกส่งไปที่ใด จนกว่าคุณจะคัดลอกข้อความสอบถาม เปิด LINE แอปอีเมล หรือโทรศัพท์ หรือไปต่อที่หน้าจองของรีสอร์ท ซึ่งดำเนินการโดยผู้ให้บริการของรีสอร์ทภายใต้เงื่อนไขของผู้ให้บริการเอง ข้อเสนอที่แสดงที่นี่อ่านจากไฟล์ข้อเสนอของเว็บไซต์นี้เอง ซึ่งไม่ได้ส่งข้อมูลใดของคุณ</p>
+      <p data-i18n="about.p2">วันที่ จำนวนผู้เข้าพัก และข้อความสอบถาม จะอยู่ในหน้านี้บนอุปกรณ์ของคุณ สิ่งที่คุณเลือกหรือพิมพ์จะไม่ถูกส่งไปที่ใด จนกว่าคุณจะคัดลอกข้อความสอบถาม เปิด LINE แอปอีเมล หรือโทรศัพท์ หรือไปต่อที่หน้าจองของรีสอร์ท ซึ่งดำเนินการโดยผู้ให้บริการของรีสอร์ทภายใต้เงื่อนไขของผู้ให้บริการเอง ข้อเสนอที่แสดงที่นี่อ่านจากไฟล์ข้อเสนอของเว็บไซต์นี้เอง และขณะที่เปิดหน้านี้อยู่ หน้าเว็บจะถามเว็บไซต์นี้ราวทุกวินาทีว่ามีการปรับปรุงข้อความหรือไม่ ทั้งสองอย่างนี้ไม่ได้ส่งข้อมูลใดของคุณ เมื่อเปิดหน้านี้ หน้าเว็บอาจถามระบบเผยแพร่เนื้อหาของเว็บไซต์ซึ่งทำงานบน Google (script.google.com) เพื่อรับข้อความล่าสุด เช่นเดียวกับการเชื่อมต่อเว็บทั่วไป Google จะเห็นที่อยู่อินเทอร์เน็ตของคุณ แต่ไม่เห็นสิ่งที่คุณเลือกหรือพิมพ์</p>
       <p data-i18n="about.p3">เว็บตัวอย่างนี้ไม่มีระบบวิเคราะห์การใช้งาน ไม่ตั้งคุกกี้ของตัวเอง และไม่ใช้พื้นที่จัดเก็บในเครื่อง (local storage) วันที่ จำนวนผู้ใหญ่ และห้องที่คุณเลือก อาจถูกเก็บไว้ในประวัติการเข้าชมของแท็บนี้ในเบราว์เซอร์ เพื่อให้กลับมาที่หน้านี้แล้วยังพบตัวเลือกเดิม ฟอนต์โหลดจาก Google Fonts และสคริปต์ภาพเคลื่อนไหวโหลดจาก jsDelivr</p>
     </aside>
   </div>
@@ -1360,13 +1362,13 @@ document.documentElement.className += " js";
 </script>
 <!-- /motion-libs -->
 <script src="facts.js?v=d78edad3" defer=""></script>
-<script src="i18n.js?v=1bad3179" defer=""></script>
+<script src="i18n.js?v=1396be47" defer=""></script>
 <script src="scene.js?v=29086502" defer=""></script>
 <script src="film-manifest.js?v=05536fc9" defer=""></script>
 <script src="film-stream.js?v=65575688" defer=""></script>
 <!-- if the main script cannot be fetched, the page falls back to its plain form: panels open, script-only controls hidden -->
-<script src="i18n-en.js?v=45387a33" defer></script>
-<script src="main.js?v=9e54e315" defer="" onerror="document.documentElement.classList.remove('js')"></script>
+<script src="i18n-en.js?v=20cc70dd" defer></script>
+<script src="main.js?v=77c7bd6a" defer="" onerror="document.documentElement.classList.remove('js')"></script>
 
 
 </body></html>

@@ -1,0 +1,104 @@
+# Publishes the Patravana Website Content sheet (Phase 3, 4 November 2026).
+# The Sheet publisher (Google Apps Script) writes each validated snapshot to inbox/snapshot.json on the cms-inbox branch.
+# This workflow checks it, builds the English and Thai pages from it, commits the release to main, asks GitHub Pages to
+# deploy it, waits until the live site serves it, and writes the outcome to inbox/result.json for the Sheet to read.
+# Written by export-pages.mjs from the studio's source (deploy/.github/workflows/cms-publish.yml): change it there.
+name: Publish content from the Sheet
+
+on:
+  push:
+    branches: [cms-inbox]
+    paths: ['inbox/snapshot.json']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+# one publication at a time; a newer snapshot waiting replaces an older one waiting (the newest always wins)
+concurrency:
+  group: cms-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SITE: https://mpc0367.github.io/patravana/
+    steps:
+      - name: Check out the site (pages, scripts and content only, not the photographs and films)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+          sparse-checkout: |
+            content
+            cms
+          sparse-checkout-cone-mode: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Read the newest snapshot from the Sheet
+        run: |
+          git fetch --depth 1 origin cms-inbox
+          git show origin/cms-inbox:inbox/snapshot.json > "$RUNNER_TEMP/inbox.json"
+          echo "RECEIVED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+
+      - name: Check it and build the pages
+        id: build
+        run: node cms/build.mjs "$RUNNER_TEMP/inbox.json" "$RUNNER_TEMP/result.json"
+
+      - name: Commit the release to the site
+        if: steps.build.outputs.changed == 'true'
+        run: |
+          git config user.name "Patravana content publisher"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A content index.html th.html i18n.js i18n-en.js facts.js build.json
+          git commit -q -m "Content revision ${{ steps.build.outputs.generation }} from the Sheet"
+          for i in 1 2 3; do
+            if git push -q origin HEAD:main; then break; fi
+            echo "main moved on: rebasing and trying again"; git pull -q --rebase origin main
+          done
+          echo "COMMITTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+
+      - name: Ask GitHub Pages to deploy it
+        if: steps.build.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds" --silent || echo "Pages build request not accepted (a push build may already be running)"
+
+      - name: Wait until the live site serves this revision
+        if: steps.build.outputs.changed == 'true'
+        run: |
+          want=${{ steps.build.outputs.generation }}
+          for i in $(seq 1 120); do
+            got=$(curl -fsS "${SITE}content/manifest.json?check=$(date +%s%N)" | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{try{console.log(JSON.parse(s).revision)}catch(e){console.log(0)}})" || echo 0)
+            if [ "$got" -ge "$want" ] 2>/dev/null; then
+              page=$(curl -fsS "${SITE}?check=$(date +%s%N)" | grep -o '<meta name="pv-content" content="[0-9]*"' | grep -o '[0-9]*$' || echo 0)
+              if [ "$page" -ge "$want" ] 2>/dev/null; then echo "LIVE_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"; echo "live: manifest $got, page $page"; exit 0; fi
+            fi
+            sleep 5
+          done
+          echo "the live site did not show revision $want within 10 minutes"; exit 1
+
+      - name: Report back to the Sheet
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OUTCOME: ${{ job.status }}
+        run: |
+          f="$RUNNER_TEMP/result.json"; [ -f "$f" ] || echo '{"status":"failed","problems":["the build did not run"]}' > "$f"
+          node -e "
+            const fs=require('fs'); const r=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));
+            r.run=process.env.GITHUB_RUN_ID; r.outcome=process.env.OUTCOME;
+            r.timings={ receivedAt:process.env.RECEIVED_AT||null, committedAt:process.env.COMMITTED_AT||null, liveAt:process.env.LIVE_AT||null };
+            if (r.status==='built') r.status = process.env.LIVE_AT ? 'live' : 'built, not yet live';
+            fs.writeFileSync(process.argv[1], JSON.stringify(r,null,1));" "$f"
+          sha=$(gh api "repos/${{ github.repository }}/contents/inbox/result.json?ref=cms-inbox" --jq .sha 2>/dev/null || echo "")
+          args=(-X PUT "repos/${{ github.repository }}/contents/inbox/result.json" -f message="Publication result" -f branch=cms-inbox -f content="$(base64 -w0 "$f")")
+          [ -n "$sha" ] && args+=(-f sha="$sha")
+          gh api "${args[@]}" --silent
+          cat "$f" >> "$GITHUB_STEP_SUMMARY"

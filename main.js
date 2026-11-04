@@ -6,6 +6,8 @@
    ============================================================ */
 (function () {
   "use strict";
+  // an old ?lang= address is being replaced by the page in that language (see the head): this copy of the page stays idle
+  if (window.PVLeaving || !document.body) return;
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   // the animation scripts arrive on their own (see startMotion): until they are taken, everything runs without them
   let hasGSAP = false, hasST = false, hasSplit = false;
@@ -102,7 +104,8 @@
       this.lang = lang;
       const th = window.PV_TH || {};
       $$("[data-i18n]").forEach((el) => { const k = el.getAttribute("data-i18n"); const v = lang === "th" ? th[k] : this.en[k]; if (v != null && el.innerHTML !== v) el.innerHTML = v; });
-      this.enAttr.forEach((map, el) => { Object.keys(map).forEach((attr) => { const v = lang === "th" ? (th[map[attr].key] || map[attr].en) : map[attr].en; el.setAttribute(attr, v); }); });
+      // (the dictionary holds HTML: an attribute takes its plain text, so "&amp;" reads "&")
+      this.enAttr.forEach((map, el) => { Object.keys(map).forEach((attr) => { const v = lang === "th" && th[map[attr].key] ? plain(th[map[attr].key]) : map[attr].en; el.setAttribute(attr, v); }); });
       FACTS.render(lang);                                // the sentences that quote a fact, before anything reads them
       document.documentElement.lang = lang;
       // the tab title and the description follow the language too
@@ -915,7 +918,8 @@
      to be animated in. */
   let motionLate = false;
   // in a late start, only what has not been reached yet is animated
-  const unseen = (el, at) => !motionLate || el.getBoundingClientRect().top >= window.innerHeight * (at || .92);
+  // (anything whose top is on the screen counts as seen, even a sliver at the bottom edge: it is never hidden to rise in)
+  const unseen = (el) => !motionLate || el.getBoundingClientRect().top >= window.innerHeight;
   const offScreen = (el) => { if (!motionLate) return true; const r = el.getBoundingClientRect(); return r.bottom <= 0 || r.top >= window.innerHeight; };
   function startMotion() {
     let state = 0;                                       // 0 waiting, 1 motion on, 2 still for now (the screen lifted first)
@@ -2086,8 +2090,9 @@
   function initDining() {
     const el = $("#diningStatus"), text = $("#diningStatusText"); if (!el || !text || !FX) return;
     const mins = (t) => { const p = t.split(":"); return +p[0] * 60 + +p[1]; };
-    const B = FX.dining.breakfast, K = FX.dining.kitchen, b0 = mins(B.open), b1 = mins(B.close), k0 = mins(K.open), k1 = mins(K.close);
     const paint = () => {
+      // the hours are read on every paint, so published changes to them (the Sheet's Shared Facts) apply at once
+      const B = FX.dining.breakfast, K = FX.dining.kitchen, b0 = mins(B.open), b1 = mins(B.close), k0 = mins(K.open), k1 = mins(K.close);
       const now = bkk(), day = now.getUTCDay(), min = now.getUTCHours() * 60 + now.getUTCMinutes();
       const bDay = B.days.includes(day), kDay = K.days.includes(day);
       let state = "closed", key = "dining.status.tomorrow";
@@ -2105,12 +2110,15 @@
   function initHall() {
     const root = $("[data-hall]"), svg = $("#hallSvg"), num = $("#hallNum"); if (!root || !svg) return;
     const rows = $$(".bar", root);
-    if (FX) {
+    // the hall's figures from facts.js; again whenever published content changes them (the Sheet's Shared Facts)
+    const figures = () => {
+      if (!FX) return;
       const max = Math.max.apply(null, FX.hall.layouts.map((l) => l.full));
-      rows.forEach((b) => { const l = FX.hall.layouts.find((x) => x.key === b.dataset.layout); if (!l) return; b.dataset.n = l.full; $(".bar__n", b).textContent = l.full; $(".bar__fill", b).dataset.w = Math.round(l.full / max * 100); });
+      rows.forEach((b) => { const l = FX.hall.layouts.find((x) => x.key === b.dataset.layout); if (!l) return; b.dataset.n = l.full; $(".bar__n", b).textContent = l.full; const fill = $(".bar__fill", b); fill.dataset.w = Math.round(l.full / max * 100); if (fill.style.width) fill.style.width = fill.dataset.w + "%"; });
       // the full hall and each half, in the table under the layouts
       $$("[data-cap]").forEach((td) => { const v = FACTS.val("hall." + td.dataset.cap); if (v != null) td.textContent = v; });
-    }
+    };
+    figures(); document.addEventListener("pv:content", figures);
     const f = (n) => (Math.round(n * 10) / 10);
     const seat = (x, y, r) => '<circle class="h-seat" cx="' + f(x) + '" cy="' + f(y) + '" r="' + r + '"/>';
     const shell = '<rect class="h-room" x="6" y="6" width="308" height="198" rx="12"/><rect class="h-stage" x="112" y="15" width="96" height="9" rx="3"/>';
@@ -2267,6 +2275,123 @@
     document.addEventListener("pv:lang", () => { shownIds = ""; render(); });
   }
 
+  /* ---------- published content (Phase 3): the Patravana Website Content sheet ----------
+     Each built page carries the content revision it was built with (meta pv-content). While the page is visible and
+     online it asks this site's own small manifest (content/manifest.json) about once a second whether a newer revision
+     has been published. Nothing about the visitor is sent, and Google Sheets is never asked: the Sheet publishes to the
+     site, the site answers the page. A newer revision is fetched once, checked against the manifest's SHA-256 and its
+     schema, and applied in place through the same path as a language switch, rewriting only texts that changed, so the
+     visitor's dates, room, view, destination, scroll, open dialogs and anything typed stay as they are. A changed text
+     that holds the keyboard's focus waits until the focus moves on. If anything about a revision is wrong, the page
+     keeps what it has. */
+  function setFact(key, value) {
+    if (!FX) return false;
+    const p = key.replace(/^facts\./, "").split("."), same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+    const int = Number.isInteger(value) && value > 0, time = typeof value === "string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
+    const days = Array.isArray(value) && value.length && value.every((d) => Number.isInteger(d) && d >= 0 && d <= 6), date = typeof value === "string" && DATE_RE.test(value);
+    let obj = null, prop = null, ok = false;
+    if (p[0] === "hall" && p[1] === "area") { obj = FX.hall; prop = "areaSqm"; ok = int; }
+    else if (p[0] === "hall") { obj = FX.hall.layouts.find((x) => x.key === p[1]); prop = p[2]; ok = int && !!obj && prop in obj; }
+    else if (p[0] === "dining" && p[1] === "seats") { obj = FX.dining; prop = "seats"; ok = int; }
+    else if (p[0] === "dining" && FX.dining[p[1]] && /^(open|close|days)$/.test(p[2])) { obj = FX.dining[p[1]]; prop = p[2]; ok = prop === "days" ? days : time; }
+    else if (key === "facts.reviewed") { obj = FX; prop = "reviewed"; ok = date; }
+    else if (key === "facts.pet.reviewed") { obj = FX.pet; prop = "lastReviewedAt"; ok = date; }
+    if (!ok || same(obj[prop], value)) return false;     // protected facts are never set from a revision
+    obj[prop] = value; return true;
+  }
+  function initContent() {
+    const meta = $('meta[name="pv-content"]');
+    if (!meta || !window.fetch || !window.AbortController || !window.crypto || !crypto.subtle || !window.TextDecoder) return;
+    let current = parseInt(meta.getAttribute("content"), 10) || 0, inflight = false, delay = 1000, timer = 0, waiting = null, checks = 0;
+    // addresses in the manifest are relative to the site's root (…/patravana/ on the preview, / in production)
+    const siteRoot = new URL("./", document.baseURI).href, manifestUrl = new URL("content/manifest.json", siteRoot).href;
+    const revisionUrl = (u) => { try { const x = new URL(u, siteRoot); return x.origin === location.origin && /\/content\/r\d+\.json$/.test(x.pathname) ? x.href : null; } catch (e) { return null; } };
+    const hex = (buf) => Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+    const norm = (s) => String(s == null ? "" : s).replace(/\s+/g, " ").trim();
+    const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    const render = (v) => esc(v).replace(/\*([^*]+)\*/g, '<em class="it">$1</em>');     // the Sheet's one mark: *words*, the italic accent
+    const schedule = (ms) => { clearTimeout(timer); timer = setTimeout(tick, ms); };
+    async function tick() {
+      if (document.hidden || navigator.onLine === false) return;           // paused; visibility or the network coming back resumes it
+      if (inflight) return schedule(1000);                                  // never two checks at once
+      inflight = true; checks++;
+      const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 4000);
+      try {
+        const r = await fetch(manifestUrl, { cache: "no-cache", credentials: "omit", signal: ctl.signal });   // a revalidation: usually a tiny 304
+        clearTimeout(to);
+        if (r.ok) { await consider(await r.json()); delay = 1000; }
+        else delay = Math.min(60000, delay * 2);                            // nothing published yet, busy or failing: ask less often
+      } catch (e) { delay = Math.min(60000, delay * 2); }
+      clearTimeout(to); inflight = false; schedule(delay);
+    }
+    async function consider(m) {
+      if (!m || m.schema !== "patravana.manifest/1" || !Number.isInteger(m.revision) || m.revision <= current) return;
+      const url = revisionUrl(m.url); if (!url || !/^[0-9a-f]{64}$/.test(String(m.sha256))) return;
+      const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 15000);
+      try {
+        const r = await fetch(url, { cache: "force-cache", credentials: "omit", signal: ctl.signal }); if (!r.ok) return;
+        const buf = await r.arrayBuffer();
+        if (hex(await crypto.subtle.digest("SHA-256", buf)) !== m.sha256) return;      // not what was published: keep what is here
+        const snap = JSON.parse(new TextDecoder().decode(buf));
+        if (!snap || snap.schema !== "patravana.content/1" || snap.generation !== m.revision || !snap.content || typeof snap.content !== "object") return;
+        if (snap.generation <= current) return;                             // a newer one won meanwhile
+        apply(snap);
+      } catch (e) { /* keep what is here */ } finally { clearTimeout(to); }
+    }
+    function apply(snap) {
+      const TH = window.PV_TH || {}, JS = window.PV_JS || {}, keys = [];
+      Object.keys(snap.content).forEach((k) => {
+        const v = snap.content[k]; if (!v || typeof v.en !== "string" || typeof v.th !== "string" || /[<>]/.test(v.en + v.th)) return;
+        if (k.startsWith("seo.")) return;                                   // the production head is written by the build
+        if (k.startsWith("js.")) { const d = JS[k.slice(3)]; if (!d || d.en !== v.en || d.th !== v.th) { JS[k.slice(3)] = { en: v.en, th: v.th }; keys.push(k); } return; }
+        if (k.startsWith("fact.")) { const d = FX && FX.text[k.slice(5)]; if (FX && (!d || d.en !== v.en || d.th !== v.th)) { FX.text[k.slice(5)] = { en: v.en, th: v.th }; keys.push(k); } return; }
+        const en = render(v.en), th = render(v.th); let ch = false;
+        if (k in I18N.en && norm(I18N.en[k]) !== norm(en)) { I18N.en[k] = en; ch = true; }
+        if (k in TH && norm(TH[k]) !== norm(th)) { TH[k] = th; ch = true; }
+        I18N.enAttr.forEach((map) => Object.keys(map).forEach((a) => { if (map[a].key === k && map[a].en !== plain(en)) { map[a].en = plain(en); ch = true; } }));
+        if (ch) keys.push(k);
+      });
+      Object.keys(snap.facts || {}).forEach((k) => { if (setFact(k, snap.facts[k])) keys.push(k); });
+      current = snap.generation;
+      if (!keys.length) return;
+      const holdsFocus = () => { const a = document.activeElement; return !!a && a !== document.body && keys.some((k) => $$('[data-i18n="' + k + '"]').some((el) => el !== a && el.contains(a))); };
+      const run = () => {
+        if (holdsFocus()) { if (!waiting) { waiting = () => { document.removeEventListener("focusout", waiting); waiting = null; setTimeout(run, 0); }; document.addEventListener("focusout", waiting); } return; }
+        releaseSplits(); I18N.apply(I18N.lang); remakeSplits(); if (hasST) ScrollTrigger.refresh();
+        document.dispatchEvent(new CustomEvent("pv:content", { detail: { revision: current, keys } }));
+      };
+      run();
+    }
+    /* The fast lane: on every load (and so on every refresh) the page also asks the Sheet's own publisher (a Google
+       Apps Script web app named in meta pv-live) for the newest checked revision. That revision exists seconds after
+       an edit, before the rebuilt pages reach the host. Nothing about the visitor is sent; the answer is checked
+       against its SHA-256 and the content rules before anything is shown, and a failure leaves the page as it is. */
+    const liveMeta = $('meta[name="pv-live"]');
+    const liveUrl = liveMeta && /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(liveMeta.getAttribute("content") || "") ? liveMeta.getAttribute("content") : null;
+    const canon = (v) => (v === null || typeof v !== "object" ? JSON.stringify(v) : Array.isArray(v) ? "[" + v.map(canon).join(",") + "]" : "{" + Object.keys(v).sort().filter((k) => v[k] !== undefined).map((k) => JSON.stringify(k) + ":" + canon(v[k])).join(",") + "}");
+    async function fastLane() {
+      if (!liveUrl || !window.TextEncoder) return;
+      const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 8000);
+      try {
+        const r = await fetch(liveUrl + "?since=" + current, { credentials: "omit", cache: "no-store", redirect: "follow", signal: ctl.signal });
+        if (!r.ok) return;
+        const d = await r.json();
+        if (!d || d.schema !== "patravana.live/1" || !Number.isInteger(d.revision) || d.revision <= current || !d.snapshot) return;
+        const s = d.snapshot;
+        if (s.schema !== "patravana.content/1" || s.generation !== d.revision || !s.content || typeof s.content !== "object") return;
+        if (hex(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(canon(s)))) !== d.contentHash) return;
+        if (s.generation > current) apply(s);
+      } catch (e) { /* the page keeps what it has; the regular checks carry on */ } finally { clearTimeout(to); }
+    }
+    fastLane();
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) schedule(0); });
+    window.addEventListener("online", () => schedule(0));
+    // first check once the page is in use; it never holds anything up
+    const start = () => schedule(1500);
+    if (document.readyState === "complete") start(); else window.addEventListener("load", start, { once: true });
+    window.PVContent = { get revision() { return current; }, get checks() { return checks; }, get delay() { return delay; } };
+  }
+
   /* ---------- film readout: add #diag to the address to see what is really being played ---------- */
   function initDiag() {
     if (!/^#diag/.test(location.hash)) return;
@@ -2310,6 +2435,7 @@
     Views.init();
     initOffers(); initHall(); initStay(); initRadius(); initMap(); initReel(); initDrawers(); initBooking(); initEnquiry(); initPet(); initCopy(); initClock(); initSky(); initDining(); initNight(); initLang(); initDiag(); onScroll();
     startMotion();
+    initContent();
     // A link that names a section (…/#pet-friendly): the browser goes there as the page is parsed, and once everything
     // above it has taken its final size the landing is squared up, unless the visitor has already started to scroll.
     // On a phone's destinations the destination does its own landing
