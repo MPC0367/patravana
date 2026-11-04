@@ -1,0 +1,17 @@
+{
+ "schema": "patravana.manifest/1",
+ "revision": 1,
+ "url": "content/r1.json",
+ "sha256": "e81c431079677c45ba26416a48343aa4134ae2ba6ab8e351d0823b7cf1ebb027",
+ "contentHash": "76808c63f6298bf1c9062845c2c087ba00690ac26a3247d7043034075511f121",
+ "publishedAt": "2026-11-04T16:54:54.307Z",
+ "rollbackOf": null,
+ "build": "4db245f7bb20-c1",
+ "html": {
+  "revision": 1,
+  "state": "deployed together with this manifest"
+ },
+ "nonces": [
+  "70c42ff854ed29ec1b1c902fbcb407e0"
+ ]
+}
