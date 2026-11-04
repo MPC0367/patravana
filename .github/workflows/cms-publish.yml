@@ -6,10 +6,9 @@
 # Written by export-pages.mjs from the studio's source (deploy/.github/workflows/cms-publish.yml): change it there.
 name: Publish content from the Sheet
 
+# Started by the Sheet publisher (workflow_dispatch on main), so it always runs this file as it is on main. It used to
+# start on pushes to cms-inbox too, which ran the older copy of this file kept on that branch and doubled every run.
 on:
-  push:
-    branches: [cms-inbox]
-    paths: ['inbox/snapshot.json']
   workflow_dispatch:
 
 permissions:

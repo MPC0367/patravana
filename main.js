@@ -2369,8 +2369,10 @@
     const liveMeta = $('meta[name="pv-live"]');
     const liveUrl = liveMeta && /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(liveMeta.getAttribute("content") || "") ? liveMeta.getAttribute("content") : null;
     const canon = (v) => (v === null || typeof v !== "object" ? JSON.stringify(v) : Array.isArray(v) ? "[" + v.map(canon).join(",") + "]" : "{" + Object.keys(v).sort().filter((k) => v[k] !== undefined).map((k) => JSON.stringify(k) + ":" + canon(v[k])).join(",") + "}");
+    let laneBusy = false;
     async function fastLane() {
-      if (!liveUrl || !window.TextEncoder) return;
+      if (!liveUrl || !window.TextEncoder || laneBusy) return;
+      laneBusy = true;
       const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 8000);
       try {
         const r = await fetch(liveUrl + "?since=" + current, { credentials: "omit", cache: "no-store", redirect: "follow", signal: ctl.signal });
@@ -2381,10 +2383,17 @@
         if (s.schema !== "patravana.content/1" || s.generation !== d.revision || !s.content || typeof s.content !== "object") return;
         if (hex(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(canon(s)))) !== d.contentHash) return;
         if (s.generation > current) apply(s);
-      } catch (e) { /* the page keeps what it has; the regular checks carry on */ } finally { clearTimeout(to); }
+      } catch (e) { /* the page keeps what it has; the regular checks carry on */ } finally { clearTimeout(to); laneBusy = false; }
     }
     fastLane();
-    document.addEventListener("visibilitychange", () => { if (!document.hidden) schedule(0); });
+    // an open page asks the fast lane again every 10 s while it is visible (for its first 30 minutes), and whenever it is
+    // shown again, so an edit in the Sheet reaches open pages in seconds without a refresh. The answer is a few bytes
+    // unless something newer exists.
+    if (liveUrl) {
+      const born = Date.now();
+      setInterval(() => { if (!document.hidden && navigator.onLine !== false && Date.now() - born < 1800000) fastLane(); }, 10000);
+    }
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) { schedule(0); fastLane(); } });
     window.addEventListener("online", () => schedule(0));
     // first check once the page is in use; it never holds anything up
     const start = () => schedule(1500);
