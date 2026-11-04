@@ -108,7 +108,7 @@ jobs:
           for i in $(seq 1 120); do
             got=$(curl -fsS "${SITE}content/manifest.json?check=$(date +%s%N)" | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{try{console.log(JSON.parse(s).revision)}catch(e){console.log(0)}})" || echo 0)
             if [ "$got" -ge "$want" ] 2>/dev/null; then
-              page=$(curl -fsS "${SITE}?check=$(date +%s%N)" | grep -o '<meta name="pv-content" content="[0-9]*"' | grep -o '[0-9]*$' || echo 0)
+              page=$(curl -fsS "${SITE}?check=$(date +%s%N)" | grep -o '<meta name="pv-content" content="[0-9]*' | grep -o '[0-9]*$' || echo 0)
               if [ "$page" -ge "$want" ] 2>/dev/null; then echo "live: manifest $got, page $page"; exit 0; fi
             fi
             sleep 5

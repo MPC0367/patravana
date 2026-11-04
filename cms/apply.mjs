@@ -112,8 +112,11 @@ export function page(html, lang, snap, d) {
 
 // the build's identity in each page: a machine-readable marker, never shown
 export function markers(html, build) {
-  const tag = '<meta name="pv-build" content="' + escAttr(build.buildId) + '">\n<meta name="pv-content" content="' + build.contentRevision + '">' + (build.liveUrl ? '\n<meta name="pv-live" content="' + escAttr(build.liveUrl) + '">' : '');
-  html = html.replace(/<meta name="pv-(?:build|content|live)"[^>]*>\s*/g, '');
+  // with a fast lane: open the connection to Google at once and ask for the newest text in the page's first milliseconds
+  // (main.js picks the answer up as window.PVLane), so a refresh shows a Sheet edit before the loading screen lifts
+  const lane = build.liveUrl ? '\n<link rel="preconnect" href="https://script.google.com" crossorigin data-pv-lane>\n<link rel="preconnect" href="https://script.googleusercontent.com" crossorigin data-pv-lane>\n<script data-pv-lane>window.fetch&&(window.PVLane=fetch(' + JSON.stringify(build.liveUrl + '?since=' + build.contentRevision) + ',{credentials:"omit",cache:"no-store",redirect:"follow"}).then(function(r){return r.ok?r.json():null}).catch(function(){return null}))</script>' : '';
+  const tag = '<meta name="pv-build" content="' + escAttr(build.buildId) + '">\n<meta name="pv-content" content="' + build.contentRevision + '">' + (build.liveUrl ? '\n<meta name="pv-live" content="' + escAttr(build.liveUrl) + '">' + lane : '');
+  html = html.replace(/<meta name="pv-(?:build|content|live)"[^>]*>\s*/g, '').replace(/<link rel="preconnect"[^>]*data-pv-lane>\s*/g, '').replace(/<script data-pv-lane>[\s\S]*?<\/script>\s*/g, '');
   if (!/<meta charset="utf-8">/i.test(html)) throw new Error('no charset meta to place the build marker after');
   return html.replace(/(<meta charset="utf-8">)/i, '$1\n' + tag);
 }

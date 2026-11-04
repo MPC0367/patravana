@@ -2369,15 +2369,19 @@
     const liveMeta = $('meta[name="pv-live"]');
     const liveUrl = liveMeta && /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(liveMeta.getAttribute("content") || "") ? liveMeta.getAttribute("content") : null;
     const canon = (v) => (v === null || typeof v !== "object" ? JSON.stringify(v) : Array.isArray(v) ? "[" + v.map(canon).join(",") + "]" : "{" + Object.keys(v).sort().filter((k) => v[k] !== undefined).map((k) => JSON.stringify(k) + ":" + canon(v[k])).join(",") + "}");
-    let laneBusy = false;
+    let laneBusy = false, early = window.PVLane || null;      // the request the page head started in its first milliseconds
     async function fastLane() {
       if (!liveUrl || !window.TextEncoder || laneBusy) return;
       laneBusy = true;
       const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 8000);
       try {
-        const r = await fetch(liveUrl + "?since=" + current, { credentials: "omit", cache: "no-store", redirect: "follow", signal: ctl.signal });
-        if (!r.ok) return;
-        const d = await r.json();
+        let d;
+        if (early) { d = await early; early = null; }
+        else {
+          const r = await fetch(liveUrl + "?since=" + current, { credentials: "omit", cache: "no-store", redirect: "follow", signal: ctl.signal });
+          if (!r.ok) return;
+          d = await r.json();
+        }
         if (!d || d.schema !== "patravana.live/1" || !Number.isInteger(d.revision) || d.revision <= current || !d.snapshot) return;
         const s = d.snapshot;
         if (s.schema !== "patravana.content/1" || s.generation !== d.revision || !s.content || typeof s.content !== "object") return;
@@ -2386,12 +2390,18 @@
       } catch (e) { /* the page keeps what it has; the regular checks carry on */ } finally { clearTimeout(to); laneBusy = false; }
     }
     fastLane();
-    // an open page asks the fast lane again every 10 s while it is visible (for its first 30 minutes), and whenever it is
-    // shown again, so an edit in the Sheet reaches open pages in seconds without a refresh. The answer is a few bytes
+    // an open page asks the fast lane again while it is visible: every 4 s for its first 5 minutes (someone editing and
+    // watching), then every 15 s up to 30 minutes, and at once whenever it is shown again. The answer is a few bytes
     // unless something newer exists.
     if (liveUrl) {
       const born = Date.now();
-      setInterval(() => { if (!document.hidden && navigator.onLine !== false && Date.now() - born < 1800000) fastLane(); }, 10000);
+      const again = () => {
+        const age = Date.now() - born;
+        if (age > 1800000) return;
+        if (!document.hidden && navigator.onLine !== false) fastLane();
+        setTimeout(again, age < 300000 ? 4000 : 15000);
+      };
+      setTimeout(again, 4000);
     }
     document.addEventListener("visibilitychange", () => { if (!document.hidden) { schedule(0); fastLane(); } });
     window.addEventListener("online", () => schedule(0));
