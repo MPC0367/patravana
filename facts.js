@@ -1,4 +1,4 @@
-/* PATRAVANA v2, operational facts. Written by cms/apply.mjs from content revision 21 (the Patravana Website Content sheet): edit the Sheet, not this file. */
+/* PATRAVANA v2, operational facts. Written by cms/apply.mjs from content revision 22 (the Patravana Website Content sheet): edit the Sheet, not this file. */
 window.PV_FACTS = {
  "reviewed": "2026-10-12",
  "contact": {
@@ -212,20 +212,20 @@ window.PV_FACTS = {
    "th": "ตรวจสอบล่าสุดเมื่อ {pet.reviewed}"
   },
   "hall.fac": {
-   "en": "{hall.area} m², nearby and off the resort grounds, divisible into two rooms, with stage, sound and a dressing room. Up to {hall.theatre.full} guests in theatre rows, full hall.",
-   "th": "{hall.area} ตร.ม. อยู่ใกล้รีสอร์ท นอกพื้นที่รีสอร์ท แบ่งเป็นสองห้องได้ พร้อมเวที เครื่องเสียง และห้องแต่งตัว รองรับสูงสุด {hall.theatre.full} ท่านแบบเธียเตอร์ เมื่อใช้เต็มห้อง"
+   "en": "{hall.name}: {hall.area} m², nearby and off the resort grounds, divisible into two rooms, with a stage at each end, audio-visual equipment and a private dressing room. Up to {hall.theatre.full} guests in theatre rows, full hall.",
+   "th": "{hall.name} พื้นที่ {hall.area} ตร.ม. อยู่ใกล้รีสอร์ท นอกพื้นที่รีสอร์ท แบ่งเป็นสองห้องได้ มีเวทีทั้งสองฝั่ง อุปกรณ์เครื่องเสียงและภาพ และห้องแต่งตัวส่วนตัว รองรับสูงสุด {hall.theatre.full} ท่านแบบเธียเตอร์ เมื่อใช้เต็มห้อง"
   },
   "hall.note": {
-   "en": "An outdoor amphitheatre over the lake, and a {hall.area} m² seminar hall nearby, off the resort grounds, that divides into two rooms.",
-   "th": "อัฒจันทร์กลางแจ้งเหนือบึงน้ำ และห้องสัมมนา {hall.area} ตร.ม. ที่อยู่ใกล้รีสอร์ท นอกพื้นที่รีสอร์ท ซึ่งแบ่งเป็นสองห้องได้"
+   "en": "An outdoor amphitheatre over the lake, and {hall.name}, a {hall.area} m² seminar hall nearby, off the resort grounds, that divides into two rooms.",
+   "th": "อัฒจันทร์กลางแจ้งเหนือบึงน้ำ และ{hall.name} ห้องสัมมนาขนาด {hall.area} ตร.ม. ที่อยู่ใกล้รีสอร์ท นอกพื้นที่รีสอร์ท ซึ่งแบ่งเป็นสองห้องได้"
   },
   "hall.know": {
    "en": "A nearby offsite seminar hall for up to {hall.theatre.full} guests in theatre rows. Send a group enquiry for dates and a quote.",
    "th": "ห้องสัมมนาอยู่ใกล้รีสอร์ท นอกพื้นที่รีสอร์ท รองรับสูงสุด {hall.theatre.full} ท่านแบบเธียเตอร์ ส่งคำขอแบบหมู่คณะเพื่อสอบถามวันและราคา"
   },
   "hall.faq": {
-   "en": "Yes. The seminar hall is offsite, close to the resort: {hall.area} m², dividing into two rooms. With the full hall it takes {hall.theatre.full} guests in theatre rows, {hall.classroom.full} in classroom rows, {hall.banquet.full} for a banquet and {hall.ushape.full} in a U-shape.",
-   "th": "ได้ ห้องสัมมนาอยู่นอกพื้นที่รีสอร์ท ใกล้กับรีสอร์ท มีพื้นที่ {hall.area} ตร.ม. และแบ่งเป็นสองห้องได้ เมื่อใช้เต็มห้องรองรับ {hall.theatre.full} ท่านแบบเธียเตอร์ {hall.classroom.full} ท่านแบบคลาสรูม {hall.banquet.full} ท่านแบบโต๊ะจีน และ {hall.ushape.full} ท่านแบบตัวยู"
+   "en": "Yes. The seminar hall, {hall.name}, is offsite, close to the resort: {hall.area} m², drawn as {hall.size.full} m, dividing into room A ({hall.size.halfA} m) and room B ({hall.size.halfB} m). With the full hall it takes {hall.theatre.full} guests in theatre rows, {hall.classroom.full} in classroom rows, {hall.banquet.full} for a banquet at {hall.banquet.tables} round tables and {hall.ushape.full} in a U-shape.",
+   "th": "ได้ ห้องสัมมนา{hall.name}อยู่นอกพื้นที่รีสอร์ท ใกล้กับรีสอร์ท มีพื้นที่ {hall.area} ตร.ม. ตามแบบแปลนขนาด {hall.size.full} ม. แบ่งเป็นห้อง A ({hall.size.halfA} ม.) และห้อง B ({hall.size.halfB} ม.) ได้ เมื่อใช้เต็มห้องรองรับ {hall.theatre.full} ท่านแบบเธียเตอร์ {hall.classroom.full} ท่านแบบคลาสรูม {hall.banquet.full} ท่านแบบโต๊ะจีน {hall.banquet.tables} โต๊ะ และ {hall.ushape.full} ท่านแบบตัวยู"
   },
   "hall.stat": {
    "en": "of seminar hall nearby, offsite, up to {hall.theatre.full} guests",

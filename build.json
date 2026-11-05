@@ -1,32 +1,18 @@
 {
  "about": "What this build of the Patravana website is. Public and machine-readable: no paths, credentials or private details.",
  "schema": "patravana.build/1",
- "buildId": "e643d3a74c0f-c21",
+ "buildId": "e643d3a74c0f-c22",
  "mode": "preview",
  "sourceRevision": "e643d3a74c0f",
- "contentRevision": 21,
- "contentHash": "d0b23d03fb55b1c2a430b5083f02ffb1f955e17559612ee7b05ca55086215a6d",
+ "contentRevision": 22,
+ "contentHash": "8d4f270c3dde2c08cef0d41227a1bbc08b7302a63dec63b486b696b5e75feba6",
  "contentSchema": "patravana.content/1",
- "registryVersion": "17d6d23cd768",
- "builtAt": "2026-11-05T19:08:09.963Z",
+ "registryVersion": "47c5f2e23773",
+ "builtAt": "2026-11-05T19:09:45.588Z",
  "liveUrl": "https://script.google.com/macros/s/AKfycbzUB0wwKaD7KskTFDWAxMB_kcaBExYeVBPkADWCVvrliZ0Tt8rdQpBARE51c_UGg0Pj/exec",
- "newerThanContent": [
-  "stay.tabs",
-  "stay.tabname.vana",
-  "stay.tab.vana",
-  "stay.tabname.patra",
-  "stay.tab.patra",
-  "stay.tabname.junior",
-  "stay.tab.junior",
-  "stay.c.livingv",
-  "stay.c.living",
-  "stay.c.openv",
-  "stay.c.open",
-  "gather.size",
-  "gather.tables"
- ],
+ "newerThanContent": [],
  "pages": {
-  "index.html": "73852dbd5b1d7e7c0feb4bb7056780e144eb7d89f88f56ddfa0db593ee0077b7",
-  "th.html": "2b44279b4152ddffb032f25e5a7d34c4147e863061708b0d04b8d6d9c0bbbdba"
+  "index.html": "d5bbf17ab44c828b5fb38e12ad53fa1e6a2fb615b2e9112ab3fc36074f4fc92c",
+  "th.html": "c4815e11f6762aa7c253a22ad906454fdd9f17fe55accfaef32f69d470e7ed23"
  }
 }
