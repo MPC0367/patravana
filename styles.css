@@ -1666,3 +1666,97 @@ body.has-overlay .fab__top, body.has-overlay .fab__book { opacity: 0; visibility
 .gfx canvas { display: block; width: 100%; height: 100%; filter: blur(16px); transform: scale(1.06); }   /* the stretched field, softened (scaled so the blur keeps the edges filled) */
 /* the dither: noise of a level or two over the green, at screen resolution, so the slow gradient shows no bands (main.js) */
 .gfx::after { content: ""; position: absolute; inset: 0; background-image: var(--pv-dither, none); background-size: 128px 128px; opacity: .022; pointer-events: none; }
+
+/* ===== Phase 4 (5 November 2026): on a phone, one suite at a time from a strip under the header, its photographs
+   first; longer descriptions fold under "Read more". Wider screens are untouched: every rule here needs html.has-rtabs
+   or html.pv-phone, which main.js (and the page's head, for pv-phone) set only for the phone's own test (VIEW_Q). ===== */
+.rtabs[hidden], .rname[hidden] { display: none !important; }
+.rname, .acc__copy > .rg__nav, p.views--one, .chips li.chips__ph, .stay-after { display: none; }
+html.has-rtabs .rtabs {
+  position: sticky; top: var(--pv-top, 46px); z-index: 70;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .3rem;
+  margin: 0 calc(-1 * var(--pad)) .8rem; padding: .15rem var(--pad);
+  background: var(--ivory); border-bottom: 1px solid var(--line);
+  box-shadow: 0 12px 18px -18px rgba(37, 39, 36, .45);
+}
+.rtabs__tab {
+  position: relative; min-height: 44px; padding: .3rem .35rem; display: grid; place-items: center; text-align: center;
+  border-radius: 999px; border: 1px solid transparent; color: var(--muted); font-size: .98rem; line-height: 1.2;
+  transition: background-color .18s, color .18s, border-color .18s;
+}
+html[lang="th"] .rtabs__tab { line-height: 1.45; }
+.rtabs__tab[aria-selected="true"] { background: var(--forest); color: var(--ivory); font-weight: 600; }
+.rtabs__tab[aria-selected="false"]:active { border-color: var(--line-2); background: var(--panel); }
+@media (hover: hover) { .rtabs__tab[aria-selected="false"]:hover { color: var(--forest); border-color: var(--line-2); } }
+.rtabs__tab:focus-visible { outline: 2px solid var(--forest); outline-offset: 3px; }
+/* the chosen suite: no accordion around it, nothing of the others in the page */
+html.has-rtabs .acc { border-top: 0; }
+html.has-rtabs .acc__item { border-bottom: 0; }
+html.has-rtabs .acc__item.is-off, html.has-rtabs .acc__head { display: none; }
+html.js.has-rtabs .acc__panel { height: auto !important; overflow: visible; }
+html.has-rtabs .acc__grid { padding: 0 0 1.4rem; }
+html.has-rtabs .acc__copy { gap: .85rem; color: var(--muted); }
+html.has-rtabs .rname { display: block; }
+.rname__h { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .65rem; font-family: var(--f-display); font-weight: 500; font-size: clamp(1.45rem, 6.4vw, 1.8rem); line-height: 1.15; letter-spacing: var(--ls-display); color: var(--charcoal); }
+.rname__th { font-family: "Prompt", sans-serif; font-weight: 300; font-size: .95rem; letter-spacing: 0; color: var(--forest); }
+.rname__meta { margin: .2rem 0 0; font-size: .88rem; line-height: 1.4; color: var(--muted); }
+html.has-rtabs .rg__shot { flex-basis: 100%; }
+html.has-rtabs .acc__copy > .rg__nav { display: flex; align-items: center; justify-content: space-between; gap: .75rem; width: 100%; margin-top: -.35rem; }
+.rg__step { width: 44px; height: 44px; }
+.rg__step svg { width: 16px; height: 16px; }
+.rg__count { font-size: .86rem; color: var(--muted); letter-spacing: .04em; }
+.rg__count b { color: var(--charcoal); font-weight: 600; }
+.rg__shot { position: relative; }
+.rg__shot.is-broken img { visibility: hidden; }
+.rg__broken { position: absolute; inset: 0; display: grid; place-items: center; padding: 1rem; text-align: center; font-size: .86rem; color: var(--muted); }
+html.has-rtabs p.views--one, html.has-rtabs .chips li.chips__ph { display: flex; }
+.views--one { margin: 0; }
+.chip--still { cursor: default; display: inline-flex; align-items: center; min-height: 40px; padding: .4rem 1rem; background: var(--forest); color: var(--ivory); border-color: var(--forest); }
+/* the Stay introduction on a phone: its heading stays for screen readers, its actions and note come after the suites */
+html.has-rtabs #stay .chapter__num, html.has-rtabs #stay .chapter__kicker { display: none; }
+html.has-rtabs #stay .chapter__title { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+html.has-rtabs #stay { row-gap: 0; }
+html.has-rtabs #stay .chapter__side { gap: 0; }
+html.has-rtabs .stay-after { display: flex; flex-direction: column; align-items: flex-start; gap: .7rem; padding-top: 1.15rem; border-top: 1px solid var(--line); }
+html.has-rtabs .stay-after .chapter__acts, html.has-rtabs .stay-after .textlink--map { margin-top: 0; }
+html.has-rtabs .stay-after .chapter__note { max-width: 60ch; }
+/* places a link or the keyboard lands on, clear of the header, the suite strip and the bottom bar */
+html.js.pv-phone { scroll-padding-top: calc(var(--pv-top, 46px) + var(--pv-rtabs, 0px) + .5rem); scroll-padding-bottom: calc(4.8rem + env(safe-area-inset-bottom, 0px)); }
+
+/* "Read more": a button just above the text it opens; the text is in the page for everyone, folded on a phone only */
+.more__btn { display: none; }
+html.js.pv-phone .more__btn {
+  display: inline-flex; align-items: center; gap: .55rem; min-height: 44px; padding: .25rem 0; text-align: left;
+  color: var(--forest); font-size: .92rem; font-weight: 500;
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .25em;
+}
+section[data-dark] .more__btn, footer[data-dark] .more__btn, [data-dark] .more__btn { color: var(--ivory); }
+.more__ic { width: 12px; height: 12px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+.more__btn[aria-expanded="true"] .more__v { display: none; }
+.more__btn:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 4px; }
+html.js.pv-phone [data-more]:not(.is-open), html.js.pv-phone [data-more-part]:not(.is-open) { display: none !important; }
+@media print { [data-more], [data-more-part] { display: revert !important; } .more__btn, .rtabs { display: none !important; } }
+html.js.pv-views.has-rtabs[data-view="stay"] #stay { padding-top: .5rem; }
+/* larger text on a phone (Phase 4, P4-Q29): the top bar may take a second line rather than push the language switch
+   and the menu off the screen; at normal sizes everything fits on one line and nothing changes. Tab labels may break
+   inside a long word rather than be cut off; the strip grows and its measured height follows (--pv-rtabs) */
+html.pv-phone .top { flex-wrap: wrap; row-gap: .2rem; }
+html.pv-phone .top__right { margin-left: auto; flex-wrap: wrap; justify-content: flex-end; min-width: 0; }
+.rtabs__tab span { overflow-wrap: anywhere; min-width: 0; }
+/* the same for three long items that could push the page sideways at large text sizes: the email address, the pet
+   heading's accent phrase and the brand. At normal sizes they fit and read exactly as before (measured, Phase 4) */
+html.pv-phone a[href^="mailto:"] { overflow-wrap: anywhere; }
+html.pv-phone .petsec__title .it { white-space: normal; }
+html.pv-phone .brand, html.pv-phone .brand__text { min-width: 0; }
+html.pv-phone .brand__text { overflow-wrap: anywhere; }
+
+/* Patra Hall's drawing, redrawn from the resort's floor plans (6 November 2026): the stages at both ends, the line
+   between rooms A and B, the doors and the measurements */
+.hall__svg .h-room { rx: 3; }
+.hall__svg .h-split { stroke: var(--earth); stroke-width: .8; stroke-dasharray: 3 2.5; opacity: .7; }
+.hall__svg .h-door { fill: var(--charcoal); opacity: .75; }
+.hall__svg .h-stagetxt { fill: var(--ivory); font-size: 8px; letter-spacing: .1em; text-anchor: middle; text-transform: uppercase; font-family: inherit; }
+html[lang="th"] .hall__svg .h-stagetxt { letter-spacing: 0; text-transform: none; font-size: 8.6px; }
+.hall__svg .h-dimline { fill: none; stroke: var(--muted); stroke-width: .7; }
+.hall__svg .h-dim, .hall__svg .h-room-k { fill: var(--muted); font-size: 11px; text-anchor: middle; font-family: inherit; font-variant-numeric: tabular-nums; }
+.hall__svg .h-room-k { fill: var(--charcoal); font-size: 11.5px; font-weight: 500; }

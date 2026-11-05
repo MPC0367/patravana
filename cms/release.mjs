@@ -4,7 +4,7 @@
 // is the same page.
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { dictionaries, serialise, page, markers, enScript, PVCMS } from './apply.mjs';
+import { dictionaries, serialise, page, head, markers, enScript, PVCMS } from './apply.mjs';
 
 const md5 = (s) => createHash('md5').update(s).digest('hex').slice(0, 8);
 const STAMPED = ['facts.js', 'i18n.js', 'i18n-en.js'];
@@ -32,8 +32,9 @@ export function applyRelease(dir, snap, build) {
   const files = {}; let newerKeys = [];
   if (snap) {
     const d = dictionaries(read('i18n.js'), read('facts.js'), snap, { production: build.mode === 'production' });
-    const pe = page(en, 'en', snap, d), pt = page(th, 'th', snap, d);
-    en = pe.html; th = pt.html;
+    const pe = page(en, 'en', snap, d), pt = page(th, 'th', snap, d), prod = build.mode === 'production';
+    // the raw page's head follows the Sheet too (title, description, link previews, lodging data): Phase 4
+    en = head(pe.html, 'en', d, snap, prod); th = head(pt.html, 'th', d, snap, prod);
     Object.assign(files, serialise(d, snap.generation));
     // the Thai page's English (for a switch to English there): every key it uses, from the snapshot
     // texts newer than the publication keep the English the page was built with

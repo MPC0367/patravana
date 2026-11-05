@@ -110,11 +110,47 @@ export function page(html, lang, snap, d) {
   return { html: out, en, newer: [...newer] };
 }
 
+/* The page's head from the same dictionaries (Phase 4, 5 November 2026): the title, the description, the link-preview
+   title, description and photo description, and the description inside the lodging data, so a search engine or a link
+   preview reading the raw page (no script) sees what the Sheet holds. In production the titles come from the SEO tab
+   (dictionaries() has already put them in docTitle and docDesc); the preview keeps its own. Only tags already in the
+   page are changed; nothing is added. */
+export function head(html, lang, d, snap, production) {
+  const pick = (o) => (o ? o[lang] || o.en : null);
+  const title = pick(d.JS.docTitle), desc = pick(d.JS.docDesc);
+  const alt = production && snap && snap.content['seo.socialAlt'] ? pick(snap.content['seo.socialAlt']) : null;
+  const escText = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const meta = (h, attr, name, v) => (v == null ? h : h.replace(new RegExp('(<meta ' + attr + '="' + name.replace(/[.:]/g, '\\$&') + '" content=")[^"]*(")', 'g'), (m, a, b) => a + escAttr(v) + b));
+  if (title != null) {
+    html = html.replace(/<title>[^<]*<\/title>/, () => '<title>' + escText(title) + '</title>');
+    // the link-preview title is the production page's own; the preview page has none
+    html = meta(meta(html, 'property', 'og:title', production ? title : null), 'name', 'twitter:title', production ? title : null);
+  }
+  if (desc != null) {
+    html = meta(html, 'name', 'description', desc);
+    if (production) html = meta(meta(html, 'property', 'og:description', desc), 'name', 'twitter:description', desc);
+  }
+  if (alt != null) html = meta(meta(html, 'property', 'og:image:alt', alt), 'name', 'twitter:image:alt', alt);
+  if (production && desc != null) {
+    html = html.replace(/(<script type="application\/ld\+json">)([\s\S]*?)(<\/script>)/g, (m, a, j, c) => {
+      // the hotel's own description, where the lodging data has one (top level, or the Hotel node of an @graph)
+      try {
+        const o = JSON.parse(j), nodes = o && Array.isArray(o['@graph']) ? o['@graph'] : [o]; let n = 0;
+        nodes.forEach((x) => { if (x && typeof x.description === 'string' && /Hotel|LodgingBusiness|Resort/.test(String(x['@type'])) && x.description !== desc) { x.description = desc; n++; } });
+        if (n) return a + JSON.stringify(o).replace(/</g, '\\u003c') + c;
+      } catch (e) { /* left as written */ }
+      return m;
+    });
+  }
+  return html;
+}
+
 // the build's identity in each page: a machine-readable marker, never shown
 export function markers(html, build) {
-  // with a fast lane: open the connection to Google at once and ask for the newest text in the page's first milliseconds
-  // (main.js picks the answer up as window.PVLane), so a refresh shows a Sheet edit before the loading screen lifts
-  const lane = build.liveUrl ? '\n<link rel="preconnect" href="https://script.google.com" crossorigin data-pv-lane>\n<link rel="preconnect" href="https://script.googleusercontent.com" crossorigin data-pv-lane>\n<script data-pv-lane>window.fetch&&(window.PVLane=fetch(' + JSON.stringify(build.liveUrl + '?since=' + build.contentRevision) + ',{credentials:"omit",cache:"no-store",redirect:"follow"}).then(function(r){return r.ok?r.json():null}).catch(function(){return null}))</script>' : '';
+  // with a fast lane: only the editor's view (an address with ?live, opened from the Sheet) asks Google for the newest
+  // text, in the page's first milliseconds (main.js picks the answer up as window.PVLane). Every other visitor makes no
+  // request to Google at all and reads the site's own content manifest (Phase 4, 5 November 2026)
+  const lane = build.liveUrl ? '\n<script data-pv-lane>/[?&]live(=|&|$)/.test(location.search)&&window.fetch&&(window.PVLane=fetch(' + JSON.stringify(build.liveUrl + '?since=' + build.contentRevision) + ',{credentials:"omit",cache:"no-store",redirect:"follow"}).then(function(r){return r.ok?r.json():null}).catch(function(){return null}))</script>' : '';
   const tag = '<meta name="pv-build" content="' + escAttr(build.buildId) + '">\n<meta name="pv-content" content="' + build.contentRevision + '">' + (build.liveUrl ? '\n<meta name="pv-live" content="' + escAttr(build.liveUrl) + '">' + lane : '');
   html = html.replace(/<meta name="pv-(?:build|content|live)"[^>]*>\s*/g, '').replace(/<link rel="preconnect"[^>]*data-pv-lane>\s*/g, '').replace(/<script data-pv-lane>[\s\S]*?<\/script>\s*/g, '');
   if (!/<meta charset="utf-8">/i.test(html)) throw new Error('no charset meta to place the build marker after');

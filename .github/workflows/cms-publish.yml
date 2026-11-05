@@ -1,13 +1,15 @@
-# Publishes the Patravana Website Content sheet (Phase 3, 4 November 2026).
+# Publishes the Patravana Website Content sheet (Phase 3, 4 November 2026; states made truthful in Phase 4, 5 November).
 # The Sheet publisher (Google Apps Script) writes each validated snapshot to inbox/snapshot.json on the cms-inbox branch.
 # This workflow checks it, builds the English and Thai pages from it, commits the release to main, asks GitHub Pages to
-# deploy it and writes the outcome to inbox/result.json for the Sheet to read. A second job then watches the live site;
-# it holds no lock, so the next edit from the Sheet builds at once instead of waiting for GitHub Pages (5 Nov 2026).
+# deploy it and writes the outcome to inbox/result.json for the Sheet to read. A second job then watches the live site
+# and only it may say "live-verified": the manifest, the English page and the Thai page must all carry this revision and
+# this build. It holds no lock, so the next edit from the Sheet builds at once instead of waiting for GitHub Pages.
+# States written to result.json: rejected, duplicate, superseded (from the build), failed, deploying (committed, waiting
+# for Pages), live-verified, timed-out (not seen live in time: neither a success nor proof that it failed).
 # Written by export-pages.mjs from the studio's source (deploy/.github/workflows/cms-publish.yml): change it there.
 name: Publish content from the Sheet
 
-# Started by the Sheet publisher (workflow_dispatch on main), so it always runs this file as it is on main. It used to
-# start on pushes to cms-inbox too, which ran the older copy of this file kept on that branch and doubled every run.
+# Started by the Sheet publisher (workflow_dispatch on main), so it always runs this file as it is on main.
 on:
   workflow_dispatch:
 
@@ -24,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
-      changed: ${{ steps.build.outputs.changed }}
+      committed: ${{ steps.commit.outputs.committed }}
       generation: ${{ steps.build.outputs.generation }}
     env:
       SITE: https://mpc0367.github.io/patravana/
@@ -53,21 +55,35 @@ jobs:
         id: build
         run: node cms/build.mjs "$RUNNER_TEMP/inbox.json" "$RUNNER_TEMP/result.json"
 
+      # If main moved on meanwhile (a newer site version), the release is built again on top of it from the same
+      # snapshot, never rebased: generated pages are not merged over newer source. Three refusals in a row fail the job.
       - name: Commit the release to the site
+        id: commit
         if: steps.build.outputs.changed == 'true'
         run: |
           git config user.name "Patravana content publisher"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A content index.html th.html i18n.js i18n-en.js facts.js build.json
-          git commit -q -m "Content revision ${{ steps.build.outputs.generation }} from the Sheet"
+          gen="${{ steps.build.outputs.generation }}"; done=no
           for i in 1 2 3; do
-            if git push -q origin HEAD:main; then break; fi
-            echo "main moved on: rebasing and trying again"; git pull -q --rebase origin main
+            git add -A content index.html th.html i18n.js i18n-en.js facts.js build.json
+            git commit -q -m "Content revision $gen from the Sheet"
+            if git push -q origin HEAD:main; then done=yes; break; fi
+            echo "main moved on (attempt $i): building revision $gen again on the newest site"
+            git fetch -q --depth 1 origin main && git reset -q --hard origin/main
+            node cms/build.mjs "$RUNNER_TEMP/inbox.json" "$RUNNER_TEMP/result.json" > /dev/null || true
+            st=$(node -e "console.log(JSON.parse(require('fs').readFileSync(process.argv[1],'utf8')).status)" "$RUNNER_TEMP/result.json")
+            if [ "$st" != "built" ]; then echo "after rebuilding, the snapshot is $st: nothing to commit"; done=$st; break; fi
           done
-          echo "COMMITTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+          if [ "$done" = "yes" ]; then
+            echo "committed=true" >> "$GITHUB_OUTPUT"; echo "COMMITTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+          elif [ "$done" = "no" ]; then
+            echo "::error::revision $gen could not be pushed after 3 attempts; the live site keeps its current version"; exit 1
+          else
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Ask GitHub Pages to deploy it
-        if: steps.build.outputs.changed == 'true'
+        if: steps.commit.outputs.committed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh api -X POST "repos/${{ github.repository }}/pages/builds" --silent || echo "Pages build request not accepted (a push build may already be running)"
@@ -77,13 +93,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           OUTCOME: ${{ job.status }}
+          COMMITTED: ${{ steps.commit.outputs.committed }}
         run: |
           f="$RUNNER_TEMP/result.json"; [ -f "$f" ] || echo '{"status":"failed","problems":["the build did not run"]}' > "$f"
           node -e "
             const fs=require('fs'); const r=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));
             r.run=process.env.GITHUB_RUN_ID; r.outcome=process.env.OUTCOME;
             r.timings={ receivedAt:process.env.RECEIVED_AT||null, committedAt:process.env.COMMITTED_AT||null };
-            if (r.status==='built') r.status = 'deployed, the Sheet confirms it live';
+            if (process.env.OUTCOME!=='success') { r.status='failed'; (r.problems=r.problems||[]).push('the publication job stopped before the release reached the site; the live site keeps its current version'); }
+            else if (process.env.COMMITTED==='true') r.status='deploying';
             fs.writeFileSync(process.argv[1], JSON.stringify(r,null,1));" "$f"
           sha=$(gh api "repos/${{ github.repository }}/contents/inbox/result.json?ref=cms-inbox" --jq .sha 2>/dev/null || echo "")
           args=(-X PUT "repos/${{ github.repository }}/contents/inbox/result.json" -f message="Publication result" -f branch=cms-inbox -f content="$(base64 -w0 "$f")")
@@ -91,26 +109,52 @@ jobs:
           gh api "${args[@]}" --silent
           cat "$f" >> "$GITHUB_STEP_SUMMARY"
 
-  # watches the live site after a build; no lock, so it never delays the next publication
+  # Watches the live site after a commit; no lock, so it never delays the next publication. Only this job says
+  # live-verified, after reading the manifest, the English page and the Thai page back from the site.
   confirm:
     needs: publish
-    if: needs.publish.outputs.changed == 'true'
+    if: needs.publish.outputs.committed == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 13
     env:
       SITE: https://mpc0367.github.io/patravana/
     steps:
-      # GitHub Pages can take longer than usual to serve a new deployment (its own incidents); the release is already
-      # committed and deployed by then, so a slow edge is reported, not treated as a failed publication
-      - name: Wait until the live site serves this revision
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+          sparse-checkout: |
+            cms
+          sparse-checkout-cone-mode: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Read the revision back from the live site (manifest, English page, Thai page)
+        id: watch
         run: |
-          want=${{ needs.publish.outputs.generation }}
+          want=${{ needs.publish.outputs.generation }}; res='{}'
           for i in $(seq 1 120); do
-            got=$(curl -fsS "${SITE}content/manifest.json?check=$(date +%s%N)" | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{try{console.log(JSON.parse(s).revision)}catch(e){console.log(0)}})" || echo 0)
-            if [ "$got" -ge "$want" ] 2>/dev/null; then
-              page=$(curl -fsS "${SITE}?check=$(date +%s%N)" | grep -o '<meta name="pv-content" content="[0-9]*' | grep -o '[0-9]*$' || echo 0)
-              if [ "$page" -ge "$want" ] 2>/dev/null; then echo "live: manifest $got, page $page"; exit 0; fi
-            fi
+            res=$(node cms/readback.mjs "$SITE" "$want")
+            if echo "$res" | grep -q '"ok":true'; then echo "live: $res"; echo "state=live-verified" >> "$GITHUB_OUTPUT"; echo "readback=$res" >> "$GITHUB_OUTPUT"; exit 0; fi
             sleep 5
           done
-          echo "the live site did not show revision $want within 10 minutes (GitHub Pages slow); the release is deployed and the Sheet keeps checking"; exit 0
+          echo "last read: $res"
+          echo "state=timed-out" >> "$GITHUB_OUTPUT"; echo "readback=$res" >> "$GITHUB_OUTPUT"
+      - name: Report the live state to the Sheet
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STATE: ${{ steps.watch.outputs.state || 'timed-out' }}
+          READBACK: ${{ steps.watch.outputs.readback }}
+        run: |
+          want=${{ needs.publish.outputs.generation }}
+          gh api "repos/${{ github.repository }}/contents/inbox/result.json?ref=cms-inbox" > "$RUNNER_TEMP/cur.json" 2>/dev/null || echo "{}" > "$RUNNER_TEMP/cur.json"
+          node cms/readback.mjs --record "$RUNNER_TEMP/cur.json" "$want" "$RUNNER_TEMP/live.json"
+          if [ -f "$RUNNER_TEMP/live.json" ]; then
+            sha=$(node -e "try{console.log(JSON.parse(require('fs').readFileSync(process.argv[1],'utf8')).sha||'')}catch(e){console.log('')}" "$RUNNER_TEMP/cur.json")
+            args=(-X PUT "repos/${{ github.repository }}/contents/inbox/result.json" -f message="Live check" -f branch=cms-inbox -f content="$(base64 -w0 "$RUNNER_TEMP/live.json")")
+            [ -n "$sha" ] && args+=(-f sha="$sha")
+            gh api "${args[@]}" --silent || echo "result not written (a newer result arrived meanwhile)"
+            cat "$RUNNER_TEMP/live.json" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          [ "$STATE" = "live-verified" ] || { echo "::error::revision $want was not seen live within 10 minutes; GitHub Pages may still finish"; exit 1; }

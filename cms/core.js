@@ -57,6 +57,11 @@ var PVCMS = (function () {
     return "{" + Object.keys(v).sort().filter(function (k) { return v[k] !== undefined; }).map(function (k) { return JSON.stringify(k) + ":" + canonical(v[k]); }).join(",") + "}";
   }
 
+  function realDay(s) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ""); if (!m) return false;
+    var y = +m[1], mo = +m[2] - 1, d = +m[3], dt = new Date(Date.UTC(y, mo, d));
+    return y >= 2020 && y <= 2100 && dt.getUTCFullYear() === y && dt.getUTCMonth() === mo && dt.getUTCDate() === d;
+  }
   /* Checks one value against its field. Returns a list of plain-language problems, each ready for the Sheet. */
   function checkValue(field, lang, raw) {
     var p = [], L = lang === "th" ? "Thai" : "English", t = field.type;
@@ -68,7 +73,9 @@ var PVCMS = (function () {
     }
     if (t === "time") { if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(str(raw).trim())) p.push("must be a time like 07:00 (24-hour, resort time)"); return p; }
     if (t === "days") { if (!/^[0-6](,[0-6])*$/.test(str(raw).replace(/\s/g, ""))) p.push("must be days as numbers 0 to 6 (0 is Sunday), for example 0,3,4,5,6"); return p; }
-    if (t === "date") { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(str(raw).trim()); if (!m || new Date(Date.UTC(+m[1], +m[2] - 1, +m[3])).getUTCDate() !== +m[3]) p.push("must be a real date written 2026-11-04"); return p; }
+    // a real calendar day: year, month and day must all come back unchanged (2026-13-01 and 2026-02-30 are refused,
+    // 29 February only in a leap year), between 2020 and 2100 (Phase 4, 5 November 2026)
+    if (t === "date") { if (!realDay(str(raw).trim())) p.push("must be a real date written 2026-11-04"); return p; }
     var v = t === "message" ? lines(raw) : oneLine(raw);
     if (!v) { if (field.required !== false) p.push(L + " is empty"); return p; }
     if (/[<>]/.test(v)) p.push(L + ": < and > are not allowed (no HTML in cells)");
@@ -209,7 +216,12 @@ var PVCMS = (function () {
     var p = path.split(".");
     if (path === "reviewed") return longDate(FX.reviewed, lang);
     if (path === "pet.reviewed") return longDate(FX.pet.lastReviewedAt, lang);
-    if (p[0] === "hall") { if (p[1] === "area") return hall.areaSqm; var l = lay(p[1]); return l ? l[p[2]] : null; }
+    if (p[0] === "hall") {
+      if (p[1] === "area") return hall.areaSqm;
+      if (p[1] === "size") return hall.size && hall.size[p[2]] != null ? hall.size[p[2]] : null;          // the floor plan's measurements (sales kit)
+      if (p[1] === "name") return hall.name ? hall.name[lang] || hall.name.en : null;                     // Patra Hall
+      var l = lay(p[1]); return l ? l[p[2]] : null;
+    }
     if (p[0] === "dining") { if (p[1] === "seats") return FX.dining.seats; var sv = FX.dining[p[1]]; return sv && sv[p[2]] ? clock(sv[p[2]]) : null; }
     if (path === "contact.phone.show") return FX.contact.phone.show;
     if (path === "contact.phone.local") return FX.contact.phone.local;

@@ -88,6 +88,19 @@ window.PV_FACTS = {
  },
  "hall": {
   "areaSqm": 280,
+  "name": {
+   "en": "Patra Hall",
+   "th": "ภัทรา ฮอลล์"
+  },
+  "size": {
+   "full": "30 × 10.40",
+   "halfA": "12.35 × 10.40",
+   "halfB": "14.15 × 10.40",
+   "length": "30",
+   "depth": "10.40",
+   "widthA": "12.35",
+   "widthB": "14.15"
+  },
   "layouts": [
    {
     "key": "theatre",
@@ -106,7 +119,9 @@ window.PV_FACTS = {
     "full": 120,
     "halfA": 40,
     "halfB": 60,
-    "tables": 12
+    "tables": 12,
+    "tablesA": 4,
+    "tablesB": 6
    },
    {
     "key": "ushape",

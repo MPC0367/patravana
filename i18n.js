@@ -170,6 +170,17 @@ window.PV_TH = {
  "stay.stagelabel": "ภาพถ่ายของห้องที่เลือก",
  "stay.open": "เปิดภาพนี้แบบเต็มจอ",
  "stay.book": "เช็ควันว่าง",
+ "stay.tabs": "ห้องสวีท",
+ "stay.c.livingv": "ห้องนั่งเล่น",
+ "stay.c.living": "แยกจากห้องนอน",
+ "stay.c.openv": "ห้องเดียว",
+ "stay.c.open": "แบบเปิดโล่ง",
+ "stay.tab.vana": "วานา",
+ "stay.tab.patra": "ภัทรา",
+ "stay.tab.junior": "จูเนียร์",
+ "stay.tabname.vana": "วานา สวีท",
+ "stay.tabname.patra": "ภัทรา สวีท",
+ "stay.tabname.junior": "ภัทรา จูเนียร์ สวีท",
  "stay.patra.meta": "64 ตร.ม. อ่างอาบน้ำจากุซซี่ วิวบึงน้ำหรือสวน",
  "stay.patra.desc": "ห้องนอนพร้อมห้องนั่งเล่นแยก อ่างอาบน้ำจากุซซี่ และระเบียงเหนือบึงน้ำหรือสวน",
  "stay.junior.meta": "40 ตร.ม. ห้องเดียวแบบเปิดโล่ง เตียงเดี่ยว 2 เตียง อ่างอาบน้ำจากุซซี่ วิวสวน",
@@ -242,6 +253,8 @@ window.PV_TH = {
  "gather.sketch": "ภาพร่างประกอบ ไม่ตรงตามมาตราส่วน",
  "gather.ask": "สอบถามรูปแบบนี้",
  "gather.foot": "ห้องแบ่งเป็นสองส่วน A และ B พร้อมเวที เครื่องเสียง และห้องแต่งตัว ตัวเลขความจุเป็นไปตามที่รีสอร์ทระบุ กรุณายืนยันรูปแบบการจัดห้องสำหรับงานของคุณ",
+ "gather.size": "ขนาด (เมตร)",
+ "gather.tables": "โต๊ะจีน (โต๊ะกลม โต๊ะละ 10 ท่าน)",
  "gather.halfcap": "จำนวนผู้เข้าร่วมตามรูปแบบการจัดห้อง ทั้งแบบเต็มห้องและแบบแบ่งครึ่ง",
  "gather.layout": "รูปแบบ",
  "gather.full": "เต็มห้อง",
@@ -801,5 +814,85 @@ window.PV_JS = {
  "offerHubExtra": {
   "en": "On the resort's own booking page, for your dates",
   "th": "ในหน้าจองของรีสอร์ทเอง ตามวันที่ของคุณ"
+ },
+ "more.read": {
+  "en": "Read more about {what}",
+  "th": "อ่านเพิ่มเติมเกี่ยวกับ{what}"
+ },
+ "more.less": {
+  "en": "Read less",
+  "th": "ย่อข้อความ"
+ },
+ "more.lessAria": {
+  "en": "Read less about {what}",
+  "th": "ย่อข้อความเกี่ยวกับ{what}"
+ },
+ "more.w.stay": {
+  "en": "our suites",
+  "th": "ห้องสวีทของเรา"
+ },
+ "more.w.vana": {
+  "en": "Vana Suite",
+  "th": "วานา สวีท"
+ },
+ "more.w.patra": {
+  "en": "Patra Suite",
+  "th": "ภัทรา สวีท"
+ },
+ "more.w.junior": {
+  "en": "Patra Junior Suite",
+  "th": "ภัทรา จูเนียร์ สวีท"
+ },
+ "more.w.offers": {
+  "en": "how offers are shown",
+  "th": "วิธีแสดงข้อเสนอ"
+ },
+ "more.w.air": {
+  "en": "the estate",
+  "th": "พื้นที่ของรีสอร์ท"
+ },
+ "more.w.pet": {
+  "en": "pet-friendly stays",
+  "th": "การเข้าพักพร้อมสัตว์เลี้ยง"
+ },
+ "more.w.dining": {
+  "en": "Phu Yai Lee",
+  "th": "ห้องอาหารครัวผู้ใหญ่ลี"
+ },
+ "more.w.night": {
+  "en": "the evening",
+  "th": "ยามค่ำที่รีสอร์ท"
+ },
+ "more.w.visit": {
+  "en": "finding the resort",
+  "th": "การหาทางมารีสอร์ท"
+ },
+ "more.w.privacy": {
+  "en": "privacy",
+  "th": "ความเป็นส่วนตัว"
+ },
+ "more.capsOpen": {
+  "en": "View all capacities",
+  "th": "ดูความจุทั้งหมด"
+ },
+ "more.capsClose": {
+  "en": "Hide the capacity table",
+  "th": "ซ่อนตารางความจุ"
+ },
+ "rg.count": {
+  "en": "Photo {i} of {n}",
+  "th": "ภาพที่ {i} จาก {n}"
+ },
+ "hallM": {
+  "en": "{n} m",
+  "th": "{n} ม."
+ },
+ "hallStage": {
+  "en": "Stage",
+  "th": "เวที"
+ },
+ "hallSketchAlt": {
+  "en": "Sketch of {name}, {size} m, with a stage at each end and three doors along one side, set out for {layout}. It divides into room A, {a} m wide, and room B, {b} m wide.",
+  "th": "ภาพร่าง{name} ขนาด {size} ม. มีเวทีทั้งสองฝั่งและประตูสามบานด้านหนึ่ง จัดแบบ{layout} แบ่งเป็นห้อง A กว้าง {a} ม. และห้อง B กว้าง {b} ม."
  }
 };

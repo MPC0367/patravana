@@ -21,6 +21,8 @@
   // away from Home on a phone the hero is not on the page at all
   const heroAway = () => viewsOn() && document.documentElement.dataset.view !== "home";
   const headerH = () => (document.getElementById("topbar") || {}).offsetHeight || 60;
+  // what covers the top of the screen above a place: the header, and inside the suites on a phone the suite strip too
+  const stackAbove = (el) => headerH() + (el && el.closest && document.documentElement.classList.contains("has-rtabs") && el.closest(".stay-list") ? ((document.querySelector(".rtabs") || {}).offsetHeight || 0) : 0);
   // the resort's wall clock wherever the visitor is: read the result with getUTC*()
   const bkk = () => new Date(Date.now() + 7 * 3600 * 1000);
 
@@ -62,7 +64,12 @@
       const p = path.split(".");
       if (path === "reviewed") return longDate(FX.reviewed, L);
       if (path === "pet.reviewed") return longDate(FX.pet.lastReviewedAt, L);
-      if (p[0] === "hall") { if (p[1] === "area") return hall.areaSqm; const l = lay(p[1]); return l ? l[p[2]] : null; }
+      if (p[0] === "hall") {
+        if (p[1] === "area") return hall.areaSqm;
+        if (p[1] === "size") return hall.size && hall.size[p[2]] != null ? hall.size[p[2]] : null;   // the floor plan's measurements
+        if (p[1] === "name") return hall.name ? hall.name[L] || hall.name.en : null;                   // Patra Hall
+        const l = lay(p[1]); return l ? l[p[2]] : null;
+      }
       if (p[0] === "dining") { if (p[1] === "seats") return FX.dining.seats; const sv = FX.dining[p[1]]; return sv && sv[p[2]] ? clock(sv[p[2]]) : null; }
       if (path === "contact.phone.show") return FX.contact.phone.show;
       if (path === "contact.phone.local") return FX.contact.phone.local;
@@ -729,6 +736,8 @@
     function saveY() { if (!viewsOn() || landing) return; try { history.replaceState(Object.assign({}, history.state, { view: cur, y: Math.round(window.scrollY) }), ""); } catch (e) { /* a sandboxed frame may refuse */ } }
     // a target folded away is opened: the pet-stay details, a facility (shown in the map's place card on a phone)
     function reveal(el) {
+      // a suite on a phone's strip, and text folded under "Read more", are chosen and opened first (Phase 4)
+      document.dispatchEvent(new CustomEvent("pv:reveal", { detail: el }));
       const d = el.tagName === "DETAILS" ? el : el.closest("details"); if (d && !d.open) d.open = true;
       if (el.classList.contains("fac__item") && !el.offsetParent && mapApi) { mapApi.select(el.dataset.hot || "hall"); return $("#placeCard") || el; }
       return el;
@@ -763,7 +772,7 @@
       const target = el && !isRoot(el, view) ? reveal(el) : null;
       const settle = () => {
         if (opts.y != null) window.scrollTo({ top: opts.y, behavior: "instant" });
-        else if (target) scrollToEl(target, -(headerH() + 14), moved);
+        else if (target) scrollToEl(target, -(stackAbove(target) + 14), moved);
         else window.scrollTo({ top: 0, behavior: moved || reduced ? "instant" : "smooth" });
         if (opts.focus !== false) focusOn(target || $(HEAD[view]) || $("#main"));
       };
@@ -776,6 +785,8 @@
       clearTimeout(saveTimer);                             // a save still waiting belongs to the entry just left: drop it
       closeAll();
       const st = e.state;
+      // what the page itself kept with this step (the chosen suite) is put back before the page moves
+      document.dispatchEvent(new CustomEvent("pv:popstate", { detail: st || {} }));
       go(location.hash, { y: st && st.view && typeof st.y === "number" ? st.y : null });
     });
     // an address typed or edited by hand
@@ -801,17 +812,26 @@
       const mid = window.innerHeight / 2, b = $$("[data-owner]").find((x) => { const r = x.getBoundingClientRect(); return x.id !== "closing" && r.height > 0 && r.top <= mid && r.bottom >= mid; });
       return b ? b.dataset.owner : fallback || "home";
     }
+    // what the visitor is reading on the whole page, kept as they move (a window that narrows has already reflowed at
+    // its new width by the time it is told, so the middle of the screen then shows some other section)
+    let reading = null, readRaf = 0;
+    window.addEventListener("scroll", () => {
+      if (viewsOn() || readRaf) return;
+      readRaf = requestAnimationFrame(() => { readRaf = 0; if (!viewsOn() && !locks.size) reading = visibleOwner(reading || cur); });
+    }, { passive: true });
     // to the whole page, at what the visitor was reading
     function toWhole() {
       const v = cur; leave();
       const at = v === "home" ? null : $(ROOT[v]);
       if (at) scrollToEl(at, -(headerH() + 8), true); else window.scrollTo({ top: 0, behavior: "instant" });
+      reading = v;
       focusOn($(HEAD[v]) || $("#main"));
     }
     // back to one destination at a time: the one the visitor was reading
-    function toViews() {
-      const v = visibleOwner(cur); enter(v);
-      try { history.replaceState({ view: v, y: 0 }, "", v === "home" ? location.pathname + location.search : ROOT[v]); } catch (e) { /* ignore */ }
+    // seen: the destination read before the layout switched (the suite strip and "Read more" change heights)
+    function toViews(seen) {
+      const v = seen || visibleOwner(cur); enter(v);
+      try { history.replaceState(Object.assign({}, history.state, { view: v, y: 0 }), "", v === "home" ? location.pathname + location.search : ROOT[v]); } catch (e) { /* ignore */ }
       lastHash = location.hash;
       window.scrollTo({ top: 0, behavior: "instant" });
       focusOn($(HEAD[v]) || $("#main"));
@@ -819,7 +839,11 @@
     const onChange = (m, fn) => { try { m.addEventListener("change", fn); } catch (e) { m.addListener(fn); } };
     onChange(mq, () => {
       closeAll();
-      if (mq.matches && !whole && !viewsOn()) toViews();
+      // the parts that change their own layout with the mode (the suite strip, "Read more") switch first, so the move
+      // below lands on the place they leave; what the visitor was reading is noted before that (Phase 4)
+      const seen = mq.matches && !whole && !viewsOn() ? reading || visibleOwner(cur) : null;
+      document.dispatchEvent(new CustomEvent("pv:mode", { detail: { phone: mq.matches } }));
+      if (mq.matches && !whole && !viewsOn()) toViews(seen);
       else if (!mq.matches && viewsOn()) toWhole();
       text();
     });
@@ -846,12 +870,12 @@
       if (!viewsOn()) return false;
       const st = history.state, el = ID.test(location.hash) ? $(location.hash) : null;
       const y = st && st.view === cur && typeof st.y === "number" && st.y > 0 ? st.y : null;
-      try { history.replaceState({ view: cur, y: y || 0 }, ""); } catch (e) { /* ignore */ }
+      try { history.replaceState(Object.assign({}, history.state, { view: cur, y: y || 0 }), ""); } catch (e) { /* ignore */ }   // merged: the chosen suite and opened texts stay
       const target = el && !isRoot(el, cur) ? reveal(el) : null;
       if (y == null && !target) { window.scrollTo(0, 0); return true; }
       let moved = false;
       ["wheel", "touchstart", "keydown", "mousedown"].forEach((t) => window.addEventListener(t, () => { moved = true; }, { once: true, passive: true }));
-      const put = () => { if (moved) return; if (y != null) window.scrollTo(0, y); else window.scrollTo(0, Math.max(0, target.getBoundingClientRect().top + window.scrollY - headerH() - 14)); };
+      const put = () => { if (moved) return; if (y != null) window.scrollTo(0, y); else window.scrollTo(0, Math.max(0, target.getBoundingClientRect().top + window.scrollY - stackAbove(target) - 14)); };
       // a browser may jump to the section in the address on its own a little later (Safari does, at load): while the
       // page settles, any scroll the visitor did not make is put back, and nothing of it is saved as their place
       landing = true;
@@ -874,7 +898,8 @@
     const el = id === "#hero" ? document.body : $(id); if (!el) return false;
     if (id === "#hero") window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
     else {
-      scrollToEl(el);
+      document.dispatchEvent(new CustomEvent("pv:reveal", { detail: el }));
+      scrollToEl(el, document.documentElement.classList.contains("has-rtabs") ? -(stackAbove(el) + 14) : undefined);
       if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
       el.focus({ preventScroll: true });
     }
@@ -1033,6 +1058,71 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
   }
 
+  /* ---------- phones: longer descriptions fold under "Read more" (Phase 4) ----------
+     Text marked data-more="<name>" stays in the page for everyone: search engines, a page without its script, print
+     and every wider screen read it as before. On a phone (VIEW_Q, decided in the page's head as html.pv-phone) it
+     folds under a button just above it, named for what it opens ("Read more about Vana Suite"). Facts, prices,
+     conditions and actions are never marked. What the visitor opened stays open while the page is open, and is kept
+     with this step of the browser's history (a reload keeps it; nothing is written to the browser's storage). A link
+     into folded text opens it; the keyboard is never left inside text that folds away. */
+  function initMore() {
+    const q = window.matchMedia(VIEW_Q), html = document.documentElement;
+    const kept = Object.assign({}, history.state && history.state.pvMore);
+    // phones: a control reached with the keyboard is never left under the bottom bar, the header or the suite strip.
+    // Safari scrolls a focused control only to the screen's very edge, where the bottom bar covers it (Phase 4, Q05)
+    document.addEventListener("focusin", (e) => {
+      const t = e.target;
+      if (!html.classList.contains("pv-phone") || !t || !t.getBoundingClientRect || !t.matches || t.closest("#mbar, #topbar, .rtabs, .lightbox, .drawer, .book, .mnav, .fab")) return;
+      requestAnimationFrame(() => {
+        let vis = false; try { vis = t.matches(":focus-visible"); } catch (err) { vis = true; }
+        if (!vis || document.activeElement !== t) return;
+        const r = t.getBoundingClientRect(); if (r.height < 4) return;
+        const bar = document.getElementById("mbar"), b = bar && bar.offsetHeight ? bar.getBoundingClientRect().top : innerHeight;
+        const low = Math.min(innerHeight, b) - 8, high = stackAbove(t) + 8;
+        if (r.bottom > low) window.scrollBy({ top: r.bottom - low, behavior: "instant" });
+        else if (r.top < high) window.scrollBy({ top: r.top - high, behavior: "instant" });
+      });
+    });
+    const blocks = $$("[data-more]");
+    function paint(el) {
+      const b = el._moreBtn; if (!b) return;
+      const what = I18N.t(el.dataset.moreWhat) || "", own = el.dataset.moreOpen;   // own: a block with its own pair of labels ("View all capacities")
+      $("span", b).textContent = own ? I18N.t(el._open ? el.dataset.moreClose : own) : el._open ? I18N.t("more.less") : I18N.t("more.read", { what: what });
+      if (el._open && !own) b.setAttribute("aria-label", I18N.t("more.lessAria", { what: what })); else b.removeAttribute("aria-label");
+      b.setAttribute("aria-expanded", String(!!el._open));
+      el.classList.toggle("is-open", !!el._open); (el._also || []).forEach((x) => x.classList.toggle("is-open", !!el._open));
+    }
+    function set(el, open, save) {
+      if (!open && [el].concat(el._also || []).some((x) => x.contains(document.activeElement)) && el._moreBtn) el._moreBtn.focus({ preventScroll: true });
+      el._open = open; paint(el);
+      if (save) { kept[el.dataset.more] = open; try { history.replaceState(Object.assign({}, history.state, { pvMore: Object.assign({}, kept) }), ""); } catch (e) { /* a sandboxed frame may refuse */ } }
+    }
+    blocks.forEach((el) => {
+      if (!el.id) el.id = "more-" + el.dataset.more;
+      // data-more-also: other text that belongs to the same block and folds with it (one button for both)
+      el._also = el.dataset.moreAlso ? $$(el.dataset.moreAlso) : [];
+      el._also.forEach((x, k) => { x.setAttribute("data-more-part", ""); if (!x.id) x.id = el.id + "-" + (k + 2); });
+      const b = document.createElement("button"); b.type = "button"; b.className = "more__btn"; b.setAttribute("aria-controls", [el.id].concat(el._also.map((x) => x.id)).join(" "));
+      b.innerHTML = '<span></span><svg class="more__ic" aria-hidden="true" viewBox="0 0 12 12"><path d="M2 6h8"/><path class="more__v" d="M6 2v8"/></svg>';
+      el.parentNode.insertBefore(b, el); el._moreBtn = b;
+      el._open = kept[el.dataset.more] === true;
+      b.addEventListener("click", () => set(el, !el._open, true));
+      paint(el);
+    });
+    // a link into folded text opens it first
+    document.addEventListener("pv:reveal", (e) => { const t = e.detail; if (!t || !t.closest) return; let el = t.closest("[data-more]"); if (!el) { const part = t.closest("[data-more-part]"); el = part ? blocks.find((x) => (x._also || []).indexOf(part) > -1) : null; } if (el && !el._open) set(el, true, false); });
+    document.addEventListener("pv:lang", () => blocks.forEach(paint));
+    // the screen changing mode: the class follows, and the keyboard is moved out of text that is about to fold
+    const onMode = () => {
+      if (q.matches) blocks.forEach((el) => { if (!el._open && [el].concat(el._also || []).some((x) => x.contains(document.activeElement))) el._moreBtn.focus({ preventScroll: true }); });
+      html.classList.toggle("pv-phone", q.matches);
+    };
+    // the destinations' own mode change announces it first (pv:mode); the media test is a fallback for anything else
+    document.addEventListener("pv:mode", onMode);
+    try { q.addEventListener("change", onMode); } catch (e) { q.addListener(onMode); }
+    html.classList.toggle("pv-phone", q.matches);
+  }
+
   /* ---------- stay: the rooms, their views, and a gallery for each ----------
      Each accordion item is a suite. Inside it, one set of photographs per view (.rg__set, carrying the booking engine's
      own room id). Wide screens show the open set in the sticky stage beside the list; small screens swipe the set in
@@ -1137,16 +1227,211 @@
         // the comparison's "Check dates" for this suite asks for the same room
         const cl = $('[data-cmp-family="' + item.dataset.roomFamily + '"]');
         if (cl) { cl.dataset.bookRoom = id; cl.href = ENGINE + "?roomtype=" + id; document.dispatchEvent(new CustomEvent("pv:cmp")); }
-        if (item === shown) showRoom(item); else paintText();
+        if (tabMode) { if (item === shown) stageStale = true; else paintText(); placeShots(item, true); saveRooms(); }
+        else if (item === shown) showRoom(item); else paintText();
         if (hasST) ScrollTrigger.refresh();
       };
+      item._pickView = pickView;
       chips.forEach((c) => c.addEventListener("click", () => pickView(c.dataset.view)));
       // small screens: the photographs sit in the panel; a tap opens them full size
       $$(".rg__shot", item).forEach((s) => s.addEventListener("focus", () => { try { s.scrollIntoView({ block: "nearest", inline: "nearest" }); } catch (e) { /* older browsers scroll it themselves */ } }));
       $$(".rg__shot", item).forEach((s) => s.addEventListener("click", () => { const set = s.closest(".rg__set"), list = $$(".rg__shot", set); lightbox.open(list.map((x) => ({ src: x.dataset.full, alt: x.getAttribute("aria-label") || "" })), list.indexOf(s)); }));
     });
     items.forEach((it) => { if (!it.classList.contains("is-open")) shut($(".acc__panel", it), true); });
-    showRoom(shown, true);
+
+    /* ---- phones (Phase 4): one suite at a time, chosen from a strip under the header ----
+       The phone's own test (VIEW_Q, the same one that turns on its destinations) also runs this, in "Show the whole
+       page" too. The strip is a real set of tabs: Vana, Patra and Patra Junior, the chosen one showing its panel and
+       the others out of the page altogether. Inside the panel the order changes for the phone: the suite's name, its
+       photographs, the view, the facts, "Check dates", then its description folded under "Read more". Wider screens
+       keep the accordion and the stage exactly as they were; the order is put back when the screen widens. Choosing a
+       suite changes only what is being looked at: the booking planner keeps its own room until "Check dates for this
+       room" asks for this one. The choice, each suite's view and its photograph are kept with this step of the
+       browser's history (a reload and Back come back to them) without adding steps of their own. */
+    const strip = $(".rtabs"), tabs = strip ? $$(".rtabs__tab", strip) : [], tabQ = window.matchMedia(VIEW_Q);
+    const fam = (f) => items.find((i) => i.dataset.roomFamily === f);
+    const famOfEl = (el) => { const it = el && el.closest ? el.closest("[data-room-family]") : null; return it && items.indexOf(it) > -1 ? it.dataset.roomFamily : null; };
+    let tabMode = false, stageStale = false, selected = (shown && shown.dataset.roomFamily) || "vana";
+    // the order of each panel's parts on a phone, and the order to put back
+    const PHONE_ORDER = [".rname", ".rg", ".rg__nav", ".views", ".chips", "[data-book-room]", "[data-more]"];
+    items.forEach((it) => {
+      const copy = $(".acc__copy", it); if (!copy) return;
+      // the suite's name on a phone, with the same one-line summary the accordion shows (its own text binding, so a
+      // language change and a content update reach both)
+      const nm = document.createElement("div"); nm.className = "rname";
+      const en = $(".acc__name", it), th = $(".acc__thai", it), meta = $(".acc__meta", it);
+      nm.innerHTML = '<h3 class="rname__h"><span class="rname__en"></span> <span class="rname__th" lang="th"></span></h3><p class="rname__meta"></p>';
+      $(".rname__en", nm).textContent = en ? en.textContent.trim() : ""; $(".rname__th", nm).textContent = th ? th.textContent.trim() : "";
+      if (meta) { const m = $(".rname__meta", nm); m.innerHTML = meta.innerHTML; if (meta.dataset.i18n) m.setAttribute("data-i18n", meta.dataset.i18n); }
+      it._orig = Array.from(copy.children);
+      copy.insertBefore(nm, copy.firstChild); nm.hidden = true;
+    });
+    function arrangePanel(it, phone) {
+      const copy = $(".acc__copy", it); if (!copy) return;
+      const nm = $(".rname", copy); if (nm) nm.hidden = !phone;
+      if (phone) PHONE_ORDER.forEach((sel) => { const el = $(":scope > " + sel, copy); if (el) copy.appendChild(el); });
+      else { if (nm) copy.insertBefore(nm, copy.firstChild); it._orig.forEach((el) => copy.appendChild(el)); }
+      // a "Read more" button travels with the text it opens (it sits just above it)
+      $$(":scope > [data-more]", copy).forEach((p) => { const b = p._moreBtn; if (b) p.parentNode.insertBefore(b, p); });
+    }
+    // the photograph each suite and view was left on, kept on the set itself (a hidden strip forgets its scroll)
+    const shotW = (set) => { const s = $(".rg__shot", set); if (!s) return 1; const gap = parseFloat(getComputedStyle(set).columnGap) || 0; return s.getBoundingClientRect().width + gap || 1; };
+    function countShots(it) {
+      const set = setOf(it), nav = $(".rg__nav", it); if (!set || !nav) return;
+      const n = $$(".rg__shot", set).length, i = Math.min(n - 1, Math.max(0, set._i || 0));
+      const b = $(".rg__count b", nav), t = $(".rg__count span", nav);
+      if (b) b.textContent = String(i + 1); if (t) t.textContent = String(n);
+      const c = $(".rg__count", nav); if (c) c.setAttribute("aria-label", I18N.t("rg.count", { i: i + 1, n: n }));
+    }
+    function placeShots(it, instant) {
+      const set = setOf(it); if (!set) return;
+      const n = $$(".rg__shot", set).length; set._i = Math.min(n - 1, Math.max(0, set._i || 0));
+      set._placing = true;
+      set.scrollTo({ left: set._i * shotW(set), behavior: instant || reduced ? "instant" : "smooth" });
+      setTimeout(() => { set._placing = false; }, instant || reduced ? 60 : 500);
+      countShots(it);
+    }
+    items.forEach((it) => {
+      $$(".rg__set", it).forEach((set) => {
+        let raf = 0;
+        set.addEventListener("scroll", () => {
+          if (raf) return;
+          raf = requestAnimationFrame(() => { raf = 0; if (set.hidden || set._placing) return; const n = $$(".rg__shot", set).length; set._i = Math.min(n - 1, Math.max(0, Math.round(set.scrollLeft / shotW(set)))); countShots(it); if (tabMode) saveRooms(); });
+        }, { passive: true });
+      });
+      $$("[data-rg-step]", it).forEach((b) => b.addEventListener("click", () => {
+        const set = setOf(it), n = $$(".rg__shot", set).length; if (!n) return;
+        set._i = ((set._i || 0) + Number(b.dataset.rgStep) + n) % n;
+        placeShots(it); saveRooms();
+      }));
+      // a photograph that does not arrive says so, and the others still work (also one that failed before this script ran)
+      const broken = (im) => {
+        const shot = im.closest(".rg__shot"); if (!shot || shot.classList.contains("is-broken")) return;
+        shot.classList.add("is-broken"); const m = document.createElement("span"); m.className = "rg__broken"; m.textContent = I18N.t("photoUnavailable") || ""; shot.appendChild(m);
+      };
+      $$(".rg__shot img", it).forEach((im) => { im.addEventListener("error", () => broken(im)); if (im.complete && im.getAttribute("src") && !im.naturalWidth) broken(im); });
+    });
+
+    // the choice, each suite's view and photograph, merged into this step of the history (never a new step)
+    function roomState() {
+      const v = {}, p = {};
+      items.forEach((it) => { const s = setOf(it); if (s) { v[it.dataset.roomFamily] = s.dataset.view; p[it.dataset.roomFamily + ":" + s.dataset.view] = s._i || 0; } });
+      return { f: selected, v: v, p: p };
+    }
+    let saveT = 0;
+    function saveRooms() {
+      clearTimeout(saveT);
+      saveT = setTimeout(() => { try { history.replaceState(Object.assign({}, history.state, { pvRoom: roomState() }), ""); } catch (e) { /* a sandboxed frame may refuse */ } }, 120);
+    }
+    // a kept state, checked against what exists: an unknown suite, view or photograph falls back to the suite's first
+    function useRoomState(st) {
+      if (!st || typeof st !== "object") return;
+      items.forEach((it) => {
+        const f = it.dataset.roomFamily, want = st.v && st.v[f];
+        if (want && $('.rg__set[data-view="' + want + '"]', it) && setOf(it).dataset.view !== want && it._pickView) it._pickView(want);
+        const s = setOf(it), i = st.p && st.p[f + ":" + s.dataset.view];
+        if (typeof i === "number" && i >= 0) s._i = i;
+      });
+      if (st.f && fam(st.f)) select(st.f, { quiet: true });
+    }
+
+    function paintTabs() {
+      tabs.forEach((t) => { const on = t.dataset.rtab === selected; t.setAttribute("aria-selected", String(on)); t.tabIndex = on ? 0 : -1; t.classList.toggle("is-on", on); });
+    }
+    // opts.align: the visitor chose from far down the page, so the new suite is brought up under the strip
+    function select(f, opts) {
+      opts = opts || {};
+      const it = fam(f); if (!it) return;
+      const was = selected; selected = f;
+      if (tabMode) {
+        paintTabs();
+        items.forEach((o) => { o.classList.toggle("is-off", o !== it); });
+        if (shown !== it) { shown = it; idx = 0; stageStale = true; }
+        placeShots(it, true);
+        if (opts.align && was !== f) {
+          const stack = headerH() + (strip ? strip.offsetHeight : 0), r = it.getBoundingClientRect();
+          if (r.top < stack - 1) window.scrollTo({ top: Math.max(0, window.scrollY + r.top - stack - 6), behavior: "instant" });
+        }
+        if (!opts.quiet) saveRooms();
+        document.dispatchEvent(new CustomEvent("pv:room", { detail: { family: f } }));
+      } else if (!it.classList.contains("is-open")) {
+        items.forEach((o) => { if (o !== it && o.classList.contains("is-open")) setOpen(o, false); });
+        setOpen(it, true); showRoom(it, true);
+      }
+    }
+    // the Stay introduction's actions and its longer note go below the suites on a phone, so the strip and the first
+    // photograph come first; they go back beside the list on a wider screen
+    const side = $("#stay .chapter__side"), after = document.createElement("div"); after.className = "stay-after";
+    let sideMarks = null;
+    function arrangeSide(on) {
+      if (!side) return;
+      const keepBtn = (el) => { if (el._moreBtn) el.parentNode.insertBefore(el._moreBtn, el); };
+      if (on && !sideMarks) {
+        acc.parentNode.insertBefore(after, acc.nextSibling);
+        sideMarks = [".chapter__acts", ".textlink--map", ".chapter__note"].map((sel) => { const el = $(sel, side); if (!el) return null; const m = document.createComment(""); el.parentNode.insertBefore(m, el); after.appendChild(el); keepBtn(el); return [el, m]; });
+      } else if (!on && sideMarks) {
+        sideMarks.slice().reverse().forEach((p) => { if (p) { p[1].parentNode.insertBefore(p[0], p[1]); p[1].remove(); keepBtn(p[0]); } });
+        sideMarks = null; after.remove();
+      }
+    }
+    function setTabMode(on) {
+      if (!strip || on === tabMode) return;
+      tabMode = on;
+      document.documentElement.classList.toggle("has-rtabs", on);
+      strip.hidden = !on;
+      arrangeSide(on);
+      items.forEach((it) => {
+        const panel = $(".acc__panel", it), head = $(".acc__head", it), tab = $("#rtab-" + it.dataset.roomFamily);
+        if (hasGSAP) gsap.killTweensOf(panel);
+        arrangePanel(it, on);
+        if (on) {
+          panel.setAttribute("role", "tabpanel"); if (tab) panel.setAttribute("aria-labelledby", tab.id);
+          panel.style.height = ""; shut(panel, false); it.classList.remove("is-open"); head.setAttribute("aria-expanded", "false");
+        } else {
+          panel.removeAttribute("role"); panel.removeAttribute("aria-labelledby"); it.classList.remove("is-off");
+          const open = it.dataset.roomFamily === selected;
+          it.classList.toggle("is-open", open); head.setAttribute("aria-expanded", String(open)); panel.style.height = open ? "auto" : "0px"; shut(panel, !open);
+        }
+      });
+      if (on) { const a = document.activeElement; if (a && a.classList && a.classList.contains("acc__head")) { const t = $("#rtab-" + famOfEl(a)); if (t) t.focus({ preventScroll: true }); } select(selected, { quiet: true }); }
+      else {
+        // the stage picks up the suite, view and photograph the phone was showing
+        const it = fam(selected) || items[0]; shown = it; const s = setOf(it); idx = (s && s._i) || 0; buildThumbs(); show(idx, true); stageStale = false;
+        if (hasST) ScrollTrigger.refresh();
+      }
+      measure();
+    }
+    // the header's and the strip's real heights, shared with the stylesheet (Thai and larger text make them taller)
+    function measure() {
+      const html = document.documentElement;
+      html.style.setProperty("--pv-top", headerH() + "px");
+      html.style.setProperty("--pv-rtabs", (tabMode && strip ? strip.offsetHeight : 0) + "px");
+    }
+    if (strip) {
+      tabs.forEach((t) => t.addEventListener("click", () => { if (t.dataset.rtab !== selected) select(t.dataset.rtab, { align: true }); t.focus({ preventScroll: true }); }));
+      // Left and Right move along the strip, Home and End to its ends; Enter or Space (the button's own click) chooses
+      strip.addEventListener("keydown", (e) => {
+        const k = tabs.indexOf(document.activeElement); if (k < 0) return;
+        let to = -1;
+        if (e.key === "ArrowRight") to = (k + 1) % tabs.length; else if (e.key === "ArrowLeft") to = (k - 1 + tabs.length) % tabs.length;
+        else if (e.key === "Home") to = 0; else if (e.key === "End") to = tabs.length - 1;
+        if (to < 0) return;
+        e.preventDefault(); tabs.forEach((t, j) => { t.tabIndex = j === to ? 0 : -1; }); tabs[to].focus({ preventScroll: true });
+      });
+      strip.addEventListener("focusout", () => setTimeout(() => { if (!strip.contains(document.activeElement)) paintTabs(); }, 0));
+      try { const ro = new ResizeObserver(measure); ro.observe(strip, { box: "border-box" }); if (top) ro.observe(top, { box: "border-box" }); } catch (e) { window.addEventListener("resize", measure); }
+      const onMode = () => setTabMode(tabQ.matches);
+      document.addEventListener("pv:mode", onMode);          // before the destinations move the page (see Views)
+      try { tabQ.addEventListener("change", onMode); } catch (e) { tabQ.addListener(onMode); }
+      // a section link that points into a suite (#acc-patra, or anything inside one) chooses that suite first
+      document.addEventListener("pv:reveal", (e) => { const f = famOfEl(e.detail); if (f) select(f, { quiet: false }); });
+      document.addEventListener("pv:popstate", (e) => { if (e.detail && e.detail.pvRoom) useRoomState(e.detail.pvRoom); });
+      document.addEventListener("pv:lang", () => { items.forEach(countShots); });
+      setTabMode(tabQ.matches);
+      useRoomState(history.state && history.state.pvRoom);
+    }
+    if (!tabMode) showRoom(shown, true);
+    window.PVRooms = { select: (f) => select(f, { align: true }), state: roomState, mode: () => tabMode };
     document.addEventListener("pv:lang", paintText);
   }
 
@@ -1431,11 +1716,13 @@
     // keyboard goes back there when it closes
     let pressed = null, pressedAt = 0;
     document.addEventListener("click", (e) => { const t = e.target && e.target.closest ? e.target.closest("button, a[href], [tabindex]") : null; if (t && !box.contains(t)) { pressed = t; pressedAt = performance.now(); } }, true);
-    function open(items, i, cb) {
+    // back: where the keyboard returns on close, when the pressed control cannot take it (a gallery copy hidden from
+    // screen readers hands it to its visible original, Phase 4)
+    function open(items, i, cb, back) {
       if (!items || !items.length) return;
       gen++;
       list = items.map((x) => (typeof x === "string" ? { src: x, alt: "" } : x)); idx = Math.max(0, i || 0); onToggle = cb || null;
-      if (!isOpen) { const a = document.activeElement; lastFocus = a && a !== document.body && a !== document.documentElement ? a : (pressed && performance.now() - pressedAt < 1000 ? pressed : null); }
+      if (!isOpen) { const a = document.activeElement; lastFocus = back || (a && a !== document.body && a !== document.documentElement ? a : (pressed && performance.now() - pressedAt < 1000 ? pressed : null)); }
       isOpen = true;
       if (onToggle) onToggle(true);
       if (hasGSAP) gsap.killTweensOf(box);
@@ -1479,7 +1766,9 @@
     const items = () => originals.map((b) => ({ src: b.dataset.full, alt: (b.getAttribute("aria-label") || "").replace(/^[^:]*:\s*/, "") }));
     const pauseBtn = $("#reelPause"), prevBtn = $("#reelPrev"), nextBtn = $("#reelNext");
     const state = { paused: false, mouse: false, focus: false, held: false, open: false, seen: false, dragged: false, caught: false };
-    const openAt = (b) => lightbox.open(items(), Math.max(0, gallery.indexOf(b.dataset.full)), (on) => { state.open = on; kick(); });
+    // a copy (made for the seamless loop, hidden from screen readers) opens its own photograph, and on close the keyboard
+    // goes to the visible original of it, never to the hidden copy
+    const openAt = (b) => { const i = Math.max(0, gallery.indexOf(b.dataset.full)); lightbox.open(items(), i, (on) => { state.open = on; kick(); }, b.classList.contains("is-clone") ? originals[i] : null); };
     let kick = function () {};
     if (reduced) {
       // nothing drifts, so there is nothing to pause: the strip scrolls natively and the arrows step it
@@ -1499,7 +1788,9 @@
       im.loading = "lazy"; im.decoding = "async"; im.alt = "";
       ["sizes", "srcset", "src"].forEach((a) => { const v = o && o.getAttribute(a); if (v != null) im.setAttribute(a, v); });
       c.appendChild(im);
-      c.setAttribute("aria-hidden", "true"); c.tabIndex = -1; c.classList.add("is-clone"); c.removeAttribute("data-i18n-attr"); return c;
+      c.setAttribute("aria-hidden", "true"); c.tabIndex = -1; c.classList.add("is-clone"); c.removeAttribute("data-i18n-attr");
+      c.addEventListener("mousedown", (e) => e.preventDefault());   // a press never puts the keyboard on a hidden copy
+      return c;
     });
     const before = mk(), after = mk();
     before.forEach((c) => track.insertBefore(c, originals[0]));
@@ -2117,44 +2408,79 @@
       rows.forEach((b) => { const l = FX.hall.layouts.find((x) => x.key === b.dataset.layout); if (!l) return; b.dataset.n = l.full; $(".bar__n", b).textContent = l.full; const fill = $(".bar__fill", b); fill.dataset.w = Math.round(l.full / max * 100); if (fill.style.width) fill.style.width = fill.dataset.w + "%"; });
       // the full hall and each half, in the table under the layouts
       $$("[data-cap]").forEach((td) => { const v = FACTS.val("hall." + td.dataset.cap); if (v != null) td.textContent = v; });
+      // and the large figure of the layout the visitor has chosen, which stays chosen (Phase 4: it kept the old number)
+      const on = rows.find((b) => b.getAttribute("aria-pressed") === "true");
+      if (on && num) num.textContent = on.dataset.n;
     };
     figures(); document.addEventListener("pv:content", figures);
     const f = (n) => (Math.round(n * 10) / 10);
     const seat = (x, y, r) => '<circle class="h-seat" cx="' + f(x) + '" cy="' + f(y) + '" r="' + r + '"/>';
-    const shell = '<rect class="h-room" x="6" y="6" width="308" height="198" rx="12"/><rect class="h-stage" x="112" y="15" width="96" height="9" rx="3"/>';
-    // each sketch shows the layout's arrangement as an illustration (the listed full-hall figures: 220, 168, 120, 64)
+    const box = (cls, x, y, w, h, rx) => '<rect class="' + cls + '" x="' + f(x) + '" y="' + f(y) + '" width="' + f(w) + '" height="' + f(h) + '"' + (rx ? ' rx="' + rx + '"' : '') + '/>';
+    const txt = (cls, x, y, s, rot) => '<text class="' + cls + '" x="' + f(x) + '" y="' + f(y) + '"' + (rot ? ' transform="rotate(' + rot + ' ' + f(x) + ' ' + f(y) + ')"' : '') + '>' + String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;") + '</text>';
+    /* Patra Hall as the resort's own floor plans draw it (its sales kit, received 6 November 2026): one long room,
+       30 x 10.40 m, a stage at each end, three doors along one long side, and the line where it divides into room A
+       (12.35 m wide, beside the first stage) and room B (14.15 m, beside the second). Ten units to the metre along the
+       room; the split is placed by the two rooms' own widths. Still an illustration, not to scale (said under it). */
+    const X0 = 10, X1 = 310, Y0 = 24, Y1 = 128, SW = 17, SH = 66;
+    const S0 = X0 + 3 + SW, S1 = X1 - 3 - SW;                       // the free floor between the two stages
+    const size = () => (FX && FX.hall.size) || { length: "30", depth: "10.40", widthA: "12.35", widthB: "14.15" };
+    const splitX = () => { const s = size(), a = parseFloat(s.widthA), b = parseFloat(s.widthB); return X0 + (X1 - X0) * (a > 0 && b > 0 ? a / (a + b) : .466); };
+    const shell = () => {
+      const s = size(), m = (n) => I18N.t("hallM", { n: n }), sx = splitX(), stage = I18N.t("hallStage"), sy = Y0 + (Y1 - Y0 - SH) / 2;
+      let o = box("h-room", X0, Y0, X1 - X0, Y1 - Y0, 3);
+      o += '<line class="h-split" x1="' + f(sx) + '" y1="' + Y0 + '" x2="' + f(sx) + '" y2="' + Y1 + '"/>';
+      o += box("h-stage", X0 + 3, sy, SW, SH, 2) + box("h-stage", X1 - 3 - SW, sy, SW, SH, 2);
+      o += txt("h-stagetxt", X0 + 3 + SW / 2 + 2.2, sy + SH / 2, stage, -90) + txt("h-stagetxt", X1 - 3 - SW / 2 + 2.2, sy + SH / 2, stage, -90);
+      [[.004, .066], [.322, .392], [.6, .67]].forEach((d) => { o += box("h-door", X0 + (X1 - X0) * d[0], Y1 - 1.6, (X1 - X0) * (d[1] - d[0]), 3.2); });   // the doors, as drawn
+      // the measurements, as the plans give them
+      o += '<path class="h-dimline" d="M' + X0 + ' 10V16M' + X0 + ' 13H' + X1 + 'M' + X1 + ' 10V16"/>' + txt("h-dim", (X0 + X1) / 2, 9.5, m(s.length));
+      o += '<path class="h-dimline" d="M317 ' + Y0 + 'H323M320 ' + Y0 + 'V' + Y1 + 'M317 ' + Y1 + 'H323"/>' + txt("h-dim", 328, (Y0 + Y1) / 2, m(s.depth), 90);
+      o += txt("h-room-k", (X0 + sx) / 2, Y1 + 16, "A  " + m(s.widthA)) + txt("h-room-k", (sx + X1) / 2, Y1 + 16, "B  " + m(s.widthB));
+      return o;
+    };
+    const cols = (n, from, to) => Array.from({ length: n }, (_, k) => from + (to - from) * (n === 1 ? .5 : k / (n - 1)));
+    // each layout set out the way the plans set it out (the listed full-hall figures: 220, 168, 120, 64)
     const draw = {
-      theatre() { let s = ""; for (let b = 0; b < 2; b++) for (let r = 0; r < 10; r++) for (let c = 0; c < 11; c++) s += seat(38 + b * 132 + c * 11.2, 48 + r * 14.6, 3); return s; },
+      // theatre: 20 rows of 11 chairs across the room, in three blocks with aisles, between the two stages
+      theatre() {
+        let s = ""; const xs = cols(20, S0 + 9, S1 - 9), ys = [];
+        [[4, 33], [4, 64], [3, 95]].forEach(([n, y]) => { for (let k = 0; k < n; k++) ys.push(y + k * 7.2); });
+        xs.forEach((x) => ys.forEach((y) => { s += seat(x, y, 2.2); })); return s;
+      },
+      // classroom: 4 rows of 14 short tables across the room, three chairs at each, all facing the first stage
       classroom() {
-        let s = "";
-        for (let b = 0; b < 2; b++) for (let r = 0; r < 7; r++) {
-          const x0 = 38 + b * 132, y = 44 + r * 21.5;
-          s += '<rect class="h-tablefill" x="' + (x0 - 3) + '" y="' + f(y) + '" width="116" height="5" rx="2"/>';
-          for (let c = 0; c < 12; c++) s += seat(x0 + c * 10, y + 11, 2.7);
-        }
+        let s = ""; const xs = cols(14, S0 + 9, S1 - 12);
+        [36, 59, 82, 105].forEach((y) => xs.forEach((x) => { s += box("h-tablefill", x - 2.6, y - 7.5, 3.4, 15, 1); for (let k = 0; k < 3; k++) s += seat(x + 4.2, y - 5 + k * 5, 1.8); }));
         return s;
       },
+      // banquet: 12 round tables of ten in three staggered rows (four, four, four)
       banquet() {
         let s = "";
-        for (let r = 0; r < 3; r++) for (let c = 0; c < 4; c++) {
-          const cx = 61 + c * 66, cy = 64 + r * 51;
-          s += '<circle class="h-tablefill" cx="' + cx + '" cy="' + cy + '" r="11"/>';
-          for (let k = 0; k < 10; k++) { const a = k / 10 * Math.PI * 2; s += seat(cx + Math.cos(a) * 17.5, cy + Math.sin(a) * 17.5, 2.7); }
-        }
+        const rowsAt = [[48, cols(4, 104, 266)], [76, cols(4, 64, 226)], [104, cols(4, 104, 266)]];
+        rowsAt.forEach(([cy, xs]) => xs.forEach((cx) => {
+          s += '<circle class="h-tablefill" cx="' + f(cx) + '" cy="' + cy + '" r="6.4"/>';
+          for (let k = 0; k < 10; k++) { const a = k / 10 * Math.PI * 2; s += seat(cx + Math.cos(a) * 10, cy + Math.sin(a) * 10, 1.6); }
+        }));
         return s;
       },
+      // U-shape: one long U, closed beside the first stage and open towards the second: 29 + 29 chairs along its sides
+      // and 6 across its closed end
       ushape() {
-        let s = '<path class="h-tablefill" d="M78 48H90V164H230V48H242V176H78Z"/>';
-        for (let k = 0; k < 22; k++) { const y = 52 + k * (120 / 21); s += seat(71, y, 2.4) + seat(249, y, 2.4); }
-        for (let k = 0; k < 20; k++) s += seat(84 + k * 8, 183, 2.4);
+        const L = S0 + 18, R = S1 - 10, T = 50, B = 102;
+        let s = '<path class="h-tablefill" d="M' + R + ' ' + T + 'H' + L + 'V' + B + 'H' + R + 'V' + (B - 4) + 'H' + (L + 4) + 'V' + (T + 4) + 'H' + R + 'Z"/>';
+        cols(29, L + 3, R - 2).forEach((x) => { s += seat(x, T - 4.5, 1.8) + seat(x, B + 4.5, 1.8); });
+        cols(6, T + 8, B - 8).forEach((y) => { s += seat(L - 4.5, y, 1.8); });
         return s;
       }
     };
+    // what the drawing shows, in words, for a screen reader
+    const describe = (key) => { const btn = rows.find((b) => b.dataset.layout === key), s = size(), name = FX && FX.hall.name ? FX.hall.name[I18N.lang] || FX.hall.name.en : ""; return I18N.t("hallSketchAlt", { name: name, size: s.length + " × " + s.depth, layout: btn ? ($(".bar__l", btn) || btn).textContent.trim() : "", a: s.widthA, b: s.widthB }); };
     function show(key, animate) {
       const btn = rows.find((b) => b.dataset.layout === key); if (!btn || !draw[key]) return;
       rows.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
       hallLayout = key;
-      svg.innerHTML = shell + draw[key]();
+      svg.innerHTML = shell() + draw[key]();
+      svg.setAttribute("aria-label", describe(key));
       const n = parseInt(btn.dataset.n, 10);
       if (animate && hasGSAP && !reduced) {
         const o = { v: parseInt(num.textContent, 10) || 0 };
@@ -2165,6 +2491,9 @@
     }
     rows.forEach((b) => b.addEventListener("click", () => { hallPicked = true; if (b.getAttribute("aria-pressed") !== "true") show(b.dataset.layout, true); }));
     show("theatre", false);
+    // the drawing's words (Stage, the measurements) follow the language, and its measurements a content update
+    const redraw = () => { const on = rows.find((b) => b.getAttribute("aria-pressed") === "true"); if (on) { svg.innerHTML = shell() + draw[on.dataset.layout](); svg.setAttribute("aria-label", describe(on.dataset.layout)); } };
+    document.addEventListener("pv:lang", redraw); document.addEventListener("pv:content", redraw);
   }
 
   /* ---------- after dark: two photographs of the same evening ---------- */
@@ -2243,7 +2572,9 @@
       return a;
     }
     function render() {
-      const offers = usableOffers(doc, Date.now()), ids = offers.map((o) => o.id).join("|") + "@" + I18N.lang;
+      // redrawn whenever anything shown changes: an offer's title, terms, code or dates under the same id, the time it
+      // was checked, the language (Phase 4: the id alone let a changed offer keep its old text)
+      const offers = usableOffers(doc, Date.now()), ids = JSON.stringify([I18N.lang, offers.length ? doc.fetchedAt : "", offers]);
       if (ids === shownIds) return; shownIds = ids;
       $$('.ticket[data-offer="feed"], .offers__checked', list).forEach((x) => x.remove());
       neutral.classList.toggle("ticket--hot", !offers.length);
@@ -2288,7 +2619,7 @@
     if (!FX) return false;
     const p = key.replace(/^facts\./, "").split("."), same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     const int = Number.isInteger(value) && value > 0, time = typeof value === "string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
-    const days = Array.isArray(value) && value.length && value.every((d) => Number.isInteger(d) && d >= 0 && d <= 6), date = typeof value === "string" && DATE_RE.test(value);
+    const days = Array.isArray(value) && value.length && value.every((d) => Number.isInteger(d) && d >= 0 && d <= 6), date = typeof value === "string" && !isNaN(dayNum(value));   // a real calendar day, not only its shape
     let obj = null, prop = null, ok = false;
     if (p[0] === "hall" && p[1] === "area") { obj = FX.hall; prop = "areaSqm"; ok = int; }
     else if (p[0] === "hall") { obj = FX.hall.layouts.find((x) => x.key === p[1]); prop = p[2]; ok = int && !!obj && prop in obj; }
@@ -2322,7 +2653,7 @@
         if (r.ok) { await consider(await r.json()); delay = 1000; }
         else delay = Math.min(60000, delay * 2);                            // nothing published yet, busy or failing: ask less often
       } catch (e) { delay = Math.min(60000, delay * 2); }
-      clearTimeout(to); inflight = false; schedule(delay);
+      clearTimeout(to); inflight = false; schedule(delay + Math.round(Math.random() * 250));   // a little jitter, so open pages do not ask in step
     }
     async function consider(m) {
       if (!m || m.schema !== "patravana.manifest/1" || !Number.isInteger(m.revision) || m.revision <= current) return;
@@ -2362,12 +2693,14 @@
       };
       run();
     }
-    /* The fast lane: on every load (and so on every refresh) the page also asks the Sheet's own publisher (a Google
-       Apps Script web app named in meta pv-live) for the newest checked revision. That revision exists seconds after
-       an edit, before the rebuilt pages reach the host. Nothing about the visitor is sent; the answer is checked
-       against its SHA-256 and the content rules before anything is shown, and a failure leaves the page as it is. */
-    const liveMeta = $('meta[name="pv-live"]');
-    const liveUrl = liveMeta && /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(liveMeta.getAttribute("content") || "") ? liveMeta.getAttribute("content") : null;
+    /* The fast lane, for the editor only (Phase 4, 5 November 2026). Opened with ?live in its address (the Sheet's
+       "see it on the site" link), the page also asks the Sheet's own publisher (a Google Apps Script web app named in
+       meta pv-live) for the newest checked revision, which exists seconds after an edit, before the rebuilt pages
+       reach the host. Every other visitor never calls Google: their page reads only this site's own manifest above,
+       which arrives together with the rebuilt pages. The answer is checked against its SHA-256 and the content rules
+       before anything is shown, and a failure leaves the page as it is. */
+    const liveMeta = $('meta[name="pv-live"]'), editorView = /[?&]live(=|&|$)/.test(location.search);
+    const liveUrl = editorView && liveMeta && /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(liveMeta.getAttribute("content") || "") ? liveMeta.getAttribute("content") : null;
     const canon = (v) => (v === null || typeof v !== "object" ? JSON.stringify(v) : Array.isArray(v) ? "[" + v.map(canon).join(",") + "]" : "{" + Object.keys(v).sort().filter((k) => v[k] !== undefined).map((k) => JSON.stringify(k) + ":" + canon(v[k])).join(",") + "}");
     let laneBusy = false, early = window.PVLane || null;      // the request the page head started in its first milliseconds
     async function fastLane() {
@@ -2390,9 +2723,8 @@
       } catch (e) { /* the page keeps what it has; the regular checks carry on */ } finally { clearTimeout(to); laneBusy = false; }
     }
     fastLane();
-    // an open page asks the fast lane again while it is visible: every 4 s for its first 5 minutes (someone editing and
-    // watching), then every 15 s up to 30 minutes, and at once whenever it is shown again. The answer is a few bytes
-    // unless something newer exists.
+    // the editor's open page asks the fast lane again while it is visible: every 4 s for its first 5 minutes, then every
+    // 15 s up to 30 minutes, and at once whenever it is shown again. The answer is a few bytes unless something newer exists.
     if (liveUrl) {
       const born = Date.now();
       const again = () => {
@@ -2552,7 +2884,10 @@
     let tau = Math.random() * 20, boost = 0, vel = 0, lastY = window.scrollY, lastT = 0, lastDraw = 0, running = false;
     const shown = () => hosts.filter((x) => x.vis);
     const drawAll = (t, v) => { const q = pools(tau, t, v); shown().forEach((x) => paint(x, q)); };
-    const still = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+    // still: drawn once per scroll, never animated, for reduced motion and for a visitor saving data (Phase 4)
+    const still = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) || !!(navigator.connection && navigator.connection.saveData);
+    // between scroll moves the drift is slow, so it is redrawn less often: 20 a second on a computer, 12 on a phone
+    const IDLE_MS = window.matchMedia && matchMedia("(pointer: coarse)").matches ? 84 : 50;
     const IDLE = 1 / 75, SCROLL = .18;                 // a slow wander (about 75 s) on its own; scrolling pushes it along, gently
     function frame(now) {
       running = false;
@@ -2565,7 +2900,7 @@
       tau += dt * IDLE + boost;
       // idle about 25 times a second (the drift is slow); while scrolling, every frame (the window onto the field moves)
       const chasing = glow.tx != null || glow.w > .01;
-      if (chasing || boost > .00005 || vel !== 0 || dy !== 0 || now - lastDraw > 40) { drawAll(now / 1000, vel); lastDraw = now; }
+      if (chasing || boost > .00005 || vel !== 0 || dy !== 0 || now - lastDraw > IDLE_MS) { drawAll(now / 1000, vel); lastDraw = now; }
       go();
     }
     const go = () => { if (!running && !still) { running = true; requestAnimationFrame(frame); } };
@@ -2597,7 +2932,7 @@
     $$("[data-count-fact]").forEach((el) => { const v = FACTS.val(el.dataset.countFact); if (v != null) { el.dataset.count = v; el.textContent = v; } });
     I18N.capture(); I18N.apply(initialLang());
     Views.init();
-    initOffers(); initHall(); initStay(); initRadius(); initMap(); initReel(); initDrawers(); initBooking(); initEnquiry(); initPet(); initCopy(); initClock(); initSky(); initDining(); initNight(); initLang(); initDiag(); onScroll();
+    initOffers(); initHall(); initMore(); initStay(); initRadius(); initMap(); initReel(); initDrawers(); initBooking(); initEnquiry(); initPet(); initCopy(); initClock(); initSky(); initDining(); initNight(); initLang(); initDiag(); onScroll();
     startMotion();
     initContent();
     initBackdrop();
