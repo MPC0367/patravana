@@ -13,7 +13,10 @@ if (args[0] === '--record') {
   if (r.generation && r.generation > +want) { console.log('a newer result is already recorded (' + r.generation + ')'); process.exit(0); }
   r.generation = r.generation || +want; r.status = process.env.STATE || 'timed-out'; r.liveCheckedAt = new Date().toISOString();
   try { r.readback = JSON.parse(process.env.READBACK || '{}'); } catch (e) { r.readback = null; }
-  if (r.status !== 'live-verified') (r.problems = r.problems || []).push('not seen live within 10 minutes: GitHub Pages may still finish; the Sheet keeps checking the live site');
+  // live-verified clears what an earlier step left (a duplicate run reporting "superseded" for the same revision); the
+  // record names the run that verified it
+  if (r.status === 'live-verified') { r.problems = []; r.run = process.env.GITHUB_RUN_ID || r.run; }
+  else (r.problems = r.problems || []).push('not seen live within 10 minutes: GitHub Pages may still finish; the Sheet keeps checking the live site');
   writeFileSync(out, JSON.stringify(r, null, 1));
   console.log(r.status);
 } else {
