@@ -77,30 +77,35 @@ html[lang="th"] .it { font-family: inherit; font-style: normal; font-weight: inh
 .skip:focus-visible { top: 1rem; }
 
 /* ---------- the language veil and the reading-progress line ---------- */
-/* the logo's divider is a hairline rule, not a dot */
-.loader__sub i, .brand__sub i, .lockup__sub i { display: inline-block; width: 1px; height: .95em; background: currentColor; vertical-align: -.1em; margin: 0 .7em; opacity: .6; }
 .veil { position: fixed; inset: 0; z-index: 995; background: var(--forest); transform: scaleX(0); transform-origin: left; pointer-events: none; }
 .progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 91; background: linear-gradient(90deg, var(--forest), var(--sage)); transform: scaleX(0); transform-origin: left; }
 
-/* ---------- brand lockups (mountain mark + wordmark) ---------- */
-/* the mountain mark is the brand artwork itself, masked so it takes whatever colour it sits on */
-.pv-mark { display: block; flex: 0 0 auto; background-color: currentColor;
-  -webkit-mask-image: url("assets/web/logo-mark.png"); mask-image: url("assets/web/logo-mark.png");
-  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
-  -webkit-mask-position: center; mask-position: center;
-  -webkit-mask-size: contain; mask-size: contain; }
-.brand { display: inline-flex; align-items: center; gap: .8rem; color: var(--ivory); transition: color .4s; }
-.top.is-solid .brand, .top.is-menu .brand { color: var(--forest); }
-.brand__mark { width: 58px; height: 19px; }
-.brand__text { display: flex; flex-direction: column; line-height: 1.05; }
-.brand__name { font-family: "Montserrat", sans-serif; font-weight: 300; font-size: 1.24rem; letter-spacing: .3em; padding-left: .3em; text-transform: uppercase; }
-.brand__sub { font-family: "Montserrat", sans-serif; font-weight: 300; font-size: .5rem; letter-spacing: .3em; padding-left: .3em; text-transform: uppercase; opacity: .85; margin-top: .3rem; }
-.lockup { display: inline-flex; flex-direction: column; align-items: center; text-align: center; color: var(--forest); line-height: 1.1; }
-.lockup__mark { width: 150px; height: 48px; }
-.lockup__name { font-family: "Montserrat", sans-serif; font-weight: 300; font-size: 1.85rem; letter-spacing: .34em; padding-left: .34em; text-transform: uppercase; margin-top: 1rem; }
-.lockup__sub { font-family: "Montserrat", sans-serif; font-weight: 300; font-size: .62rem; letter-spacing: .34em; padding-left: .34em; text-transform: uppercase; color: var(--earth); margin-top: .45rem; }
-.lockup--light { color: var(--ivory); }
-.lockup--light .lockup__sub { color: var(--mist); }
+/* ---------- the logo: the leaf, the name and the line under it (since 6 November 2026) ----------
+   The three parts are traced shapes in the icon sprite (#pvLeaf, #pvName, #pvSub, written by _qa/gen-loader.mjs) and
+   are shown with <use>. Each part takes its colour from --logo-leaf / --logo-name / --logo-sub where those are set
+   (the logo's own green and near-black on light grounds, sand / ivory / mist on dark ones), and otherwise from the
+   colour of the text around it (the top bar over the film, which follows the film's tone). */
+:root { --logo-green: #107313; --logo-ink: #070707; }
+.lg-leaf { fill: var(--logo-leaf, currentColor); stroke: var(--logo-leaf, currentColor); }
+.lg-name { fill: var(--logo-name, currentColor); stroke: var(--logo-name, currentColor); }
+.lg-sub { fill: var(--logo-sub, currentColor); stroke: var(--logo-sub, currentColor); }
+/* drawn small, the logo's hairlines would fall under a pixel: a stroke of a set width (non-scaling, in screen pixels)
+   round every shape keeps them as fine lines that still read; drawn large (the footer's name, the loader) it is 0 */
+.lg-leaf, .lg-name, .lg-sub { stroke-width: 0; stroke-linejoin: round; transition: fill .4s, stroke .4s; }
+.brand .lg-leaf { stroke-width: .7px; }
+.brand .lg-name { stroke-width: .25px; }
+.brand .lg-sub, .lockup .lg-sub { stroke-width: .4px; }
+.closing__mark .lg-leaf, .lockup .lg-leaf { stroke-width: .5px; }
+.brand { display: inline-flex; align-items: center; gap: .75rem; color: var(--ivory); transition: color .4s; }
+.top.is-solid .brand, .top.is-menu .brand { color: var(--forest); --logo-leaf: var(--logo-green); --logo-name: var(--logo-ink); --logo-sub: var(--logo-green); }
+.brand__leaf, .brand__name, .brand__sub { display: block; flex: 0 0 auto; overflow: visible; }
+.brand__leaf { width: 22px; height: 36px; }
+.brand__text { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.brand__name { width: 182px; height: 17px; }
+.brand__sub { width: 125px; height: 5px; }
+.lockup { display: inline-flex; flex-direction: column; align-items: center; color: var(--forest); --logo-leaf: var(--logo-green); --logo-name: var(--logo-ink); --logo-sub: var(--logo-green); }
+.lockup__logo { display: block; width: 230px; height: 120px; overflow: visible; }
+.lockup--light { color: var(--ivory); --logo-leaf: var(--sand); --logo-name: var(--ivory); --logo-sub: var(--mist); }
 
 /* ---------- top bar ---------- */
 .top {
@@ -111,8 +116,8 @@ html[lang="th"] .it { font-family: inherit; font-style: normal; font-weight: inh
 }
 .top.is-solid { background: rgba(244, 240, 231, .9); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 1px 0 var(--line); padding-block: calc(.45rem + env(safe-area-inset-top, 0px)) .45rem; }
 .top.is-menu { background: var(--ivory); -webkit-backdrop-filter: none; backdrop-filter: none; }
-.top.is-solid .brand__mark { width: 46px; height: 15px; }
-.top.is-solid .brand__name { font-size: 1.1rem; }
+.top.is-solid .brand__leaf { width: 17px; height: 28px; }
+.top.is-solid .brand__name { width: 160px; height: 15px; }
 .top.is-solid .brand__sub { display: none; }
 .top__book-short { display: none; }
 .menu { display: flex; gap: clamp(.9rem, 2vw, 1.8rem); }
@@ -580,7 +585,7 @@ html[lang="th"] .card__foot dt { letter-spacing: 0; text-transform: none; font-s
 
 /* ---------- closing band ---------- */
 .closing { position: relative; overflow: clip; background: var(--forest); color: var(--ivory); padding: clamp(5rem, 13vw, 10rem) var(--pad); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1.3rem; }
-.closing__mark { width: 132px; height: 42px; color: var(--sand); margin-bottom: .6rem; }
+.closing__mark { display: block; width: 42px; height: 68px; color: var(--sand); margin-bottom: .6rem; overflow: visible; }
 .closing__line { font-family: var(--f-display); font-weight: 400; font-size: clamp(2.4rem, 7.6vw, 6.8rem); line-height: .98; letter-spacing: -.05em; max-width: 13ch; text-wrap: balance; }
 .closing__acts { display: flex; flex-wrap: wrap; justify-content: center; gap: .8rem; margin-top: 1.2rem; }
 .closing__note { font-size: .8rem; color: rgba(244,240,231,.82); }   /* .82 (was .72) so it stays above 4.5:1 over the moving green */
@@ -588,16 +593,14 @@ html[lang="th"] .card__foot dt { letter-spacing: 0; text-transform: none; font-s
 /* ---------- footer (ivory on deep pine) ---------- */
 .foot { background: var(--deep); color: var(--ivory); padding: clamp(3rem, 8vh, 6rem) var(--pad) 1.6rem; display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
 .foot__word { grid-column: 1 / -1; color: rgba(244,240,231,.92); }
-.foot__word svg { width: 100%; height: auto; display: block; overflow: visible; }   /* some browsers clipped the P at the viewBox edge */
+.foot__word svg { width: 100%; height: auto; aspect-ratio: 1231 / 129; display: block; overflow: visible; fill: currentColor; }   /* the logo's name, across the footer */
 .foot__cols { display: grid; grid-template-columns: 1.15fr 1.5fr .8fr .8fr 1.15fr; gap: 2rem clamp(1.6rem, 4vw, 4rem); align-items: start; }
 .foot__cols > div { display: flex; flex-direction: column; gap: .5rem; align-items: flex-start; min-width: 0; }
 .foot .card__k { color: var(--mist); }
 .foot__cols a, .foot__cols button.textlink { color: rgba(244,240,231,.86); padding: 0; background: linear-gradient(currentColor, currentColor) 0 100% / 0% 1px no-repeat; transition: color .3s, background-size .55s var(--ease); animation: none; }
 .foot__cols a:hover, .foot__cols button.textlink:hover, .foot__cols a:focus-visible { color: var(--ivory); background-size: 100% 1px; }
 .foot__langk { margin-top: .8rem; }
-.foot__brand .lockup__mark { width: 112px; height: 36px; }
-.foot__brand .lockup__name { font-size: 1.15rem; letter-spacing: .3em; padding-left: .3em; margin-top: .8rem; }
-.foot__brand .lockup__sub { font-size: .5rem; }
+.foot__brand .lockup__logo { width: 192px; height: 100px; }   /* never 190: the old hall figure is banned from the page (_qa/accept.mjs) */
 .foot__fig { display: flex; align-items: baseline; gap: .45rem; font-size: 1.5rem; line-height: 1.1; margin-bottom: .9rem; letter-spacing: -.01em; }
 .foot__fig.num { font-weight: 400; }
 .foot__pre { font-size: .78rem; color: rgba(244,240,231,.72); }
@@ -823,8 +826,8 @@ body.has-overlay .mbar { transform: translateY(110%); }
 }
 
 /* very narrow phones: keep the brand wordmark clear of the header controls */
-@media (max-width: 25em) { .brand__name { font-size: 1.2rem; letter-spacing: .16em; } }
-@media (max-width: 22.5em) { .brand__name { font-size: 1rem; letter-spacing: .1em; } }
+@media (max-width: 25em) { .brand__name { width: 160px; height: 15px; } }
+@media (max-width: 22.5em) { .brand__name { width: 138px; height: 13px; } }
 @media (max-width: 30em) { .top__book { display: none; } }   /* Book stays available via the bottom bar and the burger menu */
 
 /* laptop-height screens: pull the hero in so the planner dock still lands inside the first view */
@@ -983,25 +986,13 @@ html.js .loader.is-up { transform: translateY(-101%); pointer-events: none; }
 html.js .loader.is-done { display: none; }
 @keyframes loaderGone { to { visibility: hidden; } }
 .loader__inner { text-align: center; }
-/* The art inside (index.html, written by _qa/gen-loader.mjs): the mark is the real logo, uncovered by a band that is
-   painted along each brush stroke; the letters are single strokes on the centre lines of the typeface, each written
-   in turn (--d: when it starts, --t: how long it takes). Once they are written and the fonts are in, the script
-   adds .is-written: the real text fades in under the strokes and the strokes fade out, so what stays is the type. */
-.loader__mark { display: block; width: min(190px, 60vw); height: 60px; margin: 0 auto 1.6rem; color: var(--forest); overflow: visible; }
+/* The art inside (index.html, written by _qa/gen-loader.mjs): the whole logo, uncovered by a mask of round bands laid
+   along the centre line of every stroke, each drawn in turn (--d: when it starts, --t: how long it takes): the leaf's
+   outline from the tip, the midrib from the stalk, the veins as it passes them, then PATRAVANA letter by letter and
+   the line under it. .ld-full fades the finished logo in under the last strokes, for the edge pixels no band reached. */
+.loader__logo { display: block; width: min(440px, 78vw); height: calc(min(440px, 78vw) * .5198); margin: 0 auto; overflow: visible; --logo-leaf: var(--logo-green); --logo-name: var(--logo-ink); --logo-sub: var(--logo-green); }
 .ld-band { fill: none; stroke: #fff; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1 2; stroke-dashoffset: 1; animation: ldDraw var(--t) cubic-bezier(.45, .05, .3, 1) var(--d) forwards; }
-.ld-full { opacity: 0; animation: ldShow .35s ease 1.3s forwards; }   /* the last dry-brush specks, outside the bands */
-.loader__word { font-family: "Montserrat", sans-serif; font-weight: 300; font-size: min(clamp(1.9rem, 5.6vw, 3.2rem), 9.6vw); letter-spacing: .34em; padding-left: .34em; display: flex; justify-content: center; color: var(--forest); }
-.loader__sub { font-family: "Montserrat", sans-serif; font-weight: 300; margin-top: .55rem; color: var(--earth); font-size: min(.7rem, 3.6vw); letter-spacing: .34em; padding-left: .34em; text-transform: uppercase; }
-.loader__sub i { width: .09em; }          /* in em, so the line keeps its place at every size */
-/* the boxes are sized in em from the typeface's own measure, so nothing moves while the fonts arrive */
-.loader__type, .loader__subtext { position: relative; display: inline-block; height: 1.6em; line-height: 1.6; white-space: nowrap; font-kerning: none; color: transparent; transition: color .4s ease; }   /* unkerned, as the name has always been set here: each letter on its own measure */
-.loader__write { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; transition: opacity .35s ease .3s; }
-.loader__write .ld-s { fill: none; stroke: var(--forest); stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 12; stroke-dasharray: 1 2; stroke-dashoffset: 1; animation: ldDraw var(--t) cubic-bezier(.4, 0, .25, 1) var(--d) forwards; }
-.loader__subtext .ld-s { stroke: var(--earth); }
-.loader__subtext .ld-bar { opacity: .6; }
-.loader.is-written .loader__type { color: var(--forest); }
-.loader.is-written .loader__subtext { color: var(--earth); }
-.loader.is-written .loader__write { opacity: 0; }
+.ld-full { opacity: 0; animation: ldShow .3s ease var(--d) forwards; }
 .loader__count { position: fixed; right: var(--pad); bottom: 1.3rem; font-family: "DM Sans", sans-serif; font-weight: 300; font-variant-numeric: tabular-nums; font-size: clamp(3rem, 9vw, 6rem); line-height: 1; letter-spacing: -.02em; color: var(--forest); }
 .loader__unit { font-size: .36em; color: var(--earth); margin-left: .08em; }
 .loader__bar { position: fixed; left: 0; right: 0; bottom: 0; height: 2px; background: var(--line); }
@@ -1223,8 +1214,8 @@ html:not(.js) .drawer__head { position: static; }
 @media (max-width: 22.5em) {
   .top { gap: .5rem; }
   .brand { gap: .5rem; }
-  .brand__mark { width: 40px; height: 13px; }
-  .brand__name { font-size: .92rem; letter-spacing: .08em; padding-left: 0; }
+  .brand__leaf { width: 16px; height: 26px; }
+  .brand__name { width: 128px; height: 12px; }
   .top__right { gap: .4rem; }
   .lang { gap: .35rem; font-size: .72rem; padding-inline: 0; }
   .hero__h1 { font-size: clamp(2.7rem, 15.5vw, 3.5rem); }
