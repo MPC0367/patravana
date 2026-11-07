@@ -1,15 +1,21 @@
 {
  "schema": "patravana.publish-result/1",
- "at": "2026-11-07T03:43:11.761Z",
- "status": "superseded",
- "generation": 40,
- "problems": [
-  "revision 40 is not newer than the live revision 40"
+ "at": "2026-11-07T03:43:31.815Z",
+ "status": "deploying",
+ "generation": 41,
+ "problems": [],
+ "revision": 41,
+ "buildId": "269eb9d1961c-c41",
+ "sha256": "b0c7cc64acc20f053fb0949c5530b18b6aa6c076702f5b16c3bfd770d7bd0b3d",
+ "sentAt": "2026-11-07T03:43:22.389Z",
+ "changed": [
+  "js.offerMore",
+  "js.offerHubHead"
  ],
- "run": "42335244483",
+ "run": "42335279570",
  "outcome": "success",
  "timings": {
-  "receivedAt": "2026-11-07T03:43:11Z",
-  "committedAt": null
+  "receivedAt": "2026-11-07T03:43:31Z",
+  "committedAt": "2026-11-07T03:43:33Z"
  }
 }
