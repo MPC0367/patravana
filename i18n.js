@@ -1,4 +1,4 @@
-/* PATRAVANA v2, Thai dictionary and script texts. Written by cms/apply.mjs from content revision 28 (the Patravana Website Content sheet): edit the Sheet, not this file. */
+/* PATRAVANA v2, Thai dictionary and script texts. Written by cms/apply.mjs from content revision 29 (the Patravana Website Content sheet): edit the Sheet, not this file. */
 window.PV_TH = {
  "a11y.skip": "ข้ามไปยังเนื้อหา",
  "nav.stay": "ห้องพัก",
@@ -79,7 +79,7 @@ window.PV_TH = {
  "hub.offergo": "ดูส่วนลด",
  "hub.offerhead": "ส่วนลดและราคาห้องปัจจุบัน",
  "hub.offerextra": "ในหน้าจองของรีสอร์ทเอง ตามวันที่ของคุณ",
- "hub.stay": "สวีทสามแบบ วิวบึงน้ำ สวน หรือทุ่งเขา",
+ "hub.stay": "สวีทสามวิว: บึงน้ำ สวน และหุบเขา",
  "hub.fac": "รีสอร์ทจากมุมสูง สระว่ายน้ำ และบึงน้ำ",
  "hub.dining": "ครัวผู้ใหญ่ลี ริมบึงน้ำ",
  "hub.events": "อัฒจันทร์ และห้องสัมมนาใกล้รีสอร์ท",
