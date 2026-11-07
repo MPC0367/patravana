@@ -1,30 +1,20 @@
 {
  "schema": "patravana.publish-result/1",
- "at": "2026-11-07T03:17:56.922Z",
- "status": "live-verified",
- "generation": 34,
+ "at": "2026-11-07T03:27:29.865Z",
+ "status": "deploying",
+ "generation": 35,
  "problems": [],
- "revision": 34,
- "buildId": "ed770fc305f6-c34",
- "sha256": "f510aa1d5446388ea3f1551be6d859d14732733462000235fe1266e58036cc5c",
- "sentAt": "2026-11-07T03:17:48.548Z",
+ "revision": 35,
+ "buildId": "ed770fc305f6-c35",
+ "sha256": "772ce41a1e50828fa669e10f676dfddcd8bffd440d7466b94c401da088ebe392",
+ "sentAt": "2026-11-07T03:27:19.885Z",
  "changed": [
   "hero.h1b"
  ],
- "run": "42333346863",
+ "run": "42334085426",
  "outcome": "success",
  "timings": {
-  "receivedAt": "2026-11-07T03:17:56Z",
-  "committedAt": "2026-11-07T03:17:58Z"
- },
- "liveCheckedAt": "2026-11-07T03:19:21.016Z",
- "readback": {
-  "ok": true,
-  "manifest": 34,
-  "build": "ed770fc305f6-c34",
-  "en": 34,
-  "enBuild": "ed770fc305f6-c34",
-  "th": 34,
-  "thBuild": "ed770fc305f6-c34"
+  "receivedAt": "2026-11-07T03:27:29Z",
+  "committedAt": "2026-11-07T03:27:31Z"
  }
 }
