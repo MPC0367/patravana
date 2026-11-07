@@ -1576,8 +1576,9 @@ body.has-overlay .fab__top, body.has-overlay .fab__book { opacity: 0; visibility
    where the phone's "you are here" line joins), deepening toward the bottom right */
 .chapter--dark { background: linear-gradient(170deg, var(--forest) 0%, var(--forest-mid) 48%, var(--forest-depth) 100%); }
 /* its small numbers and the "Nearby, offsite" note: stone measured 3.5:1 on this green; a lighter sand gives 4.9:1 at
-   the lightest point of the ramp (_qa/contrast.mjs) */
-.chapter--dark .chapter__num, .chapter--dark .fac__n { color: #D4C6B0; }
+   the lightest point of the ramp (_qa/contrast.mjs). A touch lighter again since 7 November 2026, when the moving green
+   got more light and shade: 4.5:1 or more up to the green's new ceiling (luminance .09, main.js initBackdrop) */
+.chapter--dark .chapter__num, .chapter--dark .fac__n { color: #DED2BF; }
 /* the featured offer, a much milder sibling of it */
 .ticket--hot, .hub__card--offer { background: linear-gradient(160deg, var(--forest) 0%, var(--forest-mid) 100%); }
 .hub__card--offer:hover { background: linear-gradient(160deg, var(--forest-mid) 0%, var(--forest-depth) 100%); }

@@ -2788,8 +2788,10 @@
     // two moods: the forest green of Facilities and the closing band, and the deeper green of the footer
     const MOODS = {
       // jewel greens on the brand's deep forest: emerald, deep teal, viridian, a moss glint, and ink-green shadow
-      forest: { base: hx("#263D2E"), pools: ["#0B5E43", "#0C5559", "#0E4A3A", "#1D5E58", "#2A5A2E"].map(hx), glow: hx("#19674C"), shade: hx("#081A14"), ceil: .085 },
-      deep: { base: hx("#1F3327"), pools: ["#0B4733", "#0B3F44", "#0A2620", "#0E4A3A", "#1E3D24"].map(hx), glow: hx("#125A44"), shade: hx("#081A14"), ceil: .05 }
+      // piv, k: the light and shade are spread around the middle of the field (piv, a luminance) by the power k, so the
+      // lit pools come up toward the ceiling and the hollows between them go deeper (user, 7 Nov 2026: "too flat")
+      forest: { base: hx("#263D2E"), pools: ["#0B5E43", "#0C5559", "#0E4A3A", "#1D5E58", "#2A5A2E"].map(hx), glow: hx("#19674C"), shade: hx("#081A14"), ceil: .09, piv: .056, k: 2.4 },
+      deep: { base: hx("#1F3327"), pools: ["#0B4733", "#0B3F44", "#0A2620", "#0E4A3A", "#1E3D24"].map(hx), glow: hx("#125A44"), shade: hx("#081A14"), ceil: .06, piv: .035, k: 2.2 }
     };
     const hosts = $$(".chapter--dark, .closing, .foot").map((el) => {
       const wrap = document.createElement("div"), cv = document.createElement("canvas");
@@ -2861,6 +2863,7 @@
       if (w !== hst.w || h !== hst.h || !hst.img) { hst.w = w; hst.h = h; hst.cv.width = w; hst.cv.height = h; hst.img = hst.ctx.createImageData(w, h); }
       const md = hst.mood, d = hst.img.data, ox = rect.left / s, oy = rect.top / s, vh = window.innerHeight / s;
       const cols = [md.pools[0], md.pools[1], md.pools[2], md.pools[3], md.pools[4], md.glow, md.shade], B = md.base, CEIL = md.ceil;
+      const PIV = md.piv, K = md.k, TOP = CEIL * .97, KNEE = CEIL * .78;
       // only the rows in view (and a margin) are drawn; the rest keep what they had
       const y0 = Math.max(0, Math.floor(-oy) - 2), y1 = Math.min(h, Math.ceil(vh - oy) + 2);
       for (let y = y0; y < y1; y++) {
@@ -2873,7 +2876,12 @@
             const al = q[k + 4] * G[(j * 4) | 0], c = cols[q[k + 5]];
             R += (c[0] - R) * al; Gc += (c[1] - Gc) * al; Bl += (c[2] - Bl) * al;
           }
-          const Y = .2126 * LIN[R | 0] + .7152 * LIN[Gc | 0] + .0722 * LIN[Bl | 0];
+          let Y = .2126 * LIN[R | 0] + .7152 * LIN[Gc | 0] + .0722 * LIN[Bl | 0];
+          // more light and shade, keeping the hue; the brightest ease into the ceiling instead of flattening against it
+          let Yt = PIV * Math.pow(Y / PIV, K);
+          if (Yt > KNEE) Yt = KNEE + (TOP - KNEE) * Math.tanh((Yt - KNEE) / (TOP - KNEE));
+          const fc = Math.pow(Yt / Y, .4545); R = Math.min(255, R * fc); Gc = Math.min(255, Gc * fc); Bl = Math.min(255, Bl * fc);
+          Y = .2126 * LIN[R | 0] + .7152 * LIN[Gc | 0] + .0722 * LIN[Bl | 0];
           if (Y > CEIL) { const f = Math.pow(CEIL / Y, .4545) * .985; R *= f; Gc *= f; Bl *= f; }   // dim, keeping the hue
           d[o++] = R; d[o++] = Gc; d[o++] = Bl; d[o++] = 255;
         }
