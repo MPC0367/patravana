@@ -1,4 +1,4 @@
-/* PATRAVANA v2, Thai dictionary and script texts. Written by cms/apply.mjs from content revision 40 (the Patravana Website Content sheet): edit the Sheet, not this file. */
+/* PATRAVANA v2, Thai dictionary and script texts. Written by cms/apply.mjs from content revision 41 (the Patravana Website Content sheet): edit the Sheet, not this file. */
 window.PV_TH = {
  "a11y.skip": "ข้ามไปยังเนื้อหา",
  "nav.stay": "ห้องพัก",
@@ -805,11 +805,11 @@ window.PV_JS = {
  },
  "offerMore": {
   "en": "and {n} more on the Offers page",
-  "th": "และอีก {n} รายการในหน้าข้อเสนอ"
+  "th": "และอีก {n} รายการในหน้าส่วนลด"
  },
  "offerHubHead": {
   "en": "Current offers and rates",
-  "th": "ข้อเสนอและราคาปัจจุบัน"
+  "th": "ส่วนลดและราคาปัจจุบัน"
  },
  "offerHubExtra": {
   "en": "On the resort's own booking page, for your dates",
