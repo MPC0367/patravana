@@ -136,6 +136,8 @@ jobs:
           for i in $(seq 1 120); do
             res=$(node cms/readback.mjs "$SITE" "$want")
             if echo "$res" | grep -q '"ok":true'; then echo "live: $res"; echo "state=live-verified" >> "$GITHUB_OUTPUT"; echo "readback=$res" >> "$GITHUB_OUTPUT"; exit 0; fi
+            # a newer revision from the Sheet is live everywhere: it carries this edit, and its own run reports to the Sheet
+            if echo "$res" | grep -q '"superseded":true'; then echo "replaced by a newer revision that is live: $res"; echo "state=superseded" >> "$GITHUB_OUTPUT"; echo "readback=$res" >> "$GITHUB_OUTPUT"; exit 0; fi
             sleep 5
           done
           echo "last read: $res"
@@ -148,6 +150,7 @@ jobs:
           READBACK: ${{ steps.watch.outputs.readback }}
         run: |
           want=${{ needs.publish.outputs.generation }}
+          if [ "$STATE" = "superseded" ]; then echo "revision $want was replaced by a newer revision that is live; that revision's run reports to the Sheet" | tee -a "$GITHUB_STEP_SUMMARY"; exit 0; fi
           gh api "repos/${{ github.repository }}/contents/inbox/result.json?ref=cms-inbox" > "$RUNNER_TEMP/cur.json" 2>/dev/null || echo "{}" > "$RUNNER_TEMP/cur.json"
           node cms/readback.mjs --record "$RUNNER_TEMP/cur.json" "$want" "$RUNNER_TEMP/live.json"
           if [ -f "$RUNNER_TEMP/live.json" ]; then

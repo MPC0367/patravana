@@ -1,6 +1,9 @@
 // Reads a published revision back from the live site (Phase 4, 5 November 2026), for the publishing workflow's confirm
 // job and for the studio. A revision is live-verified only when the content manifest, the English page and the Thai page
-// all carry it, and both pages carry the manifest's build id.
+// all carry it, and both pages carry the manifest's build id. When the Sheet sent a newer revision meanwhile and that one is
+// live everywhere, the answer is {"ok":false,"superseded":true}: every revision is a whole snapshot of the Sheet, so the newer
+// one carries this edit (or a later wording of it), and the newer revision's own run reports it to the Sheet (7 November 2026:
+// quick edits a few seconds apart sent "Run failed" emails for revisions that were replaced before Pages finished).
 //   node cms/readback.mjs <site> <revision>                          prints {"ok":true|false,...}
 //   node cms/readback.mjs --record <current-result.json> <revision> <out.json>   (writes the live state for the Sheet,
 //                                                                     unless a newer revision's result is already there)
@@ -28,7 +31,9 @@ if (args[0] === '--record') {
     const m = JSON.parse(await get(site + 'content/manifest.json'));
     const en = await get(site), th = await get(site + 'th');
     const out = { manifest: m.revision, build: m.build, en: +meta(en, 'pv-content'), enBuild: meta(en, 'pv-build'), th: +meta(th, 'pv-content'), thBuild: meta(th, 'pv-build') };
-    const ok = m.revision === want && out.en === want && out.th === want && out.enBuild === m.build && out.thBuild === m.build;
-    console.log(JSON.stringify(Object.assign({ ok }, out)));
+    const same = out.enBuild === m.build && out.thBuild === m.build;
+    const ok = m.revision === want && out.en === want && out.th === want && same;
+    const superseded = !ok && same && m.revision > want && out.en === m.revision && out.th === m.revision;
+    console.log(JSON.stringify(Object.assign({ ok }, superseded ? { superseded } : {}, out)));
   } catch (e) { console.log(JSON.stringify({ ok: false, error: String(e.message || e) })); }
 }
