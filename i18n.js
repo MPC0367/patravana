@@ -1,4 +1,4 @@
-/* PATRAVANA v2, Thai dictionary and script texts. Written by cms/apply.mjs from content revision 31 (the Patravana Website Content sheet): edit the Sheet, not this file. */
+/* PATRAVANA v2, Thai dictionary and script texts. Written by cms/apply.mjs from content revision 33 (the Patravana Website Content sheet): edit the Sheet, not this file. */
 window.PV_TH = {
  "a11y.skip": "ข้ามไปยังเนื้อหา",
  "nav.stay": "ห้องพัก",
@@ -47,8 +47,8 @@ window.PV_TH = {
  "dock.notemore": "ไปต่อที่หน้าจองของรีสอร์ทเองในแท็บใหม่ พร้อมวันที่ของคุณ ห้องพักและผู้เข้าพักทั้งหมดของคณะให้เลือกในหน้านั้น",
  "hero.eyebrow1": "ภัทราวานา รีสอร์ท",
  "hero.eyebrow2": "เขาใหญ่",
- "hero.h1a": "ขึ้นมา",
- "hero.h1b": "สูด<em class=\"it\">อากาศบริสุทธิ์</em>",
+ "hero.h1a": "ขึ้นมาสูด",
+ "hero.h1b": "<em class=\"it\">อากาศบริสุทธิ์</em>",
  "hero.sub": "ห้องสวีทและห้องพัก 64 ห้อง ท่ามกลางขุนเขาเขียวขจีของเขาใหญ่",
  "hero.book": "จองที่พัก",
  "hero.explore": "สำรวจขุนเขา",
