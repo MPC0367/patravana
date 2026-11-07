@@ -1,4 +1,4 @@
-/* PATRAVANA v2, Thai dictionary and script texts. Written by cms/apply.mjs from content revision 30 (the Patravana Website Content sheet): edit the Sheet, not this file. */
+/* PATRAVANA v2, Thai dictionary and script texts. Written by cms/apply.mjs from content revision 31 (the Patravana Website Content sheet): edit the Sheet, not this file. */
 window.PV_TH = {
  "a11y.skip": "ข้ามไปยังเนื้อหา",
  "nav.stay": "ห้องพัก",
@@ -41,7 +41,7 @@ window.PV_TH = {
  "room.pg": "ภัทรา สวีท วิวสวน",
  "room.pj": "ภัทรา จูเนียร์ สวีท วิวสวน",
  "book.go": "ไปที่หน้าจองของรีสอร์ท",
- "book.petq": "พาสัตว์เลี้ยงมาด้วย?",
+ "book.petq": "พาสัตว์เลี้ยงมาด้วย",
  "dock.go": "เช็คห้องว่าง",
  "dock.note": "ไปต่อที่หน้าจองของรีสอร์ทเองในแท็บใหม่ พร้อมวันที่และจำนวนผู้ใหญ่ของคุณ",
  "dock.notemore": "ไปต่อที่หน้าจองของรีสอร์ทเองในแท็บใหม่ พร้อมวันที่ของคุณ ห้องพักและผู้เข้าพักทั้งหมดของคณะให้เลือกในหน้านั้น",
