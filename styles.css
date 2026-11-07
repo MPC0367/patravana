@@ -1751,3 +1751,23 @@ html[lang="th"] .hall__svg .h-stagetxt { letter-spacing: 0; text-transform: none
 .hall__svg .h-dimline { fill: none; stroke: var(--muted); stroke-width: .7; }
 .hall__svg .h-dim, .hall__svg .h-room-k { fill: var(--muted); font-size: 11px; text-anchor: middle; font-family: inherit; font-variant-numeric: tabular-nums; }
 .hall__svg .h-room-k { fill: var(--charcoal); font-size: 11.5px; font-weight: 500; }
+
+/* ---------- booking buttons: burgundy, with a light that sweeps across every few seconds (7 November 2026, the user:
+   "change the booking button on the website to be maroon/burgundy color that shines every few seconds").
+   Every button that starts a booking carries .pill--book; all of them shine together on one clock. ---------- */
+:root { --wine: #7A1F2E; --wine-deep: #5A1420; --wine-glint: rgba(255, 238, 230, .62); }
+.pill--book { background: var(--wine); border-color: var(--wine); color: var(--ivory); }
+.pill--book::after { background: var(--wine-deep); }                     /* the hover fill rises in a deeper wine */
+.pill--book:hover, .pill--book:focus-visible { border-color: var(--wine-deep); color: var(--ivory); }
+.pill--book::before {
+  content: ""; position: absolute; top: -10%; bottom: -10%; left: 0; width: 36%; z-index: -1; pointer-events: none;
+  background: linear-gradient(100deg, rgba(255, 236, 228, 0) 0%, var(--wine-glint) 50%, rgba(255, 236, 228, 0) 100%);
+  transform: translateX(-140%) skewX(-20deg); animation: pvShine 4.5s cubic-bezier(.45, 0, .25, 1) infinite;
+}
+@keyframes pvShine {
+  0%, 74% { transform: translateX(-140%) skewX(-20deg); }
+  100% { transform: translateX(340%) skewX(-20deg); }
+}
+.pill--book:hover::before, .pill--book:focus-visible::before { animation-play-state: paused; opacity: 0; }
+:is([data-dark], .card--forest, .ticket--hot) .pill--book { box-shadow: 0 0 0 1px rgba(244, 240, 231, .22); }   /* a fine rim on dark green */
+@media (prefers-reduced-motion: reduce) { .pill--book::before { animation: none; opacity: 0; } }

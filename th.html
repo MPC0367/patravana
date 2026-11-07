@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="th" data-locale="th"><head>
 <meta charset="UTF-8">
-<meta name="pv-build" content="ed770fc305f6-c35">
+<meta name="pv-build" content="269eb9d1961c-c35">
 <meta name="pv-content" content="35">
 <meta name="pv-live" content="https://script.google.com/macros/s/AKfycbzUB0wwKaD7KskTFDWAxMB_kcaBExYeVBPkADWCVvrliZ0Tt8rdQpBARE51c_UGg0Pj/exec">
 <script data-pv-lane>/[?&]live(=|&|$)/.test(location.search)&&window.fetch&&(window.PVLane=fetch("https://script.google.com/macros/s/AKfycbzUB0wwKaD7KskTFDWAxMB_kcaBExYeVBPkADWCVvrliZ0Tt8rdQpBARE51c_UGg0Pj/exec?since=35",{credentials:"omit",cache:"no-store",redirect:"follow"}).then(function(r){return r.ok?r.json():null}).catch(function(){return null}))</script>
@@ -45,7 +45,7 @@ document.documentElement.className += " js";
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300..800&amp;family=Fraunces:ital,opsz,wght@1,9..144,300..500&amp;family=DM+Sans:opsz,wght@9..40,300..600&amp;family=Prompt:wght@300;400;500;600&amp;family=Sarabun:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=9d662eb7">
+<link rel="stylesheet" href="styles.css?v=d0d33887">
 </head>
 <body>
 
@@ -186,7 +186,7 @@ document.documentElement.className += " js";
     <button class="lang js-only" id="langToggle" aria-label="เปลี่ยนภาษาเป็นไทย">
       <span class="lang__opt is-on" data-lang-opt="en">EN</span><span class="lang__sep" aria-hidden="true"></span><span class="lang__opt" data-lang-opt="th" lang="th">ไทย</span>
     </button>
-    <a class="pill pill--solid top__book" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open=""><span class="top__book-long" data-i18n="nav.book">จองที่พัก</span><span class="top__book-short" data-i18n="nav.bookshort">จอง</span></a>
+    <a class="pill pill--solid pill--book top__book" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open=""><span class="top__book-long" data-i18n="nav.book">จองที่พัก</span><span class="top__book-short" data-i18n="nav.bookshort">จอง</span></a>
     <button class="burger js-only" id="burger" aria-label="เมนู" aria-expanded="false" aria-controls="mnav" data-i18n-attr="aria-label:nav.menu"><span></span><span></span></button>
   </div>
 </header>
@@ -238,7 +238,7 @@ document.documentElement.className += " js";
       <label class="field field--promo"><span data-i18n="book.promo">โค้ดส่วนลด (ถ้ามี)</span><input type="text" id="bookPromo" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
       <p class="book__more" id="bookMore" data-fact="book.more" hidden="">หนึ่งห้องสวีทพักได้สูงสุด 3 ท่าน วันที่และห้องที่เลือกจะถูกส่งต่อไป ส่วนห้องพักและผู้เข้าพักทั้งหมดของคณะให้เลือกในหน้าจอง หรือสอบถามทีมงาน</p>
       <div class="book__actions">
-        <a class="pill pill--solid pill--lg" id="bookGo" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener"><span data-i18n="book.go">ไปที่หน้าจองของรีสอร์ท</span><svg class="pill__ic" aria-hidden="true"><use href="#i-out"></use></svg></a>
+        <a class="pill pill--solid pill--book pill--lg" id="bookGo" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener"><span data-i18n="book.go">ไปที่หน้าจองของรีสอร์ท</span><svg class="pill__ic" aria-hidden="true"><use href="#i-out"></use></svg></a>
         <p class="book__note" data-fact="book.note">เปิดในแท็บใหม่พร้อมวันที่ จำนวนผู้ใหญ่ และห้องที่คุณเลือก โค้ดส่วนลดจะถูกคัดลอกไว้ให้นำไปวางในหน้านั้น ส่วนเด็กและห้องเพิ่มให้เลือกในหน้าจอง จองทางโทรศัพท์ 088-504-1888 หรือ LINE ก็ได้เช่นกัน</p>
       </div>
       <p class="book__summary num" id="bookSummary" aria-live="polite"></p>
@@ -251,7 +251,7 @@ document.documentElement.className += " js";
 <div class="mbar" id="mbar">
   <button class="mbar__explore js-only" type="button" id="mbarExplore" aria-controls="mnav" aria-expanded="false"><span class="mbar__k" data-i18n="nav.explore">สำรวจ</span><span class="mbar__now" id="mbarNow" aria-hidden="true"></span></button>
   <a class="pill pill--ghost" href="https://www.patravana.com/line-qr-code" target="_blank" rel="noopener" aria-label="หน้าติดต่อทาง LINE" data-i18n-attr="aria-label:line.label">LINE</a>
-  <a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open=""><span data-i18n="nav.bookshort">จอง</span></a>
+  <a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open=""><span data-i18n="nav.bookshort">จอง</span></a>
 </div>
 <div class="mnav" id="mnav">
   <nav aria-label="เมนู" data-i18n-attr="aria-label:nav.menu">
@@ -267,7 +267,7 @@ document.documentElement.className += " js";
     <a href="#visit" data-i18n="nav.contactfaq" data-view-link="contact">ติดต่อและคำถาม</a>
     <a href="#essentials" class="mnav__sub" data-i18n="nav.faqs">คำถามที่พบบ่อย</a>
   </nav>
-  <a class="pill pill--solid mnav__book" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open=""><span data-i18n="nav.book">จองที่พัก</span></a>
+  <a class="pill pill--solid pill--book mnav__book" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open=""><span data-i18n="nav.book">จองที่พัก</span></a>
 </div>
 
 <main id="main">
@@ -321,7 +321,7 @@ document.documentElement.className += " js";
       </h1>
       <p class="hero__sub" data-i18n="hero.sub">ห้องสวีทและห้องพัก 64 ห้อง ท่ามกลางขุนเขาเขียวขจีของเขาใหญ่</p>
       <div class="hero__cta">
-        <a class="pill pill--solid pill--lg" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open=""><span data-i18n="hero.book">จองที่พัก</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+        <a class="pill pill--solid pill--book pill--lg" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open=""><span data-i18n="hero.book">จองที่พัก</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
         <a class="pill pill--ghost pill--lg" href="#air"><span data-i18n="hero.explore">สำรวจขุนเขา</span></a>
       </div>
     </div>
@@ -354,7 +354,7 @@ document.documentElement.className += " js";
     <label class="dock__f dock__f--s"><span data-i18n="book.adults">ผู้ใหญ่</span>
       <select id="dockAdults" name="adults" aria-describedby="dockErr"><option value="1">1</option><option value="2" selected="">2</option><option value="3">3</option><option value="more" data-i18n="book.adultsmore">4 ท่านขึ้นไป</option></select>
     </label>
-    <a class="pill pill--solid pill--lg dock__go" id="dockGo" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener"><span data-i18n="dock.go">เช็คห้องว่าง</span><svg class="pill__ic" aria-hidden="true"><use href="#i-out"></use></svg></a>
+    <a class="pill pill--solid pill--book pill--lg dock__go" id="dockGo" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener"><span data-i18n="dock.go">เช็คห้องว่าง</span><svg class="pill__ic" aria-hidden="true"><use href="#i-out"></use></svg></a>
   </form>
   <p class="dock__err" id="dockErr" role="alert" hidden=""></p>
   <p class="dock__more" id="dockMore" data-fact="book.more" hidden="">หนึ่งห้องสวีทพักได้สูงสุด 3 ท่าน วันที่และห้องที่เลือกจะถูกส่งต่อไป ส่วนห้องพักและผู้เข้าพักทั้งหมดของคณะให้เลือกในหน้าจอง หรือสอบถามทีมงาน</p>
@@ -646,7 +646,7 @@ document.documentElement.className += " js";
               </div>
               <!-- phones: the photographs one at a time, with the count and buttons beside the swipe -->
               <div class="rg__nav js-only"><button class="iconbtn rg__step" type="button" data-rg-step="-1" aria-label="ภาพก่อนหน้า" data-i18n-attr="aria-label:lb.prev"><svg aria-hidden="true"><use href="#i-back"></use></svg></button><span class="rg__count num"><b>1</b> / <span>5</span></span><button class="iconbtn rg__step" type="button" data-rg-step="1" aria-label="ภาพถัดไป" data-i18n-attr="aria-label:lb.next"><svg aria-hidden="true"><use href="#i-arrow"></use></svg></button></div>
-              <a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000005" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000005"><span data-i18n="stay.bookroom">เช็ควันว่างของห้องนี้</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+              <a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000005" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000005"><span data-i18n="stay.bookroom">เช็ควันว่างของห้องนี้</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
             </div>
           </div>
         </div>
@@ -693,7 +693,7 @@ document.documentElement.className += " js";
               </div>
               <!-- phones: the photographs one at a time, with the count and buttons beside the swipe -->
               <div class="rg__nav js-only"><button class="iconbtn rg__step" type="button" data-rg-step="-1" aria-label="ภาพก่อนหน้า" data-i18n-attr="aria-label:lb.prev"><svg aria-hidden="true"><use href="#i-back"></use></svg></button><span class="rg__count num"><b>1</b> / <span>5</span></span><button class="iconbtn rg__step" type="button" data-rg-step="1" aria-label="ภาพถัดไป" data-i18n-attr="aria-label:lb.next"><svg aria-hidden="true"><use href="#i-arrow"></use></svg></button></div>
-              <a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000008" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000008"><span data-i18n="stay.bookroom">เช็ควันว่างของห้องนี้</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+              <a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000008" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000008"><span data-i18n="stay.bookroom">เช็ควันว่างของห้องนี้</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
             </div>
           </div>
         </div>
@@ -729,7 +729,7 @@ document.documentElement.className += " js";
               </div>
               <!-- phones: the photographs one at a time, with the count and buttons beside the swipe -->
               <div class="rg__nav js-only"><button class="iconbtn rg__step" type="button" data-rg-step="-1" aria-label="ภาพก่อนหน้า" data-i18n-attr="aria-label:lb.prev"><svg aria-hidden="true"><use href="#i-back"></use></svg></button><span class="rg__count num"><b>1</b> / <span>5</span></span><button class="iconbtn rg__step" type="button" data-rg-step="1" aria-label="ภาพถัดไป" data-i18n-attr="aria-label:lb.next"><svg aria-hidden="true"><use href="#i-arrow"></use></svg></button></div>
-              <a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000006" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000006"><span data-i18n="stay.bookroom">เช็ควันว่างของห้องนี้</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+              <a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000006" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000006"><span data-i18n="stay.bookroom">เช็ควันว่างของห้องนี้</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
             </div>
           </div>
         </div>
@@ -803,9 +803,9 @@ document.documentElement.className += " js";
         </tbody>
         <tfoot>
           <tr><td></td>
-            <td><a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000005" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000005" data-cmp-family="vana"><span data-i18n="stay.book">เช็ควันว่าง</span></a></td>
-            <td><a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000008" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000008" data-cmp-family="patra"><span data-i18n="stay.book">เช็ควันว่าง</span></a></td>
-            <td><a class="pill pill--solid" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000006" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000006" data-cmp-family="junior"><span data-i18n="stay.book">เช็ควันว่าง</span></a></td>
+            <td><a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000005" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000005" data-cmp-family="vana"><span data-i18n="stay.book">เช็ควันว่าง</span></a></td>
+            <td><a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000008" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000008" data-cmp-family="patra"><span data-i18n="stay.book">เช็ควันว่าง</span></a></td>
+            <td><a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000006" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000006" data-cmp-family="junior"><span data-i18n="stay.book">เช็ควันว่าง</span></a></td>
           </tr>
         </tfoot>
       </table>
@@ -1211,7 +1211,7 @@ document.documentElement.className += " js";
   <p class="chapter__kicker" data-i18n="close.kicker">วางแผนการเข้าพัก</p>
   <p class="closing__line st-lines" id="closingLine" data-i18n="close.line">เลือกวันของคุณ อากาศ<em class="it">รออยู่ที่นี่</em></p>
   <div class="closing__acts">
-    <a class="pill pill--light pill--lg" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open=""><span data-i18n="dock.go">เช็คห้องว่าง</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+    <a class="pill pill--light pill--book pill--lg" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open=""><span data-i18n="dock.go">เช็คห้องว่าง</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
     <a class="pill pill--ghost pill--lg" href="#stay"><span data-i18n="close.suites">ดูห้องสวีท</span></a>
   </div>
   <p class="closing__note" data-i18n="close.note">การจองจะเสร็จสมบูรณ์ในหน้าจองของรีสอร์ทเอง</p>
@@ -1255,7 +1255,7 @@ document.documentElement.className += " js";
      bottom bar does not already carry it), back to the top at the bottom left -->
 <div class="fab js-only" id="fab">
   <button class="fab__top" type="button" id="fabTop" aria-label="กลับขึ้นด้านบน" data-i18n-attr="aria-label:foot.top" inert=""><svg aria-hidden="true"><use href="#i-up"></use></svg></button>
-  <a class="pill pill--solid pill--lg fab__book" id="fabBook" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open="" inert=""><span data-i18n="nav.book">จองที่พัก</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+  <a class="pill pill--solid pill--book pill--lg fab__book" id="fabBook" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open="" inert=""><span data-i18n="nav.book">จองที่พัก</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
 </div>
 
 <!-- enquiry composer: a message the guest writes here and sends to the resort themselves, by LINE, email or phone.
