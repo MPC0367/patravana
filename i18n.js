@@ -1,4 +1,4 @@
-/* PATRAVANA v2, Thai dictionary and script texts. Written by cms/apply.mjs from content revision 25 (the Patravana Website Content sheet): edit the Sheet, not this file. */
+/* PATRAVANA v2, Thai dictionary and script texts. Written by cms/apply.mjs from content revision 27 (the Patravana Website Content sheet): edit the Sheet, not this file. */
 window.PV_TH = {
  "a11y.skip": "ข้ามไปยังเนื้อหา",
  "nav.stay": "ห้องพัก",
@@ -75,9 +75,9 @@ window.PV_TH = {
  "hub.k": "ยินดีต้อนรับ",
  "hub.intro": "ห้องสวีทและห้องพัก 64 ห้องในโครงการภูภัทรา ต.พญาเย็น สนามหญ้าทอดยาวลงสู่บึงน้ำ ห่างจากอุทยานแห่งชาติเขาใหญ่ราว 20 กม.",
  "hub.title": "สำรวจภัทราวานา",
- "hub.offerk": "ข้อเสนอ",
+ "hub.offerk": "ส่วนลด",
  "hub.offergo": "ดูส่วนลด",
- "hub.offerhead": "ข้อเสนอและราคาห้องปัจจุบัน",
+ "hub.offerhead": "ส่วนลดและราคาห้องปัจจุบัน",
  "hub.offerextra": "ในหน้าจองของรีสอร์ทเอง ตามวันที่ของคุณ",
  "hub.stay": "สวีทสามแบบ วิวบึงน้ำ สวน หรือทุ่งเขา",
  "hub.fac": "รีสอร์ทจากมุมสูง สระว่ายน้ำ และบึงน้ำ",
