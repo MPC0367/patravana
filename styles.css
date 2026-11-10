@@ -1810,3 +1810,14 @@ a.rev__name { text-decoration: underline; text-decoration-color: var(--line-2); 
 .revs__note { margin: 0; max-width: 62ch; font-size: .8rem; line-height: 1.55; color: var(--muted); }
 .revs__g { font-weight: 600; color: var(--charcoal); }
 @media (prefers-reduced-motion: reduce) { .rev, .rev.is-on { transition: none; } }
+/* until reviews have loaded (no key yet, or Google did not answer) the section is a slim band: the heading on the
+   left, the note and the button to Google on the right, nothing empty beside them */
+.chapter--reviews:not(.has-revs) .chapter__body { display: none; }
+@media (min-width: 62.5625em) {
+  .chapter--reviews:not(.has-revs) { grid-template-columns: minmax(0, 1fr); padding-block: clamp(3.5rem, 6vw, 5.5rem); }
+  .chapter--reviews:not(.has-revs) .chapter__side { position: static; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); column-gap: clamp(2rem, 6vw, 6rem); row-gap: .9rem; align-items: end; }
+  .chapter--reviews:not(.has-revs) .chapter__kicker { grid-column: 1; grid-row: 1; }
+  .chapter--reviews:not(.has-revs) .chapter__title { grid-column: 1; grid-row: 2; }
+  .chapter--reviews:not(.has-revs) .chapter__note { grid-column: 2; grid-row: 1; align-self: end; max-width: 36ch; }
+  .chapter--reviews:not(.has-revs) #revCta { grid-column: 2; grid-row: 2; justify-self: start; align-self: end; }
+}

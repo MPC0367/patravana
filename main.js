@@ -2648,6 +2648,7 @@
       list = (Array.isArray(data.reviews) ? data.reviews : []).filter((v) => v && v.rating >= min && ((v.text && v.text.text) || (v.originalText && v.originalText.text)))
         .sort((a, b) => (Date.parse(b.publishTime) || 0) - (Date.parse(a.publishTime) || 0)).slice(0, cfg.show || 5);
       stage.textContent = ""; dots.textContent = "";
+      root.classList.toggle("has-revs", list.length > 0);
       if (!list.length) { box.hidden = true; return; }
       list.forEach((v, k) => {
         const a = el("article", "rev"); a.setAttribute("aria-roledescription", I18N.lang === "th" ? "รีวิว" : "review"); a.setAttribute("aria-label", I18N.t("reviewOf", { i: k + 1, n: list.length }));
