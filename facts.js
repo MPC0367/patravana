@@ -174,6 +174,14 @@ window.PV_FACTS = {
    }
   ]
  },
+ "reviews": {
+  "placeId": "ChIJW0dROePNHTERYZEflZQxuP8",
+  "key": "",
+  "reviewsUrl": "https://search.google.com/local/reviews?placeid=ChIJW0dROePNHTERYZEflZQxuP8",
+  "minRating": 5,
+  "show": 5,
+  "rotateSeconds": 7
+ },
  "text": {
   "pet.summary": {
    "en": "Pet-friendly stays are available in one designated building.",

@@ -2,7 +2,7 @@
 <html lang="en" data-locale="en">
 <head>
 <meta charset="UTF-8">
-<meta name="pv-build" content="258d9fdb6cbe-c42">
+<meta name="pv-build" content="bf20d0392605-c42">
 <meta name="pv-content" content="42">
 <meta name="pv-live" content="https://script.google.com/macros/s/AKfycbzUB0wwKaD7KskTFDWAxMB_kcaBExYeVBPkADWCVvrliZ0Tt8rdQpBARE51c_UGg0Pj/exec">
 <script data-pv-lane>/[?&]live(=|&|$)/.test(location.search)&&window.fetch&&(window.PVLane=fetch("https://script.google.com/macros/s/AKfycbzUB0wwKaD7KskTFDWAxMB_kcaBExYeVBPkADWCVvrliZ0Tt8rdQpBARE51c_UGg0Pj/exec?since=42",{credentials:"omit",cache:"no-store",redirect:"follow"}).then(function(r){return r.ok?r.json():null}).catch(function(){return null}))</script>
@@ -37,7 +37,7 @@ document.documentElement.className += " js";
   if (mm && mm("(max-width: 47.99em), (pointer: coarse) and (max-width: 62.5em) and (max-height: 37.5em)").matches) de.className += " pv-phone";
   if (!mm || !mm("(max-width: 47.99em), (pointer: coarse) and (max-width: 62.5em) and (max-height: 37.5em)").matches) return;
   var h = location.hash.slice(1), own = { hero: "home", explore: "home", offers: "offers", closing: "offers", air: "facilities", "band-lawn": "facilities", facilities: "facilities", placeCard: "facilities",
-    stay: "stay", "pet-friendly": "stay", "pet-details": "stay", dining: "dining", gather: "events", roam: "nearby", tonight: "gallery", "band-pool": "gallery", gallery: "gallery", visit: "contact", "getting-here": "contact", talk: "contact", essentials: "contact", "about-preview": "contact", privacy: "contact" };
+    stay: "stay", "pet-friendly": "stay", "pet-details": "stay", reviews: "stay", dining: "dining", gather: "events", roam: "nearby", tonight: "gallery", "band-pool": "gallery", gallery: "gallery", visit: "contact", "getting-here": "contact", talk: "contact", essentials: "contact", "about-preview": "contact", privacy: "contact" };
   de.setAttribute("data-view", own[h] || (/^fac-/.test(h) ? "facilities" : "home"));
   de.className += " pv-views";
 })();
@@ -46,7 +46,7 @@ document.documentElement.className += " js";
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300..800&family=Fraunces:ital,opsz,wght@1,9..144,300..500&family=DM+Sans:opsz,wght@9..40,300..600&family=Prompt:wght@300;400;500;600&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=3f30da02">
+<link rel="stylesheet" href="styles.css?v=73d49e6d">
 </head>
 <body>
 
@@ -857,6 +857,32 @@ document.documentElement.className += " js";
   </details>
 </section>
 
+<!-- ===== guest reviews from Google Maps (11 November 2026). Google's terms allow its reviews only live, never copied
+     into the page: main.js (initReviews) asks Google Maps for them when this section comes into view, if facts.js holds
+     a key. Without one, the section is the link to the resort's reviews on Google. Phones show it in Stay, after the
+     pet-friendly stays (Home stays short). ===== -->
+<section class="chapter chapter--reviews" id="reviews" data-owner="stay" aria-labelledby="reviewsTitle">
+  <div class="chapter__side">
+    <p class="chapter__kicker" data-i18n="reviews.kicker">Google reviews</p>
+    <h2 class="chapter__title" id="reviewsTitle" data-i18n="reviews.title">In our guests' words</h2>
+    <p class="chapter__note" data-i18n="reviews.note">What guests write about their stay, on Google Maps.</p>
+    <p class="revsum" id="revSummary" hidden></p>
+    <a class="pill pill--solid" id="revCta" href="https://search.google.com/local/reviews?placeid=ChIJW0dROePNHTERYZEflZQxuP8" target="_blank" rel="noopener"><span data-i18n="reviews.cta">See all reviews on Google</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+  </div>
+  <div class="chapter__body">
+    <div class="revs" id="revs" hidden>
+      <div class="revs__stage" id="revStage" aria-live="off"></div>
+      <div class="revs__ctrl">
+        <button class="iconbtn" type="button" id="revPrev" aria-label="Previous review" data-i18n-attr="aria-label:reviews.prev"><svg aria-hidden="true"><use href="#i-back"/></svg></button>
+        <div class="revs__dots" id="revDots" role="group" aria-label="Choose a review" data-i18n-attr="aria-label:reviews.pick"></div>
+        <button class="iconbtn" type="button" id="revNext" aria-label="Next review" data-i18n-attr="aria-label:reviews.next"><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        <button class="textlink revs__pause" type="button" id="revPause" aria-pressed="false">Pause</button>
+      </div>
+      <p class="revs__note"><span class="revs__g" data-i18n="reviews.source">Google Maps</span> <span data-i18n="reviews.disclose">Showing 5-star reviews only, newest first. Google does not check reviews, and removes fake ones when it finds them.</span> <a class="textlink" href="https://support.google.com/contributionpolicy/answer/7400114" target="_blank" rel="noopener" data-i18n="reviews.policy">How Google handles reviews</a></p>
+    </div>
+  </div>
+</section>
+
 <!-- ===== dining ===== -->
 <section class="chapter" id="dining" data-owner="dining">
   <div class="chapter__side">
@@ -1389,12 +1415,12 @@ document.documentElement.className += " js";
 })();
 </script>
 <!-- /motion-libs -->
-<script src="facts.js?v=fe112293" defer></script>
-<script src="i18n.js?v=6fd45845" defer></script>
+<script src="facts.js?v=ed35e99a" defer></script>
+<script src="i18n.js?v=30029298" defer></script>
 <script src="scene.js?v=29086502" defer></script>
 <script src="film-manifest.js?v=5f40123b" defer></script>
 <script src="film-stream.js?v=65575688" defer></script>
 <!-- if the main script cannot be fetched, the page falls back to its plain form: panels open, script-only controls hidden -->
-<script src="main.js?v=b5521d2f" defer onerror="document.documentElement.classList.remove('js')"></script>
+<script src="main.js?v=a4664fb9" defer onerror="document.documentElement.classList.remove('js')"></script>
 </body>
 </html>

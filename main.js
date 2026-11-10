@@ -2606,6 +2606,109 @@
     document.addEventListener("pv:lang", () => { shownIds = ""; render(); });
   }
 
+  /* ---------- guest reviews from Google Maps (11 November 2026) ----------
+     Google's terms let a site show its reviews only live: never copied into the page, never stored. With a key in
+     facts.js (reviews.key: a public browser key restricted to this site's addresses), the section asks Google Maps for
+     the resort's place once, when it is about to come into view (so a visitor who never scrolls there costs nothing).
+     Google returns up to five reviews of its choosing; the 5-star ones are shown, newest first, one at a time and
+     rotating, each with its author and a link to it on Google Maps, and the section says that it filters. The resort's
+     overall rating is shown beside them as Google gives it. Without a key, or if Google does not answer, the section
+     is its button to the resort's reviews on Google, nothing more. Nothing about the visitor is sent. */
+  function initReviews() {
+    const root = $("#reviews"), cfg = FX && FX.reviews; if (!root || !cfg) return;
+    const box = $("#revs"), stage = $("#revStage"), dots = $("#revDots"), sum = $("#revSummary"), cta = $("#revCta"), pauseBtn = $("#revPause");
+    if (cta && cfg.reviewsUrl) cta.href = cfg.reviewsUrl;
+    if (!cfg.key || !cfg.placeId || !window.fetch || !box || !stage) return;
+    let data = null, list = [], idx = 0, timer = 0, asked = "", paused = false, held = false, inView = false;
+    const STAR = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.6l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L1.4 7.9l6-.8z"/></svg>';
+    const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+    const safeUrl = (u) => (typeof u === "string" && /^https:\/\/([a-z0-9-]+\.)*(google\.com|googleusercontent\.com|goo\.gl)\//i.test(u) ? u : null);
+    async function load() {
+      const lang = I18N.lang === "th" ? "th" : "en"; if (asked === lang) return; asked = lang;
+      const ctl = window.AbortController ? new AbortController() : null, stop = setTimeout(() => { if (ctl) ctl.abort(); }, 10000);
+      try {
+        const r = await fetch("https://places.googleapis.com/v1/places/" + encodeURIComponent(cfg.placeId) + "?languageCode=" + lang + "&regionCode=TH", {
+          headers: { "X-Goog-Api-Key": cfg.key, "X-Goog-FieldMask": "rating,userRatingCount,reviews,googleMapsLinks.reviewsUri" },
+          credentials: "omit", signal: ctl ? ctl.signal : undefined
+        });
+        if (!r.ok) return;
+        data = await r.json(); render();
+      } catch (e) { /* no answer: the section keeps its button */ } finally { clearTimeout(stop); }
+    }
+    function render() {
+      if (!data) return;
+      const reviewsUrl = safeUrl(data.googleMapsLinks && data.googleMapsLinks.reviewsUri);
+      if (cta && reviewsUrl) cta.href = reviewsUrl;
+      if (sum && typeof data.rating === "number" && data.userRatingCount > 0) {
+        const L = I18N.lang === "th" ? "th-TH" : "en-GB";
+        sum.textContent = I18N.t("reviewsSummary", { rating: new Intl.NumberFormat(L, { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(data.rating), count: new Intl.NumberFormat(L).format(data.userRatingCount) });
+        sum.hidden = false;
+      }
+      const min = cfg.minRating || 5;
+      list = (Array.isArray(data.reviews) ? data.reviews : []).filter((v) => v && v.rating >= min && ((v.text && v.text.text) || (v.originalText && v.originalText.text)))
+        .sort((a, b) => (Date.parse(b.publishTime) || 0) - (Date.parse(a.publishTime) || 0)).slice(0, cfg.show || 5);
+      stage.textContent = ""; dots.textContent = "";
+      if (!list.length) { box.hidden = true; return; }
+      list.forEach((v, k) => {
+        const a = el("article", "rev"); a.setAttribute("aria-roledescription", I18N.lang === "th" ? "รีวิว" : "review"); a.setAttribute("aria-label", I18N.t("reviewOf", { i: k + 1, n: list.length }));
+        const stars = el("p", "rev__stars"); stars.setAttribute("role", "img"); stars.setAttribute("aria-label", I18N.t("reviewsStars")); stars.innerHTML = STAR.repeat(5);
+        const t = (v.text && v.text.text) || v.originalText.text;
+        const q = el("blockquote", "rev__text"); q.appendChild(el("p", null, t));
+        const by = el("p", "rev__by"), au = v.authorAttribution || {};
+        const photo = safeUrl(au.photoUri);
+        if (photo) { const im = el("img", "rev__face"); im.src = photo; im.alt = ""; im.width = 40; im.height = 40; im.loading = "lazy"; im.referrerPolicy = "no-referrer"; im.addEventListener("error", () => im.remove()); by.appendChild(im); }
+        const who = el("span", "rev__who"), name = au.displayName || "", prof = safeUrl(au.uri);
+        if (prof) { const n = el("a", "rev__name", name); n.href = prof; n.target = "_blank"; n.rel = "noopener"; who.appendChild(n); } else who.appendChild(el("span", "rev__name", name));
+        if (v.relativePublishTimeDescription) who.appendChild(el("span", "rev__when", v.relativePublishTimeDescription));
+        by.appendChild(who);
+        const meta = el("p", "rev__meta"), link = safeUrl(v.googleMapsUri);
+        if (link) { const m = el("a", "textlink", I18N.t("reviewsMore")); m.href = link; m.target = "_blank"; m.rel = "noopener"; meta.appendChild(m); }
+        // a review Google has translated says so (its original stays one tap away on Google Maps)
+        if (v.text && v.originalText && v.text.languageCode && v.originalText.languageCode && v.text.languageCode !== v.originalText.languageCode) meta.appendChild(el("span", "rev__tr", I18N.t("reviewsTranslated")));
+        a.append(stars, q, by, meta);
+        stage.appendChild(a);
+        const d = el("button", "revs__dot"); d.type = "button"; d.setAttribute("aria-label", I18N.t("reviewOf", { i: k + 1, n: list.length }));
+        d.addEventListener("click", () => { show(k, true); }); dots.appendChild(d);
+      });
+      box.hidden = false;
+      const multi = list.length > 1; [$("#revPrev"), $("#revNext"), dots, pauseBtn].forEach((x) => { if (x) x.hidden = !multi; });
+      show(Math.min(idx, list.length - 1), false); paintPause(); schedule();
+    }
+    function show(i, byHand) {
+      const cards = $$(".rev", stage), ds = $$(".revs__dot", dots); if (!cards.length) return;
+      idx = (i + cards.length) % cards.length;
+      cards.forEach((c, k) => { const on = k === idx; c.classList.toggle("is-on", on); c.setAttribute("aria-hidden", String(!on)); if (on) c.removeAttribute("inert"); else c.setAttribute("inert", ""); });
+      ds.forEach((d, k) => { d.classList.toggle("is-on", k === idx); if (k === idx) d.setAttribute("aria-current", "true"); else d.removeAttribute("aria-current"); });
+      // a review chosen by hand is read out; the automatic turn is silent
+      stage.setAttribute("aria-live", byHand ? "polite" : "off");
+      if (byHand) schedule();
+    }
+    // turns every few seconds while the section is on screen, the page is visible, the visitor is not reading
+    // (pointer or keyboard inside) and has not paused it; never with reduced motion
+    function schedule() {
+      clearTimeout(timer);
+      if (reduced || paused || held || !inView || document.hidden || list.length < 2) return;
+      timer = setTimeout(() => { show(idx + 1, false); schedule(); }, (cfg.rotateSeconds || 7) * 1000);
+    }
+    function paintPause() { if (!pauseBtn) return; pauseBtn.textContent = I18N.t(paused ? "reviewsPlay" : "reviewsPause"); pauseBtn.setAttribute("aria-pressed", String(paused)); pauseBtn.hidden = pauseBtn.hidden || reduced; }
+    if ($("#revPrev")) $("#revPrev").addEventListener("click", () => show(idx - 1, true));
+    if ($("#revNext")) $("#revNext").addEventListener("click", () => show(idx + 1, true));
+    if (pauseBtn) pauseBtn.addEventListener("click", () => { paused = !paused; paintPause(); schedule(); });
+    box.addEventListener("pointerenter", () => { held = true; clearTimeout(timer); });
+    box.addEventListener("pointerleave", () => { held = false; schedule(); });
+    box.addEventListener("focusin", () => { held = true; clearTimeout(timer); });
+    box.addEventListener("focusout", () => setTimeout(() => { if (!box.contains(document.activeElement)) { held = false; schedule(); } }, 0));
+    document.addEventListener("visibilitychange", schedule);
+    // ask Google once the section is close (a phone's Home or the long page), and rotate only while it is on screen
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) load(); }, { rootMargin: "700px 0px" }).observe(root);
+      new IntersectionObserver((es) => { inView = es.some((e) => e.isIntersecting); schedule(); }, { threshold: .25 }).observe(root);
+    } else { inView = true; load(); }
+    // a language change asks again, in that language (Google translates and says so)
+    document.addEventListener("pv:lang", () => { if (data || asked) load(); paintPause(); });
+    window.PVReviews = { get count() { return list.length; }, get index() { return idx; }, get asked() { return asked; } };
+  }
+
   /* ---------- published content (Phase 3): the Patravana Website Content sheet ----------
      Each built page carries the content revision it was built with (meta pv-content). While the page is visible and
      online it asks this site's own small manifest (content/manifest.json) about once a second whether a newer revision
@@ -2940,7 +3043,7 @@
     $$("[data-count-fact]").forEach((el) => { const v = FACTS.val(el.dataset.countFact); if (v != null) { el.dataset.count = v; el.textContent = v; } });
     I18N.capture(); I18N.apply(initialLang());
     Views.init();
-    initOffers(); initHall(); initMore(); initStay(); initRadius(); initMap(); initReel(); initDrawers(); initBooking(); initEnquiry(); initPet(); initCopy(); initClock(); initSky(); initDining(); initNight(); initLang(); initDiag(); onScroll();
+    initOffers(); initReviews(); initHall(); initMore(); initStay(); initRadius(); initMap(); initReel(); initDrawers(); initBooking(); initEnquiry(); initPet(); initCopy(); initClock(); initSky(); initDining(); initNight(); initLang(); initDiag(); onScroll();
     startMotion();
     initContent();
     initBackdrop();

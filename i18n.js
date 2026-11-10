@@ -171,6 +171,16 @@ window.PV_TH = {
  "stay.open": "เปิดภาพนี้แบบเต็มจอ",
  "stay.book": "เช็ควันว่าง",
  "stay.tabs": "ห้องสวีท",
+ "reviews.kicker": "รีวิวจาก Google",
+ "reviews.title": "เสียงจากผู้เข้าพัก",
+ "reviews.note": "สิ่งที่ผู้เข้าพักเขียนถึงการเข้าพักของพวกเขาบน Google Maps",
+ "reviews.cta": "ดูรีวิวทั้งหมดบน Google",
+ "reviews.prev": "รีวิวก่อนหน้า",
+ "reviews.next": "รีวิวถัดไป",
+ "reviews.pick": "เลือกรีวิว",
+ "reviews.source": "Google Maps",
+ "reviews.disclose": "แสดงเฉพาะรีวิว 5 ดาว เรียงจากล่าสุด Google ไม่ได้ตรวจสอบรีวิว และจะลบรีวิวปลอมเมื่อพบ",
+ "reviews.policy": "วิธีที่ Google ดูแลรีวิว",
  "stay.c.livingv": "ห้องนั่งเล่น",
  "stay.c.living": "แยกจากห้องนอน",
  "stay.c.openv": "ห้องเดียว",
@@ -882,6 +892,34 @@ window.PV_JS = {
  "rg.count": {
   "en": "Photo {i} of {n}",
   "th": "ภาพที่ {i} จาก {n}"
+ },
+ "reviewsSummary": {
+  "en": "{rating} out of 5 from {count} reviews on Google",
+  "th": "{rating} จาก 5 จากรีวิว {count} รายการบน Google"
+ },
+ "reviewsStars": {
+  "en": "5 out of 5 stars",
+  "th": "5 จาก 5 ดาว"
+ },
+ "reviewOf": {
+  "en": "Review {i} of {n}",
+  "th": "รีวิวที่ {i} จาก {n}"
+ },
+ "reviewsMore": {
+  "en": "Read on Google",
+  "th": "อ่านบน Google"
+ },
+ "reviewsTranslated": {
+  "en": "Translated by Google",
+  "th": "แปลโดย Google"
+ },
+ "reviewsPause": {
+  "en": "Pause",
+  "th": "หยุด"
+ },
+ "reviewsPlay": {
+  "en": "Play",
+  "th": "เล่นต่อ"
  },
  "hallM": {
   "en": "{n} m",
