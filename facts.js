@@ -1,4 +1,4 @@
-/* PATRAVANA v2, operational facts. Written by cms/apply.mjs from content revision 42 (the Patravana Website Content sheet): edit the Sheet, not this file. */
+/* PATRAVANA v2, operational facts. Written by cms/apply.mjs from content revision 43 (the Patravana Website Content sheet): edit the Sheet, not this file. */
 window.PV_FACTS = {
  "reviewed": "2026-10-12",
  "contact": {
