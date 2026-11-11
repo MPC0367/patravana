@@ -692,7 +692,8 @@
      photo viewer) sit outside every destination, so they open from any of them. */
   const Views = (function () {
     const html = document.documentElement, mq = window.matchMedia(VIEW_Q);
-    const LABEL = { home: "nav.home", offers: "nav.offers", stay: "nav.stay", facilities: "nav.facilities", dining: "nav.dining", events: "nav.gather", nearby: "nav.roam", gallery: "nav.gallery", contact: "nav.contactfaq" };
+    // the rooms destination is "Our Rooms" on a phone (12 November 2026, the user); the wide menu keeps "Stay"
+    const LABEL = { home: "nav.home", offers: "nav.offers", stay: "nav.rooms", facilities: "nav.facilities", dining: "nav.dining", events: "nav.gather", nearby: "nav.roam", gallery: "nav.gallery", contact: "nav.contactfaq" };
     const HEAD = { home: "#hero .hero__h1", offers: "#offers .chapter__title", stay: "#stay .chapter__title", facilities: "#facilities .chapter__title", dining: "#dining .chapter__title", events: "#gather .chapter__title", nearby: "#roam .chapter__title", gallery: "#galleryTitle", contact: "#visit .chapter__title" };
     const ROOT = { home: "#hero", offers: "#offers", stay: "#stay", facilities: "#facilities", dining: "#dining", events: "#gather", nearby: "#roam", gallery: "#gallery", contact: "#visit" };
     const crumb = $("#vcrumb"), crumbNow = $("#vcrumbNow"), mbarNow = $("#mbarNow"), viewAll = $("#viewAll");
@@ -1597,7 +1598,7 @@
     const card = $("#placeCard"), cImg = $("#pcardImg"), cStep = $("#pcardStep"), cTitle = $("#pcardTitle"), cDesc = $("#pcardDesc"), cMore = $("#pcardMore"), cGo = $("#pcardGo"), cGoText = $("#pcardGoText"), index = $("#placeIndex"), hall = $("#fac-hall");
     // where a place's link leads: always somewhere the visitor can see. The pool, the lake and the loop are described
     // right here in the card, so they have none
-    const GO = { suites: ["#stay", "nav.stay"], amphi: ["#gather", "nav.gather"], deck: ["#dining", "nav.dining"], kitchen: ["#dining", "nav.dining"], arrival: ["#visit", "nav.contactfaq"], hall: ["#gather", "nav.gather"] };
+    const GO = { suites: ["#stay", "nav.rooms"], amphi: ["#gather", "nav.gather"], deck: ["#dining", "nav.dining"], kitchen: ["#dining", "nav.dining"], arrival: ["#visit", "nav.contactfaq"], hall: ["#gather", "nav.gather"] };
     const facFor = (key) => facItems.find((f) => f.dataset.hot === (key === "deck" ? "kitchen" : key));
     const places = hots.map((h) => ({ key: h.dataset.hot, hot: h })).concat(hall ? [{ key: "hall", hot: null }] : []);
     let sel = 0, cardToken = 0;

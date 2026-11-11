@@ -1597,18 +1597,17 @@ body.has-overlay .fab__top, body.has-overlay .fab__book { opacity: 0; visibility
    little lower, and each top corner has a small round fade of its own, clear for 26 px and whole by 54 px, so the
    frame's 20 px rounded corners never show; on a phone the painted label starts inside that height, but in the middle,
    well away from either corner. The stage drops its own dark fill and outer shadow so the fade shows the section
-   behind it, not a dark rectangle. Where masks are not supported the photograph stays whole, as before */
+   behind it, not a dark rectangle. Where masks are not supported the photograph stays whole, as before.
+   12 November 2026: the painted labels are gone from the photograph (11 November), so the user asked for the fade to
+   come down further. It now eases in over the blurred top fifth (whole by 20%, the same on every screen size), above
+   the first suite roof and well above the highest marker (01, at 34%) */
 @supports ((mask-image: linear-gradient(#000, #000)) or (-webkit-mask-image: linear-gradient(#000, #000))) {
   .map__stage { background: transparent; box-shadow: none; }
   .map__img {
-    --map-fade: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .3) 3%, rgba(0, 0, 0, .82) 6%, #000 8.5%, #000 100%);
+    --map-fade: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .12) 4%, rgba(0, 0, 0, .35) 8%, rgba(0, 0, 0, .62) 12%, rgba(0, 0, 0, .85) 16%, #000 20%, #000 100%);
     --map-corners: radial-gradient(circle at 0 0, transparent 26px, #000 54px), radial-gradient(circle at 100% 0, transparent 26px, #000 54px);
     -webkit-mask-image: var(--map-fade), var(--map-corners); -webkit-mask-composite: source-in;
     mask-image: var(--map-fade), var(--map-corners); mask-composite: intersect;
-  }
-  /* smaller maps, where the painted labels sit closer to the edge: a shallower top fade (the corners as above) */
-  @media (max-width: 62.5em) {
-    .map__img { --map-fade: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .45) 2%, rgba(0, 0, 0, .85) 4%, #000 6%, #000 100%); }
   }
 }
 @media print { .map__img { -webkit-mask-image: none; mask-image: none; } }

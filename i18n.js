@@ -2,6 +2,7 @@
 window.PV_TH = {
  "a11y.skip": "ข้ามไปยังเนื้อหา",
  "nav.stay": "ห้องพัก",
+ "nav.rooms": "ห้องพักของเรา",
  "nav.offers": "โปรโมชั่น",
  "nav.dining": "ห้องอาหาร",
  "nav.gather": "สัมมนา",
