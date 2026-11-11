@@ -1,4 +1,4 @@
-/* PATRAVANA v2, Thai dictionary and script texts. Written by cms/apply.mjs from content revision 45 (the Patravana Website Content sheet): edit the Sheet, not this file. */
+/* PATRAVANA v2, Thai dictionary and script texts. Written by cms/apply.mjs from content revision 46 (the Patravana Website Content sheet): edit the Sheet, not this file. */
 window.PV_TH = {
  "a11y.skip": "ข้ามไปยังเนื้อหา",
  "nav.stay": "ห้องพัก",
@@ -73,7 +73,7 @@ window.PV_TH = {
  "offers.o1.desc": "สำหรับงานสัมมนา รีทรีต และงานเลี้ยงฉลอง แจ้งวันที่และจำนวนคน แล้วทีมงานจะตอบกลับพร้อมใบเสนอราคา",
  "group.cta": "เริ่มสอบถามแบบหมู่คณะ",
  "hub.k": "ยินดีต้อนรับ",
- "hub.intro": "ห้องสวีทและห้องพัก 64 ห้องในโครงการภูภัทรา ต.พญาเย็น สนามหญ้าทอดยาวลงสู่บึงน้ำ ห่างจากอุทยานแห่งชาติเขาใหญ่ราว 20 กม.",
+ "hub.intro": "ห้องสวีทและห้องพัก 64 ห้องใน ต.พญาเย็น สนามหญ้าทอดยาวลงสู่บึงน้ำ ห่างจากอุทยานแห่งชาติเขาใหญ่ราว 20 กม.",
  "hub.title": "สำรวจภัทราวานา",
  "hub.offerk": "ส่วนลด",
  "hub.offergo": "ดูส่วนลด",
@@ -89,7 +89,7 @@ window.PV_TH = {
  "reel.hintstill": "ปัดดูภาพทีละภาพ หรือกดเล่นให้ภาพเลื่อนช้า ๆ แตะภาพใดก็ได้เพื่อดูแบบเต็มจอ",
  "air.kicker": "ที่แห่งนี้",
  "air.title": "อากาศบริสุทธิ์",
- "air.note": "ส่วนหนึ่งของโครงการภูภัทรา ตั้งอยู่ในหุบเขาของปากช่อง เชิงเขาอุทยานแห่งชาติเขาใหญ่",
+ "air.note": "ตั้งอยู่ในหุบเขาของปากช่อง เชิงเขาอุทยานแห่งชาติเขาใหญ่",
  "air.statement": "ตื่นมาท่ามกลางสายเมฆ สูดอากาศจากผืนป่าอุทยานแห่งชาติ แล้วปล่อยให้ขุนเขา<em class=\"it\">กำหนดจังหวะของวัน</em>",
  "air.s1": "ห้องสวีทและห้องพัก ในสามแบบสวีท ทุกห้องมีระเบียง",
  "air.s3": "ถึงอุทยานแห่งชาติเขาใหญ่ ตามระยะทางที่รีสอร์ทระบุ",
