@@ -1,47 +1,25 @@
 {
  "schema": "patravana.publish-result/1",
- "at": "2026-11-10T17:45:42.444Z",
- "status": "live-verified",
- "generation": 43,
+ "at": "2026-11-11T04:20:32.657Z",
+ "status": "deploying",
+ "generation": 44,
  "problems": [],
- "revision": 43,
- "buildId": "bf20d0392605-c43",
- "sha256": "b47e0f58d55bcd64494c3a9f9e3d3871da896a90552b0e258ed845b9cf8e9b66",
- "sentAt": "2026-11-10T17:45:32.980Z",
+ "revision": 44,
+ "buildId": "780970d8b189-c44",
+ "sha256": "a0c04c439e671fba05c7211adc97412ee8edcea02d83322d20b11004ae1ba921",
+ "sentAt": "2026-11-11T04:20:22.576Z",
  "changed": [
-  "reviews.kicker",
-  "reviews.title",
-  "reviews.note",
-  "reviews.cta",
-  "reviews.source",
-  "reviews.disclose",
-  "reviews.policy",
-  "about.p2",
-  "reviews.prev",
-  "reviews.pick",
-  "reviews.next",
-  "js.reviewsSummary",
-  "js.reviewsStars",
-  "js.reviewOf",
-  "js.reviewsMore",
-  "js.reviewsTranslated",
-  "js.reviewsPause",
-  "js.reviewsPlay"
+  "fact.dining.faq.hours",
+  "fact.dining.status.kitchen",
+  "fact.dining.row.lastorder",
+  "fact.dining.kitchen.last",
+  "fact.dining.status.lastorder",
+  "facts.dining.kitchen.lastOrder"
  ],
- "run": "42868208164",
+ "run": "42958581293",
  "outcome": "success",
  "timings": {
-  "receivedAt": "2026-11-10T17:45:42Z",
-  "committedAt": "2026-11-10T17:45:44Z"
- },
- "liveCheckedAt": "2026-11-10T17:48:12.450Z",
- "readback": {
-  "ok": true,
-  "manifest": 43,
-  "build": "bf20d0392605-c43",
-  "en": 43,
-  "enBuild": "bf20d0392605-c43",
-  "th": 43,
-  "thBuild": "bf20d0392605-c43"
+  "receivedAt": "2026-11-11T04:20:32Z",
+  "committedAt": "2026-11-11T04:20:34Z"
  }
 }
