@@ -1,35 +1,18 @@
 {
  "schema": "patravana.publish-result/1",
- "at": "2026-11-11T04:20:32.657Z",
- "status": "live-verified",
- "generation": 44,
+ "at": "2026-11-11T04:25:31.198Z",
+ "status": "deploying",
+ "generation": 45,
  "problems": [],
- "revision": 44,
- "buildId": "780970d8b189-c44",
- "sha256": "a0c04c439e671fba05c7211adc97412ee8edcea02d83322d20b11004ae1ba921",
- "sentAt": "2026-11-11T04:20:22.576Z",
- "changed": [
-  "fact.dining.faq.hours",
-  "fact.dining.status.kitchen",
-  "fact.dining.row.lastorder",
-  "fact.dining.kitchen.last",
-  "fact.dining.status.lastorder",
-  "facts.dining.kitchen.lastOrder"
- ],
- "run": "42958581293",
+ "revision": 45,
+ "buildId": "780970d8b189-c45",
+ "sha256": "21c7ad5350ed389dbd5214d722176bcd51f9b2fbca15f092bc2ed9cb6cf6604a",
+ "sentAt": "2026-11-11T04:25:21.167Z",
+ "changed": [],
+ "run": "42959125995",
  "outcome": "success",
  "timings": {
-  "receivedAt": "2026-11-11T04:20:32Z",
-  "committedAt": "2026-11-11T04:20:34Z"
- },
- "liveCheckedAt": "2026-11-11T04:21:32.484Z",
- "readback": {
-  "ok": true,
-  "manifest": 44,
-  "build": "780970d8b189-c44",
-  "en": 44,
-  "enBuild": "780970d8b189-c44",
-  "th": 44,
-  "thBuild": "780970d8b189-c44"
+  "receivedAt": "2026-11-11T04:25:31Z",
+  "committedAt": "2026-11-11T04:25:32Z"
  }
 }
