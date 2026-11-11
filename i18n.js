@@ -1,4 +1,4 @@
-/* PATRAVANA v2, Thai dictionary and script texts. Written by cms/apply.mjs from content revision 46 (the Patravana Website Content sheet): edit the Sheet, not this file. */
+/* PATRAVANA v2, Thai dictionary and script texts. Written by cms/apply.mjs from content revision 47 (the Patravana Website Content sheet): edit the Sheet, not this file. */
 window.PV_TH = {
  "a11y.skip": "ข้ามไปยังเนื้อหา",
  "nav.stay": "ห้องพัก",
