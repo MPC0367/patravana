@@ -1,4 +1,4 @@
-/* PATRAVANA v2, operational facts. Written by cms/apply.mjs from content revision 43 (the Patravana Website Content sheet): edit the Sheet, not this file. */
+/* PATRAVANA v2, operational facts. Written by cms/apply.mjs from content revision 44 (the Patravana Website Content sheet): edit the Sheet, not this file. */
 window.PV_FACTS = {
  "reviewed": "2026-10-12",
  "contact": {
@@ -293,16 +293,16 @@ window.PV_FACTS = {
    "th": "ขึ้นอยู่กับแพ็กเกจราคา หน้าจองของรีสอร์ทมีทั้งราคาที่รวมอาหารเช้าและราคาเฉพาะห้องพัก และระบุสิ่งที่รวมอยู่ในแต่ละราคาก่อนยืนยันการจอง อาหารเช้าเสิร์ฟทุกวันที่ครัวผู้ใหญ่ลี {dining.breakfast.open} ถึง {dining.breakfast.close} น."
   },
   "dining.faq.hours": {
-   "en": "Breakfast is served every day, {dining.breakfast.open} to {dining.breakfast.close}. Lunch and dinner are served Wednesday to Sunday, {dining.kitchen.open} to {dining.kitchen.close}. On Monday and Tuesday there is breakfast only. For a table, call {contact.dining.show}.",
-   "th": "อาหารเช้าเสิร์ฟทุกวัน {dining.breakfast.open} ถึง {dining.breakfast.close} น. มื้อกลางวันและมื้อเย็นเปิดวันพุธถึงวันอาทิตย์ {dining.kitchen.open} ถึง {dining.kitchen.close} น. วันจันทร์และวันอังคารมีเฉพาะอาหารเช้า สำรองโต๊ะโทร {contact.dining.show}"
+   "en": "Breakfast is served every day, {dining.breakfast.open} to {dining.breakfast.close}. Lunch and dinner are served Wednesday to Sunday, {dining.kitchen.open} to {dining.kitchen.close}, with last order at {dining.kitchen.lastOrder}. On Monday and Tuesday there is breakfast only. For a table, call {contact.dining.show}.",
+   "th": "อาหารเช้าเสิร์ฟทุกวัน {dining.breakfast.open} ถึง {dining.breakfast.close} น. มื้อกลางวันและมื้อเย็นเปิดวันพุธถึงวันอาทิตย์ {dining.kitchen.open} ถึง {dining.kitchen.close} น. รับออเดอร์สุดท้าย {dining.kitchen.lastOrder} น. วันจันทร์และวันอังคารมีเฉพาะอาหารเช้า สำรองโต๊ะโทร {contact.dining.show}"
   },
   "dining.status.breakfast": {
    "en": "Breakfast hours now, until {dining.breakfast.close}",
    "th": "ขณะนี้เป็นช่วงอาหารเช้า ถึง {dining.breakfast.close} น."
   },
   "dining.status.kitchen": {
-   "en": "Lunch and dinner hours now, until {dining.kitchen.close}",
-   "th": "ขณะนี้เป็นช่วงมื้อกลางวันและมื้อเย็น ถึง {dining.kitchen.close} น."
+   "en": "Lunch and dinner hours now, last order {dining.kitchen.lastOrder}",
+   "th": "ขณะนี้เป็นช่วงมื้อกลางวันและมื้อเย็น รับออเดอร์สุดท้าย {dining.kitchen.lastOrder} น."
   },
   "dining.status.lastorder": {
    "en": "Last order was at {dining.kitchen.lastOrder}. Breakfast tomorrow from {dining.breakfast.open}",
