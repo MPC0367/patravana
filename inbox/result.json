@@ -1,7 +1,7 @@
 {
  "schema": "patravana.publish-result/1",
  "at": "2026-11-11T21:25:29.361Z",
- "status": "deploying",
+ "status": "live-verified",
  "generation": 48,
  "problems": [],
  "revision": 48,
@@ -16,5 +16,15 @@
  "timings": {
   "receivedAt": "2026-11-11T21:25:29Z",
   "committedAt": "2026-11-11T21:25:31Z"
+ },
+ "liveCheckedAt": "2026-11-11T21:26:27.520Z",
+ "readback": {
+  "ok": true,
+  "manifest": 48,
+  "build": "72848a89ac3c-c48",
+  "en": 48,
+  "enBuild": "72848a89ac3c-c48",
+  "th": 48,
+  "thBuild": "72848a89ac3c-c48"
  }
 }
