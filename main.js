@@ -2377,18 +2377,21 @@
 
   /* ---------- dining: which service the listed hours put Phu Yai Lee in right now ----------
      Worked out in resort time from the hours in facts.js. It names the service (breakfast, or lunch and dinner) and
-     never says more than the listed hours do: the card asks guests to call to confirm on the day. */
+     never says more than the listed hours do: the card asks guests to call to confirm on the day. Lunch and dinner take
+     orders until the last order (kitchen.lastOrder); from then until closing the line says the last order has gone. */
   function initDining() {
     const el = $("#diningStatus"), text = $("#diningStatusText"); if (!el || !text || !FX) return;
     const mins = (t) => { const p = t.split(":"); return +p[0] * 60 + +p[1]; };
     const paint = () => {
       // the hours are read on every paint, so published changes to them (the Sheet's Shared Facts) apply at once
       const B = FX.dining.breakfast, K = FX.dining.kitchen, b0 = mins(B.open), b1 = mins(B.close), k0 = mins(K.open), k1 = mins(K.close);
+      const kl = K.lastOrder ? Math.min(mins(K.lastOrder), k1) : k1;
       const now = bkk(), day = now.getUTCDay(), min = now.getUTCHours() * 60 + now.getUTCMinutes();
       const bDay = B.days.includes(day), kDay = K.days.includes(day);
       let state = "closed", key = "dining.status.tomorrow";
       if (bDay && min >= b0 && min < b1) { state = "open"; key = "dining.status.breakfast"; }
-      else if (kDay && min >= k0 && min < k1) { state = "open"; key = "dining.status.kitchen"; }
+      else if (kDay && min >= k0 && min < kl) { state = "open"; key = "dining.status.kitchen"; }
+      else if (kDay && min >= kl && min < k1) key = "dining.status.lastorder";
       else if (bDay && min < b0) key = "dining.status.early";
       else if (kDay && min < k0) { state = "soon"; key = "dining.status.soon"; }
       else if (!kDay && min < k1) key = "dining.status.rest";      // a Monday or Tuesday, after breakfast
@@ -2728,7 +2731,7 @@
     if (p[0] === "hall" && p[1] === "area") { obj = FX.hall; prop = "areaSqm"; ok = int; }
     else if (p[0] === "hall") { obj = FX.hall.layouts.find((x) => x.key === p[1]); prop = p[2]; ok = int && !!obj && prop in obj; }
     else if (p[0] === "dining" && p[1] === "seats") { obj = FX.dining; prop = "seats"; ok = int; }
-    else if (p[0] === "dining" && FX.dining[p[1]] && /^(open|close|days)$/.test(p[2])) { obj = FX.dining[p[1]]; prop = p[2]; ok = prop === "days" ? days : time; }
+    else if (p[0] === "dining" && FX.dining[p[1]] && /^(open|close|days|lastOrder)$/.test(p[2])) { obj = FX.dining[p[1]]; prop = p[2]; ok = prop === "days" ? days : time; }
     else if (key === "facts.reviewed") { obj = FX; prop = "reviewed"; ok = date; }
     else if (key === "facts.pet.reviewed") { obj = FX.pet; prop = "lastReviewedAt"; ok = date; }
     if (!ok || same(obj[prop], value)) return false;     // protected facts are never set from a revision

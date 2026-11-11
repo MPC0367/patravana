@@ -200,7 +200,7 @@ var PVCMS = (function () {
     if (p[0] === "hall" && p[1] === "area") { FX.hall.areaSqm = value; return true; }
     if (p[0] === "hall") { var l = FX.hall.layouts.filter(function (x) { return x.key === p[1]; })[0]; if (l && p[2] in l) { l[p[2]] = value; return true; } return false; }
     if (p[0] === "dining" && p[1] === "seats") { FX.dining.seats = value; return true; }
-    if (p[0] === "dining" && FX.dining[p[1]] && /^(open|close|days)$/.test(p[2])) { FX.dining[p[1]][p[2]] = value; return true; }
+    if (p[0] === "dining" && FX.dining[p[1]] && /^(open|close|days|lastOrder)$/.test(p[2])) { FX.dining[p[1]][p[2]] = value; return true; }
     if (key === "facts.reviewed") { FX.reviewed = value; return true; }
     if (key === "facts.pet.reviewed") { FX.pet.lastReviewedAt = value; return true; }
     return false;                                        // protected facts are never set from a snapshot

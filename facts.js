@@ -155,7 +155,8 @@ window.PV_FACTS = {
     6
    ],
    "open": "11:00",
-   "close": "21:00"
+   "close": "21:00",
+   "lastOrder": "20:00"
   }
  },
  "offers": {
@@ -267,6 +268,10 @@ window.PV_FACTS = {
    "en": "Breakfast only",
    "th": "เฉพาะอาหารเช้า"
   },
+  "dining.row.lastorder": {
+   "en": "Last order, lunch and dinner",
+   "th": "รับออเดอร์สุดท้าย มื้อกลางวันและมื้อเย็น"
+  },
   "dining.breakfast.hours": {
    "en": "{dining.breakfast.open} to {dining.breakfast.close}",
    "th": "{dining.breakfast.open} ถึง {dining.breakfast.close} น."
@@ -274,6 +279,10 @@ window.PV_FACTS = {
   "dining.kitchen.hours": {
    "en": "{dining.kitchen.open} to {dining.kitchen.close}",
    "th": "{dining.kitchen.open} ถึง {dining.kitchen.close} น."
+  },
+  "dining.kitchen.last": {
+   "en": "{dining.kitchen.lastOrder}",
+   "th": "{dining.kitchen.lastOrder} น."
   },
   "dining.know": {
    "en": "Served daily at Phu Yai Lee, {dining.breakfast.open} to {dining.breakfast.close}. Whether it is included depends on the rate you book.",
@@ -294,6 +303,10 @@ window.PV_FACTS = {
   "dining.status.kitchen": {
    "en": "Lunch and dinner hours now, until {dining.kitchen.close}",
    "th": "ขณะนี้เป็นช่วงมื้อกลางวันและมื้อเย็น ถึง {dining.kitchen.close} น."
+  },
+  "dining.status.lastorder": {
+   "en": "Last order was at {dining.kitchen.lastOrder}. Breakfast tomorrow from {dining.breakfast.open}",
+   "th": "ปิดรับออเดอร์แล้วเมื่อ {dining.kitchen.lastOrder} น. อาหารเช้าพรุ่งนี้เริ่ม {dining.breakfast.open} น."
   },
   "dining.status.soon": {
    "en": "Lunch and dinner from {dining.kitchen.open}",
