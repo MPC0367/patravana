@@ -1,7 +1,5 @@
-# Patravana Resort Khao Yai, concept site
+# Patravana Resort Khao Yai
 
-Static build of the bilingual (EN / TH) concept redesign by O2 Design Studio. Served with GitHub Pages: the English page at the root, the Thai page at /th.
+The resort's website, at https://www.patravana.com/ (English) and https://www.patravana.com/th (Thai). Built by O2 Design Studio and served by GitHub Pages from this repository. Its texts are edited in the resort's Google Sheet, which publishes here (.github/workflows/cms-publish.yml).
 
-The source lives in the studio workspace (`patravana-v2`); this folder is produced by `node export-pages.mjs` and should not be edited by hand.
-
-Photography, footage and information belong to Patravana Resort.
+Produced by `node export-pages.mjs --production` from the studio workspace (`patravana-v2`); not edited by hand. Photography, footage and information belong to Patravana Resort.

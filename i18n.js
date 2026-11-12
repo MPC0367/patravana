@@ -438,17 +438,16 @@ window.PV_TH = {
  "lb.label": "แกลเลอรีภาพ",
  "lb.close": "ปิด",
  "lb.prev": "ภาพก่อนหน้า",
- "lb.next": "ภาพถัดไป",
- "faq.a2": "กรุณาสอบถามทีมงานเรื่องเวลาเช็คอินและเช็คเอาท์ในปัจจุบัน รวมถึงการมาถึงก่อนเวลาหรือออกช้ากว่ากำหนด"
+ "lb.next": "ภาพถัดไป"
 };
 window.PV_JS = {
  "docTitle": {
-  "en": "Patravana, Khao Yai",
-  "th": "ภัทราวานา เขาใหญ่"
+  "en": "Patravana Resort Khao Yai | Lakeside suites in Phayayen, Pak Chong",
+  "th": "ภัทราวานา รีสอร์ท เขาใหญ่ | ห้องสวีทริมบึงน้ำ พญาเย็น ปากช่อง"
  },
  "viewTitle": {
-  "en": "{name} | Patravana, Khao Yai",
-  "th": "{name} | ภัทราวานา เขาใหญ่"
+  "en": "{name} | Patravana Resort Khao Yai",
+  "th": "{name} | ภัทราวานา รีสอร์ท เขาใหญ่"
  },
  "exploreAria": {
   "en": "Explore the resort. Now showing: {name}",
@@ -475,8 +474,8 @@ window.PV_JS = {
   "th": "เปิดแบบเต็มจอ: {what}"
  },
  "docDesc": {
-  "en": "Patravana Resort Khao Yai. Suites, open lawns and a lakeside setting in the hills. An unofficial bilingual concept redesign.",
-  "th": "ภัทราวานา รีสอร์ท เขาใหญ่ ห้องสวีท สนามหญ้ากว้าง และบึงน้ำท่ามกลางขุนเขา งานออกแบบแนวคิดสองภาษา ไม่ใช่เว็บไซต์ทางการ"
+  "en": "Sixty-four suites and rooms in Phayayen, Pak Chong, with lawns running down to a lake, about 20 km from Khao Yai National Park. Book direct on the resort's own booking page.",
+  "th": "ห้องสวีทและห้องพัก 64 ห้อง ต.พญาเย็น อ.ปากช่อง สนามหญ้าทอดยาวลงสู่บึงน้ำ ห่างจากอุทยานแห่งชาติเขาใหญ่ราว 20 กม. จองตรงได้ที่หน้าจองของรีสอร์ท"
  },
  "langAria": {
   "en": "เปลี่ยนภาษาเป็นไทย",

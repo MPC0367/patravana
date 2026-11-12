@@ -373,14 +373,6 @@ window.PV_FACTS = {
   "enq.group.subject": {
    "en": "Group event enquiry",
    "th": "สอบถามการจัดงานแบบหมู่คณะ"
-  },
-  "dining.row.rest": {
-   "en": "Monday and Tuesday",
-   "th": "จันทร์และอังคาร"
-  },
-  "dining.row.restv": {
-   "en": "Breakfast only",
-   "th": "เฉพาะอาหารเช้า"
   }
  }
 };
