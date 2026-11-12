@@ -1,4 +1,4 @@
-/* PATRAVANA v2, operational facts. Written by cms/apply.mjs from content revision 49 (the Patravana Website Content sheet): edit the Sheet, not this file. */
+/* PATRAVANA v2, operational facts. Written by cms/apply.mjs from content revision 50 (the Patravana Website Content sheet): edit the Sheet, not this file. */
 window.PV_FACTS = {
  "reviewed": "2026-10-12",
  "contact": {
@@ -192,7 +192,7 @@ window.PV_FACTS = {
  "text": {
   "pet.summary": {
    "en": "Pet-friendly stays are available in one designated building.",
-   "th": "รีสอร์ทรับสัตว์เลี้ยงเข้าพักได้ในอาคารที่จัดไว้ 1 อาคาร"
+   "th": "รีสอร์ทรับสัตว์เลี้ยงเข้าพักได้ในอาคารที่จัดไว้หนึ่งอาคาร"
   },
   "pet.body": {
    "en": "Planning to bring your pet? Contact the team to confirm an eligible room for your dates and the current pet-stay details.",
@@ -200,7 +200,7 @@ window.PV_FACTS = {
   },
   "pet.short": {
    "en": "Pet-friendly stays are available in one designated building. Contact the team to confirm an eligible room.",
-   "th": "รีสอร์ทรับสัตว์เลี้ยงเข้าพักได้ในอาคารที่จัดไว้ 1 อาคาร ติดต่อทีมงานเพื่อยืนยันห้องที่รับสัตว์เลี้ยงได้"
+   "th": "รีสอร์ทรับสัตว์เลี้ยงเข้าพักได้ในอาคารที่จัดไว้หนึ่งอาคาร ติดต่อทีมงานเพื่อยืนยันห้องที่รับสัตว์เลี้ยงได้"
   },
   "pet.booknote": {
    "en": "General room availability does not confirm a pet-friendly allocation.",
@@ -208,7 +208,7 @@ window.PV_FACTS = {
   },
   "pet.point1": {
    "en": "Pet stays are offered in one building of the resort. They are not available in every suite.",
-   "th": "รับสัตว์เลี้ยงเฉพาะในอาคารที่กำหนด 1 อาคาร ไม่ใช่ทุกห้องสวีท"
+   "th": "รับสัตว์เลี้ยงเฉพาะในอาคารที่กำหนดหนึ่งอาคาร ไม่ใช่ทุกห้องสวีท"
   },
   "pet.point2": {
    "en": "The team confirms a pet-eligible room for your dates. A general room search does not do that.",
