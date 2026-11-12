@@ -1,24 +1,24 @@
 {
  "schema": "patravana.manifest/1",
- "revision": 48,
- "url": "content/r48.json",
- "sha256": "1de32e798f61fd7e64ef45c03af4c5c4a7a0e491cfdc5a8a4ffee28fbcf4a8eb",
- "contentHash": "f912ccb232e794ccf44a1e484d7cbbcdf9b6eb4ebec93b9056f20cdc02c86088",
- "publishedAt": "2026-11-11T21:25:29.427Z",
+ "revision": 49,
+ "url": "content/r49.json",
+ "sha256": "63d467f98fabff17e7a806675e4738987ff5c88a66e08ab152832a7404398a40",
+ "contentHash": "e2cf19776e1bd295a1c18bea1afe033bd7922a279da0e4c3c3794d418aafb083",
+ "publishedAt": "2026-11-12T15:10:37.554Z",
  "rollbackOf": null,
- "build": "b1ea0c351e38-c48",
+ "build": "b1ea0c351e38-c49",
  "html": {
-  "revision": 48,
+  "revision": 49,
   "state": "deployed together with this manifest"
  },
  "nonces": [
+  "b9c01c6d3b5d479195fcc75b6d93cb2f",
   "aeb3f345ef2340c2a564c2a73937ef07",
   "6890724a61fa405f826b7503b63974db",
   "8ad0cc6f81f6cc95821b718fa078fc82",
   "7e48f8d18d994b838ec25d3214c8d030",
   "57a5c1e600d80877e9d8659e5fea3ac5",
   "02f94472dc4545d9b6bb6fa8040bdf7a",
-  "0dbe7182ce73426b8b5e9c1ad4548ebd",
-  "847688ecc1644515b4756417e28d2795"
+  "0dbe7182ce73426b8b5e9c1ad4548ebd"
  ]
 }

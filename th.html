@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="th" data-locale="th"><head>
 <meta charset="UTF-8">
-<meta name="pv-build" content="b1ea0c351e38-c48">
-<meta name="pv-content" content="48">
+<meta name="pv-build" content="b1ea0c351e38-c49">
+<meta name="pv-content" content="49">
 <meta name="pv-live" content="https://script.google.com/macros/s/AKfycbzUB0wwKaD7KskTFDWAxMB_kcaBExYeVBPkADWCVvrliZ0Tt8rdQpBARE51c_UGg0Pj/exec">
-<script data-pv-lane>/[?&]live(=|&|$)/.test(location.search)&&window.fetch&&(window.PVLane=fetch("https://script.google.com/macros/s/AKfycbzUB0wwKaD7KskTFDWAxMB_kcaBExYeVBPkADWCVvrliZ0Tt8rdQpBARE51c_UGg0Pj/exec?since=48",{credentials:"omit",cache:"no-store",redirect:"follow"}).then(function(r){return r.ok?r.json():null}).catch(function(){return null}))</script>
+<script data-pv-lane>/[?&]live(=|&|$)/.test(location.search)&&window.fetch&&(window.PVLane=fetch("https://script.google.com/macros/s/AKfycbzUB0wwKaD7KskTFDWAxMB_kcaBExYeVBPkADWCVvrliZ0Tt8rdQpBARE51c_UGg0Pj/exec?since=49",{credentials:"omit",cache:"no-store",redirect:"follow"}).then(function(r){return r.ok?r.json():null}).catch(function(){return null}))</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <title>ภัทราวานา เขาใหญ่</title>
@@ -71,7 +71,7 @@ document.documentElement.className += " js";
   </defs>
 </svg>
 
-<a class="skip" href="#main" data-i18n="a11y.skip">ข้ามไปยังเนื้อหา</a>
+<a class="skip" href="#main" data-i18n="a11y.skip">ข้ามไปที่เนื้อหาหลัก</a>
 
 <!-- ===== loading screen: shown only when scripts run (see .loader in the stylesheet); the script right below runs it ===== -->
 <div class="loader" id="loader" aria-hidden="true">
@@ -170,7 +170,7 @@ document.documentElement.className += " js";
     <!-- Stay opens three places: the suites, the comparison, and pet-friendly stays -->
     <div class="menu__group" data-submenu="">
       <a href="#stay" data-i18n="nav.stay">ห้องพัก</a>
-      <button class="menu__more" type="button" aria-expanded="false" aria-controls="staySub" aria-label="หัวข้อย่อยของห้องพัก" data-i18n-attr="aria-label:nav.staymore"><svg aria-hidden="true"><use href="#i-down"></use></svg></button>
+      <button class="menu__more" type="button" aria-expanded="false" aria-controls="staySub" aria-label="เมนูย่อยของห้องพัก" data-i18n-attr="aria-label:nav.staymore"><svg aria-hidden="true"><use href="#i-down"></use></svg></button>
       <div class="submenu" id="staySub">
         <a href="#stay" data-i18n="nav.suites">ห้องสวีท</a>
         <a href="#stay" data-compare-open="" data-i18n="stay.compare">เปรียบเทียบห้องพัก</a>
@@ -223,26 +223,26 @@ document.documentElement.className += " js";
           <option value="" data-i18n="book.anyroom">ทุกประเภทห้อง</option>
           <option value="3446300000000000005" data-i18n="room.vl">วานา สวีท วิวบึงน้ำ</option>
           <option value="3446300000000000004" data-i18n="room.vg">วานา สวีท วิวสวน</option>
-          <option value="3446300000000000003" data-i18n="room.vc">วานา สวีท วิวทุ่งเขา</option>
+          <option value="3446300000000000003" data-i18n="room.vc">วานา สวีท วิวทิวเขา</option>
           <option value="3446300000000000008" data-i18n="room.pl">ภัทรา สวีท วิวบึงน้ำ</option>
           <option value="3446300000000000007" data-i18n="room.pg">ภัทรา สวีท วิวสวน</option>
           <option value="3446300000000000006" data-i18n="room.pj">ภัทรา จูเนียร์ สวีท วิวสวน</option>
         </select>
       </label>
-      <div class="field"><label for="bookIn" data-i18n="book.in">เช็คอิน</label><input type="date" id="bookIn" name="checkin" aria-describedby="bookInErr"><span class="field__err" id="bookInErr" hidden=""></span></div>
-      <div class="field"><label for="bookOut" data-i18n="book.out">เช็คเอาท์</label><input type="date" id="bookOut" name="checkout" aria-describedby="bookOutErr"><span class="field__err" id="bookOutErr" hidden=""></span></div>
+      <div class="field"><label for="bookIn" data-i18n="book.in">เช็กอิน</label><input type="date" id="bookIn" name="checkin" aria-describedby="bookInErr"><span class="field__err" id="bookInErr" hidden=""></span></div>
+      <div class="field"><label for="bookOut" data-i18n="book.out">เช็กเอาต์</label><input type="date" id="bookOut" name="checkout" aria-describedby="bookOutErr"><span class="field__err" id="bookOutErr" hidden=""></span></div>
       <div class="field"><label for="bookAdults" data-i18n="book.adults">ผู้ใหญ่</label>
         <select id="bookAdults" name="adults" aria-describedby="bookAdultsErr bookMore"><option value="1">1</option><option value="2" selected="">2</option><option value="3">3</option><option value="more" data-i18n="book.adultsmore">4 ท่านขึ้นไป</option></select>
         <span class="field__err" id="bookAdultsErr" hidden=""></span>
       </div>
       <label class="field field--promo"><span data-i18n="book.promo">โค้ดส่วนลด (ถ้ามี)</span><input type="text" id="bookPromo" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
-      <p class="book__more" id="bookMore" data-fact="book.more" hidden="">หนึ่งห้องสวีทพักได้สูงสุด 3 ท่าน วันที่และห้องที่เลือกจะถูกส่งต่อไป ส่วนห้องพักและผู้เข้าพักทั้งหมดของคณะให้เลือกในหน้าจอง หรือสอบถามทีมงาน</p>
+      <p class="book__more" id="bookMore" data-fact="book.more" hidden="">ห้องสวีทหนึ่งห้องพักได้ผู้ใหญ่สูงสุด 3 ท่าน ระบบจะส่งวันที่และห้องที่เลือกไปยังหน้าจอง แล้วเลือกห้องพักและผู้เข้าพักของทั้งคณะได้ในหน้านั้น หรือสอบถามทีมงาน</p>
       <div class="book__actions">
         <a class="pill pill--solid pill--book pill--lg" id="bookGo" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener"><span data-i18n="book.go">ไปที่หน้าจองของรีสอร์ท</span><svg class="pill__ic" aria-hidden="true"><use href="#i-out"></use></svg></a>
-        <p class="book__note" data-fact="book.note">เปิดในแท็บใหม่พร้อมวันที่ จำนวนผู้ใหญ่ และห้องที่คุณเลือก โค้ดส่วนลดจะถูกคัดลอกไว้ให้นำไปวางในหน้านั้น ส่วนเด็กและห้องเพิ่มให้เลือกในหน้าจอง จองทางโทรศัพท์ 088-504-1888 หรือ LINE ก็ได้เช่นกัน</p>
+        <p class="book__note" data-fact="book.note">หน้าจองจะเปิดในแท็บใหม่ พร้อมวันที่ จำนวนผู้ใหญ่ และห้องที่คุณเลือก ระบบจะคัดลอกโค้ดส่วนลดไว้ให้นำไปวางในหน้านั้น ส่วนเด็กและห้องเพิ่มเติมเลือกได้ในหน้าจอง หรือจองทางโทรศัพท์ 088-504-1888 และ LINE ก็ได้</p>
       </div>
       <p class="book__summary num" id="bookSummary" aria-live="polite"></p>
-      <p class="book__pet"><span data-i18n="book.petq">พาสัตว์เลี้ยงมาด้วย</span> <span data-fact="pet.booknote">ห้องว่างทั่วไปไม่ได้ยืนยันว่าเป็นห้องที่เข้าพักพร้อมสัตว์เลี้ยงได้</span> <a class="textlink" href="#pet-friendly" data-enquiry="pet" data-i18n="pet.cta">สอบถามการเข้าพักพร้อมสัตว์เลี้ยง</a></p>
+      <p class="book__pet"><span data-i18n="book.petq">พาสัตว์เลี้ยงมาด้วย</span> <span data-fact="pet.booknote">ห้องว่างทั่วไปยังไม่ใช่การยืนยันห้องสำหรับผู้ที่มากับสัตว์เลี้ยง</span> <a class="textlink" href="#pet-friendly" data-enquiry="pet" data-i18n="pet.cta">สอบถามการเข้าพักพร้อมสัตว์เลี้ยง</a></p>
     </form>
   </div>
 </section>
@@ -275,7 +275,7 @@ document.documentElement.className += " js";
 <!-- On a phone the page is read one destination at a time (see "phone destinations" in main.js and the stylesheet):
      each block below names the destination it belongs to in data-owner. Without the script, or on a wider screen, it is
      one continuous page as before. -->
-<nav class="vcrumb js-only" id="vcrumb" aria-label="ตำแหน่งปัจจุบัน" data-i18n-attr="aria-label:vh.label">
+<nav class="vcrumb js-only" id="vcrumb" aria-label="คุณอยู่ที่นี่" data-i18n-attr="aria-label:vh.label">
   <a href="#hero" data-i18n="nav.home">หน้าแรก</a><span class="vcrumb__sep" aria-hidden="true">/</span><span class="vcrumb__now" id="vcrumbNow" aria-current="page"></span>
 </nav>
 
@@ -316,25 +316,25 @@ document.documentElement.className += " js";
     <div class="hero__content">
       <p class="eyebrow hero__eyebrow"><span data-i18n="hero.eyebrow1">ภัทราวานา รีสอร์ท</span><i aria-hidden="true"></i><span data-i18n="hero.eyebrow2">เขาใหญ่</span></p>
       <h1 class="hero__h1">
-        <span class="hero__line"><span class="hero__word" data-i18n="hero.h1a">ขึ้นมาสูด</span></span>
-        <span class="hero__line"><span class="hero__word" data-i18n="hero.h1b"><em class="it">อากาศบริสุทธิ์</em>กลางหุบเขา</span></span>
+        <span class="hero__line"><span class="hero__word" data-i18n="hero.h1a">สัมผัสความบริสุทธิ์ของธรรมชาติ</span></span>
+        <span class="hero__line"><span class="hero__word" data-i18n="hero.h1b">ใน<em class="it">อ้อมกอดแห่งขุนเขา</em></span></span>
       </h1>
-      <p class="hero__sub" data-i18n="hero.sub">ห้องสวีทและห้องพัก 64 ห้อง ท่ามกลางขุนเขาเขียวขจีของเขาใหญ่</p>
+      <p class="hero__sub" data-i18n="hero.sub">ห้องสวีทและห้องพัก 64 ห้อง ท่ามกลางขุนเขาเขียวขจีแห่งเขาใหญ่</p>
       <div class="hero__cta">
         <a class="pill pill--solid pill--book pill--lg" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open=""><span data-i18n="hero.book">จองที่พัก</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
-        <a class="pill pill--ghost pill--lg" href="#air"><span data-i18n="hero.explore">สำรวจขุนเขา</span></a>
+        <a class="pill pill--ghost pill--lg" href="#air"><span data-i18n="hero.explore">ชมบรรยากาศ</span></a>
       </div>
     </div>
 
     <!-- which film is playing, and the controls for it -->
-    <div class="slides js-only" id="heroSlides" role="group" aria-label="ภาพยนตร์หน้าแรก" data-i18n-attr="aria-label:slides.label">
+    <div class="slides js-only" id="heroSlides" role="group" aria-label="วิดีโอหน้าแรก" data-i18n-attr="aria-label:slides.label">
       <p class="slides__count" aria-hidden="true"><b class="num" id="slideNow">01</b><span class="num">/ <span id="slideTotal">02</span></span></p>
-      <p class="slides__tap" data-i18n="slides.tap">แตะเพื่อเล่นภาพยนตร์</p>
+      <p class="slides__tap" data-i18n="slides.tap">แตะเพื่อเล่นวิดีโอ</p>
       <div class="slides__ctrl">
         <div class="slides__bars" aria-hidden="true"><i><b></b></i><i><b></b></i></div>
-        <button class="iconbtn iconbtn--glass" id="slidePrev" aria-label="คลิปก่อนหน้า" data-i18n-attr="aria-label:slides.prev"><svg aria-hidden="true"><use href="#i-back"></use></svg></button>
-        <button class="iconbtn iconbtn--glass" id="slideNext" aria-label="คลิปถัดไป" data-i18n-attr="aria-label:slides.next"><svg aria-hidden="true"><use href="#i-arrow"></use></svg></button>
-        <button class="iconbtn iconbtn--glass" id="slidePause" aria-pressed="false" aria-label="หยุดภาพยนตร์ชั่วคราว" data-i18n-attr="aria-label:slides.pause"><svg class="ic-pause" aria-hidden="true"><use href="#i-pause"></use></svg><svg class="ic-play" aria-hidden="true"><use href="#i-play"></use></svg></button>
+        <button class="iconbtn iconbtn--glass" id="slidePrev" aria-label="วิดีโอก่อนหน้า" data-i18n-attr="aria-label:slides.prev"><svg aria-hidden="true"><use href="#i-back"></use></svg></button>
+        <button class="iconbtn iconbtn--glass" id="slideNext" aria-label="วิดีโอถัดไป" data-i18n-attr="aria-label:slides.next"><svg aria-hidden="true"><use href="#i-arrow"></use></svg></button>
+        <button class="iconbtn iconbtn--glass" id="slidePause" aria-pressed="false" aria-label="หยุดวิดีโอชั่วคราว" data-i18n-attr="aria-label:slides.pause"><svg class="ic-pause" aria-hidden="true"><use href="#i-pause"></use></svg><svg class="ic-play" aria-hidden="true"><use href="#i-play"></use></svg></button>
       </div>
     </div>
   </div>
@@ -349,40 +349,40 @@ document.documentElement.className += " js";
 <!-- the way in: dates, then straight on to the resort's own booking page. Without the script the button still opens that page -->
 <div class="dockwrap" data-owner="home">
   <form class="dock" id="dock" novalidate="">
-    <label class="dock__f"><span data-i18n="book.in">เช็คอิน</span><input type="date" id="dockIn" name="checkin" aria-describedby="dockErr"></label>
-    <label class="dock__f"><span data-i18n="book.out">เช็คเอาท์</span><input type="date" id="dockOut" name="checkout" aria-describedby="dockErr"></label>
+    <label class="dock__f"><span data-i18n="book.in">เช็กอิน</span><input type="date" id="dockIn" name="checkin" aria-describedby="dockErr"></label>
+    <label class="dock__f"><span data-i18n="book.out">เช็กเอาต์</span><input type="date" id="dockOut" name="checkout" aria-describedby="dockErr"></label>
     <label class="dock__f dock__f--s"><span data-i18n="book.adults">ผู้ใหญ่</span>
       <select id="dockAdults" name="adults" aria-describedby="dockErr"><option value="1">1</option><option value="2" selected="">2</option><option value="3">3</option><option value="more" data-i18n="book.adultsmore">4 ท่านขึ้นไป</option></select>
     </label>
-    <a class="pill pill--solid pill--book pill--lg dock__go" id="dockGo" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener"><span data-i18n="dock.go">เช็คห้องว่าง</span><svg class="pill__ic" aria-hidden="true"><use href="#i-out"></use></svg></a>
+    <a class="pill pill--solid pill--book pill--lg dock__go" id="dockGo" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener"><span data-i18n="dock.go">เช็กห้องว่าง</span><svg class="pill__ic" aria-hidden="true"><use href="#i-out"></use></svg></a>
   </form>
   <p class="dock__err" id="dockErr" role="alert" hidden=""></p>
-  <p class="dock__more" id="dockMore" data-fact="book.more" hidden="">หนึ่งห้องสวีทพักได้สูงสุด 3 ท่าน วันที่และห้องที่เลือกจะถูกส่งต่อไป ส่วนห้องพักและผู้เข้าพักทั้งหมดของคณะให้เลือกในหน้าจอง หรือสอบถามทีมงาน</p>
-  <p class="dock__note" id="dockNote" data-i18n="dock.note">ไปต่อที่หน้าจองของรีสอร์ทเองในแท็บใหม่ พร้อมวันที่และจำนวนผู้ใหญ่ของคุณ</p>
-  <p class="dock__note" id="dockNoteMore" data-i18n="dock.notemore" hidden="">ไปต่อที่หน้าจองของรีสอร์ทเองในแท็บใหม่ พร้อมวันที่ของคุณ ห้องพักและผู้เข้าพักทั้งหมดของคณะให้เลือกในหน้านั้น</p>
+  <p class="dock__more" id="dockMore" data-fact="book.more" hidden="">ห้องสวีทหนึ่งห้องพักได้ผู้ใหญ่สูงสุด 3 ท่าน ระบบจะส่งวันที่และห้องที่เลือกไปยังหน้าจอง แล้วเลือกห้องพักและผู้เข้าพักของทั้งคณะได้ในหน้านั้น หรือสอบถามทีมงาน</p>
+  <p class="dock__note" id="dockNote" data-i18n="dock.note">หน้าจองของรีสอร์ทจะเปิดในแท็บใหม่ พร้อมวันที่และจำนวนผู้ใหญ่ที่คุณเลือก</p>
+  <p class="dock__note" id="dockNoteMore" data-i18n="dock.notemore" hidden="">หน้าจองของรีสอร์ทจะเปิดในแท็บใหม่ พร้อมวันที่ที่คุณเลือก จากนั้นเลือกห้องพักและจำนวนผู้เข้าพักของทั้งคณะได้ในหน้านั้น</p>
 </div>
 
 <!-- ===== the phone's Home: a short welcome and the eight destinations (shown only in the phone's one-at-a-time mode) ===== -->
 <section class="hub" id="explore" data-owner="home" aria-labelledby="hubTitle">
   <div class="hub__intro">
     <p class="chapter__kicker" data-i18n="hub.k">ยินดีต้อนรับ</p>
-    <p class="hub__lede" data-i18n="hub.intro">ห้องสวีทและห้องพัก 64 ห้องใน ต.พญาเย็น สนามหญ้าทอดยาวลงสู่บึงน้ำ ห่างจากอุทยานแห่งชาติเขาใหญ่ราว 20 กม.</p>
+    <p class="hub__lede" data-i18n="hub.intro">ห้องสวีทและห้องพัก 64 ห้อง ต.พญาเย็น สนามหญ้าทอดยาวลงสู่บึงน้ำ ห่างจากอุทยานแห่งชาติเขาใหญ่ราว 20 กม.</p>
   </div>
   <h2 class="hub__title" id="hubTitle" data-i18n="hub.title">สำรวจภัทราวานา</h2>
   <ul class="hub__grid" role="list">
     <li class="hub__offer"><a class="hub__card hub__card--offer" href="#offers" data-view-link="offers">
       <span class="hub__k" data-i18n="hub.offerk">ส่วนลด</span>
       <span class="hub__deal" data-offer-teaser=""><span class="hub__head" data-offer-head="" data-i18n="hub.offerhead">ส่วนลดและราคาห้องปัจจุบัน</span></span>
-      <span class="hub__extra" data-offer-extra="" data-i18n="hub.offerextra">ในหน้าจองของรีสอร์ทเอง ตามวันที่ของคุณ</span>
+      <span class="hub__extra" data-offer-extra="" data-i18n="hub.offerextra">ดูได้ในหน้าจองของรีสอร์ท ตามวันที่ที่คุณเลือก</span>
       <span class="hub__go"><span data-i18n="hub.offergo">ดูส่วนลด</span><svg aria-hidden="true"><use href="#i-arrow"></use></svg></span>
     </a></li>
-    <li><a class="hub__card" href="#stay" data-view-link="stay"><span class="hub__img"><img src="assets/web/room-vana-lake-bedroom-800.jpg" srcset="assets/web/room-vana-lake-bedroom-560.jpg 560w, assets/web/room-vana-lake-bedroom-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="600"></span><span class="hub__name" data-i18n="nav.rooms">ห้องพักของเรา</span><span class="hub__sub" data-i18n="hub.stay">สวีทสามวิว: บึงน้ำ สวน และหุบเขา</span></a></li>
+    <li><a class="hub__card" href="#stay" data-view-link="stay"><span class="hub__img"><img src="assets/web/room-vana-lake-bedroom-800.jpg" srcset="assets/web/room-vana-lake-bedroom-560.jpg 560w, assets/web/room-vana-lake-bedroom-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="600"></span><span class="hub__name" data-i18n="nav.rooms">ห้องพักของเรา</span><span class="hub__sub" data-i18n="hub.stay">สวีทสามวิว: บึงน้ำ สวน และทิวเขา</span></a></li>
     <li><a class="hub__card" href="#facilities" data-view-link="facilities"><span class="hub__img"><img src="assets/web/aerial-estate-800.jpg" srcset="assets/web/aerial-estate-560.jpg 560w, assets/web/aerial-estate-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="450"></span><span class="hub__name" data-i18n="nav.facilities">สิ่งอำนวยความสะดวก</span><span class="hub__sub" data-i18n="hub.fac">รีสอร์ทจากมุมสูง สระว่ายน้ำ และบึงน้ำ</span></a></li>
     <li><a class="hub__card" href="#dining" data-view-link="dining"><span class="hub__img"><img src="assets/web/dining-terrace-800.jpg" srcset="assets/web/dining-terrace-560.jpg 560w, assets/web/dining-terrace-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.dining">ห้องอาหาร</span><span class="hub__sub" data-i18n="hub.dining">ครัวผู้ใหญ่ลี ริมบึงน้ำ</span></a></li>
-    <li><a class="hub__card" href="#gather" data-view-link="events"><span class="hub__img"><img src="assets/web/amphitheatre-800.jpg" srcset="assets/web/amphitheatre-560.jpg 560w, assets/web/amphitheatre-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.gather">สัมมนา</span><span class="hub__sub" data-i18n="hub.events">อัฒจันทร์ และห้องสัมมนาใกล้รีสอร์ท</span></a></li>
+    <li><a class="hub__card" href="#gather" data-view-link="events"><span class="hub__img"><img src="assets/web/amphitheatre-800.jpg" srcset="assets/web/amphitheatre-560.jpg 560w, assets/web/amphitheatre-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.gather">สัมมนา</span><span class="hub__sub" data-i18n="hub.events">อัฒจันทร์กลางแจ้ง และห้องสัมมนาใกล้รีสอร์ท</span></a></li>
     <li><a class="hub__card" href="#roam" data-view-link="nearby"><span class="hub__img"><img src="assets/web/hero-poster-800.jpg" srcset="assets/web/hero-poster-560.jpg 560w, assets/web/hero-poster-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="450"></span><span class="hub__name" data-i18n="nav.roam">ที่เที่ยว</span><span class="hub__sub" data-i18n="hub.nearby">ไร่องุ่น สนามกอล์ฟ และอุทยานแห่งชาติ</span></a></li>
-    <li><a class="hub__card" href="#gallery" data-view-link="gallery"><span class="hub__img"><img src="assets/web/moonrise-800.jpg" srcset="assets/web/moonrise-560.jpg 560w, assets/web/moonrise-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.gallery">แกลเลอรี</span><span class="hub__sub" data-i18n="hub.gallery">ภาพถ่าย และยามค่ำ</span></a></li>
-    <li><a class="hub__card" href="#visit" data-view-link="contact"><span class="hub__img"><img src="assets/web/building-sky-800.jpg" srcset="assets/web/building-sky-560.jpg 560w, assets/web/building-sky-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.contactfaq">ติดต่อและคำถาม</span><span class="hub__sub" data-i18n="hub.contact">เส้นทาง การติดต่อ และคำตอบ</span></a></li>
+    <li><a class="hub__card" href="#gallery" data-view-link="gallery"><span class="hub__img"><img src="assets/web/moonrise-800.jpg" srcset="assets/web/moonrise-560.jpg 560w, assets/web/moonrise-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.gallery">แกลเลอรี</span><span class="hub__sub" data-i18n="hub.gallery">ภาพบรรยากาศ และยามค่ำคืน</span></a></li>
+    <li><a class="hub__card" href="#visit" data-view-link="contact"><span class="hub__img"><img src="assets/web/building-sky-800.jpg" srcset="assets/web/building-sky-560.jpg 560w, assets/web/building-sky-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.contactfaq">ติดต่อและคำถาม</span><span class="hub__sub" data-i18n="hub.contact">การเดินทาง ช่องทางติดต่อ และคำถามที่พบบ่อย</span></a></li>
   </ul>
 </section>
 
@@ -400,7 +400,7 @@ document.documentElement.className += " js";
     <div class="tickets" id="offerList">
       <article class="ticket ticket--hot" data-rv="" data-offer="current">
         <p class="ticket__tag" data-i18n="offers.cur.tag">จองตรง</p>
-        <h3 class="ticket__head" data-i18n="offers.cur.head">ข้อเสนอและราคาปัจจุบัน</h3>
+        <h3 class="ticket__head" data-i18n="offers.cur.head">ส่วนลดและราคาปัจจุบัน</h3>
         <p class="ticket__desc" data-i18n="offers.cur.desc">เลือกวันที่เพื่อดูส่วนลดและราคาปัจจุบันในหน้าจองของรีสอร์ทเอง แต่ละราคาจะแสดงเงื่อนไขการยกเลิกและการชำระเงินก่อนคุณยืนยัน</p>
         <div class="ticket__acts">
           <a class="pill pill--light" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open=""><span data-i18n="offers.cur.go">ดูส่วนลดและราคาปัจจุบัน</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
@@ -409,9 +409,9 @@ document.documentElement.className += " js";
       <article class="ticket" data-rv="" data-offer="group">
         <p class="ticket__tag" data-i18n="offers.o1.tag">หมู่คณะและสัมมนา</p>
         <p class="ticket__big ticket__big--word" data-i18n="offers.o1.big">สอบถามราคา</p>
-        <p class="ticket__per" data-i18n="offers.o1.per">ราคาหมู่คณะและค่าใช้ห้องสัมมนา</p>
-        <p class="ticket__desc" data-i18n="offers.o1.desc">สำหรับงานสัมมนา รีทรีต และงานเลี้ยงฉลอง แจ้งวันที่และจำนวนคน แล้วทีมงานจะตอบกลับพร้อมใบเสนอราคา</p>
-        <a class="pill pill--ghost" href="#visit" data-enquiry="group"><span data-i18n="group.cta">เริ่มสอบถามแบบหมู่คณะ</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+        <p class="ticket__per" data-i18n="offers.o1.per">ราคาสำหรับหมู่คณะและค่าเช่าห้องสัมมนา</p>
+        <p class="ticket__desc" data-i18n="offers.o1.desc">สำหรับงานสัมมนา รีทรีต และงานเลี้ยงฉลอง แจ้งวันที่และจำนวนผู้เข้าร่วม แล้วทีมงานจะส่งใบเสนอราคากลับไปให้</p>
+        <a class="pill pill--ghost" href="#visit" data-enquiry="group"><span data-i18n="group.cta">สอบถามสำหรับหมู่คณะ</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
       </article>
     </div>
   </div>
@@ -423,14 +423,14 @@ document.documentElement.className += " js";
     <p class="chapter__num num" aria-hidden="true">02</p>
     <p class="chapter__kicker" data-i18n="air.kicker">ที่แห่งนี้</p>
     <h2 class="chapter__title" data-i18n="air.title">อากาศบริสุทธิ์</h2>
-    <p class="chapter__note" data-i18n="air.note" data-more="air" data-more-what="more.w.air" data-more-also="#air .statement">ตั้งอยู่ในหุบเขาของปากช่อง เชิงเขาอุทยานแห่งชาติเขาใหญ่</p>
+    <p class="chapter__note" data-i18n="air.note" data-more="air" data-more-what="more.w.air" data-more-also="#air .statement">ตั้งอยู่ท่ามกลางหุบเขาของปากช่อง เชิงเขาอุทยานแห่งชาติเขาใหญ่</p>
   </div>
   <div class="chapter__body">
-    <p class="statement st-lines" data-i18n="air.statement">ตื่นมาท่ามกลางสายเมฆ สูดอากาศจากผืนป่าอุทยานแห่งชาติ แล้วปล่อยให้ขุนเขา<em class="it">กำหนดจังหวะของวัน</em></p>
+    <p class="statement st-lines" data-i18n="air.statement">ตื่นมาท่ามกลางสายหมอก สูดอากาศบริสุทธิ์จากผืนป่าอุทยานแห่งชาติ แล้วปล่อยให้วันเวลา<em class="it">เดินช้าลง</em></p>
     <ul class="stats" role="list">
-      <li class="stat" data-rv=""><span class="stat__n num"><span data-count="64">64</span></span><span class="stat__l" data-i18n="air.s1">ห้องสวีทและห้องพัก ในสามแบบสวีท ทุกห้องมีระเบียง</span></li>
-      <li class="stat" data-rv=""><span class="stat__n num"><span data-count="20">20</span><small>km</small></span><span class="stat__l" data-i18n="air.s3">ถึงอุทยานแห่งชาติเขาใหญ่ ตามระยะทางที่รีสอร์ทระบุ</span></li>
-      <li class="stat" data-rv=""><span class="stat__n num"><span data-count="280" data-count-fact="hall.area">280</span><small>m²</small></span><span class="stat__l" data-fact="hall.stat">ห้องสัมมนาใกล้รีสอร์ท นอกพื้นที่รีสอร์ท รองรับสูงสุด 220 ท่าน</span></li>
+      <li class="stat" data-rv=""><span class="stat__n num"><span data-count="64">64</span></span><span class="stat__l" data-i18n="air.s1">ห้องสวีทและห้องพัก มีให้เลือกสามแบบ ทุกห้องมีระเบียง</span></li>
+      <li class="stat" data-rv=""><span class="stat__n num"><span data-count="20">20</span><small>km</small></span><span class="stat__l" data-i18n="air.s3">ถึงอุทยานแห่งชาติเขาใหญ่ ตามข้อมูลของรีสอร์ท</span></li>
+      <li class="stat" data-rv=""><span class="stat__n num"><span data-count="280" data-count-fact="hall.area">280</span><small>m²</small></span><span class="stat__l" data-fact="hall.stat">ห้องสัมมนานอกรีสอร์ทในระยะใกล้ รองรับได้สูงสุด 220 ท่าน</span></li>
     </ul>
     <div class="pair">
       <figure class="frame pair__a" data-mr="">
@@ -448,7 +448,7 @@ document.documentElement.className += " js";
   <img class="band__img" src="assets/web/lawn-wings-2400.jpg" srcset="assets/web/lawn-wings-800.jpg 800w, assets/web/lawn-wings-1600.jpg 1600w, assets/web/lawn-wings-2400.jpg 2400w, assets/web/lawn-wings-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy" data-band="">
   <div class="band__scrim" aria-hidden="true"></div>
   <div class="band__inner">
-    <p class="band__line st-lines" data-i18n="band.a">เช้าที่เนิบช้า <em class="it">สนามหญ้ากว้าง</em> และไม่มีที่ไหนต้องรีบไป</p>
+    <p class="band__line st-lines" data-i18n="band.a">เช้าที่ไม่ต้องรีบ <em class="it">สนามหญ้ากว้าง</em> และไม่มีที่ไหนที่ต้องไป</p>
   </div>
 </section>
 
@@ -458,15 +458,15 @@ document.documentElement.className += " js";
     <p class="chapter__num num" aria-hidden="true">03</p>
     <p class="chapter__kicker" data-i18n="fac.kicker">รอบรีสอร์ท</p>
     <h2 class="chapter__title" data-i18n="fac.title">สิ่งอำนวยความสะดวก</h2>
-    <p class="chapter__note" data-i18n="fac.note">ทั้งรีสอร์ทจากมุมสูง ในรูปแบบแผนที่ เลือกหมุดเพื่อดูสถานที่นั้น แล้วไปยังส่วนนั้นได้ทันที</p>
+    <p class="chapter__note" data-i18n="fac.note">ชมทั้งรีสอร์ทจากมุมสูงในรูปแบบแผนที่ เลือกหมุดเพื่อดูรายละเอียดของแต่ละจุด แล้วไปยังส่วนนั้นได้ทันที</p>
   </div>
   <div class="chapter__body">
     <div class="map" data-map="">
       <div class="map__bar">
-        <button class="pill pill--ghost map__tour js-only" id="mapTour" aria-pressed="false"><svg class="pill__ic pill__ic--lead ic-play" aria-hidden="true"><use href="#i-play"></use></svg><svg class="pill__ic pill__ic--lead ic-pause" aria-hidden="true"><use href="#i-pause"></use></svg><span class="map__tour-on" data-i18n="fac.tour">พาชมรอบรีสอร์ท</span><span class="map__tour-off" data-i18n="fac.tourstop">หยุดการพาชม</span><span class="map__tour-go" data-i18n="fac.tourgo">พาชมต่อ</span></button>
+        <button class="pill pill--ghost map__tour js-only" id="mapTour" aria-pressed="false"><svg class="pill__ic pill__ic--lead ic-play" aria-hidden="true"><use href="#i-play"></use></svg><svg class="pill__ic pill__ic--lead ic-pause" aria-hidden="true"><use href="#i-pause"></use></svg><span class="map__tour-on" data-i18n="fac.tour">พาชมรอบรีสอร์ท</span><span class="map__tour-off" data-i18n="fac.tourstop">หยุดพาชม</span><span class="map__tour-go" data-i18n="fac.tourgo">พาชมต่อ</span></button>
         <p class="map__step num" aria-hidden="true"><b id="mapStepNow">00</b><span>/ 08</span></p>
         <div class="map__prog" aria-hidden="true"><i id="mapProg"></i></div>
-        <p class="map__hint" data-i18n="fac.hint">แปดสถานที่บนภาพถ่ายมุมสูงหนึ่งภาพ เลือกสิ่งอำนวยความสะดวกด้านล่างเพื่อหาตำแหน่งบนแผนที่</p>
+        <p class="map__hint" data-i18n="fac.hint">รวมแปดจุดสำคัญไว้ในภาพถ่ายมุมสูงภาพเดียว เลือกสิ่งอำนวยความสะดวกด้านล่างเพื่อดูตำแหน่งบนแผนที่</p>
       </div>
       <div class="map__stage" id="mapStage">
         <img class="map__img" src="assets/web/aerial-map-edited-2400.jpg" srcset="assets/web/aerial-map-edited-800.jpg 800w, assets/web/aerial-map-edited-1600.jpg 1600w, assets/web/aerial-map-edited-2400.jpg 2400w, assets/web/aerial-map-edited-4k.jpg 3582w" sizes="100vw" alt="ภาพโดรนของภัทราวานาทั้งผืน อาคารห้องสวีท อัฒจันทร์ บึงน้ำ สระว่ายน้ำ และครัวผู้ใหญ่ลี" data-i18n-attr="alt:fac.mapalt" loading="lazy" decoding="async" width="2000" height="1122">
@@ -476,7 +476,7 @@ document.documentElement.className += " js";
         <button class="hot" style="--x:47.5%;--y:61%" data-hot="deck" data-go="#dining" data-img="assets/web/dining-terrace-1600.jpg" aria-label="ระเบียงริมน้ำ" data-i18n-attr="aria-label:fac.h4.t"><span class="hot__dot"><span class="hot__n num">04</span></span><span class="hot__label" data-i18n="fac.h4.t">ระเบียงริมน้ำ</span></button>
         <button class="hot" style="--x:62%;--y:54%" data-hot="kitchen" data-go="#dining" data-img="assets/web/cafe-rattan-1600.jpg" aria-label="ครัวผู้ใหญ่ลี" data-i18n-attr="aria-label:fac.h5.t"><span class="hot__dot"><span class="hot__n num">05</span></span><span class="hot__label" data-i18n="fac.h5.t">ครัวผู้ใหญ่ลี</span></button>
         <button class="hot" style="--x:56%;--y:45.5%" data-hot="pool" data-go="#fac-pool" data-img="assets/web/pool-swim-1600.jpg" aria-label="สระว่ายน้ำ" data-i18n-attr="aria-label:fac.h6.t"><span class="hot__dot"><span class="hot__n num">06</span></span><span class="hot__label" data-i18n="fac.h6.t">สระว่ายน้ำ</span></button>
-        <button class="hot" style="--x:27%;--y:61%" data-hot="loop" data-go="#fac-loop" data-img="assets/web/lawn-wings-1600.jpg" aria-label="เส้นทางรอบสวน" data-i18n-attr="aria-label:fac.h7.t"><span class="hot__dot"><span class="hot__n num">07</span></span><span class="hot__label" data-i18n="fac.h7.t">เส้นทางรอบสวน</span></button>
+        <button class="hot" style="--x:27%;--y:61%" data-hot="loop" data-go="#fac-loop" data-img="assets/web/lawn-wings-1600.jpg" aria-label="ทางเดินรอบสวน" data-i18n-attr="aria-label:fac.h7.t"><span class="hot__dot"><span class="hot__n num">07</span></span><span class="hot__label" data-i18n="fac.h7.t">ทางเดินรอบสวน</span></button>
         <button class="hot" style="--x:9%;--y:63%" data-hot="arrival" data-go="#visit" data-img="assets/web/entrance-dusk-1600.jpg" aria-label="ทางเข้าและที่จอดรถ" data-i18n-attr="aria-label:fac.h8.t"><span class="hot__dot"><span class="hot__n num">08</span></span><span class="hot__label" data-i18n="fac.h8.t">ทางเข้าและที่จอดรถ</span></button>
 
         <aside class="map__panel" id="mapPanel" aria-live="polite" aria-hidden="true">
@@ -486,7 +486,7 @@ document.documentElement.className += " js";
             <h3 class="map__panel-title" id="mapPanelTitle"></h3>
             <p class="map__panel-desc" id="mapPanelDesc"></p>
             <div class="map__panel-actions">
-              <button class="pill pill--solid" id="mapGo"><span data-i18n="fac.go">พาฉันไป</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></button>
+              <button class="pill pill--solid" id="mapGo"><span data-i18n="fac.go">ไปที่นี่</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></button>
               <div class="map__panel-nav">
                 <button class="iconbtn" type="button" id="mapPrev" aria-label="สถานที่ก่อนหน้า" data-i18n-attr="aria-label:fac.prev"><svg aria-hidden="true"><use href="#i-back"></use></svg></button>
                 <button class="iconbtn" type="button" id="mapNext" aria-label="สถานที่ถัดไป" data-i18n-attr="aria-label:fac.next"><svg aria-hidden="true"><use href="#i-arrow"></use></svg></button>
@@ -515,59 +515,59 @@ document.documentElement.className += " js";
       </div>
       <ul class="pindex js-only" id="placeIndex" role="list" aria-label="สถานที่ทั้งหมดบนแผนที่" data-i18n-attr="aria-label:fac.index"></ul>
       <div id="hotCopy" hidden="">
-        <span data-hot="suites" data-i18n="fac.h1.d">อาคารหลังคาทรงสูงเป็นที่ตั้งของห้องสวีทและห้องพักทั้ง 64 ห้อง ทุกห้องมีระเบียงส่วนตัว</span>
-        <span data-hot="amphi" data-i18n="fac.h2.d">สนามหญ้าเป็นขั้นลดหลั่นลงสู่ผืนน้ำ โดยมีขุนเขาเป็นฉากหลัง แจ้งทีมงานว่าคุณวางแผนจัดงานแบบใด แล้วทีมงานจะแนะนำการจัดพื้นที่ให้</span>
-        <span data-hot="lake" data-i18n="fac.h3.d">บึงน้ำอยู่ใจกลางพื้นที่ มีตัวอักษร PATRAVANA สีขาวบนฝั่งใกล้ และสะพานไม้สำหรับชั่วโมงที่เงียบสงบ</span>
-        <span data-hot="deck" data-i18n="fac.h4.d">ระเบียงไม้ทอดยาวเลียบน้ำข้างครัว ที่อาหารเช้าและมื้อเย็นอยู่ห่างจากบึงเพียงไม่กี่ก้าว</span>
-        <span data-hot="kitchen" data-fact="dining.hot">ครัวผู้ใหญ่ลี ร้านอาหารของรีสอร์ท อาหารไทยพร้อมเมนูนานาชาติ ทั้งในร่มและกลางแจ้ง รองรับได้ถึง 150 ที่นั่ง</span>
-        <span data-hot="pool" data-i18n="fac.h6.d">สระลากูนขอบหิน ซ่อนตัวระหว่างครัวกับสนามหญ้าหน้าอาคารห้องพัก และมีห้องฟิตเนสอยู่ใกล้ ๆ</span>
-        <span data-hot="loop" data-i18n="fac.h7.d">ทางเดินวนรอบสนามหญ้าใหญ่ระหว่างอาคารกับบึงน้ำ เหมาะกับการเดินเล่นยามเย็นแบบไม่รีบร้อน</span>
-        <span data-hot="arrival" data-i18n="fac.h8.d">ทางเข้าอยู่ริมถนนมิตรภาพ ต.พญาเย็น มีที่จอดรถฟรีในรีสอร์ท เส้นทางเข้าขึ้นอยู่กับทิศที่คุณเดินทางมา ใช้หมุดแผนที่ในหัวข้อติดต่อได้เลย</span>
+        <span data-hot="suites" data-i18n="fac.h1.d">ห้องสวีทและห้องพักทั้ง 64 ห้องอยู่ในอาคารหลังคาทรงจั่วสูง ทุกห้องมีระเบียงส่วนตัว</span>
+        <span data-hot="amphi" data-i18n="fac.h2.d">สนามหญ้าลดหลั่นเป็นขั้นลงสู่ผืนน้ำ มีขุนเขาเป็นฉากหลัง แจ้งทีมงานได้เลยว่าต้องการจัดงานแบบไหน แล้วทีมงานจะแนะนำการจัดพื้นที่ให้</span>
+        <span data-hot="lake" data-i18n="fac.h3.d">บึงน้ำอยู่ใจกลางรีสอร์ท ริมฝั่งมีตัวอักษร PATRAVANA สีขาว และมีสะพานไม้ให้นั่งพักในยามเงียบสงบ</span>
+        <span data-hot="deck" data-i18n="fac.h4.d">ระเบียงไม้ทอดยาวเลียบริมน้ำข้างครัวผู้ใหญ่ลี ให้มื้อเช้าและมื้อเย็นอยู่ห่างจากบึงน้ำเพียงไม่กี่ก้าว</span>
+        <span data-hot="kitchen" data-fact="dining.hot">ครัวผู้ใหญ่ลี ห้องอาหารของรีสอร์ท อาหารไทยและเมนูนานาชาติบางรายการ ทั้งในร่มและกลางแจ้ง รองรับได้ถึง 150 ที่นั่ง</span>
+        <span data-hot="pool" data-i18n="fac.h6.d">สระลากูนขอบหิน อยู่ระหว่างครัวผู้ใหญ่ลีกับสนามหญ้าหน้าอาคารห้องพัก และมีห้องฟิตเนสอยู่ใกล้ ๆ</span>
+        <span data-hot="loop" data-i18n="fac.h7.d">ทางเดินรอบสนามหญ้าผืนใหญ่ระหว่างอาคารห้องพักกับบึงน้ำ เหมาะกับการเดินเล่นสบาย ๆ ยามเย็น</span>
+        <span data-hot="arrival" data-i18n="fac.h8.d">ทางเข้าอยู่ติดถนนมิตรภาพ ต.พญาเย็น มีที่จอดรถฟรีภายในรีสอร์ท ทางเลี้ยวเข้าจะต่างกันตามทิศที่ขับมา ใช้หมุดแผนที่ในหัวข้อติดต่อนำทางได้เลย</span>
       </div>
     </div>
 
     <ul class="fac" role="list" data-fac="">
       <li class="fac__item" id="fac-pool" data-hot="pool" data-rv="">
         <span class="fac__n num">06</span>
-        <figure class="fac__media"><img src="assets/web/pool-umbrellas-2400.jpg" srcset="assets/web/pool-umbrellas-800.jpg 800w, assets/web/pool-umbrellas-1600.jpg 1600w, assets/web/pool-umbrellas-2400.jpg 2400w, assets/web/pool-umbrellas-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="เดคริมสระพร้อมร่มสีส้ม" data-i18n-attr="alt:fac.f1.alt" loading="lazy"></figure>
+        <figure class="fac__media"><img src="assets/web/pool-umbrellas-2400.jpg" srcset="assets/web/pool-umbrellas-800.jpg 800w, assets/web/pool-umbrellas-1600.jpg 1600w, assets/web/pool-umbrellas-2400.jpg 2400w, assets/web/pool-umbrellas-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ลานริมสระพร้อมร่มสีส้ม" data-i18n-attr="alt:fac.f1.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f1.t">สระว่ายน้ำและฟิตเนส</h3>
-        <p data-i18n="fac.f1.d">สระกลางแจ้งหันหน้าสู่เทือกเขา สระลากูนขอบหินสำหรับยามบ่ายสบาย ๆ และห้องฟิตเนส</p>
+        <p data-i18n="fac.f1.d">สระว่ายน้ำกลางแจ้งหันหน้าสู่ทิวเขา สระลากูนขอบหินสำหรับบ่ายสบาย ๆ และห้องฟิตเนส</p>
       </li>
       <li class="fac__item" id="fac-lake" data-hot="lake" data-rv="">
         <span class="fac__n num">03</span>
         <figure class="fac__media"><img src="assets/web/lake-dusk-2400.jpg" srcset="assets/web/lake-dusk-800.jpg 800w, assets/web/lake-dusk-1600.jpg 1600w, assets/web/lake-dusk-2400.jpg 2400w, assets/web/lake-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="รีสอร์ทสะท้อนบนผิวน้ำยามโพล้เพล้" data-i18n-attr="alt:fac.f2.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f2.t">บึงน้ำและสะพานไม้</h3>
-        <p data-i18n="fac.f2.d">รีสอร์ทสร้างรอบผืนน้ำ มีสะพานไม้ไว้นั่ง ฝั่งสำหรับป้าย และเงาสะท้อนที่คุ้มค่ากับการตื่นเช้า</p>
+        <p data-i18n="fac.f2.d">รีสอร์ทสร้างล้อมรอบผืนน้ำ มีสะพานไม้ให้นั่งเล่น ป้ายชื่อรีสอร์ทริมฝั่ง และเงาสะท้อนบนผิวน้ำที่คุ้มค่ากับการตื่นเช้า</p>
       </li>
       <li class="fac__item" id="fac-amphi" data-hot="amphi" data-rv="">
         <span class="fac__n num">02</span>
         <figure class="fac__media"><img src="assets/web/amphitheatre-2400.jpg" srcset="assets/web/amphitheatre-800.jpg 800w, assets/web/amphitheatre-1600.jpg 1600w, assets/web/amphitheatre-2400.jpg 2400w, assets/web/amphitheatre-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ลานอัฒจันทร์กลางแจ้ง" data-i18n-attr="alt:fac.f3.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f3.t">อัฒจันทร์กลางแจ้ง</h3>
-        <p data-i18n="fac.f3.d">สนามหญ้าเป็นขั้นเหนือบึงน้ำ แจ้งทีมงานว่าคุณวางแผนจัดงานแบบใด แล้วทีมงานจะแนะนำการจัดพื้นที่ให้</p>
+        <p data-i18n="fac.f3.d">สนามหญ้าลดหลั่นเป็นขั้นเหนือบึงน้ำ แจ้งทีมงานได้เลยว่าต้องการจัดงานแบบไหน แล้วทีมงานจะแนะนำการจัดพื้นที่ให้</p>
       </li>
       <li class="fac__item" id="fac-hall" data-hot="" data-rv="">
-        <span class="fac__n fac__n--note" data-i18n="fac.offmap1">ใกล้รีสอร์ท นอกพื้นที่</span>
+        <span class="fac__n fac__n--note" data-i18n="fac.offmap1">นอกพื้นที่รีสอร์ท อยู่ใกล้ ๆ</span>
         <figure class="fac__media is-crop"><img src="assets/web/hall-classroom-2400.jpg" srcset="assets/web/hall-classroom-800.jpg 800w, assets/web/hall-classroom-1600.jpg 1600w, assets/web/hall-classroom-2400.jpg 2400w, assets/web/hall-classroom-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ห้องสัมมนาจัดแบบคลาสรูม" data-i18n-attr="alt:fac.f4.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f4.t">ห้องสัมมนา</h3>
-        <p data-fact="hall.fac">ภัทรา ฮอลล์ พื้นที่ 280 ตร.ม. อยู่ใกล้รีสอร์ท นอกพื้นที่รีสอร์ท แบ่งเป็นสองห้องได้ มีเวทีทั้งสองฝั่ง อุปกรณ์เครื่องเสียงและภาพ และห้องแต่งตัวส่วนตัว รองรับสูงสุด 220 ท่านแบบเธียเตอร์ เมื่อใช้เต็มห้อง</p>
+        <p data-fact="hall.fac">ภัทรา ฮอลล์ ขนาด 280 ตร.ม. ตั้งอยู่นอกรีสอร์ทในระยะใกล้ แบ่งเป็นสองห้องได้ มีเวทีทั้งสองฝั่ง ระบบภาพและเสียง และห้องแต่งตัวส่วนตัว เมื่อใช้เต็มห้องรองรับได้สูงสุด 220 ท่านแบบเธียเตอร์</p>
       </li>
       <li class="fac__item" id="fac-dining" data-hot="kitchen" data-rv="">
         <span class="fac__n num">05</span>
-        <figure class="fac__media"><img src="assets/web/dining-terrace-2400.jpg" srcset="assets/web/dining-terrace-800.jpg 800w, assets/web/dining-terrace-1600.jpg 1600w, assets/web/dining-terrace-2400.jpg 2400w, assets/web/dining-terrace-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ระเบียงอาหารริมบึง" data-i18n-attr="alt:fac.f5.alt" loading="lazy"></figure>
-        <h3 data-i18n="fac.f5.t">ครัวผู้ใหญ่ลีและระเบียง</h3>
+        <figure class="fac__media"><img src="assets/web/dining-terrace-2400.jpg" srcset="assets/web/dining-terrace-800.jpg 800w, assets/web/dining-terrace-1600.jpg 1600w, assets/web/dining-terrace-2400.jpg 2400w, assets/web/dining-terrace-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ลานรับประทานอาหารริมบึง" data-i18n-attr="alt:fac.f5.alt" loading="lazy"></figure>
+        <h3 data-i18n="fac.f5.t">ครัวผู้ใหญ่ลีและระเบียงไม้</h3>
         <p data-fact="dining.fac">อาหารไทย รองรับได้ถึง 150 ที่นั่งในร่มและบนระเบียงไม้ อาหารเช้าทุกวันตั้งแต่ 7:00 น.</p>
       </li>
       <li class="fac__item" id="fac-loop" data-hot="loop" data-rv="">
         <span class="fac__n num">07</span>
         <figure class="fac__media"><img src="assets/web/lawn-wings-2400.jpg" srcset="assets/web/lawn-wings-800.jpg 800w, assets/web/lawn-wings-1600.jpg 1600w, assets/web/lawn-wings-2400.jpg 2400w, assets/web/lawn-wings-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="สนามหญ้าและต้นปาล์มหน้าอาคารห้องพัก" data-i18n-attr="alt:fac.f6.alt" loading="lazy"></figure>
-        <h3 data-i18n="fac.f6.t">สวนและเส้นทางวน</h3>
-        <p data-i18n="fac.f6.d">สนามหญ้า ต้นปาล์ม และสวนหิน เชื่อมด้วยทางเดินวนสำหรับเดินเล่นยามเย็น</p>
+        <h3 data-i18n="fac.f6.t">สวนและทางเดินเล่น</h3>
+        <p data-i18n="fac.f6.d">สนามหญ้า ต้นปาล์ม และสวนหิน เชื่อมกันด้วยทางเดินสำหรับเดินเล่นยามเย็น</p>
       </li>
       <li class="fac__item" id="fac-suites" data-hot="suites" data-rv="">
         <span class="fac__n num">01</span>
         <figure class="fac__media"><img src="assets/web/vana-living-2400.jpg" srcset="assets/web/vana-living-800.jpg 800w, assets/web/vana-living-1600.jpg 1600w, assets/web/vana-living-2400.jpg 2400w, assets/web/vana-living-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ห้องนั่งเล่นของสวีทเปิดออกสู่ระเบียง" data-i18n-attr="alt:fac.f8.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f8.t">ห้องสวีทและห้องพัก 64 ห้อง</h3>
-        <p data-i18n="fac.f8.d">ระเบียง ครัวเล็ก และทีวี 50 นิ้วในทุกสวีท ห้องนั่งเล่นแยกในวานาและภัทรา อ่างอาบน้ำจากุซซี่ในภัทราและภัทรา จูเนียร์</p>
+        <p data-i18n="fac.f8.d">ทุกสวีทมีระเบียง เคาน์เตอร์เตรียมอาหาร และทีวี 50 นิ้ว วานา สวีทและภัทรา สวีทมีห้องนั่งเล่นแยก ส่วนภัทรา สวีทและภัทรา จูเนียร์ สวีทมีอ่างอาบน้ำจากุซซี่</p>
       </li>
     </ul>
   </div>
@@ -579,7 +579,7 @@ document.documentElement.className += " js";
     <p class="chapter__num num" aria-hidden="true">04</p>
     <p class="chapter__kicker" data-i18n="stay.kicker">ห้องสวีท</p>
     <h2 class="chapter__title" data-i18n="stay.title">พักผ่อน</h2>
-    <p class="chapter__note" data-i18n="stay.note" data-more="stay" data-more-what="more.w.stay">สามแบบสวีท เลือกได้ทั้งวิวบึงน้ำ วิวสวน และวิวทุ่งเขา ทุกห้องมีระเบียงและครัวเล็ก วานาและภัทรามีห้องนั่งเล่นแยก ส่วนภัทรา จูเนียร์เป็นห้องเดียวแบบเปิดโล่ง</p>
+    <p class="chapter__note" data-i18n="stay.note" data-more="stay" data-more-what="more.w.stay">สวีทสามแบบ เลือกได้ทั้งวิวบึงน้ำ วิวสวน และวิวทิวเขา ทุกห้องมีระเบียงและเคาน์เตอร์เตรียมอาหาร วานา สวีทและภัทรา สวีทมีห้องนั่งเล่นแยก ส่วนภัทรา จูเนียร์ สวีทเป็นห้องโล่งห้องเดียว</p>
     <button class="textlink textlink--map js-only" data-map-open="suites"><span data-i18n="fac.find">ดูบนแผนที่</span></button>
     <div class="chapter__acts js-only">
       <button class="pill pill--ghost" type="button" data-compare-open=""><span data-i18n="stay.compare">เปรียบเทียบห้องพัก</span></button>
@@ -601,24 +601,24 @@ document.documentElement.className += " js";
           <span class="acc__no num" aria-hidden="true">01</span>
           <span class="acc__name">Vana Suite</span>
           <span class="acc__thai" lang="th">วานา สวีท</span>
-          <span class="acc__meta" data-i18n="stay.vana.meta">61 ตร.ม. เตียงคิงไซซ์หรือเตียงเดี่ยว 2 เตียง วิวบึงน้ำ สวน หรือทุ่งเขา</span>
+          <span class="acc__meta" data-i18n="stay.vana.meta">61 ตร.ม. เตียงคิงไซซ์หรือเตียงเดี่ยว 2 เตียง วิวบึงน้ำ สวน หรือทิวเขา</span>
           <span class="acc__toggle" aria-hidden="true"></span>
         </button>
         <div class="acc__panel" id="acc-vana">
           <div class="acc__grid">
             <div class="acc__copy">
-              <p data-i18n="stay.vana.desc" data-more="vana" data-more-what="more.w.vana">สวีทซิกเนเจอร์ของเรา ห้องนอนพร้อมห้องนั่งเล่นแยก ระเบียงที่มองเห็นสนามหญ้าเขียวขจี และทุกสิ่งที่เช้าวันพักผ่อนต้องการ</p>
+              <p data-i18n="stay.vana.desc" data-more="vana" data-more-what="more.w.vana">สวีทซิกเนเจอร์ของรีสอร์ท ห้องนอนแยกจากห้องนั่งเล่น ระเบียงมองเห็นสนามหญ้าเขียวขจี พร้อมทุกอย่างสำหรับเช้าวันสบาย ๆ</p>
               <ul class="chips" role="list">
                 <li><b class="num">61 m²</b><span data-i18n="stay.c.size">ขนาด</span></li>
                 <li><b data-i18n="stay.c.bedsv">เตียงคิงไซซ์หรือเตียงเดี่ยว 2 เตียง</b><span data-i18n="stay.c.beds">เตียง</span></li>
-                <li><b class="num">2</b><span data-i18n="stay.c.occ">ผู้ใหญ่ หรือ 3 ท่านเมื่อเสริมเตียง</span></li>
+                <li><b class="num">2</b><span data-i18n="stay.c.occ">ผู้ใหญ่ เสริมเตียงได้เป็น 3 ท่าน</span></li>
                 <li class="chips__ph"><b data-i18n="stay.c.livingv">ห้องนั่งเล่น</b><span data-i18n="stay.c.living">แยกจากห้องนอน</span></li>
               </ul>
               <div class="views js-only" role="group" aria-label="เลือกวิว" data-i18n-attr="aria-label:stay.viewpick">
                 <span class="views__k" data-i18n="stay.viewk">วิว</span>
                 <button class="chip is-on" aria-pressed="true" data-view="lake" data-i18n="stay.v.lake">บึงน้ำ</button>
                 <button class="chip" aria-pressed="false" data-view="garden" data-i18n="stay.v.garden">สวน</button>
-                <button class="chip" aria-pressed="false" data-view="country" data-i18n="stay.v.country">ทุ่งเขา</button>
+                <button class="chip" aria-pressed="false" data-view="country" data-i18n="stay.v.country">ทิวเขา</button>
               </div>
               <!-- the photographs of this room, one set per view: small screens swipe them here, wide screens show them in the stage -->
               <div class="rg">
@@ -646,7 +646,7 @@ document.documentElement.className += " js";
               </div>
               <!-- phones: the photographs one at a time, with the count and buttons beside the swipe -->
               <div class="rg__nav js-only"><button class="iconbtn rg__step" type="button" data-rg-step="-1" aria-label="ภาพก่อนหน้า" data-i18n-attr="aria-label:lb.prev"><svg aria-hidden="true"><use href="#i-back"></use></svg></button><span class="rg__count num"><b>1</b> / <span>5</span></span><button class="iconbtn rg__step" type="button" data-rg-step="1" aria-label="ภาพถัดไป" data-i18n-attr="aria-label:lb.next"><svg aria-hidden="true"><use href="#i-arrow"></use></svg></button></div>
-              <a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000005" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000005"><span data-i18n="stay.bookroom">เช็ควันว่างของห้องนี้</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+              <a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000005" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000005"><span data-i18n="stay.bookroom">เช็กวันว่างของห้องนี้</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
             </div>
           </div>
         </div>
@@ -662,11 +662,11 @@ document.documentElement.className += " js";
         <div class="acc__panel" id="acc-patra">
           <div class="acc__grid">
             <div class="acc__copy">
-              <p data-i18n="stay.patra.desc" data-more="patra" data-more-what="more.w.patra">ห้องนอนพร้อมห้องนั่งเล่นแยก อ่างอาบน้ำจากุซซี่ และระเบียงเหนือบึงน้ำหรือสวน</p>
+              <p data-i18n="stay.patra.desc" data-more="patra" data-more-what="more.w.patra">ห้องนอนแยกจากห้องนั่งเล่น มีอ่างอาบน้ำจากุซซี่ และระเบียงวิวบึงน้ำหรือสวน</p>
               <ul class="chips" role="list">
                 <li><b class="num">64 m²</b><span data-i18n="stay.c.size">ขนาด</span></li>
                 <li><b data-i18n="stay.c.bedsv">เตียงคิงไซซ์หรือเตียงเดี่ยว 2 เตียง</b><span data-i18n="stay.c.beds">เตียง</span></li>
-                <li><b class="num">2</b><span data-i18n="stay.c.occ">ผู้ใหญ่ หรือ 3 ท่านเมื่อเสริมเตียง</span></li>
+                <li><b class="num">2</b><span data-i18n="stay.c.occ">ผู้ใหญ่ เสริมเตียงได้เป็น 3 ท่าน</span></li>
                 <li class="chips__ph"><b data-i18n="stay.c.livingv">ห้องนั่งเล่น</b><span data-i18n="stay.c.living">แยกจากห้องนอน</span></li>
               </ul>
               <div class="views js-only" role="group" aria-label="เลือกวิว" data-i18n-attr="aria-label:stay.viewpick">
@@ -693,7 +693,7 @@ document.documentElement.className += " js";
               </div>
               <!-- phones: the photographs one at a time, with the count and buttons beside the swipe -->
               <div class="rg__nav js-only"><button class="iconbtn rg__step" type="button" data-rg-step="-1" aria-label="ภาพก่อนหน้า" data-i18n-attr="aria-label:lb.prev"><svg aria-hidden="true"><use href="#i-back"></use></svg></button><span class="rg__count num"><b>1</b> / <span>5</span></span><button class="iconbtn rg__step" type="button" data-rg-step="1" aria-label="ภาพถัดไป" data-i18n-attr="aria-label:lb.next"><svg aria-hidden="true"><use href="#i-arrow"></use></svg></button></div>
-              <a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000008" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000008"><span data-i18n="stay.bookroom">เช็ควันว่างของห้องนี้</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+              <a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000008" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000008"><span data-i18n="stay.bookroom">เช็กวันว่างของห้องนี้</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
             </div>
           </div>
         </div>
@@ -703,17 +703,17 @@ document.documentElement.className += " js";
           <span class="acc__no num" aria-hidden="true">03</span>
           <span class="acc__name">Patra Junior Suite</span>
           <span class="acc__thai" lang="th">ภัทรา จูเนียร์ สวีท</span>
-          <span class="acc__meta" data-i18n="stay.junior.meta">40 ตร.ม. ห้องเดียวแบบเปิดโล่ง เตียงเดี่ยว 2 เตียง อ่างอาบน้ำจากุซซี่ วิวสวน</span>
+          <span class="acc__meta" data-i18n="stay.junior.meta">40 ตร.ม. ห้องโล่งห้องเดียว เตียงเดี่ยว 2 เตียง อ่างอาบน้ำจากุซซี่ วิวสวน</span>
           <span class="acc__toggle" aria-hidden="true"></span>
         </button>
         <div class="acc__panel" id="acc-junior">
           <div class="acc__grid">
             <div class="acc__copy">
-              <p data-i18n="stay.junior.desc" data-more="junior" data-more-what="more.w.junior">ภัทราในขนาดที่กะทัดรัดกว่า ห้องเดียวแบบเปิดโล่งพร้อมเตียงเดี่ยว 2 เตียง อ่างอาบน้ำจากุซซี่แบบเดียวกัน และระเบียงเหนือสวน</p>
+              <p data-i18n="stay.junior.desc" data-more="junior" data-more-what="more.w.junior">ภัทรา สวีทในขนาดกะทัดรัด เป็นห้องโล่งห้องเดียว มีเตียงเดี่ยว 2 เตียง อ่างอาบน้ำจากุซซี่แบบเดียวกัน และระเบียงวิวสวน</p>
               <ul class="chips" role="list">
                 <li><b class="num">40 m²</b><span data-i18n="stay.c.size">ขนาด</span></li>
                 <li><b data-i18n="stay.c.twinv">เตียงเดี่ยว 2 เตียง</b><span data-i18n="stay.c.beds">เตียง</span></li>
-                <li><b class="num">2</b><span data-i18n="stay.c.occ">ผู้ใหญ่ หรือ 3 ท่านเมื่อเสริมเตียง</span></li>
+                <li><b class="num">2</b><span data-i18n="stay.c.occ">ผู้ใหญ่ เสริมเตียงได้เป็น 3 ท่าน</span></li>
                 <li class="chips__ph"><b data-i18n="stay.c.openv">ห้องเดียว</b><span data-i18n="stay.c.open">แบบเปิดโล่ง</span></li>
               </ul>
               <p class="views views--one"><span class="views__k" data-i18n="stay.viewk">วิว</span><span class="chip is-on chip--still" data-i18n="stay.v.garden">สวน</span></p>
@@ -729,19 +729,19 @@ document.documentElement.className += " js";
               </div>
               <!-- phones: the photographs one at a time, with the count and buttons beside the swipe -->
               <div class="rg__nav js-only"><button class="iconbtn rg__step" type="button" data-rg-step="-1" aria-label="ภาพก่อนหน้า" data-i18n-attr="aria-label:lb.prev"><svg aria-hidden="true"><use href="#i-back"></use></svg></button><span class="rg__count num"><b>1</b> / <span>5</span></span><button class="iconbtn rg__step" type="button" data-rg-step="1" aria-label="ภาพถัดไป" data-i18n-attr="aria-label:lb.next"><svg aria-hidden="true"><use href="#i-arrow"></use></svg></button></div>
-              <a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000006" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000006"><span data-i18n="stay.bookroom">เช็ควันว่างของห้องนี้</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+              <a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000006" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000006"><span data-i18n="stay.bookroom">เช็กวันว่างของห้องนี้</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
             </div>
           </div>
         </div>
       </li>
     </ul>
-    <p class="stay-pet"><a class="textlink" href="#pet-friendly" data-i18n="stay.petlink">พาสัตว์เลี้ยงมาด้วย? ดูการเข้าพักในอาคารที่กำหนด</a></p>
+    <p class="stay-pet"><a class="textlink" href="#pet-friendly" data-i18n="stay.petlink">พาสัตว์เลี้ยงมาด้วยใช่ไหม ดูการเข้าพักในอาคารที่รับสัตว์เลี้ยง</a></p>
     </div>
     <!-- the gallery of the open room in its chosen view -->
     <figure class="stay-stage js-only" id="stayStage" aria-label="ภาพถ่ายของห้องที่เลือก" data-i18n-attr="aria-label:stay.stagelabel">
       <div class="stay-stage__view" id="stayView">
         <img id="stayImg" src="assets/web/room-vana-lake-bedroom-1600.jpg" alt="" loading="lazy"><img id="stayImgNext" src="" alt="">
-        <button class="stay-stage__open" type="button" id="stayOpen" aria-label="เปิดภาพนี้แบบเต็มจอ" data-i18n-attr="aria-label:stay.open"></button>
+        <button class="stay-stage__open" type="button" id="stayOpen" aria-label="ดูภาพนี้แบบเต็มจอ" data-i18n-attr="aria-label:stay.open"></button>
         <button class="iconbtn iconbtn--glass stay-stage__nav stay-stage__nav--prev" id="stayPrev" aria-label="ภาพก่อนหน้า" data-i18n-attr="aria-label:lb.prev"><svg aria-hidden="true"><use href="#i-back"></use></svg></button>
         <button class="iconbtn iconbtn--glass stay-stage__nav stay-stage__nav--next" id="stayNext" aria-label="ภาพถัดไป" data-i18n-attr="aria-label:lb.next"><svg aria-hidden="true"><use href="#i-arrow"></use></svg></button>
         <figcaption class="stay-stage__cap"><b class="num" id="stayNow">01</b><i></i><span class="num" id="stayTotal">05</span></figcaption>
@@ -760,11 +760,11 @@ document.documentElement.className += " js";
     <h4 class="drawer__sub" data-i18n="amen.g1">ในทุกสวีท</h4>
     <ul class="drawer__list" role="list">
       <li data-i18n="amen.1">เครื่องปรับอากาศ และทีวี LCD 50 นิ้ว</li>
-      <li data-i18n="amen.2">อินเทอร์เน็ตไร้สายฟรี</li>
+      <li data-i18n="amen.2">Wi-Fi ฟรี</li>
       <li data-i18n="amen.3">ตู้เย็น ไมโครเวฟ และอ่างล้างจาน</li>
       <li data-i18n="amen.4">กาต้มน้ำ พร้อมชุดชาและกาแฟ</li>
-      <li data-i18n="amen.5">โต๊ะทานข้าว และน้ำดื่มฟรี</li>
-      <li data-i18n="amen.12">ห้องอาบน้ำฝักบัวและผ้าเช็ดตัว</li>
+      <li data-i18n="amen.5">โต๊ะรับประทานอาหาร และน้ำดื่มฟรี</li>
+      <li data-i18n="amen.12">ฝักบัวอาบน้ำและผ้าเช็ดตัว</li>
       <li data-i18n="amen.11">ระเบียงส่วนตัว</li>
     </ul>
     <h4 class="drawer__sub" data-i18n="amen.g2">ในภัทรา สวีท</h4>
@@ -773,13 +773,13 @@ document.documentElement.className += " js";
       <li data-i18n="amen.7">เสื้อคลุมอาบน้ำและรองเท้าแตะ</li>
       <li data-i18n="amen.13">โทรศัพท์</li>
     </ul>
-    <h4 class="drawer__sub" data-i18n="amen.g3">ขอเพิ่มได้</h4>
+    <h4 class="drawer__sub" data-i18n="amen.g3">มีให้ตามคำขอ</h4>
     <ul class="drawer__list" role="list">
       <li data-i18n="amen.9">ตู้เซฟในห้อง</li>
       <li data-i18n="amen.10">เตารีดและโต๊ะรีด</li>
       <li data-i18n="amen.6">ไดร์เป่าผม ตู้เสื้อผ้า และของใช้ในห้องน้ำ</li>
     </ul>
-    <p class="drawer__note" data-i18n="amen.note">ภัทรา จูเนียร์ สวีทมีอ่างอาบน้ำจากุซซี่ ส่วนสิ่งอำนวยความสะดวกอื่นของห้องนี้ กรุณาสอบถามทีมงาน</p>
+    <p class="drawer__note" data-i18n="amen.note">ภัทรา จูเนียร์ สวีทมีอ่างอาบน้ำจากุซซี่ สำหรับสิ่งอำนวยความสะดวกอื่น ๆ ของห้องนี้ สอบถามทีมงานได้เลย</p>
   </div>
 </div>
 
@@ -796,23 +796,23 @@ document.documentElement.className += " js";
           <tr><th scope="row" data-i18n="cmp.size">ขนาด</th><td class="num">61 m²</td><td class="num">64 m²</td><td class="num">40 m²</td></tr>
           <tr><th scope="row" data-i18n="cmp.beds">เตียง</th><td data-i18n="stay.c.bedsv">เตียงคิงไซซ์หรือเตียงเดี่ยว 2 เตียง</td><td data-i18n="stay.c.bedsv">เตียงคิงไซซ์หรือเตียงเดี่ยว 2 เตียง</td><td data-i18n="stay.c.twinv">เตียงเดี่ยว 2 เตียง</td></tr>
           <tr><th scope="row" data-i18n="cmp.sleeps">เข้าพักได้</th><td data-i18n="cmp.sleepsv">ผู้ใหญ่ 2 ท่าน หรือ 3 ท่านเมื่อเสริมเตียง</td><td data-i18n="cmp.sleepsv">ผู้ใหญ่ 2 ท่าน หรือ 3 ท่านเมื่อเสริมเตียง</td><td data-i18n="cmp.sleepsv">ผู้ใหญ่ 2 ท่าน หรือ 3 ท่านเมื่อเสริมเตียง</td></tr>
-          <tr><th scope="row" data-i18n="cmp.views">วิว</th><td data-i18n="cmp.v3">บึงน้ำ สวน หรือทุ่งเขา</td><td data-i18n="cmp.v2">บึงน้ำหรือสวน</td><td data-i18n="cmp.v1">สวน</td></tr>
-          <tr><th scope="row" data-i18n="cmp.layout">ผังห้อง</th><td data-i18n="cmp.sep">ห้องนอนและห้องนั่งเล่นแยกกัน</td><td data-i18n="cmp.sep">ห้องนอนและห้องนั่งเล่นแยกกัน</td><td data-i18n="cmp.open">ห้องเดียวแบบเปิดโล่ง</td></tr>
-          <tr><th scope="row" data-i18n="cmp.balc">ระเบียงและครัวเล็ก</th><td><span class="cmp__yes" data-i18n="cmp.yes">มี</span></td><td><span class="cmp__yes" data-i18n="cmp.yes">มี</span></td><td><span class="cmp__yes" data-i18n="cmp.yes">มี</span></td></tr>
+          <tr><th scope="row" data-i18n="cmp.views">วิว</th><td data-i18n="cmp.v3">บึงน้ำ สวน หรือทิวเขา</td><td data-i18n="cmp.v2">บึงน้ำหรือสวน</td><td data-i18n="cmp.v1">สวน</td></tr>
+          <tr><th scope="row" data-i18n="cmp.layout">ผังห้อง</th><td data-i18n="cmp.sep">ห้องนอนและห้องนั่งเล่นแยกกัน</td><td data-i18n="cmp.sep">ห้องนอนและห้องนั่งเล่นแยกกัน</td><td data-i18n="cmp.open">ห้องโล่งห้องเดียว</td></tr>
+          <tr><th scope="row" data-i18n="cmp.balc">ระเบียงและเคาน์เตอร์เตรียมอาหาร</th><td><span class="cmp__yes" data-i18n="cmp.yes">มี</span></td><td><span class="cmp__yes" data-i18n="cmp.yes">มี</span></td><td><span class="cmp__yes" data-i18n="cmp.yes">มี</span></td></tr>
           <tr><th scope="row" data-i18n="cmp.tub">อ่างอาบน้ำจากุซซี่</th><td class="cmp__no" data-i18n="cmp.no">ไม่ได้ระบุ</td><td><span class="cmp__yes" data-i18n="cmp.yes">มี</span></td><td><span class="cmp__yes" data-i18n="cmp.yes">มี</span></td></tr>
         </tbody>
         <tfoot>
           <tr><td></td>
-            <td><a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000005" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000005" data-cmp-family="vana"><span data-i18n="stay.book">เช็ควันว่าง</span></a></td>
-            <td><a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000008" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000008" data-cmp-family="patra"><span data-i18n="stay.book">เช็ควันว่าง</span></a></td>
-            <td><a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000006" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000006" data-cmp-family="junior"><span data-i18n="stay.book">เช็ควันว่าง</span></a></td>
+            <td><a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000005" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000005" data-cmp-family="vana"><span data-i18n="stay.book">เช็กวันว่าง</span></a></td>
+            <td><a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000008" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000008" data-cmp-family="patra"><span data-i18n="stay.book">เช็กวันว่าง</span></a></td>
+            <td><a class="pill pill--solid pill--book" href="https://letsbook.me/booking/patravanaresortkhaoyai?roomtype=3446300000000000006" target="_blank" rel="noopener" data-book-open="" data-book-room="3446300000000000006" data-cmp-family="junior"><span data-i18n="stay.book">เช็กวันว่าง</span></a></td>
           </tr>
         </tfoot>
       </table>
     </div>
     <!-- phones: the same table, one card per suite (built from the table by the script, so the facts are written once) -->
     <div class="cmpc js-only" id="cmpCards"></div>
-    <p class="cmp__note"><span data-i18n="cmp.note">ขนาดห้องและจำนวนผู้เข้าพักเป็นตัวเลขของรีสอร์ทเอง ตามที่ระบุในหน้าจอง ส่วนห้องที่เข้าพักพร้อมสัตว์เลี้ยงได้จะจัดสรรแยกต่างหาก</span> <a class="textlink" href="#pet-friendly" data-i18n="nav.pet">เข้าพักพร้อมสัตว์เลี้ยง</a></p>
+    <p class="cmp__note"><span data-i18n="cmp.note">ขนาดห้องและจำนวนผู้เข้าพักอ้างอิงตามข้อมูลในหน้าจองของรีสอร์ท ส่วนห้องสำหรับผู้ที่มากับสัตว์เลี้ยงจะจัดแยกต่างหาก</span> <a class="textlink" href="#pet-friendly" data-i18n="nav.pet">เข้าพักพร้อมสัตว์เลี้ยง</a></p>
   </div>
 </div>
 
@@ -822,30 +822,30 @@ document.documentElement.className += " js";
   <div class="petsec__copy">
     <p class="chapter__kicker" data-i18n="pet.kicker">เข้าพักพร้อมสัตว์เลี้ยง</p>
     <h2 class="petsec__title st-lines" id="petTitle" data-i18n="pet.title">เผื่อที่อีกนิด ให้<em class="it">ทั้งครอบครัว</em></h2>
-    <p class="petsec__fact" data-fact="pet.summary">รีสอร์ทรับสัตว์เลี้ยงเข้าพักได้ในอาคารที่กำหนดไว้หนึ่งอาคาร</p>
-    <p class="petsec__body" data-fact="pet.body">วางแผนพาสัตว์เลี้ยงมาด้วยใช่ไหม ติดต่อทีมงานเพื่อยืนยันห้องที่เข้าพักพร้อมสัตว์เลี้ยงได้ในวันที่คุณต้องการ และรายละเอียดการเข้าพักพร้อมสัตว์เลี้ยงในปัจจุบัน</p>
+    <p class="petsec__fact" data-fact="pet.summary">รีสอร์ทรับสัตว์เลี้ยงเข้าพักได้ในอาคารที่จัดไว้ 1 อาคาร</p>
+    <p class="petsec__body" data-fact="pet.body">อยากพาสัตว์เลี้ยงมาด้วยใช่ไหม ติดต่อทีมงานเพื่อยืนยันห้องที่รับสัตว์เลี้ยงได้ในวันที่คุณต้องการ พร้อมสอบถามเงื่อนไขล่าสุด</p>
     <div class="petsec__acts">
       <a class="pill pill--solid pill--lg" href="#talk" data-enquiry="pet"><span data-i18n="pet.cta">สอบถามการเข้าพักพร้อมสัตว์เลี้ยง</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
       <a class="pill pill--ghost pill--lg" href="#pet-details" data-pet-details=""><span data-i18n="pet.details">รายละเอียดการเข้าพักพร้อมสัตว์เลี้ยง</span></a>
     </div>
-    <p class="petsec__note" data-fact="pet.booknote">ห้องว่างทั่วไปไม่ได้ยืนยันว่าเป็นห้องที่เข้าพักพร้อมสัตว์เลี้ยงได้</p>
+    <p class="petsec__note" data-fact="pet.booknote">ห้องว่างทั่วไปยังไม่ใช่การยืนยันห้องสำหรับผู้ที่มากับสัตว์เลี้ยง</p>
   </div>
   <figure class="frame petsec__img" data-mr="">
     <img src="assets/web/pet-corgi-1168.jpg" srcset="assets/web/pet-corgi-800.jpg 800w, assets/web/pet-corgi-1168.jpg 1168w" sizes="(max-width: 1000px) 100vw, 46vw" width="1168" height="876" alt="สุนัขคอร์กี้นั่งบนโซฟาสีครีมกับหมอนอิงสีเขียวเข้ม" data-i18n-attr="alt:pet.alt" loading="lazy">
   </figure>
   <ol class="petsec__points" role="list" data-more="pet" data-more-what="more.w.pet">
-    <li data-rv=""><span class="petsec__n num" aria-hidden="true">01</span><h3 data-i18n="pet.p1">อาคารที่กำหนดไว้หนึ่งอาคาร</h3><p data-fact="pet.point1">รับสัตว์เลี้ยงเข้าพักในอาคารหนึ่งหลังของรีสอร์ท ไม่ได้เปิดรับในทุกห้องสวีท</p></li>
-    <li data-rv=""><span class="petsec__n num" aria-hidden="true">02</span><h3 data-i18n="pet.p2">ห้องที่เข้าพักได้ ยืนยันโดยทีมงาน</h3><p data-fact="pet.point2">ทีมงานจะยืนยันห้องที่เข้าพักพร้อมสัตว์เลี้ยงได้สำหรับวันที่ของคุณ การค้นหาห้องว่างทั่วไปไม่ได้ยืนยันเรื่องนี้</p></li>
-    <li data-rv=""><span class="petsec__n num" aria-hidden="true">03</span><h3 data-i18n="pet.p3">รายละเอียดล่าสุดจากทีมงาน</h3><p data-fact="pet.point3">สอบถามทีมสำรองห้องพักว่ารายละเอียดการเข้าพักพร้อมสัตว์เลี้ยงข้อใดมีผลในวันที่คุณเข้าพัก จะได้เตรียมตัวก่อนเดินทาง</p></li>
+    <li data-rv=""><span class="petsec__n num" aria-hidden="true">01</span><h3 data-i18n="pet.p1">อาคารที่รับสัตว์เลี้ยง 1 อาคาร</h3><p data-fact="pet.point1">รับสัตว์เลี้ยงเฉพาะในอาคารที่กำหนด 1 อาคาร ไม่ใช่ทุกห้องสวีท</p></li>
+    <li data-rv=""><span class="petsec__n num" aria-hidden="true">02</span><h3 data-i18n="pet.p2">ทีมงานยืนยันห้องให้ก่อนเข้าพัก</h3><p data-fact="pet.point2">ทีมงานจะยืนยันห้องที่รับสัตว์เลี้ยงได้ตามวันที่คุณเข้าพัก การค้นหาห้องว่างทั่วไปไม่ได้ยืนยันเรื่องนี้</p></li>
+    <li data-rv=""><span class="petsec__n num" aria-hidden="true">03</span><h3 data-i18n="pet.p3">รายละเอียดล่าสุดจากทีมงาน</h3><p data-fact="pet.point3">สอบถามฝ่ายสำรองห้องพักถึงเงื่อนไขการพาสัตว์เลี้ยงเข้าพักในวันที่คุณมา จะได้เตรียมตัวได้ถูกต้องก่อนเดินทาง</p></li>
   </ol>
   <details class="petsec__details" id="pet-details">
     <summary><span data-i18n="pet.details">รายละเอียดการเข้าพักพร้อมสัตว์เลี้ยง</span><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
     <div class="petsec__in">
       <!-- owner-approved rules are listed here from facts.js once they exist; until then only what is confirmed -->
       <ul class="petsec__list" role="list" id="petDetailsList">
-        <li data-fact="pet.summary">รีสอร์ทรับสัตว์เลี้ยงเข้าพักได้ในอาคารที่กำหนดไว้หนึ่งอาคาร</li>
-        <li data-fact="pet.booknote">ห้องว่างทั่วไปไม่ได้ยืนยันว่าเป็นห้องที่เข้าพักพร้อมสัตว์เลี้ยงได้</li>
-        <li data-fact="pet.askteam">ประเภทสัตว์เลี้ยง จำนวน และเงื่อนไขต่าง ๆ ทีมงานจะยืนยันให้ตามการเข้าพักของคุณ</li>
+        <li data-fact="pet.summary">รีสอร์ทรับสัตว์เลี้ยงเข้าพักได้ในอาคารที่จัดไว้ 1 อาคาร</li>
+        <li data-fact="pet.booknote">ห้องว่างทั่วไปยังไม่ใช่การยืนยันห้องสำหรับผู้ที่มากับสัตว์เลี้ยง</li>
+        <li data-fact="pet.askteam">ทีมงานจะยืนยันประเภทสัตว์เลี้ยง จำนวน และเงื่อนไขต่าง ๆ ให้ตามการเข้าพักของคุณ</li>
       </ul>
       <p class="petsec__reach"><span data-i18n="pet.reach">ฝ่ายสำรองห้องพัก:</span> <a class="textlink num" href="tel:+66885041888">+66 88 504 1888</a> <a class="textlink" href="https://www.patravana.com/line-qr-code" target="_blank" rel="noopener">LINE @patravana</a> <a class="textlink" href="mailto:info@patravanaresort.com">info@patravanaresort.com</a></p>
       <p class="card__small" data-fact="pet.reviewed">ตรวจสอบล่าสุดเมื่อ 8 ตุลาคม 2569</p>
@@ -861,7 +861,7 @@ document.documentElement.className += " js";
   <div class="chapter__side">
     <p class="chapter__kicker" data-i18n="reviews.kicker">รีวิวจาก Google</p>
     <h2 class="chapter__title" id="reviewsTitle" data-i18n="reviews.title">เสียงจากผู้เข้าพัก</h2>
-    <p class="chapter__note" data-i18n="reviews.note">สิ่งที่ผู้เข้าพักเขียนถึงการเข้าพักของพวกเขาบน Google Maps</p>
+    <p class="chapter__note" data-i18n="reviews.note">ความประทับใจของผู้เข้าพัก จาก Google Maps</p>
     <p class="revsum" id="revSummary" hidden=""></p>
     <a class="pill pill--solid" id="revCta" href="https://search.google.com/local/reviews?placeid=ChIJW0dROePNHTERYZEflZQxuP8" target="_blank" rel="noopener"><span data-i18n="reviews.cta">ดูรีวิวทั้งหมดบน Google</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
   </div>
@@ -874,7 +874,7 @@ document.documentElement.className += " js";
         <button class="iconbtn" type="button" id="revNext" aria-label="รีวิวถัดไป" data-i18n-attr="aria-label:reviews.next"><svg aria-hidden="true"><use href="#i-arrow"></use></svg></button>
         <button class="textlink revs__pause" type="button" id="revPause" aria-pressed="false">Pause</button>
       </div>
-      <p class="revs__note"><span class="revs__g" data-i18n="reviews.source">Google Maps</span> <span data-i18n="reviews.disclose">แสดงเฉพาะรีวิว 5 ดาว เรียงจากล่าสุด Google ไม่ได้ตรวจสอบรีวิว และจะลบรีวิวปลอมเมื่อพบ</span> <a class="textlink" href="https://support.google.com/contributionpolicy/answer/7400114" target="_blank" rel="noopener" data-i18n="reviews.policy">วิธีที่ Google ดูแลรีวิว</a></p>
+      <p class="revs__note"><span class="revs__g" data-i18n="reviews.source">Google Maps</span> <span data-i18n="reviews.disclose">แสดงเฉพาะรีวิว 5 ดาว เรียงจากใหม่ไปเก่า Google ไม่ได้ตรวจสอบรีวิว แต่จะลบรีวิวปลอมออกเมื่อพบ</span> <a class="textlink" href="https://support.google.com/contributionpolicy/answer/7400114" target="_blank" rel="noopener" data-i18n="reviews.policy">วิธีที่ Google ดูแลรีวิว</a></p>
     </div>
   </div>
 </section>
@@ -884,12 +884,12 @@ document.documentElement.className += " js";
   <div class="chapter__side">
     <p class="chapter__num num" aria-hidden="true">05</p>
     <p class="chapter__kicker" data-i18n="dining.kicker">ห้องอาหารครัวผู้ใหญ่ลี</p>
-    <h2 class="chapter__title" data-i18n="dining.title">โต๊ะอาหาร</h2>
+    <h2 class="chapter__title" data-i18n="dining.title">ลิ้มรส</h2>
     <p class="chapter__note" data-fact="dining.note">อาหารไทยเป็นหลัก พร้อมเมนูนานาชาติบางรายการ รองรับได้ถึง 150 ที่นั่ง ทั้งในร่มและกลางแจ้ง</p>
     <button class="textlink textlink--map js-only" type="button" data-map-open="kitchen"><span data-i18n="fac.find">ดูบนแผนที่</span></button>
   </div>
   <div class="chapter__body">
-    <p class="statement st-lines" data-i18n="dining.lede" data-more="dining" data-more-what="more.w.dining">สถาปัตยกรรมไทยประยุกต์ ทั้งในร่มและกลางแจ้ง ที่มื้อเย็นมา<em class="it">พร้อมเสียงของบึงน้ำ</em></p>
+    <p class="statement st-lines" data-i18n="dining.lede" data-more="dining" data-more-what="more.w.dining">สถาปัตยกรรมไทยประยุกต์ ทั้งในร่มและกลางแจ้ง ให้มื้อเย็นของคุณ<em class="it">มีเสียงน้ำคลอเบา ๆ</em></p>
     <div class="dining">
       <figure class="frame dining__img" data-mr="">
         <img src="assets/web/dining-terrace-2400.jpg" srcset="assets/web/dining-terrace-800.jpg 800w, assets/web/dining-terrace-1600.jpg 1600w, assets/web/dining-terrace-2400.jpg 2400w, assets/web/dining-terrace-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="โต๊ะอาหารเช้าบนระเบียงริมบึง" data-i18n-attr="alt:dining.alt" loading="lazy">
@@ -898,15 +898,15 @@ document.documentElement.className += " js";
         <p class="status" id="diningStatus" data-state=""><i aria-hidden="true"></i><span id="diningStatusText"></span></p>
         <dl class="rows">
           <div><dt data-fact="dining.row.breakfast">อาหารเช้า ทุกวัน</dt><dd class="num" data-fact="dining.breakfast.hours">7:00 ถึง 10:00 น.</dd></div>
-          <div><dt data-fact="dining.row.kitchen">มื้อกลางวันและมื้อเย็น พุธถึงอาทิตย์</dt><dd class="num" data-fact="dining.kitchen.hours">11:00 ถึง 21:00 น.</dd></div>
-          <div><dt data-fact="dining.row.lastorder">รับออเดอร์สุดท้าย มื้อกลางวันและมื้อเย็น</dt><dd class="num" data-fact="dining.kitchen.last">20:00 น.</dd></div>
+          <div><dt data-fact="dining.row.kitchen">มื้อกลางวันและมื้อเย็น ทุกวัน</dt><dd class="num" data-fact="dining.kitchen.hours">11:00 ถึง 21:00 น.</dd></div>
+          <div><dt data-fact="dining.row.lastorder">ออร์เดอร์สุดท้าย มื้อกลางวันและมื้อเย็น</dt><dd class="num" data-fact="dining.kitchen.last">20:00 น.</dd></div>
           <div><dt data-i18n="dining.r4">สำรองที่นั่ง</dt><dd><a class="num" href="tel:+66840887785">+66 84 088 7785</a><br><a class="num" href="tel:+66840887786">+66 84 088 7786</a></dd></div>
           <div><dt data-i18n="dining.r5">เฟซบุ๊กของร้าน</dt><dd><a href="https://www.facebook.com/PhuYaiLee.KhaoYai/" target="_blank" rel="noopener">Phu Yai Lee</a></dd></div>
         </dl>
-        <p class="card__small js-only" data-i18n="dining.statusnote">สถานะอ้างอิงจากเวลาทำการที่ระบุไว้ ตามเวลาของรีสอร์ท กรุณาโทรยืนยันอีกครั้งในวันที่มา</p>
+        <p class="card__small js-only" data-i18n="dining.statusnote">สถานะนี้อิงตามเวลาเปิดทำการของร้าน ตามเวลาที่รีสอร์ท แนะนำให้โทรยืนยันอีกครั้งในวันที่มา</p>
       </div>
       <figure class="frame dining__img2" data-mr="">
-        <img src="assets/web/cafe-rattan-2400.jpg" srcset="assets/web/cafe-rattan-800.jpg 800w, assets/web/cafe-rattan-1600.jpg 1600w, assets/web/cafe-rattan-2400.jpg 2400w, assets/web/cafe-rattan-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="เก้าอี้หวายและไม้แขวนในมุมคาเฟ่" data-i18n-attr="alt:dining.alt2" loading="lazy">
+        <img src="assets/web/cafe-rattan-2400.jpg" srcset="assets/web/cafe-rattan-800.jpg 800w, assets/web/cafe-rattan-1600.jpg 1600w, assets/web/cafe-rattan-2400.jpg 2400w, assets/web/cafe-rattan-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="เก้าอี้หวายและต้นไม้แขวนในมุมคาเฟ่" data-i18n-attr="alt:dining.alt2" loading="lazy">
       </figure>
     </div>
   </div>
@@ -917,7 +917,7 @@ document.documentElement.className += " js";
   <img class="band__img" src="assets/web/pool-umbrellas-2400.jpg" srcset="assets/web/pool-umbrellas-800.jpg 800w, assets/web/pool-umbrellas-1600.jpg 1600w, assets/web/pool-umbrellas-2400.jpg 2400w, assets/web/pool-umbrellas-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy" data-band="">
   <div class="band__scrim" aria-hidden="true"></div>
   <div class="band__inner">
-    <p class="band__line st-lines" data-i18n="band.b">ยามบ่ายเป็นของ<em class="it">ผืนน้ำ</em></p>
+    <p class="band__line st-lines" data-i18n="band.b">บ่ายสบาย ๆ <em class="it">ริมสระน้ำ</em></p>
   </div>
 </section>
 
@@ -926,8 +926,8 @@ document.documentElement.className += " js";
   <div class="chapter__side">
     <p class="chapter__num num" aria-hidden="true">06</p>
     <p class="chapter__kicker" data-i18n="gather.kicker">ประชุมและจัดงาน</p>
-    <h2 class="chapter__title" data-i18n="gather.title">รวมตัว</h2>
-    <p class="chapter__note" data-fact="hall.note">อัฒจันทร์กลางแจ้งเหนือบึงน้ำ และภัทรา ฮอลล์ ห้องสัมมนาขนาด 280 ตร.ม. ที่อยู่ใกล้รีสอร์ท นอกพื้นที่รีสอร์ท ซึ่งแบ่งเป็นสองห้องได้</p>
+    <h2 class="chapter__title" data-i18n="gather.title">พบปะ</h2>
+    <p class="chapter__note" data-fact="hall.note">อัฒจันทร์กลางแจ้งริมบึงน้ำ และภัทรา ฮอลล์ ห้องสัมมนาขนาด 280 ตร.ม. นอกพื้นที่รีสอร์ทในระยะใกล้ ซึ่งแบ่งเป็นสองห้องได้</p>
     <button class="textlink textlink--map js-only" type="button" data-map-open="amphi"><span data-i18n="fac.find">ดูบนแผนที่</span></button>
     <a class="pill pill--ghost" href="#talk" data-enquiry="group"><span data-i18n="gather.cta">วางแผนจัดสัมมนา</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
   </div>
@@ -939,14 +939,14 @@ document.documentElement.className += " js";
     <!-- hall planner: pick a layout, see the room. The four figures are the full-hall capacities in facts.js (hall) -->
     <div class="hall" data-hall="" data-rv="">
       <div class="hall__left">
-        <p class="bars__title" data-i18n="gather.bars">ความจุห้องตามรูปแบบ เต็มห้อง</p>
+        <p class="bars__title" data-i18n="gather.bars">ความจุตามรูปแบบการจัดห้อง (เต็มห้อง)</p>
         <div class="hall__rows" role="group" aria-label="เลือกรูปแบบการจัดห้อง" data-i18n-attr="aria-label:gather.pick">
           <button class="bar is-on" type="button" aria-pressed="true" data-layout="theatre" data-n="220"><span class="bar__l" data-i18n="gather.b1">เธียเตอร์</span><span class="bar__track"><span class="bar__fill" data-w="100" style="--w:100%"></span></span><span class="bar__n num">220</span></button>
           <button class="bar" type="button" aria-pressed="false" data-layout="classroom" data-n="168"><span class="bar__l" data-i18n="gather.b2">คลาสรูม</span><span class="bar__track"><span class="bar__fill" data-w="76" style="--w:76%"></span></span><span class="bar__n num">168</span></button>
           <button class="bar" type="button" aria-pressed="false" data-layout="banquet" data-n="120"><span class="bar__l" data-i18n="gather.b3">โต๊ะจีน</span><span class="bar__track"><span class="bar__fill" data-w="55" style="--w:55%"></span></span><span class="bar__n num">120</span></button>
           <button class="bar" type="button" aria-pressed="false" data-layout="ushape" data-n="64"><span class="bar__l" data-i18n="gather.b4">ตัวยู</span><span class="bar__track"><span class="bar__fill" data-w="29" style="--w:29%"></span></span><span class="bar__n num">64</span></button>
         </div>
-        <p class="bars__foot" data-i18n="gather.foot">ภัทรา ฮอลล์ แบ่งเป็นสองห้อง A และ B แต่ละห้องมีเวทีอยู่ที่ปลายห้อง พร้อมอุปกรณ์เครื่องเสียงและภาพ และห้องแต่งตัวส่วนตัว ตัวเลขความจุเป็นไปตามที่รีสอร์ทระบุ กรุณายืนยันรูปแบบการจัดห้องสำหรับงานของคุณ</p>
+        <p class="bars__foot" data-i18n="gather.foot">ภัทรา ฮอลล์ แบ่งเป็นสองห้อง คือห้อง A และห้อง B แต่ละห้องมีเวทีที่ปลายห้อง มีระบบภาพและเสียง และห้องแต่งตัวส่วนตัว ความจุอ้างอิงตามข้อมูลของรีสอร์ท โปรดยืนยันรูปแบบการจัดห้องกับทีมงานอีกครั้ง</p>
         <table class="halfcap" data-more="halls" data-more-open="more.capsOpen" data-more-close="more.capsClose">
           <caption data-i18n="gather.halfcap">จำนวนผู้เข้าร่วมตามรูปแบบการจัดห้อง ทั้งแบบเต็มห้องและแบบแบ่งครึ่ง</caption>
           <thead><tr><th scope="col" data-i18n="gather.layout">รูปแบบ</th><th scope="col" data-i18n="gather.full">เต็มห้อง</th><th scope="col" data-i18n="gather.halla">ห้อง A</th><th scope="col" data-i18n="gather.hallb">ห้อง B</th></tr></thead>
@@ -963,14 +963,14 @@ document.documentElement.className += " js";
       <div class="hall__right js-only">
         <p class="hall__big"><b class="num" id="hallNum">220</b><span data-i18n="gather.guests">ท่าน</span></p>
         <svg class="hall__svg" id="hallSvg" viewBox="0 0 340 148" role="img" aria-label="ภาพร่างประกอบของรูปแบบที่เลือก" data-i18n-attr="aria-label:gather.sketchalt"></svg>
-        <p class="card__small" data-i18n="gather.sketch">ภาพร่างจากแบบแปลนของรีสอร์ท ไม่ตรงตามมาตราส่วน</p>
+        <p class="card__small" data-i18n="gather.sketch">ภาพร่างจากแบบแปลนของรีสอร์ท ไม่ได้ย่อตามสัดส่วนจริง</p>
         <button class="textlink" type="button" data-enquiry="group" data-enquiry-layout=""><span data-i18n="gather.ask">สอบถามรูปแบบนี้</span></button>
       </div>
     </div>
 
     <div class="duo">
       <figure class="frame is-crop" data-mr=""><img src="assets/web/hall-classroom-2400.jpg" srcset="assets/web/hall-classroom-800.jpg 800w, assets/web/hall-classroom-1600.jpg 1600w, assets/web/hall-classroom-2400.jpg 2400w, assets/web/hall-classroom-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ห้องสัมมนาจัดแบบคลาสรูมเต็มห้อง" data-i18n-attr="alt:gather.alt2" loading="lazy"></figure>
-      <figure class="frame" data-mr=""><img src="assets/web/pool-swim-2400.jpg" srcset="assets/web/pool-swim-800.jpg 800w, assets/web/pool-swim-1600.jpg 1600w, assets/web/pool-swim-2400.jpg 2400w, assets/web/pool-swim-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="แขกกำลังว่ายน้ำในสระกลางแจ้ง หันหน้าเข้าหาเทือกเขา" data-i18n-attr="alt:gather.alt3" loading="lazy"></figure>
+      <figure class="frame" data-mr=""><img src="assets/web/pool-swim-2400.jpg" srcset="assets/web/pool-swim-800.jpg 800w, assets/web/pool-swim-1600.jpg 1600w, assets/web/pool-swim-2400.jpg 2400w, assets/web/pool-swim-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ผู้เข้าพักว่ายน้ำในสระกลางแจ้งที่หันหน้าสู่ทิวเขา" data-i18n-attr="alt:gather.alt3" loading="lazy"></figure>
     </div>
   </div>
 </section>
@@ -981,7 +981,7 @@ document.documentElement.className += " js";
     <p class="chapter__num num" aria-hidden="true">07</p>
     <p class="chapter__kicker" data-i18n="roam.kicker">ใกล้เคียง</p>
     <h2 class="chapter__title" data-i18n="roam.title">เที่ยวเล่น</h2>
-    <p class="chapter__note" data-i18n="roam.note">กำหนดระยะทางเพื่อดูว่ามีอะไรอยู่ใกล้ ระยะทางเป็นตัวเลขที่รีสอร์ทระบุไว้ ไม่ใช่เวลาเดินทาง</p>
+    <p class="chapter__note" data-i18n="roam.note">เลือกระยะทางเพื่อดูสถานที่ใกล้เคียง ระยะทางอ้างอิงตามข้อมูลของรีสอร์ท ไม่ใช่เวลาขับรถ</p>
   </div>
   <div class="chapter__body">
     <div class="radius js-only" data-radius="">
@@ -1030,11 +1030,11 @@ document.documentElement.className += " js";
   <div class="night__inner">
     <div class="night__copy">
       <p class="chapter__kicker" data-i18n="night.kicker">ยามค่ำ</p>
-      <h2 class="night__title st-lines" id="tonightTitle" data-i18n="night.title">อยู่ต่อถึง<em class="it">ยามค่ำ</em></h2>
-      <p class="night__body" data-i18n="night.body" data-more="night" data-more-what="more.w.night">แสงโพล้เพล้ทอดลงบนบึงน้ำ ไฟตามแนวอาคารเริ่มสว่าง และพระจันทร์ค่อย ๆ ลอยขึ้นเหนือขุนเขา</p>
+      <h2 class="night__title st-lines" id="tonightTitle" data-i18n="night.title">อยู่ต่อให้ถึง<em class="it">ยามค่ำ</em></h2>
+      <p class="night__body" data-i18n="night.body" data-more="night" data-more-what="more.w.night">แสงสนธยาทอดลงบนผืนน้ำ ไฟตามอาคารค่อย ๆ สว่างขึ้น และพระจันทร์ลอยขึ้นเหนือขุนเขาอย่างไม่รีบร้อน</p>
       <div class="seg" role="group" aria-label="เลือกภาพถ่าย" data-i18n-attr="aria-label:night.pick">
         <button class="seg__b" aria-pressed="false" data-night-set="dusk" data-i18n="night.dusk">โพล้เพล้</button>
-        <button class="seg__b is-on" aria-pressed="true" data-night-set="moon" data-i18n="night.moon">จันทร์ขึ้น</button>
+        <button class="seg__b is-on" aria-pressed="true" data-night-set="moon" data-i18n="night.moon">พระจันทร์ขึ้น</button>
       </div>
     </div>
     <div class="sky" data-rv="">
@@ -1047,10 +1047,10 @@ document.documentElement.className += " js";
         <p class="sky__v sky__v--moon"><svg class="moon" viewBox="0 0 40 40" aria-hidden="true" data-sky="moonsvg"></svg><span data-sky="moonname"></span></p>
       </div>
       <div class="sky__cell">
-        <p class="card__k" data-i18n="sky.timek">เวลาที่รีสอร์ทขณะนี้</p>
+        <p class="card__k" data-i18n="sky.timek">เวลาขณะนี้ที่รีสอร์ท</p>
         <p class="sky__v"><b class="num" data-clock="">--:--</b></p>
       </div>
-      <p class="sky__note" data-i18n="sky.note">คำนวณสำหรับปากช่อง เป็นค่าโดยประมาณ</p>
+      <p class="sky__note" data-i18n="sky.note">คำนวณสำหรับพื้นที่ปากช่อง เป็นเวลาโดยประมาณ</p>
     </div>
   </div>
 </section>
@@ -1060,10 +1060,10 @@ document.documentElement.className += " js";
   <div class="reelwrap__head">
     <div>
       <p class="chapter__kicker" data-i18n="reel.kicker">แกลเลอรี</p>
-      <h2 class="reelwrap__title st-lines" id="galleryTitle" data-i18n="reel.title">แปดภาพจาก<em class="it">สุดสัปดาห์ที่เนิบช้า</em></h2>
+      <h2 class="reelwrap__title st-lines" id="galleryTitle" data-i18n="reel.title">แปดภาพจาก<em class="it">สุดสัปดาห์แสนสบาย</em></h2>
     </div>
     <div class="reelwrap__side">
-      <p class="reelwrap__hint reelwrap__hint--drift" data-i18n="reel.hint">แกลเลอรีเลื่อนไปช้า ๆ กดหยุด เลื่อนดูทีละภาพ หรือเปิดภาพใดก็ได้</p>
+      <p class="reelwrap__hint reelwrap__hint--drift" data-i18n="reel.hint">ภาพจะเลื่อนไปช้า ๆ กดหยุด เลื่อนดูทีละภาพ หรือเลือกภาพเพื่อดูแบบเต็มจอ</p>
       <p class="reelwrap__hint reelwrap__hint--still" data-i18n="reel.hintstill">ปัดดูภาพทีละภาพ หรือกดเล่นให้ภาพเลื่อนช้า ๆ แตะภาพใดก็ได้เพื่อดูแบบเต็มจอ</p>
       <div class="reel__ctrl js-only" role="group" aria-label="ปุ่มควบคุมแกลเลอรี" data-i18n-attr="aria-label:reel.ctrl">
         <button class="iconbtn" type="button" id="reelPrev" aria-label="ภาพก่อนหน้า" data-i18n-attr="aria-label:reel.prev"><svg aria-hidden="true"><use href="#i-back"></use></svg></button>
@@ -1092,8 +1092,8 @@ document.documentElement.className += " js";
     <p class="chapter__num num" aria-hidden="true">08</p>
     <p class="chapter__kicker" data-i18n="visit.kicker">เส้นทางและการติดต่อ</p>
     <h2 class="chapter__title" data-i18n="visit.title">มาเยือน</h2>
-    <p class="chapter__note" data-i18n="visit.note" data-more="visit" data-more-what="more.w.visit">ต.พญาเย็น ริมถนนมิตรภาพ ทางเลี้ยวเข้าขึ้นอยู่กับทิศที่คุณเดินทางมา ช่วงสุดท้ายให้ตามหมุดแผนที่</p>
-    <p class="chapter__note" data-i18n="visit.nocar">เดินทางมาโดยไม่มีรถส่วนตัว? กรุณาติดต่อรีสอร์ทก่อนวางแผนการเดินทาง เพื่อสอบถามบริการรับส่งที่มีในปัจจุบัน</p>
+    <p class="chapter__note" data-i18n="visit.note" data-more="visit" data-more-what="more.w.visit">ตั้งอยู่ที่ ต.พญาเย็น ติดถนนมิตรภาพ ทางเลี้ยวเข้าจะต่างกันตามทิศที่ขับมา ช่วงสุดท้ายแนะนำให้ใช้หมุดแผนที่นำทาง</p>
+    <p class="chapter__note" data-i18n="visit.nocar">หากไม่ได้ขับรถมาเอง กรุณาติดต่อรีสอร์ทก่อนวางแผนการเดินทาง เพื่อสอบถามบริการรับส่งที่มีในปัจจุบัน</p>
     <button class="textlink textlink--map js-only" type="button" data-map-open="arrival"><span data-i18n="fac.find">ดูบนแผนที่</span></button>
   </div>
   <div class="chapter__body visit">
@@ -1121,54 +1121,54 @@ document.documentElement.className += " js";
         <a class="textlink card__ask" href="#talk" data-enquiry="general" data-i18n="visit.ask">เขียนคำถามถึงทีมงาน</a>
       </div>
       <div class="card card--wide" data-rv="">
-        <p class="card__k" data-i18n="visit.knowk">ควรรู้</p>
+        <p class="card__k" data-i18n="visit.knowk">ข้อมูลน่ารู้</p>
         <ul class="know" role="list">
-          <li data-pet-item=""><b data-i18n="visit.k2k">สัตว์เลี้ยง</b><span data-fact="pet.short">รีสอร์ทรับสัตว์เลี้ยงเข้าพักได้ในอาคารที่กำหนดไว้หนึ่งอาคาร ติดต่อทีมงานเพื่อยืนยันห้องที่เข้าพักได้</span><span class="know__links"><a class="textlink" href="#pet-friendly" data-i18n="nav.pet">เข้าพักพร้อมสัตว์เลี้ยง</a><a class="textlink" href="#talk" data-enquiry="pet" data-i18n="pet.asklink">สอบถามทีมงาน</a></span></li>
-          <li><b data-i18n="visit.k3k">อาหารเช้า</b><span data-fact="dining.know">เสิร์ฟทุกวันที่ครัวผู้ใหญ่ลี 7:00 ถึง 10:00 น. จะรวมในราคาหรือไม่ขึ้นอยู่กับแพ็กเกจที่จอง</span></li>
-          <li><b data-i18n="visit.k4k">หมู่คณะ</b><span data-fact="hall.know">ห้องสัมมนาอยู่ใกล้รีสอร์ท นอกพื้นที่รีสอร์ท รองรับสูงสุด 220 ท่านแบบเธียเตอร์ ส่งคำขอแบบหมู่คณะเพื่อสอบถามวันและราคา</span><span class="know__links"><a class="textlink" href="#talk" data-enquiry="group" data-i18n="group.cta">เริ่มสอบถามแบบหมู่คณะ</a></span></li>
-          <li><b data-i18n="visit.k1k">การเข้าถึง</b><span data-i18n="visit.k1v">กรุณาสอบถามทีมงานเรื่องเส้นทางที่ไม่มีขั้นบันได ตำแหน่งห้อง และห้องน้ำก่อนจอง ทีมงานจะแนะนำสิ่งที่เหมาะกับคุณ</span></li>
+          <li data-pet-item=""><b data-i18n="visit.k2k">สัตว์เลี้ยง</b><span data-fact="pet.short">รีสอร์ทรับสัตว์เลี้ยงเข้าพักได้ในอาคารที่จัดไว้ 1 อาคาร ติดต่อทีมงานเพื่อยืนยันห้องที่รับสัตว์เลี้ยงได้</span><span class="know__links"><a class="textlink" href="#pet-friendly" data-i18n="nav.pet">เข้าพักพร้อมสัตว์เลี้ยง</a><a class="textlink" href="#talk" data-enquiry="pet" data-i18n="pet.asklink">สอบถามทีมงาน</a></span></li>
+          <li><b data-i18n="visit.k3k">อาหารเช้า</b><span data-fact="dining.know">เสิร์ฟทุกวันที่ครัวผู้ใหญ่ลี 7:00 ถึง 10:00 น. รวมในราคาห้องพักหรือไม่ ขึ้นอยู่กับแพ็กเกจที่จอง</span></li>
+          <li><b data-i18n="visit.k4k">หมู่คณะ</b><span data-fact="hall.know">ห้องสัมมนานอกพื้นที่รีสอร์ทในระยะใกล้ รองรับได้สูงสุด 220 ท่านแบบเธียเตอร์ ส่งคำถามสำหรับหมู่คณะเพื่อสอบถามวันว่างและราคา</span><span class="know__links"><a class="textlink" href="#talk" data-enquiry="group" data-i18n="group.cta">สอบถามสำหรับหมู่คณะ</a></span></li>
+          <li><b data-i18n="visit.k1k">ความสะดวกในการเข้าถึง</b><span data-i18n="visit.k1v">ก่อนจอง สอบถามทีมงานได้เรื่องทางเดินที่ไม่มีขั้นบันได ตำแหน่งห้องพัก และห้องน้ำ ทีมงานจะแนะนำสิ่งที่เหมาะกับคุณ</span></li>
         </ul>
       </div>
 
       <!-- how to get here (4 November 2026): checked against the resort's own directions and the rail and airport
            operators' sites on that date. No fares, timetables or transfers are promised; the map pin leads the last stretch -->
       <div class="card card--wide ways" id="getting-here" data-rv="">
-        <p class="card__k" data-i18n="ways.k">การเดินทางมาที่นี่</p>
-        <p class="ways__intro" data-i18n="ways.intro">ภัทราวานาตั้งอยู่ที่ ต.พญาเย็น อ.ปากช่อง จ.นครราชสีมา เลือกวิธีเดินทางของคุณ</p>
+        <p class="card__k" data-i18n="ways.k">การเดินทาง</p>
+        <p class="ways__intro" data-i18n="ways.intro">ภัทราวานาตั้งอยู่ที่ ต.พญาเย็น อ.ปากช่อง จ.นครราชสีมา เลือกวิธีเดินทางที่สะดวกสำหรับคุณ</p>
         <div class="ways__list">
           <details class="ways__item">
             <summary><h3 data-i18n="ways.car.t">รถยนต์</h3><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
             <div class="ways__a">
-              <p data-i18n="ways.car.p1">จากกรุงเทพฯ ใช้ถนนพหลโยธิน (ทางหลวงหมายเลข 1) ผ่านรังสิตไปทางสระบุรี แล้วเลี้ยวเข้าถนนมิตรภาพ (ทางหลวงหมายเลข 2) มุ่งหน้าปากช่องและนครราชสีมา</p>
-              <p data-i18n="ways.car.p2">รีสอร์ทเข้าทางถนนมิตรภาพ ใน ต.พญาเย็น ทางเข้าขึ้นอยู่กับทิศทางที่คุณเดินทางมา จึงควรใช้หมุดแผนที่นำทางช่วงสุดท้าย เวลาเดินทางขึ้นอยู่กับจุดเริ่มต้น สภาพการจราจร และการแวะพัก มีที่จอดรถฟรีในรีสอร์ท</p>
+              <p data-i18n="ways.car.p1">จากกรุงเทพฯ ใช้ถนนพหลโยธิน (ทางหลวงหมายเลข 1) ผ่านรังสิตไปทางสระบุรี แล้วแยกเข้าถนนมิตรภาพ (ทางหลวงหมายเลข 2) มุ่งหน้าปากช่องและนครราชสีมา</p>
+              <p data-i18n="ways.car.p2">ทางเข้ารีสอร์ทอยู่ติดถนนมิตรภาพ ต.พญาเย็น ทางเลี้ยวเข้าจะต่างกันตามทิศที่ขับมา จึงควรใช้หมุดแผนที่นำทางในช่วงสุดท้าย ระยะเวลาเดินทางขึ้นอยู่กับจุดเริ่มต้น สภาพการจราจร และการแวะพักระหว่างทาง มีที่จอดรถฟรีภายในรีสอร์ท</p>
               <p class="ways__links"><a class="textlink" href="https://maps.app.goo.gl/nnPAtFGH4KwDBAJA9" target="_blank" rel="noopener" data-i18n="ways.car.nav">นำทางด้วย Google Maps</a><button class="textlink js-only" type="button" data-copy-el="#addrText" data-copy-msg="addrCopied" data-i18n="visit.copyaddr">คัดลอกที่อยู่</button></p>
             </div>
           </details>
           <details class="ways__item">
             <summary><h3 data-i18n="ways.train.t">รถไฟ</h3><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
             <div class="ways__a">
-              <p data-i18n="ways.train.p1">รถไฟไม่ได้วิ่งถึงรีสอร์ทโดยตรง ช่วงสุดท้ายจึงต้องเดินทางต่อทางถนน เส้นทางที่รีสอร์ทแนะนำใช้สถานีมวกเหล็ก ปัจจุบันการรถไฟระบุสถานีในบริเวณนั้นสองแห่ง คือ มวกเหล็กและมวกเหล็กใหม่ โปรดตรวจสอบในตารางเดินรถปัจจุบันของการรถไฟแห่งประเทศไทยว่ารถไฟของคุณจอดที่สถานีใด และออกจากสถานีใดในกรุงเทพฯ</p>
-              <p data-i18n="ways.train.p2">โปรดติดต่อรีสอร์ทก่อนออกเดินทาง เพื่อยืนยันจุดลงรถไฟที่เหมาะกับขบวนของคุณ และนัดหมายการเดินทางต่อ</p>
-              <p class="ways__links"><a class="textlink" href="https://dticket.railway.co.th/DTicketPublicWeb/home/Home" target="_blank" rel="noopener" data-i18n="ways.train.link">ตารางเดินรถและตั๋วรถไฟ การรถไฟแห่งประเทศไทย</a><a class="textlink" href="tel:1690" data-i18n="ways.train.call">ศูนย์บริการข้อมูลการรถไฟ 1690</a></p>
+              <p data-i18n="ways.train.p1">รถไฟไม่ได้จอดถึงรีสอร์ท ช่วงสุดท้ายจึงต้องต่อรถอีกทอด รีสอร์ทแนะนำให้ลงที่มวกเหล็ก ซึ่งปัจจุบันการรถไฟระบุไว้สองสถานี คือ มวกเหล็กและมวกเหล็กใหม่ โปรดตรวจสอบตารางเดินรถล่าสุดของการรถไฟแห่งประเทศไทยว่าขบวนของคุณจอดที่สถานีใด และออกจากสถานีใดในกรุงเทพฯ</p>
+              <p data-i18n="ways.train.p2">ก่อนออกเดินทาง โปรดติดต่อรีสอร์ทเพื่อยืนยันสถานีที่เหมาะกับขบวนของคุณ และนัดหมายการเดินทางต่อมายังรีสอร์ท</p>
+              <p class="ways__links"><a class="textlink" href="https://dticket.railway.co.th/DTicketPublicWeb/home/Home" target="_blank" rel="noopener" data-i18n="ways.train.link">ตารางเดินรถและตั๋วรถไฟ การรถไฟแห่งประเทศไทย</a><a class="textlink" href="tel:1690" data-i18n="ways.train.call">สายด่วนการรถไฟ 1690</a></p>
             </div>
           </details>
           <details class="ways__item">
             <summary><h3 data-i18n="ways.coach.t">รถทัวร์หรือรถตู้</h3><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
             <div class="ways__a">
-              <p data-i18n="ways.coach.p1">หากเดินทางด้วยรถทัวร์หรือรถตู้ โปรดสอบถามผู้ให้บริการว่ารถออกจากที่ใด และส่งลงใกล้ปากช่องหรือมวกเหล็กได้หรือไม่ เพราะไม่ใช่ทุกเที่ยวที่จอดระหว่างทาง</p>
+              <p data-i18n="ways.coach.p1">หากมาด้วยรถทัวร์หรือรถตู้ โปรดสอบถามผู้ให้บริการว่ารถออกจากจุดไหน และจอดส่งใกล้ปากช่องหรือมวกเหล็กได้หรือไม่ เพราะบางเที่ยวไม่จอดระหว่างทาง</p>
               <p data-i18n="ways.coach.p2">จากนั้นติดต่อรีสอร์ทเพื่อนัดหมายการเดินทางช่วงสุดท้ายมายังภัทราวานา</p>
             </div>
           </details>
           <details class="ways__item">
             <summary><h3 data-i18n="ways.air.t">จากสนามบิน</h3><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
             <div class="ways__a">
-              <p data-i18n="ways.air.p1">กรุงเทพฯ มีสนามบินสองแห่ง คือ สุวรรณภูมิ (BKK) และดอนเมือง (DMK) จากทั้งสองแห่ง เดินทางต่อด้วยรถยนต์ตามเส้นทางข้างต้น หรือสอบถามรีสอร์ทเรื่องบริการรับส่งก่อนออกเดินทาง ทั้งความพร้อมให้บริการ การแจ้งล่วงหน้า และค่าใช้จ่าย</p>
+              <p data-i18n="ways.air.p1">กรุงเทพฯ มีสนามบินสองแห่ง คือ สุวรรณภูมิ (BKK) และดอนเมือง (DMK) จากสนามบินทั้งสองแห่ง เดินทางต่อด้วยรถยนต์ตามเส้นทางด้านบนได้ หรือสอบถามรีสอร์ทเรื่องบริการรับส่งก่อนออกเดินทาง ทั้งเรื่องการให้บริการ การแจ้งล่วงหน้า และค่าใช้จ่าย</p>
               <p class="ways__links"><a class="textlink" href="https://suvarnabhumi.airportthai.co.th/" target="_blank" rel="noopener" data-i18n="ways.air.bkk">ท่าอากาศยานสุวรรณภูมิ</a><a class="textlink" href="https://donmueang.airportthai.co.th/service/transportation" target="_blank" rel="noopener" data-i18n="ways.air.dmk">การเดินทางจากท่าอากาศยานดอนเมือง</a></p>
               <a class="pill pill--ghost" href="#talk" data-enquiry="general" data-enquiry-topic="transfer"><span data-i18n="ways.ask">สอบถามรีสอร์ทเรื่องบริการรับส่ง</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
             </div>
           </details>
         </div>
-        <p class="card__small ways__checked" data-i18n="ways.checked">ตรวจสอบข้อมูลการเดินทางเมื่อ 4 พฤศจิกายน 2569 เส้นทาง ตารางเวลา และบริการอาจเปลี่ยนแปลง โปรดตรวจสอบก่อนออกเดินทาง</p>
+        <p class="card__small ways__checked" data-i18n="ways.checked">ข้อมูลการเดินทางตรวจสอบล่าสุดเมื่อ 4 พฤศจิกายน 2569 เส้นทาง ตารางเวลา และบริการอาจเปลี่ยนแปลง โปรดตรวจสอบอีกครั้งก่อนออกเดินทาง</p>
       </div>
     </div>
     <figure class="frame frame--wide" data-mr="">
@@ -1183,41 +1183,41 @@ document.documentElement.className += " js";
     <p class="chapter__num num" aria-hidden="true">09</p>
     <p class="chapter__kicker" data-i18n="faq.kicker">ก่อนจอง</p>
     <h2 class="chapter__title" data-i18n="faq.title">ข้อมูลควรรู้</h2>
-    <p class="chapter__note" data-i18n="faq.note">คำตอบสั้น ๆ ของคำถามที่แขกถามบ่อยที่สุด เรื่องอื่น ๆ โทรหรือส่งข้อความหาทีมงานได้เลย</p>
+    <p class="chapter__note" data-i18n="faq.note">รวมคำตอบสั้น ๆ สำหรับคำถามที่ผู้เข้าพักถามบ่อย หากมีเรื่องอื่น โทรหรือส่งข้อความหาทีมงานได้เลย</p>
   </div>
   <div class="chapter__body">
     <div class="faq">
       <details class="faq__item" data-pet-item="" open="">
         <summary><span class="faq__n num" aria-hidden="true">01</span><h3 data-i18n="faq.q1">พาสัตว์เลี้ยงมาด้วยได้ไหม</h3><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
-        <div class="faq__a"><p data-fact="pet.short">รีสอร์ทรับสัตว์เลี้ยงเข้าพักได้ในอาคารที่กำหนดไว้หนึ่งอาคาร ติดต่อทีมงานเพื่อยืนยันห้องที่เข้าพักได้</p><p data-fact="pet.booknote">ห้องว่างทั่วไปไม่ได้ยืนยันว่าเป็นห้องที่เข้าพักพร้อมสัตว์เลี้ยงได้</p><p class="faq__links"><a class="textlink" href="#pet-friendly" data-i18n="nav.pet">เข้าพักพร้อมสัตว์เลี้ยง</a><a class="textlink" href="#talk" data-enquiry="pet" data-i18n="pet.cta">สอบถามการเข้าพักพร้อมสัตว์เลี้ยง</a></p></div>
+        <div class="faq__a"><p data-fact="pet.short">รีสอร์ทรับสัตว์เลี้ยงเข้าพักได้ในอาคารที่จัดไว้ 1 อาคาร ติดต่อทีมงานเพื่อยืนยันห้องที่รับสัตว์เลี้ยงได้</p><p data-fact="pet.booknote">ห้องว่างทั่วไปยังไม่ใช่การยืนยันห้องสำหรับผู้ที่มากับสัตว์เลี้ยง</p><p class="faq__links"><a class="textlink" href="#pet-friendly" data-i18n="nav.pet">เข้าพักพร้อมสัตว์เลี้ยง</a><a class="textlink" href="#talk" data-enquiry="pet" data-i18n="pet.cta">สอบถามการเข้าพักพร้อมสัตว์เลี้ยง</a></p></div>
       </details>
       <details class="faq__item">
-        <summary><span class="faq__n num" aria-hidden="true">02</span><h3 data-i18n="faq.q2">เช็คอินและเช็คเอาท์กี่โมง</h3><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
+        <summary><span class="faq__n num" aria-hidden="true">02</span><h3 data-i18n="faq.q2">เช็กอินและเช็กเอาต์กี่โมง</h3><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
         <div class="faq__a"><p data-fact="stay.faq.times">เช็กอินได้ตั้งแต่ 15:00 น. และเช็กเอาต์ภายใน 12:00 น. หากต้องการเช็กอินก่อนเวลาหรือเช็กเอาต์ช้ากว่ากำหนด สอบถามทีมงานได้เลย</p><p class="faq__links"><a class="textlink num" href="tel:+66885041888">+66 88 504 1888</a><a class="textlink" href="https://www.patravana.com/line-qr-code" target="_blank" rel="noopener">LINE @patravana</a></p></div>
       </details>
       <details class="faq__item">
-        <summary><span class="faq__n num" aria-hidden="true">03</span><h3 data-i18n="faq.q3">เด็กเข้าพักได้ไหม และมีเตียงเสริมหรือไม่</h3><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
-        <div class="faq__a"><p data-fact="stay.faq.beds">แต่ละห้องสวีทจัดไว้สำหรับผู้ใหญ่สองท่าน และเสริมเตียงได้หนึ่งเตียงสำหรับท่านที่สาม ส่วนเด็กให้เพิ่มในหน้าจองของรีสอร์ท ซึ่งจะแสดงว่าแต่ละห้องรองรับผู้เข้าพักของคุณได้อย่างไร</p></div>
+        <summary><span class="faq__n num" aria-hidden="true">03</span><h3 data-i18n="faq.q3">เด็กเข้าพักได้ไหม และเสริมเตียงได้หรือไม่</h3><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
+        <div class="faq__a"><p data-fact="stay.faq.beds">ห้องสวีทแต่ละห้องพักได้ผู้ใหญ่ 2 ท่าน และเสริมเตียงได้ 1 เตียงสำหรับท่านที่ 3 ส่วนเด็กให้ระบุในหน้าจองของรีสอร์ท ซึ่งจะแสดงว่าแต่ละห้องรองรับผู้เข้าพักของคุณได้หรือไม่</p></div>
       </details>
       <details class="faq__item">
-        <summary><span class="faq__n num" aria-hidden="true">04</span><h3 data-i18n="faq.q4">ราคารวมอาหารเช้าหรือไม่</h3><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
-        <div class="faq__a"><p data-fact="dining.faq.breakfast">ขึ้นอยู่กับแพ็กเกจราคา หน้าจองของรีสอร์ทมีทั้งราคาที่รวมอาหารเช้าและราคาเฉพาะห้องพัก และระบุสิ่งที่รวมอยู่ในแต่ละราคาก่อนยืนยันการจอง อาหารเช้าเสิร์ฟทุกวันที่ครัวผู้ใหญ่ลี 7:00 ถึง 10:00 น.</p></div>
+        <summary><span class="faq__n num" aria-hidden="true">04</span><h3 data-i18n="faq.q4">ราคาห้องพักรวมอาหารเช้าไหม</h3><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
+        <div class="faq__a"><p data-fact="dining.faq.breakfast">ขึ้นอยู่กับแพ็กเกจที่เลือก หน้าจองของรีสอร์ทมีทั้งแบบรวมอาหารเช้าและแบบห้องพักอย่างเดียว และแจ้งสิ่งที่รวมอยู่ในแต่ละราคาก่อนยืนยันการจอง อาหารเช้าเสิร์ฟทุกวันที่ครัวผู้ใหญ่ลี 7:00 ถึง 10:00 น.</p></div>
       </details>
       <details class="faq__item">
-        <summary><span class="faq__n num" aria-hidden="true">05</span><h3 data-i18n="faq.q5">ห้องอาหารให้บริการเมื่อไร</h3><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
-        <div class="faq__a"><p data-fact="dining.faq.hours">อาหารเช้าเสิร์ฟทุกวัน 7:00 ถึง 10:00 น. มื้อกลางวันและมื้อเย็นเปิดวันพุธถึงวันอาทิตย์ 11:00 ถึง 21:00 น. รับออเดอร์สุดท้าย 20:00 น. วันจันทร์และวันอังคารมีเฉพาะอาหารเช้า สำรองโต๊ะโทร +66 84 088 7785</p></div>
+        <summary><span class="faq__n num" aria-hidden="true">05</span><h3 data-i18n="faq.q5">ห้องอาหารเปิดกี่โมง</h3><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
+        <div class="faq__a"><p data-fact="dining.faq.hours">ห้องอาหารเปิดทุกวัน อาหารเช้าเสิร์ฟ 7:00 ถึง 10:00 น. มื้อกลางวันและมื้อเย็น 11:00 ถึง 21:00 น. รับออร์เดอร์สุดท้าย 20:00 น. สำรองโต๊ะโทร +66 84 088 7785</p></div>
       </details>
       <details class="faq__item">
-        <summary><span class="faq__n num" aria-hidden="true">06</span><h3 data-i18n="faq.q6">เดินทางมาอย่างไร และมีที่จอดรถไหม</h3><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
-        <div class="faq__a"><p data-i18n="faq.a6">รีสอร์ทอยู่ที่ ต.พญาเย็น อ.ปากช่อง ริมถนนมิตรภาพ เปิดหมุดแผนที่เพื่อนำทางจากตำแหน่งของคุณ มีที่จอดรถฟรีในรีสอร์ท</p><p data-i18n="visit.nocar">เดินทางมาโดยไม่มีรถส่วนตัว? กรุณาติดต่อรีสอร์ทก่อนวางแผนการเดินทาง เพื่อสอบถามบริการรับส่งที่มีในปัจจุบัน</p><p class="faq__links"><a class="textlink" href="#getting-here" data-i18n="ways.link">วิธีเดินทางด้วยรถยนต์ รถไฟ รถทัวร์ หรือเครื่องบิน</a><a class="textlink" href="https://maps.app.goo.gl/nnPAtFGH4KwDBAJA9" target="_blank" rel="noopener" data-i18n="visit.maps">เปิดใน Google Maps</a></p></div>
+        <summary><span class="faq__n num" aria-hidden="true">06</span><h3 data-i18n="faq.q6">เดินทางไปอย่างไร และมีที่จอดรถไหม</h3><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
+        <div class="faq__a"><p data-i18n="faq.a6">รีสอร์ทตั้งอยู่ที่ ต.พญาเย็น อ.ปากช่อง ติดถนนมิตรภาพ เปิดหมุดแผนที่เพื่อนำทางจากตำแหน่งของคุณได้เลย และมีที่จอดรถฟรีภายในรีสอร์ท</p><p data-i18n="visit.nocar">หากไม่ได้ขับรถมาเอง กรุณาติดต่อรีสอร์ทก่อนวางแผนการเดินทาง เพื่อสอบถามบริการรับส่งที่มีในปัจจุบัน</p><p class="faq__links"><a class="textlink" href="#getting-here" data-i18n="ways.link">วิธีเดินทางด้วยรถยนต์ รถไฟ รถทัวร์ หรือเครื่องบิน</a><a class="textlink" href="https://maps.app.goo.gl/nnPAtFGH4KwDBAJA9" target="_blank" rel="noopener" data-i18n="visit.maps">เปิดใน Google Maps</a></p></div>
       </details>
       <details class="faq__item">
-        <summary><span class="faq__n num" aria-hidden="true">07</span><h3 data-i18n="faq.q7">รีสอร์ทรองรับผู้ที่ต้องการความสะดวกในการเข้าถึงหรือไม่</h3><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
-        <div class="faq__a"><p data-i18n="faq.a7">กรุณาแจ้งทีมงานว่าสิ่งใดจะช่วยให้คุณพักได้สะดวก เช่น เส้นทางที่ไม่มีขั้นบันได หรือตำแหน่งห้องที่ต้องการ ทีมงานจะแนะนำให้ก่อนจอง โดยไม่จำเป็นต้องแจ้งข้อมูลทางการแพทย์</p></div>
+        <summary><span class="faq__n num" aria-hidden="true">07</span><h3 data-i18n="faq.q7">เหมาะกับผู้ที่เดินไม่สะดวกหรือใช้วีลแชร์ไหม</h3><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
+        <div class="faq__a"><p data-i18n="faq.a7">แจ้งทีมงานได้เลยว่าต้องการอะไรเพื่อให้การเข้าพักสะดวกขึ้น เช่น ทางเดินที่ไม่มีขั้นบันได หรือตำแหน่งห้องที่ต้องการ ทีมงานจะแนะนำให้ก่อนจอง โดยไม่ต้องแจ้งข้อมูลด้านสุขภาพ</p></div>
       </details>
       <details class="faq__item">
         <summary><span class="faq__n num" aria-hidden="true">08</span><h3 data-i18n="faq.q8">รีสอร์ทรับจัดงานหมู่คณะหรือสัมมนาไหม</h3><svg aria-hidden="true"><use href="#i-down"></use></svg></summary>
-        <div class="faq__a"><p data-fact="hall.faq">ได้ ห้องสัมมนาภัทรา ฮอลล์อยู่นอกพื้นที่รีสอร์ท ใกล้กับรีสอร์ท มีพื้นที่ 280 ตร.ม. ตามแบบแปลนขนาด 30 × 10.40 ม. แบ่งเป็นห้อง A (12.35 × 10.40 ม.) และห้อง B (14.15 × 10.40 ม.) ได้ เมื่อใช้เต็มห้องรองรับ 220 ท่านแบบเธียเตอร์ 168 ท่านแบบคลาสรูม 120 ท่านแบบโต๊ะจีน 12 โต๊ะ และ 64 ท่านแบบตัวยู</p><p class="faq__links"><a class="textlink" href="#talk" data-enquiry="group" data-i18n="group.cta">เริ่มสอบถามแบบหมู่คณะ</a></p></div>
+        <div class="faq__a"><p data-fact="hall.faq">ได้ ห้องสัมมนาภัทรา ฮอลล์ตั้งอยู่นอกพื้นที่รีสอร์ทในระยะใกล้ มีพื้นที่ 280 ตร.ม. ขนาดตามแบบแปลน 30 × 10.40 ม. แบ่งเป็นห้อง A (12.35 × 10.40 ม.) และห้อง B (14.15 × 10.40 ม.) ได้ เมื่อใช้เต็มห้องรองรับ 220 ท่านแบบเธียเตอร์ 168 ท่านแบบคลาสรูม 120 ท่านแบบโต๊ะจีน 12 โต๊ะ และ 64 ท่านแบบตัวยู</p><p class="faq__links"><a class="textlink" href="#talk" data-enquiry="group" data-i18n="group.cta">สอบถามสำหรับหมู่คณะ</a></p></div>
       </details>
     </div>
     <aside class="about" id="about-preview" aria-labelledby="aboutK">
@@ -1237,12 +1237,12 @@ document.documentElement.className += " js";
        on every dark ground -->
   <svg class="closing__mark" viewBox="68 306 1131 506" width="352" height="157" aria-hidden="true" focusable="false"><use class="lg-leaf" href="#pvLeaf"></use><use class="lg-name" href="#pvName"></use></svg>
   <p class="chapter__kicker" data-i18n="close.kicker">วางแผนการเข้าพัก</p>
-  <p class="closing__line st-lines" id="closingLine" data-i18n="close.line">เลือกวันของคุณ อากาศ<em class="it">รออยู่ที่นี่</em></p>
+  <p class="closing__line st-lines" id="closingLine" data-i18n="close.line">เลือกวันที่สะดวก <em class="it">อากาศดี ๆ รอคุณอยู่</em></p>
   <div class="closing__acts">
-    <a class="pill pill--light pill--book pill--lg" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open=""><span data-i18n="dock.go">เช็คห้องว่าง</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+    <a class="pill pill--light pill--book pill--lg" href="https://letsbook.me/booking/patravanaresortkhaoyai" target="_blank" rel="noopener" data-book-open=""><span data-i18n="dock.go">เช็กห้องว่าง</span><svg class="pill__ic" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
     <a class="pill pill--ghost pill--lg" href="#stay"><span data-i18n="close.suites">ดูห้องสวีท</span></a>
   </div>
-  <p class="closing__note" data-i18n="close.note">การจองจะเสร็จสมบูรณ์ในหน้าจองของรีสอร์ทเอง</p>
+  <p class="closing__note" data-i18n="close.note">ขั้นตอนการจองทั้งหมดทำผ่านหน้าจองของรีสอร์ท</p>
 </section>
 
 <!-- ===== footer ===== -->
@@ -1257,7 +1257,7 @@ document.documentElement.className += " js";
     <div><p class="card__k" data-i18n="foot.explore">สำรวจ</p><a href="#offers" data-i18n="nav.offers">โปรโมชั่น</a><a href="#facilities" data-i18n="nav.facilities">สิ่งอำนวยความสะดวก</a><a href="#stay" data-i18n="nav.stay">ห้องพัก</a><a href="#pet-friendly" data-i18n="nav.pet">เข้าพักพร้อมสัตว์เลี้ยง</a><a href="#dining" data-i18n="nav.dining">ห้องอาหาร</a><a href="#gather" data-i18n="nav.gather">สัมมนา</a><a href="#roam" data-i18n="nav.roam">ที่เที่ยว</a><a href="#gallery" data-i18n="nav.gallery">แกลเลอรี</a><a href="#visit" data-i18n="nav.visit">ติดต่อ</a><a href="#essentials" data-i18n="faq.title">ข้อมูลควรรู้</a></div>
     <div><p class="card__k" data-i18n="foot.follow">ติดตาม</p><a href="https://www.facebook.com/patravanaresort/" target="_blank" rel="noopener">Facebook</a><a href="https://www.instagram.com/patravana_khaoyai/" target="_blank" rel="noopener">Instagram</a><p class="card__k foot__langk" data-i18n="foot.lang">ภาษา</p><a class="textlink" href="./" data-lang-set="en" hreflang="en" lang="en">English</a><a class="textlink" href="th" data-lang-set="th" hreflang="th" lang="th">ภาษาไทย</a></div>
     <div class="foot__sky js-only">
-      <p class="card__k" data-i18n="foot.timek">เวลาท้องถิ่นที่รีสอร์ท</p><p class="foot__fig num" data-clock="">--:--</p>
+      <p class="card__k" data-i18n="foot.timek">เวลาขณะนี้ที่รีสอร์ท</p><p class="foot__fig num" data-clock="">--:--</p>
       <p class="card__k" data-i18n="foot.sunsetk">พระอาทิตย์ตกวันนี้</p><p class="foot__fig"><span class="foot__pre" data-i18n="sky.about">ราว</span> <span class="num" data-sky="sunset">--:--</span></p>
       <p class="card__k" data-i18n="sky.moonk">พระจันทร์คืนนี้</p><p class="foot__fig foot__fig--moon"><svg class="moon" viewBox="0 0 40 40" aria-hidden="true" data-sky="moonsvg"></svg><span data-sky="moonname"></span></p>
     </div>
@@ -1293,8 +1293,8 @@ document.documentElement.className += " js";
       <fieldset class="enq__set">
         <legend data-i18n="enq.dates">วันที่</legend>
         <div class="enq__row">
-          <div class="field"><label for="enqIn" data-i18n="enq.in">วันที่มาถึง</label><input type="date" id="enqIn" aria-describedby="enqInErr"><span class="field__err" id="enqInErr" hidden=""></span></div>
-          <div class="field"><label for="enqOut" data-i18n="enq.out">วันที่กลับ</label><input type="date" id="enqOut" aria-describedby="enqOutErr"><span class="field__err" id="enqOutErr" hidden=""></span></div>
+          <div class="field"><label for="enqIn" data-i18n="enq.in">วันเช็กอิน</label><input type="date" id="enqIn" aria-describedby="enqInErr"><span class="field__err" id="enqInErr" hidden=""></span></div>
+          <div class="field"><label for="enqOut" data-i18n="enq.out">วันเช็กเอาต์</label><input type="date" id="enqOut" aria-describedby="enqOutErr"><span class="field__err" id="enqOutErr" hidden=""></span></div>
         </div>
         <label class="check"><input type="checkbox" id="enqUndecided"><span data-i18n="enq.undecided">ยังไม่ได้กำหนดวันที่</span></label>
       </fieldset>
@@ -1308,12 +1308,12 @@ document.documentElement.className += " js";
             <option value="" data-i18n="enq.nopref">ไม่ระบุ</option>
             <option value="3446300000000000005" data-i18n="room.vl">วานา สวีท วิวบึงน้ำ</option>
             <option value="3446300000000000004" data-i18n="room.vg">วานา สวีท วิวสวน</option>
-            <option value="3446300000000000003" data-i18n="room.vc">วานา สวีท วิวทุ่งเขา</option>
+            <option value="3446300000000000003" data-i18n="room.vc">วานา สวีท วิวทิวเขา</option>
             <option value="3446300000000000008" data-i18n="room.pl">ภัทรา สวีท วิวบึงน้ำ</option>
             <option value="3446300000000000007" data-i18n="room.pg">ภัทรา สวีท วิวสวน</option>
             <option value="3446300000000000006" data-i18n="room.pj">ภัทรา จูเนียร์ สวีท วิวสวน</option>
           </select>
-          <span class="field__hint" id="enqSuiteHint" data-i18n="enq.suitehint">เป็นเพียงความต้องการเบื้องต้น ทีมงานจะยืนยันว่าห้องใดเข้าพักพร้อมสัตว์เลี้ยงได้</span>
+          <span class="field__hint" id="enqSuiteHint" data-i18n="enq.suitehint">ระบุเป็นตัวเลือกเบื้องต้นได้ ทีมงานจะยืนยันอีกครั้งว่าห้องใดรับสัตว์เลี้ยงได้</span>
         </div>
         <div class="field"><label for="enqPet" data-i18n="enq.pet">ประเภทสัตว์เลี้ยง</label><input type="text" id="enqPet" maxlength="60" autocomplete="off" aria-describedby="enqPetErr"><span class="field__err" id="enqPetErr" hidden=""></span></div>
         <div class="enq__row">
@@ -1355,10 +1355,10 @@ document.documentElement.className += " js";
       <div class="enq__acts">
         <button class="pill pill--solid pill--copy" type="button" id="enqCopy"><span data-i18n="enq.copy">คัดลอกข้อความ</span><svg class="pill__ic pill__ic--copy" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="pill__ic pill__ic--done" aria-hidden="true"><use href="#i-check"></use></svg></button>
         <a class="pill pill--ghost" id="enqLine" href="https://www.patravana.com/line-qr-code" target="_blank" rel="noopener"><span data-i18n="enq.line">เปิดหน้าติดต่อทาง LINE</span><svg class="pill__ic" aria-hidden="true"><use href="#i-out"></use></svg></a>
-        <a class="pill pill--ghost" id="enqMail" href="mailto:info@patravanaresort.com"><span data-i18n="enq.mail">เปิดในแอปอีเมลของคุณ</span></a>
+        <a class="pill pill--ghost" id="enqMail" href="mailto:info@patravanaresort.com"><span data-i18n="enq.mail">เปิดในแอปอีเมล</span></a>
       </div>
       <p class="enq__status" id="enqStatus" role="status" aria-live="polite"></p>
-      <p class="card__small" data-i18n="enq.linehelp">ปุ่ม LINE จะเปิดหน้า LINE ของรีสอร์ทซึ่งแสดงคิวอาร์โค้ด เพิ่มรีสอร์ทเป็นเพื่อนจากหน้านั้น แล้ววางข้อความของคุณในแชต ส่วนปุ่มอีเมลจะเปิดร่างข้อความในแอปอีเมลของคุณเอง ไม่มีอะไรถูกส่งจนกว่าคุณจะกดส่งในแอปนั้น</p>
+      <p class="card__small" data-i18n="enq.linehelp">ปุ่ม LINE จะเปิดหน้า LINE ของรีสอร์ทที่มีคิวอาร์โค้ด เพิ่มเพื่อนจากหน้านั้น แล้ววางข้อความในแชต ส่วนปุ่มอีเมลจะเปิดร่างอีเมลในแอปของคุณ ข้อความจะยังไม่ถูกส่งจนกว่าคุณจะกดส่งเอง</p>
       <p class="enq__direct"><span data-i18n="enq.direct">หรือติดต่อฝ่ายสำรองห้องพักโดยตรง:</span> <a class="textlink num" href="tel:+66885041888">+66 88 504 1888</a> <span>LINE @patravana</span> <span>info@patravanaresort.com</span></p>
     </div>
   </div>
@@ -1410,13 +1410,13 @@ document.documentElement.className += " js";
 })();
 </script>
 <!-- /motion-libs -->
-<script src="facts.js?v=fa391cc3" defer=""></script>
-<script src="i18n.js?v=d9975be0" defer=""></script>
+<script src="facts.js?v=11f6abd7" defer=""></script>
+<script src="i18n.js?v=c8a3f8c2" defer=""></script>
 <script src="scene.js?v=29086502" defer=""></script>
 <script src="film-manifest.js?v=5f40123b" defer=""></script>
 <script src="film-stream.js?v=65575688" defer=""></script>
 <!-- if the main script cannot be fetched, the page falls back to its plain form: panels open, script-only controls hidden -->
-<script src="i18n-en.js?v=8378b143" defer></script>
+<script src="i18n-en.js?v=9936e249" defer></script>
 <script src="main.js?v=b32da61c" defer="" onerror="document.documentElement.classList.remove('js')"></script>
 
 
