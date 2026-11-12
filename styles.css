@@ -1085,6 +1085,16 @@ html[lang="th"] .petsec__fact { letter-spacing: 0; line-height: 1.55; max-width:
 .petsec__acts { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.6rem; }
 .petsec__note { margin-top: 1rem; max-width: 46ch; color: var(--muted); font-size: .86rem; }
 .petsec__img { aspect-ratio: 5 / 4; margin-top: clamp(0rem, 3vw, 2.6rem); }
+/* pet amenities: the label in line with point 01, the two photographs over points 02 and 03 (13 November 2026) */
+.petsec__kit { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1rem, 2.4vw, 2.8rem) clamp(1.2rem, 3vw, 2.8rem); align-items: center; }
+.petsec__kittext { display: flex; flex-direction: column; gap: .5rem; padding-bottom: .2rem; }
+.petsec__kitk { font-family: var(--f-display); font-weight: 500; font-size: clamp(1.25rem, 1.9vw, 1.6rem); letter-spacing: -.02em; color: var(--charcoal); }
+html[lang="th"] .petsec__kitk { letter-spacing: 0; }
+.petsec__kittext p { max-width: 32ch; color: var(--muted); font-size: .95rem; }
+.petsec__kitimg { aspect-ratio: 5 / 4; box-shadow: var(--shadow-photo); }
+.petsec__kitimg img { width: 100%; height: 100%; object-fit: cover; }
+.petsec__kitimg--room img { object-position: 50% 88%; }   /* the pet bed and bowls, not the ceiling fan */
+.petsec__kitimg:not(.petsec__kitimg--room) img { object-position: 50% 55%; }
 .petsec__points { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 clamp(1.2rem, 3vw, 2.8rem); list-style: none; }
 .petsec__points li { display: flex; flex-direction: column; gap: .35rem; padding-top: 1rem; border-top: 1px solid var(--line-2); }
 .petsec__n { font-size: .76rem; color: var(--earth); }
@@ -1107,6 +1117,10 @@ html[lang="th"] .petsec__points h3 { letter-spacing: 0; }
 }
 @media (max-width: 43.75em) {
   .petsec__points { grid-template-columns: 1fr; gap: 1.1rem; }
+  .petsec__kit { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+  .petsec__kittext { grid-column: 1 / -1; }
+  .petsec__kitimg { aspect-ratio: 4 / 5; }
+  .petsec__kitimg--room img { object-position: 50% 80%; }
   .petsec__acts .pill { width: 100%; }
 }
 
