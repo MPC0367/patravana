@@ -1091,8 +1091,12 @@ html[lang="th"] .petsec__fact { letter-spacing: 0; line-height: 1.55; max-width:
 .petsec__kitk { font-family: var(--f-display); font-weight: 500; font-size: clamp(1.25rem, 1.9vw, 1.6rem); letter-spacing: -.02em; color: var(--charcoal); }
 html[lang="th"] .petsec__kitk { letter-spacing: 0; }
 .petsec__kittext p { max-width: 32ch; color: var(--muted); font-size: .95rem; }
-.petsec__kitimg { aspect-ratio: 5 / 4; box-shadow: var(--shadow-photo); }
+/* smaller tiles that grow a little under the pointer and open full size in the photo viewer (13 November 2026); the
+   grow uses the scale property with !important because the scroll-in animation leaves an inline scale: none on the tile */
+.petsec__kitimg { display: block; justify-self: start; width: min(100%, 20rem); aspect-ratio: 4 / 3; padding: 0; border: 0; cursor: zoom-in; box-shadow: var(--shadow-photo); transition: scale .45s var(--ease), box-shadow .45s var(--ease); }
 .petsec__kitimg img { width: 100%; height: 100%; object-fit: cover; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) { .petsec__kitimg:hover { scale: 1.05 !important; box-shadow: 0 22px 44px rgba(31, 51, 39, .22); } }
+.petsec__kitimg:focus-visible { outline: 2px solid var(--forest); outline-offset: 4px; }
 .petsec__kitimg--room img { object-position: 50% 88%; }   /* the pet bed and bowls, not the ceiling fan */
 .petsec__kitimg:not(.petsec__kitimg--room) img { object-position: 50% 55%; }
 .petsec__points { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 clamp(1.2rem, 3vw, 2.8rem); list-style: none; }
@@ -1119,7 +1123,7 @@ html[lang="th"] .petsec__points h3 { letter-spacing: 0; }
   .petsec__points { grid-template-columns: 1fr; gap: 1.1rem; }
   .petsec__kit { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
   .petsec__kittext { grid-column: 1 / -1; }
-  .petsec__kitimg { aspect-ratio: 4 / 5; }
+  .petsec__kitimg { width: 100%; aspect-ratio: 1 / 1; }
   .petsec__kitimg--room img { object-position: 50% 80%; }
   .petsec__acts .pill { width: 100%; }
 }

@@ -1757,6 +1757,15 @@
     return { open: open, shut: () => close(true) };
   })();
 
+  /* ---------- pet amenities: the two photographs open full size in the same viewer (13 November 2026) ---------- */
+  (function () {
+    const shots = $$(".petsec__kitimg[data-full]"); if (!shots.length) return;
+    const altOf = (b) => { const im = $("img", b); return im ? im.alt : ""; };
+    const label = () => shots.forEach((b) => b.setAttribute("aria-label", I18N.t("openPhoto", { what: altOf(b) })));
+    shots.forEach((b, i) => b.addEventListener("click", () => lightbox.open(shots.map((x) => ({ src: x.dataset.full, alt: altOf(x) })), i)));
+    label(); document.addEventListener("pv:lang", label);
+  })();
+
   /* ---------- gallery: a strip of photographs that drifts slowly ----------
      It can be paused for good, stepped with the arrows, dragged or flung, and any photo opens full size. Off screen or
      in a background tab it does no work at all. With reduced motion it is a plain strip that scrolls sideways. */
