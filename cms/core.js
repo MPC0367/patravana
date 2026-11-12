@@ -201,6 +201,7 @@ var PVCMS = (function () {
     if (p[0] === "hall") { var l = FX.hall.layouts.filter(function (x) { return x.key === p[1]; })[0]; if (l && p[2] in l) { l[p[2]] = value; return true; } return false; }
     if (p[0] === "dining" && p[1] === "seats") { FX.dining.seats = value; return true; }
     if (p[0] === "dining" && FX.dining[p[1]] && /^(open|close|days|lastOrder)$/.test(p[2])) { FX.dining[p[1]][p[2]] = value; return true; }
+    if (p[0] === "stay" && FX.stay && /^(checkIn|checkOut)$/.test(p[1])) { FX.stay[p[1]] = value; return true; }
     if (key === "facts.reviewed") { FX.reviewed = value; return true; }
     if (key === "facts.pet.reviewed") { FX.pet.lastReviewedAt = value; return true; }
     return false;                                        // protected facts are never set from a snapshot
@@ -223,6 +224,7 @@ var PVCMS = (function () {
       var l = lay(p[1]); return l ? l[p[2]] : null;
     }
     if (p[0] === "dining") { if (p[1] === "seats") return FX.dining.seats; var sv = FX.dining[p[1]]; return sv && sv[p[2]] ? clock(sv[p[2]]) : null; }
+    if (p[0] === "stay") return FX.stay && FX.stay[p[1]] ? clock(FX.stay[p[1]]) : null;
     if (path === "contact.phone.show") return FX.contact.phone.show;
     if (path === "contact.phone.local") return FX.contact.phone.local;
     if (path === "contact.dining.show") return FX.contact.diningPhones[0].show;

@@ -159,6 +159,10 @@ window.PV_FACTS = {
    "lastOrder": "20:00"
   }
  },
+ "stay": {
+  "checkIn": "15:00",
+  "checkOut": "12:00"
+ },
  "offers": {
   "source": "offers.json",
   "maxAgeMinutes": 30,
@@ -260,14 +264,6 @@ window.PV_FACTS = {
    "en": "Lunch and dinner, Wednesday to Sunday",
    "th": "มื้อกลางวันและมื้อเย็น พุธถึงอาทิตย์"
   },
-  "dining.row.rest": {
-   "en": "Monday and Tuesday",
-   "th": "จันทร์และอังคาร"
-  },
-  "dining.row.restv": {
-   "en": "Breakfast only",
-   "th": "เฉพาะอาหารเช้า"
-  },
   "dining.row.lastorder": {
    "en": "Last order, lunch and dinner",
    "th": "รับออเดอร์สุดท้าย มื้อกลางวันและมื้อเย็น"
@@ -336,6 +332,10 @@ window.PV_FACTS = {
    "en": "Each suite takes up to {booking.adultsMax} adults. Your dates and room choice carry over; the rooms and guests for your party are chosen on the booking page, or ask the team.",
    "th": "หนึ่งห้องสวีทพักได้สูงสุด {booking.adultsMax} ท่าน วันที่และห้องที่เลือกจะถูกส่งต่อไป ส่วนห้องพักและผู้เข้าพักทั้งหมดของคณะให้เลือกในหน้าจอง หรือสอบถามทีมงาน"
   },
+  "stay.faq.times": {
+   "en": "Check-in is from {stay.checkIn} and check-out is by {stay.checkOut}. To arrive early or leave late, please ask the team.",
+   "th": "เช็กอินได้ตั้งแต่ {stay.checkIn} น. และเช็กเอาต์ภายใน {stay.checkOut} น. หากต้องการเช็กอินก่อนเวลาหรือเช็กเอาต์ช้ากว่ากำหนด สอบถามทีมงานได้เลย"
+  },
   "stay.faq.beds": {
    "en": "Each suite is set up for two adults, and one extra bed can be added for a third. Children are added on the resort's booking page, which shows what each room can take for your party.",
    "th": "แต่ละห้องสวีทจัดไว้สำหรับผู้ใหญ่สองท่าน และเสริมเตียงได้หนึ่งเตียงสำหรับท่านที่สาม ส่วนเด็กให้เพิ่มในหน้าจองของรีสอร์ท ซึ่งจะแสดงว่าแต่ละห้องรองรับผู้เข้าพักของคุณได้อย่างไร"
@@ -371,6 +371,14 @@ window.PV_FACTS = {
   "enq.group.subject": {
    "en": "Group event enquiry",
    "th": "สอบถามการจัดงานแบบหมู่คณะ"
+  },
+  "dining.row.rest": {
+   "en": "Monday and Tuesday",
+   "th": "จันทร์และอังคาร"
+  },
+  "dining.row.restv": {
+   "en": "Breakfast only",
+   "th": "เฉพาะอาหารเช้า"
   }
  }
 };

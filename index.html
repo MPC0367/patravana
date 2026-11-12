@@ -2,7 +2,7 @@
 <html lang="en" data-locale="en">
 <head>
 <meta charset="UTF-8">
-<meta name="pv-build" content="72848a89ac3c-c48">
+<meta name="pv-build" content="b1ea0c351e38-c48">
 <meta name="pv-content" content="48">
 <meta name="pv-live" content="https://script.google.com/macros/s/AKfycbzUB0wwKaD7KskTFDWAxMB_kcaBExYeVBPkADWCVvrliZ0Tt8rdQpBARE51c_UGg0Pj/exec">
 <script data-pv-lane>/[?&]live(=|&|$)/.test(location.search)&&window.fetch&&(window.PVLane=fetch("https://script.google.com/macros/s/AKfycbzUB0wwKaD7KskTFDWAxMB_kcaBExYeVBPkADWCVvrliZ0Tt8rdQpBARE51c_UGg0Pj/exec?since=48",{credentials:"omit",cache:"no-store",redirect:"follow"}).then(function(r){return r.ok?r.json():null}).catch(function(){return null}))</script>
@@ -46,7 +46,7 @@ document.documentElement.className += " js";
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300..800&family=Fraunces:ital,opsz,wght@1,9..144,300..500&family=DM+Sans:opsz,wght@9..40,300..600&family=Prompt:wght@300;400;500;600&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=8e4efb6b">
+<link rel="stylesheet" href="styles.css?v=819163a3">
 </head>
 <body>
 
@@ -904,7 +904,6 @@ document.documentElement.className += " js";
           <div><dt data-fact="dining.row.breakfast">Breakfast, every day</dt><dd class="num" data-fact="dining.breakfast.hours">7:00 to 10:00</dd></div>
           <div><dt data-fact="dining.row.kitchen">Lunch and dinner, Wednesday to Sunday</dt><dd class="num" data-fact="dining.kitchen.hours">11:00 to 21:00</dd></div>
           <div><dt data-fact="dining.row.lastorder">Last order, lunch and dinner</dt><dd class="num" data-fact="dining.kitchen.last">20:00</dd></div>
-          <div><dt data-fact="dining.row.rest">Monday and Tuesday</dt><dd data-fact="dining.row.restv">Breakfast only</dd></div>
           <div><dt data-i18n="dining.r4">Reservations</dt><dd><a class="num" href="tel:+66840887785">+66 84 088 7785</a><br><a class="num" href="tel:+66840887786">+66 84 088 7786</a></dd></div>
           <div><dt data-i18n="dining.r5">On Facebook</dt><dd><a href="https://www.facebook.com/PhuYaiLee.KhaoYai/" target="_blank" rel="noopener">Phu Yai Lee</a></dd></div>
         </dl>
@@ -1198,7 +1197,7 @@ document.documentElement.className += " js";
       </details>
       <details class="faq__item">
         <summary><span class="faq__n num" aria-hidden="true">02</span><h3 data-i18n="faq.q2">What time are check-in and check-out?</h3><svg aria-hidden="true"><use href="#i-down"/></svg></summary>
-        <div class="faq__a"><p data-i18n="faq.a2">Please ask the team for the current check-in and check-out times, and about arriving early or leaving late.</p><p class="faq__links"><a class="textlink num" href="tel:+66885041888">+66 88 504 1888</a><a class="textlink" href="https://www.patravana.com/line-qr-code" target="_blank" rel="noopener">LINE @patravana</a></p></div>
+        <div class="faq__a"><p data-fact="stay.faq.times">Check-in is from 15:00 and check-out is by 12:00. To arrive early or leave late, please ask the team.</p><p class="faq__links"><a class="textlink num" href="tel:+66885041888">+66 88 504 1888</a><a class="textlink" href="https://www.patravana.com/line-qr-code" target="_blank" rel="noopener">LINE @patravana</a></p></div>
       </details>
       <details class="faq__item">
         <summary><span class="faq__n num" aria-hidden="true">03</span><h3 data-i18n="faq.q3">Can children stay, and is there an extra bed?</h3><svg aria-hidden="true"><use href="#i-down"/></svg></summary>
@@ -1238,7 +1237,9 @@ document.documentElement.className += " js";
 
 <!-- ===== closing ===== -->
 <section class="closing" id="closing" data-dark data-owner="offers" aria-labelledby="closingLine">
-  <svg class="closing__mark" viewBox="501 310 223 359" width="42" height="68" aria-hidden="true" focusable="false"><use class="lg-leaf" href="#pvLeaf"/></svg>
+  <!-- the logo with its name (board notes, 12 November 2026: bigger, and with the name), in the light colours it has
+       on every dark ground -->
+  <svg class="closing__mark" viewBox="68 306 1131 506" width="352" height="157" aria-hidden="true" focusable="false"><use class="lg-leaf" href="#pvLeaf"/><use class="lg-name" href="#pvName"/></svg>
   <p class="chapter__kicker" data-i18n="close.kicker">Plan your stay</p>
   <p class="closing__line st-lines" id="closingLine" data-i18n="close.line">Pick your dates. The air <em class="it">will be here.</em></p>
   <div class="closing__acts">
@@ -1250,9 +1251,6 @@ document.documentElement.className += " js";
 
 <!-- ===== footer ===== -->
 <footer class="foot" id="foot" data-dark>
-  <div class="foot__word" aria-hidden="true">
-    <svg viewBox="18 691 1231 129" preserveAspectRatio="xMidYMid meet" focusable="false"><use class="lg-name" href="#pvName"/></svg>
-  </div>
   <div class="foot__cols">
     <div class="foot__brand">
       <div class="lockup lockup--light" role="img" aria-label="Patravana Resort Khao Yai">
@@ -1416,12 +1414,12 @@ document.documentElement.className += " js";
 })();
 </script>
 <!-- /motion-libs -->
-<script src="facts.js?v=6518ef91" defer></script>
-<script src="i18n.js?v=ee378db3" defer></script>
+<script src="facts.js?v=fa391cc3" defer></script>
+<script src="i18n.js?v=d9975be0" defer></script>
 <script src="scene.js?v=29086502" defer></script>
 <script src="film-manifest.js?v=5f40123b" defer></script>
 <script src="film-stream.js?v=65575688" defer></script>
 <!-- if the main script cannot be fetched, the page falls back to its plain form: panels open, script-only controls hidden -->
-<script src="main.js?v=14775029" defer onerror="document.documentElement.classList.remove('js')"></script>
+<script src="main.js?v=b32da61c" defer onerror="document.documentElement.classList.remove('js')"></script>
 </body>
 </html>

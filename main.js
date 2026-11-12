@@ -71,6 +71,7 @@
         const l = lay(p[1]); return l ? l[p[2]] : null;
       }
       if (p[0] === "dining") { if (p[1] === "seats") return FX.dining.seats; const sv = FX.dining[p[1]]; return sv && sv[p[2]] ? clock(sv[p[2]]) : null; }
+      if (p[0] === "stay") return FX.stay && FX.stay[p[1]] ? clock(FX.stay[p[1]]) : null;   // check-in and check-out
       if (path === "contact.phone.show") return FX.contact.phone.show;
       if (path === "contact.phone.local") return FX.contact.phone.local;
       if (path === "contact.dining.show") return FX.contact.diningPhones[0].show;
@@ -2733,6 +2734,7 @@
     else if (p[0] === "hall") { obj = FX.hall.layouts.find((x) => x.key === p[1]); prop = p[2]; ok = int && !!obj && prop in obj; }
     else if (p[0] === "dining" && p[1] === "seats") { obj = FX.dining; prop = "seats"; ok = int; }
     else if (p[0] === "dining" && FX.dining[p[1]] && /^(open|close|days|lastOrder)$/.test(p[2])) { obj = FX.dining[p[1]]; prop = p[2]; ok = prop === "days" ? days : time; }
+    else if (p[0] === "stay" && FX.stay && /^(checkIn|checkOut)$/.test(p[1])) { obj = FX.stay; prop = p[1]; ok = time; }
     else if (key === "facts.reviewed") { obj = FX; prop = "reviewed"; ok = date; }
     else if (key === "facts.pet.reviewed") { obj = FX.pet; prop = "lastReviewedAt"; ok = date; }
     if (!ok || same(obj[prop], value)) return false;     // protected facts are never set from a revision

@@ -237,7 +237,10 @@ html[lang="th"] .eyebrow { letter-spacing: .04em; }
 .hero__eyebrow i { display: block; width: clamp(2.2rem, 5vw, 4.5rem); height: 1px; background: currentColor; opacity: .75; transform-origin: left center; }
 .hero__h1 { position: relative; margin-top: 1.1rem; font-family: var(--f-display); font-weight: 500; font-size: clamp(3.5rem, min(12.6vw, 19vh), 11.5rem); line-height: .9; letter-spacing: -.045em; color: var(--ivory); }
 .hero__h1 .it { font-weight: 300; font-size: 1.07em; letter-spacing: -.035em; padding-right: .04em; }
-html[lang="th"] .hero__h1 { font-weight: 500; line-height: 1.22; letter-spacing: 0; font-size: clamp(2.8rem, min(9.4vw, 17vh), 8rem); }
+/* the Thai line is the board's own sentence (12 November 2026), about half as long again as the English, so it is set
+   smaller and each half wraps evenly (สัมผัสความบริสุทธิ์ / ของธรรมชาติ) instead of leaving a word alone */
+html[lang="th"] .hero__h1 { font-weight: 500; line-height: 1.22; letter-spacing: 0; font-size: clamp(2.15rem, min(5.6vw, 10vh), 5rem); }
+html[lang="th"] .hero__word { text-wrap: balance; }
 html[lang="th"] .hero__h1 .it { font-weight: 500; font-size: 1em; padding: 0; }
 .hero__line { display: block; overflow: hidden; padding: .04em .1em .12em 0; margin-bottom: -.12em; }
 html[lang="th"] .hero__line { padding-top: .2em; margin-top: -.2em; padding-bottom: .14em; margin-bottom: -.14em; }
@@ -585,15 +588,15 @@ html[lang="th"] .card__foot dt { letter-spacing: 0; text-transform: none; font-s
 
 /* ---------- closing band ---------- */
 .closing { position: relative; overflow: clip; background: var(--forest); color: var(--ivory); padding: clamp(5rem, 13vw, 10rem) var(--pad); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1.3rem; }
-.closing__mark { display: block; width: 42px; height: 68px; color: var(--sand); margin-bottom: .6rem; overflow: visible; }
-.closing__line { font-family: var(--f-display); font-weight: 400; font-size: clamp(2.4rem, 7.6vw, 6.8rem); line-height: .98; letter-spacing: -.05em; max-width: 13ch; text-wrap: balance; }
+/* the logo with its name, the band's lead (board notes, 12 November 2026); the line under it is the smaller voice */
+.closing__mark { display: block; width: clamp(15rem, 27vw, 22rem); height: auto; aspect-ratio: 1131 / 506; max-width: 100%; color: var(--ivory); --logo-leaf: var(--sand); --logo-name: var(--ivory); margin-bottom: .9rem; overflow: visible; }
+.closing__mark .lg-name { stroke-width: .2px; }
+.closing__line { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.9rem, 4.4vw, 3.9rem); line-height: .98; letter-spacing: -.05em; max-width: 13ch; text-wrap: balance; }
 .closing__acts { display: flex; flex-wrap: wrap; justify-content: center; gap: .8rem; margin-top: 1.2rem; }
 .closing__note { font-size: .8rem; color: rgba(244,240,231,.82); }   /* .82 (was .72) so it stays above 4.5:1 over the moving green */
 
 /* ---------- footer (ivory on deep pine) ---------- */
 .foot { background: var(--deep); color: var(--ivory); padding: clamp(3rem, 8vh, 6rem) var(--pad) 1.6rem; display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
-.foot__word { grid-column: 1 / -1; color: rgba(244,240,231,.92); }
-.foot__word svg { width: 100%; height: auto; aspect-ratio: 1231 / 129; display: block; overflow: visible; fill: currentColor; }   /* the logo's name, across the footer */
 .foot__cols { display: grid; grid-template-columns: 1.15fr 1.5fr .8fr .8fr 1.15fr; gap: 2rem clamp(1.6rem, 4vw, 4rem); align-items: start; }
 .foot__cols > div { display: flex; flex-direction: column; gap: .5rem; align-items: flex-start; min-width: 0; }
 .foot .card__k { color: var(--mist); }
@@ -1219,7 +1222,7 @@ html:not(.js) .drawer__head { position: static; }
   .top__right { gap: .4rem; }
   .lang { gap: .35rem; font-size: .72rem; padding-inline: 0; }
   .hero__h1 { font-size: clamp(2.7rem, 15.5vw, 3.5rem); }
-  html[lang="th"] .hero__h1 { font-size: clamp(2.4rem, 13vw, 2.8rem); }
+  html[lang="th"] .hero__h1 { font-size: clamp(1.75rem, 8.8vw, 2.15rem); }
   .slides__bars { display: none; }
   .slides__ctrl { gap: .35rem; }
   .petsec__title { font-size: 1.9rem; }
@@ -1425,7 +1428,7 @@ html[lang="th"] .hub__head { letter-spacing: 0; line-height: 1.35; }
   html.js.pv-views .progress { display: none; }
   /* a compact footer: what is here, the way round, and the studio credit */
   html.js.pv-views .foot { gap: 1.5rem; padding-top: 2.4rem; padding-bottom: calc(5.8rem + env(safe-area-inset-bottom, 0px)); }
-  html.js.pv-views .foot__word, html.js.pv-views .foot__sky { display: none; }
+  html.js.pv-views .foot__sky { display: none; }
   html.js.pv-views .foot__cols { grid-template-columns: minmax(0, 1fr); gap: 1.3rem; }
   html.js.pv-views .foot__cols > div:not(.foot__brand) { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: .35rem 1.15rem; }
   html.js.pv-views .foot__cols .card__k { flex: 0 0 100%; margin-bottom: 0; }
