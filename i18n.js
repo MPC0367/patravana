@@ -1,4 +1,4 @@
-/* PATRAVANA v2, Thai dictionary and script texts. Written by cms/apply.mjs from content revision 50 (the Patravana Website Content sheet): edit the Sheet, not this file. */
+/* PATRAVANA v2, Thai dictionary and script texts. Written by cms/apply.mjs from content revision 51 (the Patravana Website Content sheet): edit the Sheet, not this file. */
 window.PV_TH = {
  "a11y.skip": "ข้ามไปที่เนื้อหาหลัก",
  "nav.stay": "ห้องพัก",
@@ -256,7 +256,7 @@ window.PV_TH = {
  "dining.r4": "สำรองที่นั่ง",
  "dining.r5": "เฟซบุ๊กของร้าน",
  "dining.statusnote": "สถานะนี้อิงตามเวลาเปิดทำการของร้าน ตามเวลาที่รีสอร์ท แนะนำให้โทรยืนยันอีกครั้งในวันที่มา",
- "dining.alt2": "เก้าอี้หวายและต้นไม้แขวนในมุมคาเฟ่",
+ "dining.alt2": "ภายในครัวผู้ใหญ่ลี โต๊ะไม้บนพื้นกระเบื้องสีแดง เคาน์เตอร์กับกระดานเมนู และหน้าต่างบานสูงที่มองออกไปยังสวน",
  "gather.kicker": "ประชุมและจัดงาน",
  "gather.title": "พบปะ",
  "gather.cta": "วางแผนจัดสัมมนา",
