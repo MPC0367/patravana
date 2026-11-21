@@ -2834,7 +2834,8 @@
         tell({ type: "spine:focus", key: key, found: !!el, shown: shown.length > 0 });
       };
       window.addEventListener("message", (e) => {
-        if (e.source !== window.parent) return;
+        // only SPINE: its own frame parent, served from this computer or an O2 address
+        if (e.source !== window.parent || !/^(http:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?|https:\/\/([a-z0-9-]+\.)*o2-designstudio\.com)$/.test(e.origin)) return;
         const d = e.data;
         if (!d || typeof d !== "object" || d.type !== "spine:preview") return;
         try {
