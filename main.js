@@ -2788,7 +2788,7 @@
         apply(snap);
       } catch (e) { /* keep what is here */ } finally { clearTimeout(to); }
     }
-    function apply(snap) {
+    function apply(snap, preview) {
       const TH = window.PV_TH || {}, JS = window.PV_JS || {}, keys = [];
       Object.keys(snap.content).forEach((k) => {
         const v = snap.content[k]; if (!v || typeof v.en !== "string" || typeof v.th !== "string" || /[<>]/.test(v.en + v.th)) return;
@@ -2802,7 +2802,7 @@
         if (ch) keys.push(k);
       });
       Object.keys(snap.facts || {}).forEach((k) => { if (setFact(k, snap.facts[k])) keys.push(k); });
-      current = snap.generation;
+      if (!preview) current = snap.generation;            // a SPINE preview shows texts, it is not a revision
       if (!keys.length) return;
       const holdsFocus = () => { const a = document.activeElement; return !!a && a !== document.body && keys.some((k) => $$('[data-i18n="' + k + '"]').some((el) => el !== a && el.contains(a))); };
       const run = () => {
@@ -2811,6 +2811,39 @@
         document.dispatchEvent(new CustomEvent("pv:content", { detail: { revision: current, keys } }));
       };
       run();
+    }
+    /* SPINE preview (21 November 2026). SPINE, O2's backend for the resort, shows this page in a frame while its texts
+       are edited there. Only a page that is inside a frame AND has ?spine-preview in its address listens, and only to
+       the frame's own parent. What it receives is shown in this one window: nothing is saved, sent or published, and
+       a reload shows the website as it is. The text being edited gets an outline and is scrolled into view. */
+    const spinePreview = /[?&]spine-preview(=|&|$)/.test(location.search) && window.parent !== window;
+    if (spinePreview) {
+      const tell = (m) => { try { window.parent.postMessage(m, "*"); } catch (e) { /* the parent went away */ } };
+      const owners = (key) => {
+        let els = $$('[data-i18n="' + CSS.escape(key) + '"]');
+        if (!els.length) I18N.enAttr.forEach((map, el) => { if (Object.keys(map).some((a) => map[a].key === key)) els.push(el); });
+        if (!els.length && key.startsWith("fact.")) els = $$('[data-fact="' + CSS.escape(key.slice(5)) + '"]');
+        return els;
+      };
+      const focusOn = (key) => {
+        $$(".pv-spine-focus").forEach((el) => el.classList.remove("pv-spine-focus"));
+        if (!key) return;
+        const els = owners(key), shown = els.filter((el) => el.getClientRects().length);
+        const el = shown[0] || els[0];
+        if (el) { el.classList.add("pv-spine-focus"); if (shown.length) el.scrollIntoView({ block: "center", behavior: "smooth" }); }
+        tell({ type: "spine:focus", key: key, found: !!el, shown: shown.length > 0 });
+      };
+      window.addEventListener("message", (e) => {
+        if (e.source !== window.parent) return;
+        const d = e.data;
+        if (!d || typeof d !== "object" || d.type !== "spine:preview") return;
+        try {
+          if ((d.lang === "en" || d.lang === "th") && d.lang !== I18N.lang) { releaseSplits(); I18N.apply(d.lang); remakeSplits(); if (hasST) ScrollTrigger.refresh(); }
+          if ((d.content && typeof d.content === "object") || (d.facts && typeof d.facts === "object")) apply({ generation: current, content: d.content || {}, facts: d.facts || {} }, true);
+          if (typeof d.focus === "string" || d.focus === null) focusOn(d.focus);
+        } catch (err) { tell({ type: "spine:error", message: String(err && err.message || err).slice(0, 200) }); }
+      });
+      tell({ type: "spine:ready", revision: current, lang: I18N.lang });
     }
     /* The fast lane, for the editor only (Phase 4, 5 November 2026). Opened with ?live in its address (the Sheet's
        "see it on the site" link), the page also asks the Sheet's own publisher (a Google Apps Script web app named in
@@ -3053,6 +3086,33 @@
     $$("[data-lang-set]").forEach((b) => b.addEventListener("click", (e) => { e.preventDefault(); switchLang(b.dataset.langSet); }));
   }
 
+  /* ---------- visit counter (21 November 2026) ----------
+     Counts page views, visits, and presses of Book, LINE, phone, email and map, for SPINE's Website page. No cookie,
+     no address, nothing that names a person: each message says only which page, the language, the website that sent
+     the visitor here (on the first page of a visit), and whether this is the browser's first view today (a flag kept in
+     this browser). It is sent only when meta pv-count names the counter (O2's counter on Cloudflare), and never from
+     the editor's ?live view, a SPINE preview, a frame or this computer. */
+  function initCounter() {
+    const meta = $('meta[name="pv-count"]'), url = meta ? meta.getAttribute("content") || "" : "";
+    if (!/^https:\/\/[a-z0-9.-]+\/hit$/.test(url) || !navigator.sendBeacon || !window.Blob) return;
+    if (/[?&](spine-preview|live)(=|&|$)/.test(location.search) || window.parent !== window || /^(localhost|127\.|\[::1\])/.test(location.hostname)) return;
+    const site = meta.getAttribute("data-site") || "patravana";
+    const send = (o) => { try { navigator.sendBeacon(url, new Blob([JSON.stringify(Object.assign({ s: site, l: I18N.lang, p: location.pathname }, o))], { type: "text/plain" })); } catch (e) { /* counting never gets in the way */ } };
+    let visit = 0, first = 0, ref = "";
+    try { if (!sessionStorage.getItem("pv-visit")) { sessionStorage.setItem("pv-visit", "1"); visit = 1; } } catch (e) { visit = 0; }
+    try { const d = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Bangkok" }); if (localStorage.getItem("pv-day") !== d) { localStorage.setItem("pv-day", d); first = 1; } } catch (e) { first = 0; }
+    try { const r = document.referrer ? new URL(document.referrer) : null; if (r && r.hostname !== location.hostname) ref = r.hostname.slice(0, 80); } catch (e) { ref = ""; }
+    send({ t: "view", v: visit, u: first, r: visit ? ref : "" });
+    document.addEventListener("click", (e) => {
+      const a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+      if (!a) return;
+      const h = a.getAttribute("href") || "";
+      const k = a.hasAttribute("data-book-open") ? "bookbutton" : /letsbook\.me|ipms247/.test(h) ? "book" : /^tel:/.test(h) ? "call" : /line\.me|lin\.ee/.test(h) ? "line"
+        : /^mailto:/.test(h) ? "email" : /google\.[a-z.]+\/maps|maps\.app\.goo\.gl|goo\.gl\/maps|maps\.google\./.test(h) ? "map" : "";
+      if (k) send({ t: "click", k: k });
+    }, { capture: true, passive: true });
+  }
+
   /* ---------- boot ---------- */
   document.addEventListener("DOMContentLoaded", () => {
     // figures the page counts up to are facts too
@@ -3062,6 +3122,7 @@
     initOffers(); initReviews(); initHall(); initMore(); initStay(); initRadius(); initMap(); initReel(); initDrawers(); initBooking(); initEnquiry(); initPet(); initCopy(); initClock(); initSky(); initDining(); initNight(); initLang(); initDiag(); onScroll();
     startMotion();
     initContent();
+    initCounter();
     initBackdrop();
     // A link that names a section (…/#pet-friendly): the browser goes there as the page is parsed, and once everything
     // above it has taken its final size the landing is squared up, unless the visitor has already started to scroll.

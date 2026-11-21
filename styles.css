@@ -1841,3 +1841,8 @@ a.rev__name { text-decoration: underline; text-decoration-color: var(--line-2); 
   .chapter--reviews:not(.has-revs) .chapter__note { grid-column: 2; grid-row: 1; align-self: end; max-width: 36ch; }
   .chapter--reviews:not(.has-revs) #revCta { grid-column: 2; grid-row: 2; justify-self: start; align-self: end; }
 }
+
+/* SPINE preview: the text being edited in SPINE (only inside SPINE's preview frame) */
+.pv-spine-focus { outline: 3px solid #F5B700 !important; outline-offset: 4px; border-radius: 4px; animation: pvSpinePulse 1.6s ease-in-out 2; }
+@keyframes pvSpinePulse { 50% { outline-color: rgba(245, 183, 0, .35); } }
+@media (prefers-reduced-motion: reduce) { .pv-spine-focus { animation: none; } }
