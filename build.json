@@ -1,18 +1,18 @@
 {
  "about": "What this build of the Patravana website is. Public and machine-readable: no paths, credentials or private details.",
  "schema": "patravana.build/1",
- "buildId": "8ac01c3a0875-c54",
+ "buildId": "8ac01c3a0875-c55",
  "mode": "production",
  "sourceRevision": "8ac01c3a0875",
- "contentRevision": 54,
- "contentHash": "7cf2babd610ae1412dbd0ffdc8172bf2dedf49c1113445a69cb7ce0140880c2b",
+ "contentRevision": 55,
+ "contentHash": "e3f38904caa53a954af70d089b7a07105deac10916039f75591ffa0bf019e534",
  "contentSchema": "patravana.content/1",
  "registryVersion": "b39ae5f9d30d",
- "builtAt": "2026-11-22T09:42:31.778Z",
+ "builtAt": "2026-11-22T11:05:24.420Z",
  "liveUrl": "https://script.google.com/macros/s/AKfycbzUB0wwKaD7KskTFDWAxMB_kcaBExYeVBPkADWCVvrliZ0Tt8rdQpBARE51c_UGg0Pj/exec",
  "newerThanContent": [],
  "pages": {
-  "index.html": "6ae1670bb2979cb78713dc48242e53ebe7dff10f7985821140512566d567bd7d",
-  "th.html": "be8d3a7646384a99e72bfd5bf359c488aa24167270d84645dbc904ea16b23cd0"
+  "index.html": "1f1b2f953d240d05da20e8348bef0827313bfe1d97e24b2e6e72af33ca9136fd",
+  "th.html": "a079770bfe5285002826e78e7df425dfc10e4d7d10f07ec70ca4b16cd222df2e"
  }
 }
