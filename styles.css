@@ -1299,6 +1299,20 @@ html[lang="th"] .ticket__head { letter-spacing: 0; line-height: 1.32; }
 .ticket__terms::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--sand); flex: none; }
 .ticket__acts { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .2rem; }
 .ticket__help { font-size: .8rem; line-height: 1.45; color: rgba(244,240,231,.8); }
+/* the resort's own offers (22 November 2026): what each one gives as a short list; the terms, buttons and help sit at the
+   foot of every card so they line up across a row. Offer cards after the first are light, so their parts take dark ink. */
+.ticket[data-offer="feed"] .ticket__desc { flex: none; }
+.ticket__perks { list-style: none; margin: 0 0 auto; padding: 0; display: grid; gap: .4rem; font-size: .95rem; line-height: 1.4; color: var(--charcoal); }
+.ticket__perks li { display: flex; gap: .6rem; align-items: baseline; }
+.ticket__perks li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--forest); flex: none; translate: 0 -.1em; }
+.ticket--hot .ticket__perks { color: var(--ivory); }
+.ticket--hot .ticket__perks li::before { background: var(--sand); }
+.ticket:not(.ticket--hot) .ticket__terms { color: var(--charcoal); border-color: var(--line-2); }
+.ticket:not(.ticket--hot) .ticket__terms::before { background: var(--forest); }
+.ticket:not(.ticket--hot) .ticket__help { color: var(--muted); }
+.ticket:not(.ticket--hot) .pill--light { background: var(--forest); border-color: var(--forest); color: var(--ivory); }
+.ticket:not(.ticket--hot) .pill--light::after { background: var(--charcoal); }
+.ticket:not(.ticket--hot) .pill--light:hover { border-color: var(--charcoal); }
 .ticket.is-ended .ticket__head, .ticket.is-ended .ticket__head b { color: var(--earth); text-decoration: line-through; text-decoration-thickness: 1px; }
 /* the offers are whole cards on a phone, one under another: never a sliver of the next one at the edge */
 @media (max-width: 40em) {

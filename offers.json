@@ -1,10 +1,196 @@
 {
  "schema": "patravana.offers/1",
- "source": "none",
- "sourceRevision": "none",
- "status": "unconfigured",
- "fetchedAt": "2026-11-21T16:51:06.807Z",
- "validUntil": "2026-11-21T17:21:06.808Z",
- "lastSuccessAt": null,
- "offers": []
+ "source": "approved",
+ "sourceRevision": "approved:2026-11-22T15:40:00+07:00:Patravana Resort, Media and Promotion Request sheet (12 and 15 November 2026)",
+ "status": "ok",
+ "fetchedAt": "2026-11-22T08:43:18.084Z",
+ "validUntil": "2027-02-28T17:00:00.000Z",
+ "lastSuccessAt": "2026-11-22T08:43:18.084Z",
+ "offers": [
+  {
+   "id": "november-2026",
+   "title": {
+    "en": "November offer",
+    "th": "โปรโมชั่นเดือนพฤศจิกายน"
+   },
+   "description": {
+    "en": "Book now and save on both your room and your meals.",
+    "th": "จองตอนนี้ คุ้มทั้งค่าห้องพักและค่าอาหาร"
+   },
+   "code": "refresh2026",
+   "discount": {
+    "type": "percent",
+    "value": 10
+   },
+   "perks": [
+    {
+     "percent": 10,
+     "text": {
+      "en": "10% off the room rate",
+      "th": "ส่วนลดค่าห้องพัก 10%"
+     }
+    },
+    {
+     "percent": 10,
+     "text": {
+      "en": "10% off food during your stay, drinks not included",
+      "th": "ส่วนลดค่าอาหาร 10% ตลอดการเข้าพัก ไม่รวมเครื่องดื่ม"
+     }
+    }
+   ],
+   "bookingWindow": {
+    "from": "2026-11-01",
+    "to": "2026-11-30"
+   },
+   "terms": {
+    "cancellation": {
+     "en": "Non-refundable with this code",
+     "th": "ราคาที่ใช้โค้ดนี้ไม่สามารถคืนเงินได้"
+    }
+   },
+   "verifiedAt": "2026-11-22T08:40:00Z"
+  },
+  {
+   "id": "pet-friendly-2026",
+   "title": {
+    "en": "Pet-friendly stays: 50% off the pet fee",
+    "th": "พาน้องมาพักด้วย ลดค่าบริการสัตว์เลี้ยง 50%"
+   },
+   "description": {
+    "en": "Bring your pet along. Pet stays are in one designated building, so contact the team to confirm a pet-friendly room for your dates.",
+    "th": "พาสัตว์เลี้ยงมาพักผ่อนด้วยกัน ห้องที่รับสัตว์เลี้ยงอยู่ในอาคารที่จัดไว้หนึ่งอาคาร ติดต่อทีมงานเพื่อยืนยันห้องในวันที่ต้องการ"
+   },
+   "code": "refresh2026",
+   "discount": {
+    "type": "percent",
+    "value": 10
+   },
+   "perks": [
+    {
+     "percent": 50,
+     "text": {
+      "en": "50% off the pet fee",
+      "th": "ลดค่าบริการสัตว์เลี้ยง 50%"
+     }
+    },
+    {
+     "percent": 10,
+     "text": {
+      "en": "10% off the room rate",
+      "th": "ส่วนลดค่าห้องพัก 10%"
+     }
+    },
+    {
+     "percent": 10,
+     "text": {
+      "en": "10% off food during your stay, drinks not included",
+      "th": "ส่วนลดค่าอาหาร 10% ตลอดการเข้าพัก ไม่รวมเครื่องดื่ม"
+     }
+    }
+   ],
+   "bookingWindow": {
+    "from": "2026-11-01",
+    "to": "2027-01-31"
+   },
+   "terms": {
+    "cancellation": {
+     "en": "Non-refundable with this code",
+     "th": "ราคาที่ใช้โค้ดนี้ไม่สามารถคืนเงินได้"
+    }
+   },
+   "verifiedAt": "2026-11-22T08:40:00Z"
+  },
+  {
+   "id": "free-breakfast-2026",
+   "title": {
+    "en": "Free breakfast with every booking",
+    "th": "ฟรีอาหารเช้าทุกการจอง"
+   },
+   "description": {
+    "en": "Every booking includes breakfast at Phu Yai Lee, the resort's restaurant by the lake.",
+    "th": "ทุกการจองรวมอาหารเช้าที่ครัวผู้ใหญ่ลี ห้องอาหารริมบึงน้ำของรีสอร์ท"
+   },
+   "code": "refresh2026",
+   "discount": {
+    "type": "percent",
+    "value": 10
+   },
+   "perks": [
+    {
+     "text": {
+      "en": "Breakfast included",
+      "th": "รวมอาหารเช้า"
+     }
+    },
+    {
+     "percent": 10,
+     "text": {
+      "en": "10% off the room rate",
+      "th": "ส่วนลดค่าห้องพัก 10%"
+     }
+    },
+    {
+     "percent": 10,
+     "text": {
+      "en": "10% off food during your stay, drinks not included",
+      "th": "ส่วนลดค่าอาหาร 10% ตลอดการเข้าพัก ไม่รวมเครื่องดื่ม"
+     }
+    }
+   ],
+   "bookingWindow": {
+    "from": "2026-11-15",
+    "to": "2027-02-28"
+   },
+   "terms": {
+    "cancellation": {
+     "en": "Non-refundable with this code",
+     "th": "ราคาที่ใช้โค้ดนี้ไม่สามารถคืนเงินได้"
+    }
+   },
+   "verifiedAt": "2026-11-22T08:40:00Z"
+  },
+  {
+   "id": "best-price-2026",
+   "title": {
+    "en": "Best price guaranteed when you book direct",
+    "th": "การันตีราคาดีที่สุด เมื่อจองตรงกับรีสอร์ท"
+   },
+   "description": {
+    "en": "Book through the resort's own booking page for its best price.",
+    "th": "จองผ่านหน้าจองของรีสอร์ทโดยตรง เพื่อรับราคาที่ดีที่สุด"
+   },
+   "code": "refresh2026",
+   "discount": {
+    "type": "percent",
+    "value": 10
+   },
+   "perks": [
+    {
+     "percent": 10,
+     "text": {
+      "en": "10% off the room rate",
+      "th": "ส่วนลดค่าห้องพัก 10%"
+     }
+    },
+    {
+     "percent": 10,
+     "text": {
+      "en": "10% off food during your stay, drinks not included",
+      "th": "ส่วนลดค่าอาหาร 10% ตลอดการเข้าพัก ไม่รวมเครื่องดื่ม"
+     }
+    }
+   ],
+   "bookingWindow": {
+    "from": "2026-11-15",
+    "to": "2027-02-28"
+   },
+   "terms": {
+    "cancellation": {
+     "en": "Non-refundable with this code",
+     "th": "ราคาที่ใช้โค้ดนี้ไม่สามารถคืนเงินได้"
+    }
+   },
+   "verifiedAt": "2026-11-22T08:40:00Z"
+  }
+ ]
 }

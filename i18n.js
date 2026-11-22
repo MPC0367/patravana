@@ -805,6 +805,14 @@ window.PV_JS = {
   "en": "Stays through",
   "th": "เข้าพักได้ถึง"
  },
+ "offerEnds": {
+  "en": "Offer ends",
+  "th": "โปรโมชั่นถึงวันที่"
+ },
+ "offerApproved": {
+  "en": "Offers from the resort, updated {at}",
+  "th": "โปรโมชั่นจากรีสอร์ท อัปเดตเมื่อ {at}"
+ },
  "offerCopy": {
   "en": "Copy code",
   "th": "คัดลอกโค้ด"

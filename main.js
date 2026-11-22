@@ -2532,8 +2532,10 @@
   const OFFER_SCHEMA = "patravana.offers/1";
   function usableOffers(doc, nowMs) {
     const cfg = FX && FX.offers; if (!cfg || !doc || doc.schema !== OFFER_SCHEMA || doc.status !== "ok" || !Array.isArray(doc.offers)) return [];
-    const fetched = Date.parse(doc.fetchedAt), until = Date.parse(doc.validUntil);
-    if (!(fetched <= nowMs && nowMs - fetched <= (cfg.maxAgeMinutes || 30) * 60000 && nowMs < until)) return [];
+    // the owner's approved list (source "approved", 22 November 2026) stands until its validUntil, the approval's end;
+    // a feed must have been read within maxAgeMinutes. Either way each offer still leaves when its own windows close.
+    const fetched = Date.parse(doc.fetchedAt), until = Date.parse(doc.validUntil), standing = doc.source === "approved";
+    if (!(fetched <= nowMs && (standing || nowMs - fetched <= (cfg.maxAgeMinutes || 30) * 60000) && nowMs < until)) return [];
     const today = todayBkk(), withdrawn = cfg.withdrawn || [], str = (v, n) => typeof v === "string" && v.trim() && v.length <= n;
     const isDay = (s) => !isNaN(dayNum(s));
     return doc.offers.filter((o) => {
@@ -2542,9 +2544,20 @@
       if (pct != null && !(typeof pct === "number" && pct > 0 && pct < 90)) return false;
       if (o.code != null && !(typeof o.code === "string" && /^[A-Za-z0-9-]{3,32}$/.test(o.code))) return false;
       if (withdrawn.some((w) => (w.id && w.id === o.id) || (w.code && o.code && w.code.toLowerCase() === o.code.toLowerCase()) || (w.codeless && !o.code && w.percent === pct))) return false;
-      // a text may only quote the offer's own figure: no combined or borrowed savings
+      // perks: what else the offer gives, each line quoting at most its own figure (10% off food, 50% off the pet fee)
+      const own = new Set(pct == null ? [] : [pct]), pc = (t) => (t.match(/\d+(?:\.\d+)?\s*%/g) || []).map(parseFloat);
+      if (o.perks != null) {
+        if (!Array.isArray(o.perks) || o.perks.length > 6) return false;
+        for (const k of o.perks) {
+          if (!k || !k.text || !str(k.text.en, 120) || (k.text.th != null && !str(k.text.th, 120))) return false;
+          if (k.percent != null && !(typeof k.percent === "number" && k.percent > 0 && k.percent < 90)) return false;
+          if (pc([k.text.en, k.text.th].filter(Boolean).join(" ")).some((n) => n !== k.percent)) return false;
+          if (k.percent != null) own.add(k.percent);
+        }
+      }
+      // a text may only quote the offer's own figures: no combined or borrowed savings
       const texts = [o.title, o.description].filter(Boolean).flatMap((t) => [t.en, t.th]).filter(Boolean).join(" ");
-      if ((texts.match(/\d+(?:\.\d+)?\s*%/g) || []).some((m) => parseFloat(m) !== pct)) return false;
+      if (pc(texts).some((n) => !own.has(n))) return false;
       for (const w of [o.bookingWindow, o.stayWindow]) {
         if (!w) continue;
         if ((w.from && !isDay(w.from)) || (w.to && !isDay(w.to))) return false;
@@ -2557,7 +2570,8 @@
   let openBookPanel = null;                                    // set by initBooking
   function initOffers() {
     const list = $("#offerList"), neutral = $('.ticket[data-offer="current"]'); if (!list || !neutral || !FX || !FX.offers || !window.fetch) return;
-    const teaser = $("[data-offer-teaser]"), teaserHead = teaser && $("[data-offer-head]", teaser), teaserExtra = teaser && $("[data-offer-extra]", teaser);
+    // the Home guide's offer line: its second line sits beside the teaser, not inside it (fixed 22 November 2026)
+    const teaser = $("[data-offer-teaser]"), teaserHead = teaser && $("[data-offer-head]", teaser), teaserExtra = $("[data-offer-extra]");
     let doc = null, shownIds = "";
     const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
     const pick = (t, e) => { const L = I18N.lang; if (t && t[L]) e.textContent = t[L]; else if (t && t.en) { e.textContent = t.en; if (L !== "en") e.lang = "en"; } return e; };
@@ -2566,11 +2580,14 @@
       const tag = el("p", "ticket__tag");
       if (o.code) { tag.append(I18N.t("offerWithCode") + " "); tag.append(el("span", "ticket__code", o.code)); } else tag.textContent = I18N.t("offerNoCode");
       a.append(tag, pick(o.title, el("h3", "ticket__head")));
-      if (o.stayWindow && o.stayWindow.to) {
-        const p = el("p", "ticket__until"), s = el("strong"), t = el("time", null, longDate(o.stayWindow.to, I18N.lang)); t.dateTime = o.stayWindow.to;
-        s.append(I18N.t("offerStayThrough") + " ", t); p.append(s); a.append(p);
+      // the last day: of the stay when the offer names one, otherwise of the offer itself
+      const last = o.stayWindow && o.stayWindow.to ? ["offerStayThrough", o.stayWindow.to] : o.bookingWindow && o.bookingWindow.to ? ["offerEnds", o.bookingWindow.to] : null;
+      if (last) {
+        const p = el("p", "ticket__until"), s = el("strong"), t = el("time", null, longDate(last[1], I18N.lang)); t.dateTime = last[1];
+        s.append(I18N.t(last[0]) + " ", t); p.append(s); a.append(p);
       }
       if (o.description) a.append(pick(o.description, el("p", "ticket__desc")));
+      if (o.perks && o.perks.length) { const ul = el("ul", "ticket__perks"); o.perks.forEach((k) => ul.append(pick(k.text, el("li")))); a.append(ul); }
       if (o.terms && o.terms.cancellation) a.append(pick(o.terms.cancellation, el("p", "ticket__terms")));
       const acts = el("div", "ticket__acts");
       if (o.code) {
@@ -2594,8 +2611,10 @@
       neutral.classList.toggle("ticket--hot", !offers.length);
       offers.forEach((o, i) => { const c = card(o); if (i === 0) c.classList.add("ticket--hot"); list.insertBefore(c, neutral); });
       if (offers.length) {
-        const at = new Intl.DateTimeFormat(I18N.lang === "th" ? "th-TH" : "en-GB", { timeZone: "Asia/Bangkok", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(doc.fetchedAt));
-        list.append(el("p", "offers__checked", I18N.t("offerChecked", { at })));
+        // an approved list says whose it is and the day it was last updated; a feed says when it was last checked
+        const approved = doc.source === "approved";
+        const at = new Intl.DateTimeFormat(I18N.lang === "th" ? "th-TH" : "en-GB", approved ? { timeZone: "Asia/Bangkok", day: "numeric", month: "long", year: "numeric" } : { timeZone: "Asia/Bangkok", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(doc.fetchedAt));
+        list.append(el("p", "offers__checked", I18N.t(approved ? "offerApproved" : "offerChecked", { at })));
       }
       if (teaserHead) {
         teaserHead.textContent = offers.length ? (offers[0].title[I18N.lang] || offers[0].title.en) : I18N.t("offerHubHead");
