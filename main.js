@@ -1772,14 +1772,14 @@
   function initReel() {
     const reel = $("#reel"), track = $("#reelTrack"); if (!reel || !track) return;
     const originals = $$(".reel__item", track);
-    const gallery = originals.map((b) => b.dataset.full);
     // each photograph's description is its button's name after "Open photo n of 8: ", in the language being read
     const items = () => originals.map((b) => ({ src: b.dataset.full, alt: (b.getAttribute("aria-label") || "").replace(/^[^:]*:\s*/, "") }));
     const pauseBtn = $("#reelPause"), prevBtn = $("#reelPrev"), nextBtn = $("#reelNext");
     const state = { paused: false, mouse: false, focus: false, held: false, open: false, seen: false, dragged: false, caught: false };
     // a copy (made for the seamless loop, hidden from screen readers) opens its own photograph, and on close the keyboard
     // goes to the visible original of it, never to the hidden copy
-    const openAt = (b) => { const i = Math.max(0, gallery.indexOf(b.dataset.full)); lightbox.open(items(), i, (on) => { state.open = on; kick(); }, b.classList.contains("is-clone") ? originals[i] : null); };
+    // found by the originals' addresses as they are now (a photograph published since the page opened has a new one)
+    const openAt = (b) => { const i = Math.max(0, originals.findIndex((o) => o.dataset.full === b.dataset.full)); lightbox.open(items(), i, (on) => { state.open = on; kick(); }, b.classList.contains("is-clone") ? originals[i] : null); };
     let kick = function () {};
     if (reduced) {
       // nothing drifts, so there is nothing to pause: the strip scrolls natively and the arrows step it
@@ -2807,17 +2807,34 @@
         apply(snap);
       } catch (e) { /* keep what is here */ } finally { clearTimeout(to); }
     }
-    /* A published photograph (22 November 2026): every <img> and <source> the build marked data-pic="pic.<name>" points
-       at the sizes the new value names (the original assets/web/<name> or a picture uploaded in SPINE). */
-    const PIC_FILE = /(?:assets\/web\/[a-z0-9-]+|content\/media\/[a-z0-9-]+\.[a-f0-9]{16})-(\d+|4k)\.(jpg|webp|png)/g;
-    function swapPicture(key, value) {
+    /* A published photograph (22 November 2026): wherever the page names this photograph's files (img src and srcset,
+       picture sources, and the data-full / data-img / data-src a viewer or the map opens), they point at the sizes the
+       new value names: the original assets/web/<name> or a picture uploaded in SPINE. Only this photograph's own files
+       are matched, so a viewer that now shows another photograph keeps it. The new picture is loaded first: until it
+       is on the host (just uploaded, pages still deploying) the page keeps what it shows and tries again. */
+    const picRe = (name) => new RegExp("(?:assets/web/" + name + "|content/media/" + name + "\\.[a-f0-9]{16})-(\\d+|4k)\\.(jpg|webp|png)", "g");
+    const PIC_ATTRS = ["src", "srcset", "data-full", "data-img", "data-src", "data-srcset"];
+    const picWaiting = new Map();
+    function swapPicture(key, value, tries) {
       const m = /^pic\.([a-z0-9-]+)$/.exec(key);
       if (!m || typeof value !== "string" || !(value === "assets/web/" + m[1] || new RegExp("^content/media/" + m[1] + "\\.[a-f0-9]{16}$").test(value))) return false;
-      $$('[data-pic="' + key + '"]').forEach((el) => ["src", "srcset"].forEach((a) => {
+      // the newest value wins: a swap still waiting for an earlier one is dropped (even when this one changes nothing)
+      picWaiting.set(key, value);
+      const re = picRe(m[1]), els = $$('[data-pic="' + key + '"],[data-full*="/' + m[1] + '"],[data-img*="/' + m[1] + '"],[data-src*="/' + m[1] + '"],[data-srcset*="/' + m[1] + '"]');
+      const edits = [];
+      els.forEach((el) => PIC_ATTRS.forEach((a) => {
         const v = el.getAttribute(a); if (!v) return;
-        const nv = v.replace(PIC_FILE, (x, size, ext) => value + "-" + size + "." + ext);
-        if (nv !== v) el.setAttribute(a, nv);
+        const nv = v.replace(re, (x, size, ext) => value + "-" + size + "." + ext);
+        if (nv !== v) edits.push([el, a, v, nv]);
       }));
+      if (!edits.length) { picWaiting.delete(key); return true; }
+      const probe = (edits.find((e) => e[1] === "src") || edits[0])[3].split(/[\s,]+/)[0];
+      // each attribute changes only if it still holds what it held when the swap was planned (a viewer may have moved on)
+      const go = () => { if (picWaiting.get(key) !== value) return; picWaiting.delete(key); edits.forEach(([el, a, was, nv]) => { if (el.getAttribute(a) === was) el.setAttribute(a, nv); }); };
+      const img = new Image();
+      img.onload = go;
+      img.onerror = () => { if (picWaiting.get(key) === value && (tries || 0) < 20) setTimeout(() => { if (picWaiting.get(key) === value) { picWaiting.delete(key); swapPicture(key, value, (tries || 0) + 1); } }, 15000); };
+      img.src = new URL(probe, document.baseURI).href;
       return true;
     }
     function apply(snap, preview) {
@@ -2869,13 +2886,19 @@
         Object.keys(pics || {}).forEach((k) => { const b = pics[k]; if (/^pic\.[a-z0-9-]+$/.test(k) && b instanceof Blob && /^image\/(jpeg|png|webp)$/.test(b.type) && b.size < 20e6) want.set(k, b); });
         shownPics.forEach((was, k) => {
           if (want.get(k) === was.blob) return;
-          was.els.forEach(([el, src, srcset, sizes]) => { if (srcset != null) el.setAttribute("srcset", srcset); if (src != null) el.setAttribute("src", src); if (sizes != null) el.setAttribute("sizes", sizes); });
+          // only where the preview's picture is still shown (a viewer may have moved on to another photograph meanwhile)
+          was.els.forEach(([el, src, srcset, sizes]) => {
+            if ((el.tagName === "SOURCE" ? el.getAttribute("srcset") : el.getAttribute("src")) !== was.url) return;
+            if (el.tagName === "SOURCE") { if (srcset != null) el.setAttribute("srcset", srcset); return; }
+            if (srcset != null) el.setAttribute("srcset", srcset); if (src != null) el.setAttribute("src", src); if (sizes != null) el.setAttribute("sizes", sizes);
+          });
           URL.revokeObjectURL(was.url); shownPics.delete(k);
         });
         want.forEach((blob, k) => {
           if (shownPics.has(k)) return;
-          const url = URL.createObjectURL(blob), els = [];
-          $$('[data-pic="' + CSS.escape(k) + '"]').forEach((el) => {
+          const url = URL.createObjectURL(blob), els = [], re = picRe(k.slice(4));
+          // only where the page shows this photograph now (a viewer may have moved on to another one)
+          $$('[data-pic="' + CSS.escape(k) + '"]').filter((el) => { const s = (el.getAttribute("src") || "") + " " + (el.getAttribute("srcset") || ""); re.lastIndex = 0; return re.test(s); }).forEach((el) => {
             els.push([el, el.getAttribute("src"), el.getAttribute("srcset"), el.getAttribute("sizes")]);
             if (el.tagName === "SOURCE") el.setAttribute("srcset", url);
             else { el.removeAttribute("srcset"); el.removeAttribute("sizes"); el.setAttribute("src", url); }

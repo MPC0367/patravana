@@ -6,7 +6,7 @@
  "contentHash": "7cf2babd610ae1412dbd0ffdc8172bf2dedf49c1113445a69cb7ce0140880c2b",
  "publishedAt": "2026-11-22T09:20:31.009Z",
  "rollbackOf": null,
- "build": "4201394ccf59-c54",
+ "build": "8ac01c3a0875-c54",
  "html": {
   "revision": 54,
   "state": "deployed together with this manifest"
