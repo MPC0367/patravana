@@ -1,32 +1,23 @@
 {
  "schema": "patravana.publish-result/1",
- "at": "2026-11-13T12:40:33.384Z",
- "status": "live-verified",
- "generation": 52,
+ "at": "2026-11-22T09:05:28.850Z",
+ "status": "deploying",
+ "generation": 53,
  "problems": [],
- "revision": 52,
- "buildId": "de2bfe7e8167-c52",
- "sha256": "89244011b646df7361bfdbe466f334cec792c93efbdacd3f10594415fe95e2eb",
- "sentAt": "2026-11-13T12:40:21.542Z",
+ "revision": 53,
+ "buildId": "80ff7e1ab123-c53",
+ "sha256": "44084c07ef7e8423e89fadffa870432d8a3657958f4af5b7ffc897f2a4f074b6",
+ "sentAt": "2026-11-22T09:05:18.600Z",
  "changed": [
-  "fac.h3.d",
-  "fac.f2.t",
-  "fac.f2.d"
+  "js.offerEnds",
+  "js.offerApproved",
+  "fact.dining.know",
+  "fact.dining.faq.breakfast"
  ],
- "run": "43427158104",
+ "run": "45005819591",
  "outcome": "success",
  "timings": {
-  "receivedAt": "2026-11-13T12:40:33Z",
-  "committedAt": "2026-11-13T12:40:35Z"
- },
- "liveCheckedAt": "2026-11-13T12:41:38.169Z",
- "readback": {
-  "ok": true,
-  "manifest": 52,
-  "build": "de2bfe7e8167-c52",
-  "en": 52,
-  "enBuild": "de2bfe7e8167-c52",
-  "th": 52,
-  "thBuild": "de2bfe7e8167-c52"
+  "receivedAt": "2026-11-22T09:05:28Z",
+  "committedAt": "2026-11-22T09:05:30Z"
  }
 }
