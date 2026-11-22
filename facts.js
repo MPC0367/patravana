@@ -1,4 +1,4 @@
-/* PATRAVANA v2, operational facts. Written by cms/apply.mjs from content revision 52 (the Patravana Website Content sheet): edit the Sheet, not this file. */
+/* PATRAVANA v2, operational facts. Written by cms/apply.mjs from content revision 53 (the Patravana Website Content sheet): edit the Sheet, not this file. */
 window.PV_FACTS = {
  "reviewed": "2026-10-12",
  "contact": {
@@ -283,12 +283,12 @@ window.PV_FACTS = {
    "th": "{dining.kitchen.lastOrder} น."
   },
   "dining.know": {
-   "en": "Served daily at Phu Yai Lee, {dining.breakfast.open} to {dining.breakfast.close}. Whether it is included depends on the rate you book.",
-   "th": "เสิร์ฟทุกวันที่ครัวผู้ใหญ่ลี {dining.breakfast.open} ถึง {dining.breakfast.close} น. รวมในราคาห้องพักหรือไม่ ขึ้นอยู่กับแพ็กเกจที่จอง"
+   "en": "Served daily at Phu Yai Lee, {dining.breakfast.open} to {dining.breakfast.close}. Every rate on the resort's booking page includes it.",
+   "th": "เสิร์ฟทุกวันที่ครัวผู้ใหญ่ลี {dining.breakfast.open} ถึง {dining.breakfast.close} น. ทุกราคาห้องพักในหน้าจองของรีสอร์ทรวมอาหารเช้าแล้ว"
   },
   "dining.faq.breakfast": {
-   "en": "It depends on the rate. The resort's booking page offers rates with breakfast and room-only rates, and names what each one includes before you confirm. Breakfast is served daily at Phu Yai Lee, {dining.breakfast.open} to {dining.breakfast.close}.",
-   "th": "ขึ้นอยู่กับแพ็กเกจที่เลือก หน้าจองของรีสอร์ทมีทั้งแบบรวมอาหารเช้าและแบบห้องพักอย่างเดียว และแจ้งสิ่งที่รวมอยู่ในแต่ละราคาก่อนยืนยันการจอง อาหารเช้าเสิร์ฟทุกวันที่ครัวผู้ใหญ่ลี {dining.breakfast.open} ถึง {dining.breakfast.close} น."
+   "en": "Yes. Every rate on the resort's booking page includes breakfast, served daily at Phu Yai Lee, {dining.breakfast.open} to {dining.breakfast.close}.",
+   "th": "ทุกราคาห้องพักในหน้าจองของรีสอร์ทรวมอาหารเช้าแล้ว เสิร์ฟทุกวันที่ครัวผู้ใหญ่ลี เวลา {dining.breakfast.open} ถึง {dining.breakfast.close} น."
   },
   "dining.faq.hours": {
    "en": "The restaurant is open every day. Breakfast is served {dining.breakfast.open} to {dining.breakfast.close}, and lunch and dinner {dining.kitchen.open} to {dining.kitchen.close}, with last order at {dining.kitchen.lastOrder}. For a table, call {contact.dining.show}.",
