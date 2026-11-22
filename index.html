@@ -2,7 +2,7 @@
 <html lang="en" data-locale="en">
 <head>
 <meta charset="UTF-8">
-<meta name="pv-build" content="80ff7e1ab123-c53">
+<meta name="pv-build" content="4201394ccf59-c53">
 <meta name="pv-content" content="53">
 <meta name="pv-live" content="https://script.google.com/macros/s/AKfycbzUB0wwKaD7KskTFDWAxMB_kcaBExYeVBPkADWCVvrliZ0Tt8rdQpBARE51c_UGg0Pj/exec">
 <script data-pv-lane>/[?&]live(=|&|$)/.test(location.search)&&window.fetch&&(window.PVLane=fetch("https://script.google.com/macros/s/AKfycbzUB0wwKaD7KskTFDWAxMB_kcaBExYeVBPkADWCVvrliZ0Tt8rdQpBARE51c_UGg0Pj/exec?since=53",{credentials:"omit",cache:"no-store",redirect:"follow"}).then(function(r){return r.ok?r.json():null}).catch(function(){return null}))</script>
@@ -302,8 +302,8 @@ document.documentElement.className += " js";
   <div class="hero__media" aria-hidden="true">
     <!-- WebP where the browser takes it (a third to a half lighter, measured 42 dB against the JPEG), the JPEG otherwise -->
     <picture>
-      <source type="image/webp" srcset="assets/web/hero-first-800.webp 800w, assets/web/hero-first-1600.webp 1600w, assets/web/hero-first-2400.webp 2400w, assets/web/hero-first-4k.webp 3840w" sizes="100vw">
-      <img class="hero__poster" fetchpriority="high" src="assets/web/hero-first-2400.jpg" srcset="assets/web/hero-first-800.jpg 800w, assets/web/hero-first-1600.jpg 1600w, assets/web/hero-first-2400.jpg 2400w, assets/web/hero-first-4k.jpg 3840w" sizes="100vw" alt="">
+      <source data-pic="pic.hero-first" type="image/webp" srcset="assets/web/hero-first-800.webp 800w, assets/web/hero-first-1600.webp 1600w, assets/web/hero-first-2400.webp 2400w, assets/web/hero-first-4k.webp 3840w" sizes="100vw">
+      <img data-pic="pic.hero-first" class="hero__poster" fetchpriority="high" src="assets/web/hero-first-2400.jpg" srcset="assets/web/hero-first-800.jpg 800w, assets/web/hero-first-1600.jpg 1600w, assets/web/hero-first-2400.jpg 2400w, assets/web/hero-first-4k.jpg 3840w" sizes="100vw" alt="">
     </picture>
     <!-- the script decides how each film is played (streamed in parts, or one of these files), so nothing preloads here -->
     <video class="hero__video is-on" id="heroVideo" muted playsinline preload="none"
@@ -397,13 +397,13 @@ document.documentElement.className += " js";
       <span class="hub__extra" data-offer-extra data-i18n="hub.offerextra">On the resort's own booking page, for your dates</span>
       <span class="hub__go"><span data-i18n="hub.offergo">See offers</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
     </a></li>
-    <li><a class="hub__card" href="#stay" data-view-link="stay"><span class="hub__img"><img src="assets/web/room-vana-lake-bedroom-800.jpg" srcset="assets/web/room-vana-lake-bedroom-560.jpg 560w, assets/web/room-vana-lake-bedroom-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="600"></span><span class="hub__name" data-i18n="nav.rooms">Our Rooms</span><span class="hub__sub" data-i18n="hub.stay">Three suites with lake, garden or country views</span></a></li>
-    <li><a class="hub__card" href="#facilities" data-view-link="facilities"><span class="hub__img"><img src="assets/web/aerial-estate-800.jpg" srcset="assets/web/aerial-estate-560.jpg 560w, assets/web/aerial-estate-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="450"></span><span class="hub__name" data-i18n="nav.facilities">Facilities</span><span class="hub__sub" data-i18n="hub.fac">The resort from the air, the pool and the lake</span></a></li>
-    <li><a class="hub__card" href="#dining" data-view-link="dining"><span class="hub__img"><img src="assets/web/dining-terrace-800.jpg" srcset="assets/web/dining-terrace-560.jpg 560w, assets/web/dining-terrace-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.dining">Dining</span><span class="hub__sub" data-i18n="hub.dining">Phu Yai Lee, by the lake</span></a></li>
-    <li><a class="hub__card" href="#gather" data-view-link="events"><span class="hub__img"><img src="assets/web/amphitheatre-800.jpg" srcset="assets/web/amphitheatre-560.jpg 560w, assets/web/amphitheatre-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.gather">Events</span><span class="hub__sub" data-i18n="hub.events">The amphitheatre, and a seminar hall nearby</span></a></li>
-    <li><a class="hub__card" href="#roam" data-view-link="nearby"><span class="hub__img"><img src="assets/web/hero-poster-800.jpg" srcset="assets/web/hero-poster-560.jpg 560w, assets/web/hero-poster-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="450"></span><span class="hub__name" data-i18n="nav.roam">Nearby</span><span class="hub__sub" data-i18n="hub.nearby">Vineyards, golf and the national park</span></a></li>
-    <li><a class="hub__card" href="#gallery" data-view-link="gallery"><span class="hub__img"><img src="assets/web/moonrise-800.jpg" srcset="assets/web/moonrise-560.jpg 560w, assets/web/moonrise-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.gallery">Gallery</span><span class="hub__sub" data-i18n="hub.gallery">Photographs, and the evening</span></a></li>
-    <li><a class="hub__card" href="#visit" data-view-link="contact"><span class="hub__img"><img src="assets/web/building-sky-800.jpg" srcset="assets/web/building-sky-560.jpg 560w, assets/web/building-sky-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.contactfaq">Contact &amp; FAQs</span><span class="hub__sub" data-i18n="hub.contact">Directions, contacts and answers</span></a></li>
+    <li><a class="hub__card" href="#stay" data-view-link="stay"><span class="hub__img"><img data-pic="pic.room-vana-lake-bedroom" src="assets/web/room-vana-lake-bedroom-800.jpg" srcset="assets/web/room-vana-lake-bedroom-560.jpg 560w, assets/web/room-vana-lake-bedroom-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="600"></span><span class="hub__name" data-i18n="nav.rooms">Our Rooms</span><span class="hub__sub" data-i18n="hub.stay">Three suites with lake, garden or country views</span></a></li>
+    <li><a class="hub__card" href="#facilities" data-view-link="facilities"><span class="hub__img"><img data-pic="pic.aerial-estate" src="assets/web/aerial-estate-800.jpg" srcset="assets/web/aerial-estate-560.jpg 560w, assets/web/aerial-estate-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="450"></span><span class="hub__name" data-i18n="nav.facilities">Facilities</span><span class="hub__sub" data-i18n="hub.fac">The resort from the air, the pool and the lake</span></a></li>
+    <li><a class="hub__card" href="#dining" data-view-link="dining"><span class="hub__img"><img data-pic="pic.dining-terrace" src="assets/web/dining-terrace-800.jpg" srcset="assets/web/dining-terrace-560.jpg 560w, assets/web/dining-terrace-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.dining">Dining</span><span class="hub__sub" data-i18n="hub.dining">Phu Yai Lee, by the lake</span></a></li>
+    <li><a class="hub__card" href="#gather" data-view-link="events"><span class="hub__img"><img data-pic="pic.amphitheatre" src="assets/web/amphitheatre-800.jpg" srcset="assets/web/amphitheatre-560.jpg 560w, assets/web/amphitheatre-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.gather">Events</span><span class="hub__sub" data-i18n="hub.events">The amphitheatre, and a seminar hall nearby</span></a></li>
+    <li><a class="hub__card" href="#roam" data-view-link="nearby"><span class="hub__img"><img data-pic="pic.hero-poster" src="assets/web/hero-poster-800.jpg" srcset="assets/web/hero-poster-560.jpg 560w, assets/web/hero-poster-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="450"></span><span class="hub__name" data-i18n="nav.roam">Nearby</span><span class="hub__sub" data-i18n="hub.nearby">Vineyards, golf and the national park</span></a></li>
+    <li><a class="hub__card" href="#gallery" data-view-link="gallery"><span class="hub__img"><img data-pic="pic.moonrise" src="assets/web/moonrise-800.jpg" srcset="assets/web/moonrise-560.jpg 560w, assets/web/moonrise-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.gallery">Gallery</span><span class="hub__sub" data-i18n="hub.gallery">Photographs, and the evening</span></a></li>
+    <li><a class="hub__card" href="#visit" data-view-link="contact"><span class="hub__img"><img data-pic="pic.building-sky" src="assets/web/building-sky-800.jpg" srcset="assets/web/building-sky-560.jpg 560w, assets/web/building-sky-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.contactfaq">Contact &amp; FAQs</span><span class="hub__sub" data-i18n="hub.contact">Directions, contacts and answers</span></a></li>
   </ul>
 </section>
 
@@ -455,10 +455,10 @@ document.documentElement.className += " js";
     </ul>
     <div class="pair">
       <figure class="frame pair__a" data-mr>
-        <img src="assets/web/aerial-estate-2400.jpg" srcset="assets/web/aerial-estate-800.jpg 800w, assets/web/aerial-estate-1600.jpg 1600w, assets/web/aerial-estate-2400.jpg 2400w, assets/web/aerial-estate-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="Aerial view of Patravana Resort, its lake and the hills" data-i18n-attr="alt:air.alt" loading="lazy" data-parallax="8">
+        <img data-pic="pic.aerial-estate" src="assets/web/aerial-estate-2400.jpg" srcset="assets/web/aerial-estate-800.jpg 800w, assets/web/aerial-estate-1600.jpg 1600w, assets/web/aerial-estate-2400.jpg 2400w, assets/web/aerial-estate-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="Aerial view of Patravana Resort, its lake and the hills" data-i18n-attr="alt:air.alt" loading="lazy" data-parallax="8">
       </figure>
       <figure class="frame pair__b" data-mr>
-        <img src="assets/web/reception-2400.jpg" srcset="assets/web/reception-800.jpg 800w, assets/web/reception-1600.jpg 1600w, assets/web/reception-2400.jpg 2400w, assets/web/reception-4k.jpg 3840w" sizes="(max-width: 820px) 60vw, 22vw" alt="Timber-lined reception with woven chairs" data-i18n-attr="alt:air.alt2" loading="lazy">
+        <img data-pic="pic.reception" src="assets/web/reception-2400.jpg" srcset="assets/web/reception-800.jpg 800w, assets/web/reception-1600.jpg 1600w, assets/web/reception-2400.jpg 2400w, assets/web/reception-4k.jpg 3840w" sizes="(max-width: 820px) 60vw, 22vw" alt="Timber-lined reception with woven chairs" data-i18n-attr="alt:air.alt2" loading="lazy">
       </figure>
     </div>
   </div>
@@ -466,7 +466,7 @@ document.documentElement.className += " js";
 
 <!-- band: the great lawn -->
 <section class="band band--top" id="band-lawn" data-dark data-owner="facilities" aria-label="The great lawn" data-i18n-attr="aria-label:band.a.label">
-  <img class="band__img" src="assets/web/lawn-wings-2400.jpg" srcset="assets/web/lawn-wings-800.jpg 800w, assets/web/lawn-wings-1600.jpg 1600w, assets/web/lawn-wings-2400.jpg 2400w, assets/web/lawn-wings-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy" data-band>
+  <img data-pic="pic.lawn-wings" class="band__img" src="assets/web/lawn-wings-2400.jpg" srcset="assets/web/lawn-wings-800.jpg 800w, assets/web/lawn-wings-1600.jpg 1600w, assets/web/lawn-wings-2400.jpg 2400w, assets/web/lawn-wings-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy" data-band>
   <div class="band__scrim" aria-hidden="true"></div>
   <div class="band__inner">
     <p class="band__line st-lines" data-i18n="band.a">Slow mornings, <em class="it">wide lawns,</em> and nowhere you have to be.</p>
@@ -490,7 +490,7 @@ document.documentElement.className += " js";
         <p class="map__hint" data-i18n="fac.hint">Eight places on one aerial photograph. Choose a facility below to find it on the map.</p>
       </div>
       <div class="map__stage" id="mapStage">
-        <img class="map__img" src="assets/web/aerial-map-edited-2400.jpg" srcset="assets/web/aerial-map-edited-800.jpg 800w, assets/web/aerial-map-edited-1600.jpg 1600w, assets/web/aerial-map-edited-2400.jpg 2400w, assets/web/aerial-map-edited-4k.jpg 3582w" sizes="100vw" alt="Drone view of the whole Patravana estate: the suite wings, amphitheatre, lake, pool and Phu Yai Lee kitchen" data-i18n-attr="alt:fac.mapalt" loading="lazy" decoding="async" width="2000" height="1122">
+        <img data-pic="pic.aerial-map-edited" class="map__img" src="assets/web/aerial-map-edited-2400.jpg" srcset="assets/web/aerial-map-edited-800.jpg 800w, assets/web/aerial-map-edited-1600.jpg 1600w, assets/web/aerial-map-edited-2400.jpg 2400w, assets/web/aerial-map-edited-4k.jpg 3582w" sizes="100vw" alt="Drone view of the whole Patravana estate: the suite wings, amphitheatre, lake, pool and Phu Yai Lee kitchen" data-i18n-attr="alt:fac.mapalt" loading="lazy" decoding="async" width="2000" height="1122">
         <button class="hot" style="--x:21%;--y:34%" data-hot="suites" data-go="#stay" data-img="assets/web/vana-bedroom-1600.jpg" aria-label="Suite wings" data-i18n-attr="aria-label:fac.h1.t"><span class="hot__dot"><span class="hot__n num">01</span></span><span class="hot__label" data-i18n="fac.h1.t">Suite wings</span></button>
         <button class="hot" style="--x:28.5%;--y:47%" data-hot="amphi" data-go="#gather" data-img="assets/web/amphitheatre-1600.jpg" aria-label="Amphitheatre" data-i18n-attr="aria-label:fac.h2.t"><span class="hot__dot"><span class="hot__n num">02</span></span><span class="hot__label" data-i18n="fac.h2.t">Amphitheatre</span></button>
         <button class="hot" style="--x:37%;--y:58%" data-hot="lake" data-go="#gallery" data-img="assets/web/lake-dusk-1600.jpg" aria-label="The lake and the sign" data-i18n-attr="aria-label:fac.h3.t"><span class="hot__dot"><span class="hot__n num">03</span></span><span class="hot__label" data-i18n="fac.h3.t">The lake and the sign</span></button>
@@ -519,7 +519,7 @@ document.documentElement.className += " js";
       </div>
       <!-- up to 1000 px wide: the chosen place, in the page under the map (never over it), with an index of every place -->
       <div class="pcard js-only" id="placeCard" aria-labelledby="pcardTitle" role="group">
-        <figure class="pcard__media"><img id="pcardImg" src="assets/web/vana-bedroom-1600.jpg" alt="" width="1600" height="1067" loading="lazy"></figure>
+        <figure class="pcard__media"><img data-pic="pic.vana-bedroom" id="pcardImg" src="assets/web/vana-bedroom-1600.jpg" alt="" width="1600" height="1067" loading="lazy"></figure>
         <div class="pcard__body">
           <div class="pcard__top">
             <p class="pcard__step num" id="pcardStep" aria-live="polite"></p>
@@ -550,43 +550,43 @@ document.documentElement.className += " js";
     <ul class="fac" role="list" data-fac>
       <li class="fac__item" id="fac-pool" data-hot="pool" data-rv>
         <span class="fac__n num">06</span>
-        <figure class="fac__media"><img src="assets/web/pool-umbrellas-2400.jpg" srcset="assets/web/pool-umbrellas-800.jpg 800w, assets/web/pool-umbrellas-1600.jpg 1600w, assets/web/pool-umbrellas-2400.jpg 2400w, assets/web/pool-umbrellas-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Poolside deck with orange umbrellas" data-i18n-attr="alt:fac.f1.alt" loading="lazy"></figure>
+        <figure class="fac__media"><img data-pic="pic.pool-umbrellas" src="assets/web/pool-umbrellas-2400.jpg" srcset="assets/web/pool-umbrellas-800.jpg 800w, assets/web/pool-umbrellas-1600.jpg 1600w, assets/web/pool-umbrellas-2400.jpg 2400w, assets/web/pool-umbrellas-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Poolside deck with orange umbrellas" data-i18n-attr="alt:fac.f1.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f1.t">Pool and fitness</h3>
         <p data-i18n="fac.f1.d">An outdoor pool aimed at the range, a rock-edged lagoon for slower afternoons, and a fitness room.</p>
       </li>
       <li class="fac__item" id="fac-lake" data-hot="lake" data-rv>
         <span class="fac__n num">03</span>
-        <figure class="fac__media"><img src="assets/web/lake-dusk-2400.jpg" srcset="assets/web/lake-dusk-800.jpg 800w, assets/web/lake-dusk-1600.jpg 1600w, assets/web/lake-dusk-2400.jpg 2400w, assets/web/lake-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="The resort reflected in the lake at dusk" data-i18n-attr="alt:fac.f2.alt" loading="lazy"></figure>
+        <figure class="fac__media"><img data-pic="pic.lake-dusk" src="assets/web/lake-dusk-2400.jpg" srcset="assets/web/lake-dusk-800.jpg 800w, assets/web/lake-dusk-1600.jpg 1600w, assets/web/lake-dusk-2400.jpg 2400w, assets/web/lake-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="The resort reflected in the lake at dusk" data-i18n-attr="alt:fac.f2.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f2.t">The lake</h3>
         <p data-i18n="fac.f2.d">The estate is built around the water, with the resort's sign on its bank and reflections worth the early alarm.</p>
       </li>
       <li class="fac__item" id="fac-amphi" data-hot="amphi" data-rv>
         <span class="fac__n num">02</span>
-        <figure class="fac__media"><img src="assets/web/amphitheatre-2400.jpg" srcset="assets/web/amphitheatre-800.jpg 800w, assets/web/amphitheatre-1600.jpg 1600w, assets/web/amphitheatre-2400.jpg 2400w, assets/web/amphitheatre-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Outdoor amphitheatre lawn" data-i18n-attr="alt:fac.f3.alt" loading="lazy"></figure>
+        <figure class="fac__media"><img data-pic="pic.amphitheatre" src="assets/web/amphitheatre-2400.jpg" srcset="assets/web/amphitheatre-800.jpg 800w, assets/web/amphitheatre-1600.jpg 1600w, assets/web/amphitheatre-2400.jpg 2400w, assets/web/amphitheatre-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Outdoor amphitheatre lawn" data-i18n-attr="alt:fac.f3.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f3.t">Outdoor amphitheatre</h3>
         <p data-i18n="fac.f3.d">A tiered lawn over the lake. Tell the team what you are planning and they will advise on the setup.</p>
       </li>
       <li class="fac__item" id="fac-hall" data-hot="" data-rv>
         <span class="fac__n fac__n--note" data-i18n="fac.offmap1">Nearby, offsite</span>
-        <figure class="fac__media is-crop"><img src="assets/web/hall-classroom-2400.jpg" srcset="assets/web/hall-classroom-800.jpg 800w, assets/web/hall-classroom-1600.jpg 1600w, assets/web/hall-classroom-2400.jpg 2400w, assets/web/hall-classroom-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Seminar hall in classroom setup" data-i18n-attr="alt:fac.f4.alt" loading="lazy"></figure>
+        <figure class="fac__media is-crop"><img data-pic="pic.hall-classroom" src="assets/web/hall-classroom-2400.jpg" srcset="assets/web/hall-classroom-800.jpg 800w, assets/web/hall-classroom-1600.jpg 1600w, assets/web/hall-classroom-2400.jpg 2400w, assets/web/hall-classroom-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Seminar hall in classroom setup" data-i18n-attr="alt:fac.f4.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f4.t">Seminar hall</h3>
         <p data-fact="hall.fac">Patra Hall: 280 m², nearby and off the resort grounds, divisible into two rooms, with a stage at each end, audio-visual equipment and a private dressing room. Up to 220 guests in theatre rows, full hall.</p>
       </li>
       <li class="fac__item" id="fac-dining" data-hot="kitchen" data-rv>
         <span class="fac__n num">05</span>
-        <figure class="fac__media"><img src="assets/web/dining-terrace-2400.jpg" srcset="assets/web/dining-terrace-800.jpg 800w, assets/web/dining-terrace-1600.jpg 1600w, assets/web/dining-terrace-2400.jpg 2400w, assets/web/dining-terrace-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Lakeside dining terrace" data-i18n-attr="alt:fac.f5.alt" loading="lazy"></figure>
+        <figure class="fac__media"><img data-pic="pic.dining-terrace" src="assets/web/dining-terrace-2400.jpg" srcset="assets/web/dining-terrace-800.jpg 800w, assets/web/dining-terrace-1600.jpg 1600w, assets/web/dining-terrace-2400.jpg 2400w, assets/web/dining-terrace-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Lakeside dining terrace" data-i18n-attr="alt:fac.f5.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f5.t">Phu Yai Lee and the deck</h3>
         <p data-fact="dining.fac">Thai cooking, up to 150 seats indoors and on the timber deck, breakfast daily from 7:00.</p>
       </li>
       <li class="fac__item" id="fac-loop" data-hot="loop" data-rv>
         <span class="fac__n num">07</span>
-        <figure class="fac__media"><img src="assets/web/lawn-wings-2400.jpg" srcset="assets/web/lawn-wings-800.jpg 800w, assets/web/lawn-wings-1600.jpg 1600w, assets/web/lawn-wings-2400.jpg 2400w, assets/web/lawn-wings-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Lawn and palms in front of the suite wings" data-i18n-attr="alt:fac.f6.alt" loading="lazy"></figure>
+        <figure class="fac__media"><img data-pic="pic.lawn-wings" src="assets/web/lawn-wings-2400.jpg" srcset="assets/web/lawn-wings-800.jpg 800w, assets/web/lawn-wings-1600.jpg 1600w, assets/web/lawn-wings-2400.jpg 2400w, assets/web/lawn-wings-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Lawn and palms in front of the suite wings" data-i18n-attr="alt:fac.f6.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f6.t">Gardens and the loop</h3>
         <p data-i18n="fac.f6.d">Lawns, palms and rock gardens threaded by a loop path for evening walks.</p>
       </li>
       <li class="fac__item" id="fac-suites" data-hot="suites" data-rv>
         <span class="fac__n num">01</span>
-        <figure class="fac__media"><img src="assets/web/vana-living-2400.jpg" srcset="assets/web/vana-living-800.jpg 800w, assets/web/vana-living-1600.jpg 1600w, assets/web/vana-living-2400.jpg 2400w, assets/web/vana-living-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Suite living room opening to the balcony" data-i18n-attr="alt:fac.f8.alt" loading="lazy"></figure>
+        <figure class="fac__media"><img data-pic="pic.vana-living" src="assets/web/vana-living-2400.jpg" srcset="assets/web/vana-living-800.jpg 800w, assets/web/vana-living-1600.jpg 1600w, assets/web/vana-living-2400.jpg 2400w, assets/web/vana-living-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Suite living room opening to the balcony" data-i18n-attr="alt:fac.f8.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f8.t">Sixty-four suites and rooms</h3>
         <p data-i18n="fac.f8.d">A balcony, a kitchenette and a 50 inch TV in every suite. A separate living room in Vana and Patra, a jacuzzi bathtub in Patra and Patra Junior.</p>
       </li>
@@ -644,25 +644,25 @@ document.documentElement.className += " js";
               <!-- the photographs of this room, one set per view: small screens swipe them here, wide screens show them in the stage -->
               <div class="rg">
                 <div class="rg__set" data-view="lake" data-room="3446300000000000005">
-                  <button class="rg__shot" data-full="assets/web/room-vana-lake-bedroom-1600.jpg" data-cap="bedroom"><img src="assets/web/room-vana-lake-bedroom-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-lake-balcony-1600.jpg" data-cap="balcony"><img src="assets/web/room-vana-lake-balcony-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-lake-living-1600.jpg" data-cap="living"><img src="assets/web/room-vana-lake-living-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-lake-kitchenette-1600.jpg" data-cap="kitchenette"><img src="assets/web/room-vana-lake-kitchenette-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-lake-bathroom-1600.jpg" data-cap="bathroom"><img src="assets/web/room-vana-lake-bathroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-lake-bedroom-1600.jpg" data-cap="bedroom"><img data-pic="pic.room-vana-lake-bedroom" src="assets/web/room-vana-lake-bedroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-lake-balcony-1600.jpg" data-cap="balcony"><img data-pic="pic.room-vana-lake-balcony" src="assets/web/room-vana-lake-balcony-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-lake-living-1600.jpg" data-cap="living"><img data-pic="pic.room-vana-lake-living" src="assets/web/room-vana-lake-living-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-lake-kitchenette-1600.jpg" data-cap="kitchenette"><img data-pic="pic.room-vana-lake-kitchenette" src="assets/web/room-vana-lake-kitchenette-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-lake-bathroom-1600.jpg" data-cap="bathroom"><img data-pic="pic.room-vana-lake-bathroom" src="assets/web/room-vana-lake-bathroom-800.jpg" alt="" loading="lazy"></button>
                 </div>
                 <div class="rg__set" data-view="garden" data-room="3446300000000000004" hidden>
-                  <button class="rg__shot" data-full="assets/web/room-vana-garden-bedroom-1600.jpg" data-cap="bedroom"><img src="assets/web/room-vana-garden-bedroom-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-garden-balcony-1600.jpg" data-cap="balcony"><img src="assets/web/room-vana-garden-balcony-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-garden-living-1600.jpg" data-cap="living"><img src="assets/web/room-vana-garden-living-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-garden-kitchenette-1600.jpg" data-cap="kitchenette"><img src="assets/web/room-vana-garden-kitchenette-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-garden-bathroom-1600.jpg" data-cap="bathroom"><img src="assets/web/room-vana-garden-bathroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-garden-bedroom-1600.jpg" data-cap="bedroom"><img data-pic="pic.room-vana-garden-bedroom" src="assets/web/room-vana-garden-bedroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-garden-balcony-1600.jpg" data-cap="balcony"><img data-pic="pic.room-vana-garden-balcony" src="assets/web/room-vana-garden-balcony-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-garden-living-1600.jpg" data-cap="living"><img data-pic="pic.room-vana-garden-living" src="assets/web/room-vana-garden-living-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-garden-kitchenette-1600.jpg" data-cap="kitchenette"><img data-pic="pic.room-vana-garden-kitchenette" src="assets/web/room-vana-garden-kitchenette-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-garden-bathroom-1600.jpg" data-cap="bathroom"><img data-pic="pic.room-vana-garden-bathroom" src="assets/web/room-vana-garden-bathroom-800.jpg" alt="" loading="lazy"></button>
                 </div>
                 <div class="rg__set" data-view="country" data-room="3446300000000000003" hidden>
-                  <button class="rg__shot" data-full="assets/web/room-vana-country-bedroom-1600.jpg" data-cap="bedroom"><img src="assets/web/room-vana-country-bedroom-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-country-balcony-1600.jpg" data-cap="balcony"><img src="assets/web/room-vana-country-balcony-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-country-living-1600.jpg" data-cap="living"><img src="assets/web/room-vana-country-living-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-country-kitchenette-1600.jpg" data-cap="kitchenette"><img src="assets/web/room-vana-country-kitchenette-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-country-bathroom-1600.jpg" data-cap="bathroom"><img src="assets/web/room-vana-country-bathroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-country-bedroom-1600.jpg" data-cap="bedroom"><img data-pic="pic.room-vana-country-bedroom" src="assets/web/room-vana-country-bedroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-country-balcony-1600.jpg" data-cap="balcony"><img data-pic="pic.room-vana-country-balcony" src="assets/web/room-vana-country-balcony-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-country-living-1600.jpg" data-cap="living"><img data-pic="pic.room-vana-country-living" src="assets/web/room-vana-country-living-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-country-kitchenette-1600.jpg" data-cap="kitchenette"><img data-pic="pic.room-vana-country-kitchenette" src="assets/web/room-vana-country-kitchenette-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-country-bathroom-1600.jpg" data-cap="bathroom"><img data-pic="pic.room-vana-country-bathroom" src="assets/web/room-vana-country-bathroom-800.jpg" alt="" loading="lazy"></button>
                 </div>
               </div>
               <!-- phones: the photographs one at a time, with the count and buttons beside the swipe -->
@@ -698,18 +698,18 @@ document.documentElement.className += " js";
               <!-- the photographs of this room, one set per view: small screens swipe them here, wide screens show them in the stage -->
               <div class="rg">
                 <div class="rg__set" data-view="lake" data-room="3446300000000000008">
-                  <button class="rg__shot" data-full="assets/web/room-patra-lake-bedroom-1600.jpg" data-cap="bedroom"><img src="assets/web/room-patra-lake-bedroom-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-lake-balcony-1600.jpg" data-cap="balcony"><img src="assets/web/room-patra-lake-balcony-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-lake-jacuzzi-1600.jpg" data-cap="jacuzzi"><img src="assets/web/room-patra-lake-jacuzzi-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-lake-living-1600.jpg" data-cap="living"><img src="assets/web/room-patra-lake-living-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-lake-kitchenette-1600.jpg" data-cap="kitchenette"><img src="assets/web/room-patra-lake-kitchenette-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-lake-bedroom-1600.jpg" data-cap="bedroom"><img data-pic="pic.room-patra-lake-bedroom" src="assets/web/room-patra-lake-bedroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-lake-balcony-1600.jpg" data-cap="balcony"><img data-pic="pic.room-patra-lake-balcony" src="assets/web/room-patra-lake-balcony-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-lake-jacuzzi-1600.jpg" data-cap="jacuzzi"><img data-pic="pic.room-patra-lake-jacuzzi" src="assets/web/room-patra-lake-jacuzzi-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-lake-living-1600.jpg" data-cap="living"><img data-pic="pic.room-patra-lake-living" src="assets/web/room-patra-lake-living-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-lake-kitchenette-1600.jpg" data-cap="kitchenette"><img data-pic="pic.room-patra-lake-kitchenette" src="assets/web/room-patra-lake-kitchenette-800.jpg" alt="" loading="lazy"></button>
                 </div>
                 <div class="rg__set" data-view="garden" data-room="3446300000000000007" hidden>
-                  <button class="rg__shot" data-full="assets/web/room-patra-garden-bedroom-1600.jpg" data-cap="bedroom"><img src="assets/web/room-patra-garden-bedroom-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-garden-balcony-1600.jpg" data-cap="balcony"><img src="assets/web/room-patra-garden-balcony-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-garden-jacuzzi-1600.jpg" data-cap="jacuzzi"><img src="assets/web/room-patra-garden-jacuzzi-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-garden-living-1600.jpg" data-cap="living"><img src="assets/web/room-patra-garden-living-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-garden-kitchenette-1600.jpg" data-cap="kitchenette"><img src="assets/web/room-patra-garden-kitchenette-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-garden-bedroom-1600.jpg" data-cap="bedroom"><img data-pic="pic.room-patra-garden-bedroom" src="assets/web/room-patra-garden-bedroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-garden-balcony-1600.jpg" data-cap="balcony"><img data-pic="pic.room-patra-garden-balcony" src="assets/web/room-patra-garden-balcony-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-garden-jacuzzi-1600.jpg" data-cap="jacuzzi"><img data-pic="pic.room-patra-garden-jacuzzi" src="assets/web/room-patra-garden-jacuzzi-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-garden-living-1600.jpg" data-cap="living"><img data-pic="pic.room-patra-garden-living" src="assets/web/room-patra-garden-living-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-garden-kitchenette-1600.jpg" data-cap="kitchenette"><img data-pic="pic.room-patra-garden-kitchenette" src="assets/web/room-patra-garden-kitchenette-800.jpg" alt="" loading="lazy"></button>
                 </div>
               </div>
               <!-- phones: the photographs one at a time, with the count and buttons beside the swipe -->
@@ -741,11 +741,11 @@ document.documentElement.className += " js";
               <!-- the photographs of this room, one set per view: small screens swipe them here, wide screens show them in the stage -->
               <div class="rg">
                 <div class="rg__set" data-view="garden" data-room="3446300000000000006">
-                  <button class="rg__shot" data-full="assets/web/room-patra-junior-bedroom-1600.jpg" data-cap="bedroom"><img src="assets/web/room-patra-junior-bedroom-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-junior-balcony-1600.jpg" data-cap="balcony"><img src="assets/web/room-patra-junior-balcony-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-junior-twin-1600.jpg" data-cap="twin"><img src="assets/web/room-patra-junior-twin-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-junior-jacuzzi-1600.jpg" data-cap="jacuzzi"><img src="assets/web/room-patra-junior-jacuzzi-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-junior-kitchenette-1600.jpg" data-cap="kitchenette"><img src="assets/web/room-patra-junior-kitchenette-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-junior-bedroom-1600.jpg" data-cap="bedroom"><img data-pic="pic.room-patra-junior-bedroom" src="assets/web/room-patra-junior-bedroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-junior-balcony-1600.jpg" data-cap="balcony"><img data-pic="pic.room-patra-junior-balcony" src="assets/web/room-patra-junior-balcony-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-junior-twin-1600.jpg" data-cap="twin"><img data-pic="pic.room-patra-junior-twin" src="assets/web/room-patra-junior-twin-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-junior-jacuzzi-1600.jpg" data-cap="jacuzzi"><img data-pic="pic.room-patra-junior-jacuzzi" src="assets/web/room-patra-junior-jacuzzi-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-junior-kitchenette-1600.jpg" data-cap="kitchenette"><img data-pic="pic.room-patra-junior-kitchenette" src="assets/web/room-patra-junior-kitchenette-800.jpg" alt="" loading="lazy"></button>
                 </div>
               </div>
               <!-- phones: the photographs one at a time, with the count and buttons beside the swipe -->
@@ -761,7 +761,7 @@ document.documentElement.className += " js";
     <!-- the gallery of the open room in its chosen view -->
     <figure class="stay-stage js-only" id="stayStage" aria-label="Photographs of the selected room" data-i18n-attr="aria-label:stay.stagelabel">
       <div class="stay-stage__view" id="stayView">
-        <img id="stayImg" src="assets/web/room-vana-lake-bedroom-1600.jpg" alt="" loading="lazy"><img id="stayImgNext" src="" alt="">
+        <img data-pic="pic.room-vana-lake-bedroom" id="stayImg" src="assets/web/room-vana-lake-bedroom-1600.jpg" alt="" loading="lazy"><img id="stayImgNext" src="" alt="">
         <button class="stay-stage__open" type="button" id="stayOpen" aria-label="Open this photo full size" data-i18n-attr="aria-label:stay.open"></button>
         <button class="iconbtn iconbtn--glass stay-stage__nav stay-stage__nav--prev" id="stayPrev" aria-label="Previous photo" data-i18n-attr="aria-label:lb.prev"><svg aria-hidden="true"><use href="#i-back"/></svg></button>
         <button class="iconbtn iconbtn--glass stay-stage__nav stay-stage__nav--next" id="stayNext" aria-label="Next photo" data-i18n-attr="aria-label:lb.next"><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
@@ -859,7 +859,7 @@ document.documentElement.className += " js";
     <p class="petsec__note" data-fact="pet.booknote">General room availability does not confirm a pet-friendly allocation.</p>
   </div>
   <figure class="frame petsec__img" data-mr>
-    <img src="assets/web/pet-corgi-1168.jpg" srcset="assets/web/pet-corgi-800.jpg 800w, assets/web/pet-corgi-1168.jpg 1168w" sizes="(max-width: 1000px) 100vw, 46vw" width="1168" height="876" alt="A corgi sitting on a cream sofa with dark teal cushions" data-i18n-attr="alt:pet.alt" loading="lazy">
+    <img data-pic="pic.pet-corgi" src="assets/web/pet-corgi-1168.jpg" srcset="assets/web/pet-corgi-800.jpg 800w, assets/web/pet-corgi-1168.jpg 1168w" sizes="(max-width: 1000px) 100vw, 46vw" width="1168" height="876" alt="A corgi sitting on a cream sofa with dark teal cushions" data-i18n-attr="alt:pet.alt" loading="lazy">
   </figure>
   <!-- what a pet-friendly room has ready, from the resort's own photographs (13 November 2026); no captions on photos -->
   <div class="petsec__kit" aria-labelledby="petKitK">
@@ -867,8 +867,8 @@ document.documentElement.className += " js";
       <h3 class="petsec__kitk" id="petKitK" data-i18n="pet.kitk">Pet amenities</h3>
       <p data-i18n="pet.kit">Set out in a pet-friendly room: a bed and mats, food and water bowls, waste bags and a bin.</p>
     </div>
-    <button class="frame petsec__kitimg petsec__kitimg--room" type="button" data-full="assets/web/pet-room-1108.jpg" aria-label="Open full size: A suite living room set up for a pet" data-rv><img src="assets/web/pet-room-1000.jpg" srcset="assets/web/pet-room-640.jpg 640w, assets/web/pet-room-1000.jpg 1000w" sizes="(max-width: 1000px) 50vw, 20rem" width="1000" height="1334" alt="A suite living room set up for a pet: a green pet bed, mats and a pair of bowls beside the TV, with the kitchenette beyond" data-i18n-attr="alt:pet.kitalt1" loading="lazy" decoding="async"></button>
-    <button class="frame petsec__kitimg" type="button" data-full="assets/web/pet-kit-1080.jpg" aria-label="Open full size: The pet set close up" data-rv><img src="assets/web/pet-kit-1000.jpg" srcset="assets/web/pet-kit-640.jpg 640w, assets/web/pet-kit-1000.jpg 1000w" sizes="(max-width: 1000px) 50vw, 20rem" width="1000" height="1250" alt="The pet set close up: a green bed, two quilted mats, twin steel bowls on a stand, a waste-bag holder and a bin" data-i18n-attr="alt:pet.kitalt2" loading="lazy" decoding="async"></button>
+    <button class="frame petsec__kitimg petsec__kitimg--room" type="button" data-full="assets/web/pet-room-1108.jpg" aria-label="Open full size: A suite living room set up for a pet" data-rv><img data-pic="pic.pet-room" src="assets/web/pet-room-1000.jpg" srcset="assets/web/pet-room-640.jpg 640w, assets/web/pet-room-1000.jpg 1000w" sizes="(max-width: 1000px) 50vw, 20rem" width="1000" height="1334" alt="A suite living room set up for a pet: a green pet bed, mats and a pair of bowls beside the TV, with the kitchenette beyond" data-i18n-attr="alt:pet.kitalt1" loading="lazy" decoding="async"></button>
+    <button class="frame petsec__kitimg" type="button" data-full="assets/web/pet-kit-1080.jpg" aria-label="Open full size: The pet set close up" data-rv><img data-pic="pic.pet-kit" src="assets/web/pet-kit-1000.jpg" srcset="assets/web/pet-kit-640.jpg 640w, assets/web/pet-kit-1000.jpg 1000w" sizes="(max-width: 1000px) 50vw, 20rem" width="1000" height="1250" alt="The pet set close up: a green bed, two quilted mats, twin steel bowls on a stand, a waste-bag holder and a bin" data-i18n-attr="alt:pet.kitalt2" loading="lazy" decoding="async"></button>
   </div>
   <ol class="petsec__points" role="list" data-more="pet" data-more-what="more.w.pet">
     <li data-rv><span class="petsec__n num" aria-hidden="true">01</span><h3 data-i18n="pet.p1">One designated building</h3><p data-fact="pet.point1">Pet stays are offered in one building of the resort. They are not available in every suite.</p></li>
@@ -929,7 +929,7 @@ document.documentElement.className += " js";
     <p class="statement st-lines" data-i18n="dining.lede" data-more="dining" data-more-what="more.w.dining">A classic twist on traditional Thai architecture, indoors and out, where dinner comes <em class="it">with the sound of the lake.</em></p>
     <div class="dining">
       <figure class="frame dining__img" data-mr>
-        <img src="assets/web/dining-terrace-2400.jpg" srcset="assets/web/dining-terrace-800.jpg 800w, assets/web/dining-terrace-1600.jpg 1600w, assets/web/dining-terrace-2400.jpg 2400w, assets/web/dining-terrace-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="Breakfast table on the lakeside terrace" data-i18n-attr="alt:dining.alt" loading="lazy">
+        <img data-pic="pic.dining-terrace" src="assets/web/dining-terrace-2400.jpg" srcset="assets/web/dining-terrace-800.jpg 800w, assets/web/dining-terrace-1600.jpg 1600w, assets/web/dining-terrace-2400.jpg 2400w, assets/web/dining-terrace-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="Breakfast table on the lakeside terrace" data-i18n-attr="alt:dining.alt" loading="lazy">
       </figure>
       <div class="dining__card" data-rv>
         <p class="status" id="diningStatus" data-state=""><i aria-hidden="true"></i><span id="diningStatusText"></span></p>
@@ -943,7 +943,7 @@ document.documentElement.className += " js";
         <p class="card__small js-only" data-i18n="dining.statusnote">The status follows the listed hours, in resort time. Please call to confirm on the day.</p>
       </div>
       <figure class="frame dining__img2" data-mr>
-        <img src="assets/web/dining-hall-2400.jpg" srcset="assets/web/dining-hall-800.jpg 800w, assets/web/dining-hall-1600.jpg 1600w, assets/web/dining-hall-2400.jpg 2400w, assets/web/dining-hall-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Inside Phu Yai Lee: wooden tables on a red-tiled floor, the counter with its menu board, and tall windows onto the garden" data-i18n-attr="alt:dining.alt2" loading="lazy">
+        <img data-pic="pic.dining-hall" src="assets/web/dining-hall-2400.jpg" srcset="assets/web/dining-hall-800.jpg 800w, assets/web/dining-hall-1600.jpg 1600w, assets/web/dining-hall-2400.jpg 2400w, assets/web/dining-hall-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Inside Phu Yai Lee: wooden tables on a red-tiled floor, the counter with its menu board, and tall windows onto the garden" data-i18n-attr="alt:dining.alt2" loading="lazy">
       </figure>
     </div>
   </div>
@@ -951,7 +951,7 @@ document.documentElement.className += " js";
 
 <!-- band: the pool -->
 <section class="band band--short" id="band-pool" data-dark data-owner="gallery" aria-label="The pool deck" data-i18n-attr="aria-label:band.b.label">
-  <img class="band__img" src="assets/web/pool-umbrellas-2400.jpg" srcset="assets/web/pool-umbrellas-800.jpg 800w, assets/web/pool-umbrellas-1600.jpg 1600w, assets/web/pool-umbrellas-2400.jpg 2400w, assets/web/pool-umbrellas-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy" data-band>
+  <img data-pic="pic.pool-umbrellas" class="band__img" src="assets/web/pool-umbrellas-2400.jpg" srcset="assets/web/pool-umbrellas-800.jpg 800w, assets/web/pool-umbrellas-1600.jpg 1600w, assets/web/pool-umbrellas-2400.jpg 2400w, assets/web/pool-umbrellas-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy" data-band>
   <div class="band__scrim" aria-hidden="true"></div>
   <div class="band__inner">
     <p class="band__line st-lines" data-i18n="band.b">Afternoons belong <em class="it">to the water.</em></p>
@@ -970,7 +970,7 @@ document.documentElement.className += " js";
   </div>
   <div class="chapter__body">
     <figure class="frame frame--wide" data-mr>
-      <img src="assets/web/amphitheatre-2400.jpg" srcset="assets/web/amphitheatre-800.jpg 800w, assets/web/amphitheatre-1600.jpg 1600w, assets/web/amphitheatre-2400.jpg 2400w, assets/web/amphitheatre-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="Outdoor amphitheatre lawn under a dramatic sky" data-i18n-attr="alt:gather.alt" loading="lazy" data-parallax="8">
+      <img data-pic="pic.amphitheatre" src="assets/web/amphitheatre-2400.jpg" srcset="assets/web/amphitheatre-800.jpg 800w, assets/web/amphitheatre-1600.jpg 1600w, assets/web/amphitheatre-2400.jpg 2400w, assets/web/amphitheatre-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="Outdoor amphitheatre lawn under a dramatic sky" data-i18n-attr="alt:gather.alt" loading="lazy" data-parallax="8">
     </figure>
 
     <!-- hall planner: pick a layout, see the room. The four figures are the full-hall capacities in facts.js (hall) -->
@@ -1006,8 +1006,8 @@ document.documentElement.className += " js";
     </div>
 
     <div class="duo">
-      <figure class="frame is-crop" data-mr><img src="assets/web/hall-classroom-2400.jpg" srcset="assets/web/hall-classroom-800.jpg 800w, assets/web/hall-classroom-1600.jpg 1600w, assets/web/hall-classroom-2400.jpg 2400w, assets/web/hall-classroom-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Seminar hall in full classroom setup" data-i18n-attr="alt:gather.alt2" loading="lazy"></figure>
-      <figure class="frame" data-mr><img src="assets/web/pool-swim-2400.jpg" srcset="assets/web/pool-swim-800.jpg 800w, assets/web/pool-swim-1600.jpg 1600w, assets/web/pool-swim-2400.jpg 2400w, assets/web/pool-swim-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Guest swimming in the outdoor pool facing the range" data-i18n-attr="alt:gather.alt3" loading="lazy"></figure>
+      <figure class="frame is-crop" data-mr><img data-pic="pic.hall-classroom" src="assets/web/hall-classroom-2400.jpg" srcset="assets/web/hall-classroom-800.jpg 800w, assets/web/hall-classroom-1600.jpg 1600w, assets/web/hall-classroom-2400.jpg 2400w, assets/web/hall-classroom-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Seminar hall in full classroom setup" data-i18n-attr="alt:gather.alt2" loading="lazy"></figure>
+      <figure class="frame" data-mr><img data-pic="pic.pool-swim" src="assets/web/pool-swim-2400.jpg" srcset="assets/web/pool-swim-800.jpg 800w, assets/web/pool-swim-1600.jpg 1600w, assets/web/pool-swim-2400.jpg 2400w, assets/web/pool-swim-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="Guest swimming in the outdoor pool facing the range" data-i18n-attr="alt:gather.alt3" loading="lazy"></figure>
     </div>
   </div>
 </section>
@@ -1059,8 +1059,8 @@ document.documentElement.className += " js";
 <!-- ===== after dark: the evening, tonight's sunset and moon ===== -->
 <section class="night" id="tonight" data-dark data-owner="gallery" aria-labelledby="tonightTitle">
   <div class="night__media" aria-hidden="true">
-    <img class="night__img is-on" data-night="moon" src="assets/web/moonrise-2400.jpg" srcset="assets/web/moonrise-800.jpg 800w, assets/web/moonrise-1600.jpg 1600w, assets/web/moonrise-2400.jpg 2400w, assets/web/moonrise-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy">
-    <img class="night__img" data-night="dusk" src="assets/web/lake-dusk-2400.jpg" srcset="assets/web/lake-dusk-800.jpg 800w, assets/web/lake-dusk-1600.jpg 1600w, assets/web/lake-dusk-2400.jpg 2400w, assets/web/lake-dusk-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy">
+    <img data-pic="pic.moonrise" class="night__img is-on" data-night="moon" src="assets/web/moonrise-2400.jpg" srcset="assets/web/moonrise-800.jpg 800w, assets/web/moonrise-1600.jpg 1600w, assets/web/moonrise-2400.jpg 2400w, assets/web/moonrise-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy">
+    <img data-pic="pic.lake-dusk" class="night__img" data-night="dusk" src="assets/web/lake-dusk-2400.jpg" srcset="assets/web/lake-dusk-800.jpg 800w, assets/web/lake-dusk-1600.jpg 1600w, assets/web/lake-dusk-2400.jpg 2400w, assets/web/lake-dusk-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy">
     <canvas class="night__canvas" id="nightCanvas"></canvas>
     <div class="night__scrim"></div>
   </div>
@@ -1111,14 +1111,14 @@ document.documentElement.className += " js";
   </div>
   <div class="reel" id="reel">
     <div class="reel__track" id="reelTrack">
-      <button class="reel__item" type="button" data-full="assets/web/moonrise-4k.jpg" aria-label="Open photo 1 of 8: Moonrise over the lake" data-i18n-attr="aria-label:reel.p1"><img src="assets/web/moonrise-2400.jpg" srcset="assets/web/moonrise-800.jpg 800w, assets/web/moonrise-1600.jpg 1600w, assets/web/moonrise-2400.jpg 2400w, assets/web/moonrise-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
-      <button class="reel__item" type="button" data-full="assets/web/lake-dusk-4k.jpg" aria-label="Open photo 2 of 8: The suite wings reflected in the lake at dusk" data-i18n-attr="aria-label:reel.p2"><img src="assets/web/lake-dusk-2400.jpg" srcset="assets/web/lake-dusk-800.jpg 800w, assets/web/lake-dusk-1600.jpg 1600w, assets/web/lake-dusk-2400.jpg 2400w, assets/web/lake-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
-      <button class="reel__item" type="button" data-full="assets/web/pool-umbrellas-4k.jpg" aria-label="Open photo 3 of 8: The pool deck and its umbrellas" data-i18n-attr="aria-label:reel.p3"><img src="assets/web/pool-umbrellas-2400.jpg" srcset="assets/web/pool-umbrellas-800.jpg 800w, assets/web/pool-umbrellas-1600.jpg 1600w, assets/web/pool-umbrellas-2400.jpg 2400w, assets/web/pool-umbrellas-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
-      <button class="reel__item" type="button" data-full="assets/web/entrance-dusk-4k.jpg" aria-label="Open photo 4 of 8: The entrance at blue hour" data-i18n-attr="aria-label:reel.p4"><img src="assets/web/entrance-dusk-2400.jpg" srcset="assets/web/entrance-dusk-800.jpg 800w, assets/web/entrance-dusk-1600.jpg 1600w, assets/web/entrance-dusk-2400.jpg 2400w, assets/web/entrance-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
-      <button class="reel__item" type="button" data-full="assets/web/lagoon-pool-4k.jpg" aria-label="Open photo 5 of 8: The rock-edged lagoon pool" data-i18n-attr="aria-label:reel.p5"><img src="assets/web/lagoon-pool-2400.jpg" srcset="assets/web/lagoon-pool-800.jpg 800w, assets/web/lagoon-pool-1600.jpg 1600w, assets/web/lagoon-pool-2400.jpg 2400w, assets/web/lagoon-pool-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
-      <button class="reel__item" type="button" data-full="assets/web/pavilion-lounge-4k.jpg" aria-label="Open photo 6 of 8: The open-air lounge pavilion" data-i18n-attr="aria-label:reel.p6"><img src="assets/web/pavilion-lounge-2400.jpg" srcset="assets/web/pavilion-lounge-800.jpg 800w, assets/web/pavilion-lounge-1600.jpg 1600w, assets/web/pavilion-lounge-2400.jpg 2400w, assets/web/pavilion-lounge-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
-      <button class="reel__item" type="button" data-full="assets/web/lawn-wings-4k.jpg" aria-label="Open photo 7 of 8: The suite wings across the lawn and the lake" data-i18n-attr="aria-label:reel.p7"><img src="assets/web/lawn-wings-2400.jpg" srcset="assets/web/lawn-wings-800.jpg 800w, assets/web/lawn-wings-1600.jpg 1600w, assets/web/lawn-wings-2400.jpg 2400w, assets/web/lawn-wings-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
-      <button class="reel__item" type="button" data-full="assets/web/reception-4k.jpg" aria-label="Open photo 8 of 8: The timber-lined reception" data-i18n-attr="aria-label:reel.p8"><img src="assets/web/reception-2400.jpg" srcset="assets/web/reception-800.jpg 800w, assets/web/reception-1600.jpg 1600w, assets/web/reception-2400.jpg 2400w, assets/web/reception-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" type="button" data-full="assets/web/moonrise-4k.jpg" aria-label="Open photo 1 of 8: Moonrise over the lake" data-i18n-attr="aria-label:reel.p1"><img data-pic="pic.moonrise" src="assets/web/moonrise-2400.jpg" srcset="assets/web/moonrise-800.jpg 800w, assets/web/moonrise-1600.jpg 1600w, assets/web/moonrise-2400.jpg 2400w, assets/web/moonrise-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" type="button" data-full="assets/web/lake-dusk-4k.jpg" aria-label="Open photo 2 of 8: The suite wings reflected in the lake at dusk" data-i18n-attr="aria-label:reel.p2"><img data-pic="pic.lake-dusk" src="assets/web/lake-dusk-2400.jpg" srcset="assets/web/lake-dusk-800.jpg 800w, assets/web/lake-dusk-1600.jpg 1600w, assets/web/lake-dusk-2400.jpg 2400w, assets/web/lake-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" type="button" data-full="assets/web/pool-umbrellas-4k.jpg" aria-label="Open photo 3 of 8: The pool deck and its umbrellas" data-i18n-attr="aria-label:reel.p3"><img data-pic="pic.pool-umbrellas" src="assets/web/pool-umbrellas-2400.jpg" srcset="assets/web/pool-umbrellas-800.jpg 800w, assets/web/pool-umbrellas-1600.jpg 1600w, assets/web/pool-umbrellas-2400.jpg 2400w, assets/web/pool-umbrellas-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" type="button" data-full="assets/web/entrance-dusk-4k.jpg" aria-label="Open photo 4 of 8: The entrance at blue hour" data-i18n-attr="aria-label:reel.p4"><img data-pic="pic.entrance-dusk" src="assets/web/entrance-dusk-2400.jpg" srcset="assets/web/entrance-dusk-800.jpg 800w, assets/web/entrance-dusk-1600.jpg 1600w, assets/web/entrance-dusk-2400.jpg 2400w, assets/web/entrance-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" type="button" data-full="assets/web/lagoon-pool-4k.jpg" aria-label="Open photo 5 of 8: The rock-edged lagoon pool" data-i18n-attr="aria-label:reel.p5"><img data-pic="pic.lagoon-pool" src="assets/web/lagoon-pool-2400.jpg" srcset="assets/web/lagoon-pool-800.jpg 800w, assets/web/lagoon-pool-1600.jpg 1600w, assets/web/lagoon-pool-2400.jpg 2400w, assets/web/lagoon-pool-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" type="button" data-full="assets/web/pavilion-lounge-4k.jpg" aria-label="Open photo 6 of 8: The open-air lounge pavilion" data-i18n-attr="aria-label:reel.p6"><img data-pic="pic.pavilion-lounge" src="assets/web/pavilion-lounge-2400.jpg" srcset="assets/web/pavilion-lounge-800.jpg 800w, assets/web/pavilion-lounge-1600.jpg 1600w, assets/web/pavilion-lounge-2400.jpg 2400w, assets/web/pavilion-lounge-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" type="button" data-full="assets/web/lawn-wings-4k.jpg" aria-label="Open photo 7 of 8: The suite wings across the lawn and the lake" data-i18n-attr="aria-label:reel.p7"><img data-pic="pic.lawn-wings" src="assets/web/lawn-wings-2400.jpg" srcset="assets/web/lawn-wings-800.jpg 800w, assets/web/lawn-wings-1600.jpg 1600w, assets/web/lawn-wings-2400.jpg 2400w, assets/web/lawn-wings-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" type="button" data-full="assets/web/reception-4k.jpg" aria-label="Open photo 8 of 8: The timber-lined reception" data-i18n-attr="aria-label:reel.p8"><img data-pic="pic.reception" src="assets/web/reception-2400.jpg" srcset="assets/web/reception-800.jpg 800w, assets/web/reception-1600.jpg 1600w, assets/web/reception-2400.jpg 2400w, assets/web/reception-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
     </div>
   </div>
 </section>
@@ -1209,7 +1209,7 @@ document.documentElement.className += " js";
       </div>
     </div>
     <figure class="frame frame--wide" data-mr>
-      <img src="assets/web/entrance-dusk-2400.jpg" srcset="assets/web/entrance-dusk-800.jpg 800w, assets/web/entrance-dusk-1600.jpg 1600w, assets/web/entrance-dusk-2400.jpg 2400w, assets/web/entrance-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="The resort entrance and its sign at blue hour" data-i18n-attr="alt:visit.alt" loading="lazy" data-parallax="8">
+      <img data-pic="pic.entrance-dusk" src="assets/web/entrance-dusk-2400.jpg" srcset="assets/web/entrance-dusk-800.jpg 800w, assets/web/entrance-dusk-1600.jpg 1600w, assets/web/entrance-dusk-2400.jpg 2400w, assets/web/entrance-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="The resort entrance and its sign at blue hour" data-i18n-attr="alt:visit.alt" loading="lazy" data-parallax="8">
     </figure>
   </div>
 </section>
@@ -1452,6 +1452,6 @@ document.documentElement.className += " js";
 <script src="film-manifest.js?v=5f40123b" defer></script>
 <script src="film-stream.js?v=65575688" defer></script>
 <!-- if the main script cannot be fetched, the page falls back to its plain form: panels open, script-only controls hidden -->
-<script src="main.js?v=66f7c7c8" defer onerror="document.documentElement.classList.remove('js')"></script>
+<script src="main.js?v=b4d8e7e7" defer onerror="document.documentElement.classList.remove('js')"></script>
 </body>
 </html>

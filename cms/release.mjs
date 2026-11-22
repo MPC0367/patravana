@@ -4,7 +4,7 @@
 // is the same page.
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { dictionaries, serialise, page, head, markers, enScript, PVCMS } from './apply.mjs';
+import { dictionaries, serialise, page, head, markers, enScript, pictures, PVCMS } from './apply.mjs';
 
 const md5 = (s) => createHash('md5').update(s).digest('hex').slice(0, 8);
 const STAMPED = ['facts.js', 'i18n.js', 'i18n-en.js'];
@@ -42,6 +42,9 @@ export function applyRelease(dir, snap, build) {
     files['i18n-en.js'] = enScript({ t: { ...old.t, ...pt.en.t }, a: { ...old.a, ...pt.en.a } }, snap.generation);
     newerKeys = [...new Set(pe.newer.concat(pt.newer))];
   }
+  // the photographs follow the published pictures too (and are marked for the page's live update and SPINE's preview)
+  const registry = existsSync(dir + 'cms/registry.json') ? JSON.parse(read('cms/registry.json')) : null;
+  en = pictures(en, registry, snap ? snap.facts : null); th = pictures(th, registry, snap ? snap.facts : null);
   const contentRevision = snap ? snap.generation : 0;
   const buildId = String(build.sourceRevision || 'unknown').slice(0, 12) + '-c' + contentRevision;
   const liveUrl = /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(String(build.liveUrl || '')) ? build.liveUrl : null;

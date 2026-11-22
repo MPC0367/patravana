@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="th" data-locale="th"><head>
 <meta charset="UTF-8">
-<meta name="pv-build" content="80ff7e1ab123-c53">
+<meta name="pv-build" content="4201394ccf59-c53">
 <meta name="pv-content" content="53">
 <meta name="pv-live" content="https://script.google.com/macros/s/AKfycbzUB0wwKaD7KskTFDWAxMB_kcaBExYeVBPkADWCVvrliZ0Tt8rdQpBARE51c_UGg0Pj/exec">
 <script data-pv-lane>/[?&]live(=|&|$)/.test(location.search)&&window.fetch&&(window.PVLane=fetch("https://script.google.com/macros/s/AKfycbzUB0wwKaD7KskTFDWAxMB_kcaBExYeVBPkADWCVvrliZ0Tt8rdQpBARE51c_UGg0Pj/exec?since=53",{credentials:"omit",cache:"no-store",redirect:"follow"}).then(function(r){return r.ok?r.json():null}).catch(function(){return null}))</script>
@@ -301,8 +301,8 @@ document.documentElement.className += " js";
   <div class="hero__media" aria-hidden="true">
     <!-- WebP where the browser takes it (a third to a half lighter, measured 42 dB against the JPEG), the JPEG otherwise -->
     <picture>
-      <source type="image/webp" srcset="assets/web/hero-first-800.webp 800w, assets/web/hero-first-1600.webp 1600w, assets/web/hero-first-2400.webp 2400w, assets/web/hero-first-4k.webp 3840w" sizes="100vw">
-      <img class="hero__poster" fetchpriority="high" src="assets/web/hero-first-2400.jpg" srcset="assets/web/hero-first-800.jpg 800w, assets/web/hero-first-1600.jpg 1600w, assets/web/hero-first-2400.jpg 2400w, assets/web/hero-first-4k.jpg 3840w" sizes="100vw" alt="">
+      <source data-pic="pic.hero-first" type="image/webp" srcset="assets/web/hero-first-800.webp 800w, assets/web/hero-first-1600.webp 1600w, assets/web/hero-first-2400.webp 2400w, assets/web/hero-first-4k.webp 3840w" sizes="100vw">
+      <img data-pic="pic.hero-first" class="hero__poster" fetchpriority="high" src="assets/web/hero-first-2400.jpg" srcset="assets/web/hero-first-800.jpg 800w, assets/web/hero-first-1600.jpg 1600w, assets/web/hero-first-2400.jpg 2400w, assets/web/hero-first-4k.jpg 3840w" sizes="100vw" alt="">
     </picture>
     <!-- the script decides how each film is played (streamed in parts, or one of these files), so nothing preloads here -->
     <video class="hero__video is-on" id="heroVideo" muted="" playsinline="" preload="none" poster="assets/web/hero-first-1600.webp" data-hq="assets/video/film-pav-1080.mp4" data-uhd="assets/video/film-pav-1440.mp4" data-uhd-touch="1" data-phone="assets/video/film-pav-phone.mp4">
@@ -393,13 +393,13 @@ document.documentElement.className += " js";
       <span class="hub__extra" data-offer-extra="" data-i18n="hub.offerextra">ดูได้ในหน้าจองของรีสอร์ท ตามวันที่ที่คุณเลือก</span>
       <span class="hub__go"><span data-i18n="hub.offergo">ดูส่วนลด</span><svg aria-hidden="true"><use href="#i-arrow"></use></svg></span>
     </a></li>
-    <li><a class="hub__card" href="#stay" data-view-link="stay"><span class="hub__img"><img src="assets/web/room-vana-lake-bedroom-800.jpg" srcset="assets/web/room-vana-lake-bedroom-560.jpg 560w, assets/web/room-vana-lake-bedroom-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="600"></span><span class="hub__name" data-i18n="nav.rooms">ห้องพักของเรา</span><span class="hub__sub" data-i18n="hub.stay">สวีทสามวิว: บึงน้ำ สวน และทิวเขา</span></a></li>
-    <li><a class="hub__card" href="#facilities" data-view-link="facilities"><span class="hub__img"><img src="assets/web/aerial-estate-800.jpg" srcset="assets/web/aerial-estate-560.jpg 560w, assets/web/aerial-estate-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="450"></span><span class="hub__name" data-i18n="nav.facilities">สิ่งอำนวยความสะดวก</span><span class="hub__sub" data-i18n="hub.fac">รีสอร์ทจากมุมสูง สระว่ายน้ำ และบึงน้ำ</span></a></li>
-    <li><a class="hub__card" href="#dining" data-view-link="dining"><span class="hub__img"><img src="assets/web/dining-terrace-800.jpg" srcset="assets/web/dining-terrace-560.jpg 560w, assets/web/dining-terrace-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.dining">ห้องอาหาร</span><span class="hub__sub" data-i18n="hub.dining">ครัวผู้ใหญ่ลี ริมบึงน้ำ</span></a></li>
-    <li><a class="hub__card" href="#gather" data-view-link="events"><span class="hub__img"><img src="assets/web/amphitheatre-800.jpg" srcset="assets/web/amphitheatre-560.jpg 560w, assets/web/amphitheatre-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.gather">สัมมนา</span><span class="hub__sub" data-i18n="hub.events">อัฒจันทร์กลางแจ้ง และห้องสัมมนาใกล้รีสอร์ท</span></a></li>
-    <li><a class="hub__card" href="#roam" data-view-link="nearby"><span class="hub__img"><img src="assets/web/hero-poster-800.jpg" srcset="assets/web/hero-poster-560.jpg 560w, assets/web/hero-poster-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="450"></span><span class="hub__name" data-i18n="nav.roam">ที่เที่ยว</span><span class="hub__sub" data-i18n="hub.nearby">ไร่องุ่น สนามกอล์ฟ และอุทยานแห่งชาติ</span></a></li>
-    <li><a class="hub__card" href="#gallery" data-view-link="gallery"><span class="hub__img"><img src="assets/web/moonrise-800.jpg" srcset="assets/web/moonrise-560.jpg 560w, assets/web/moonrise-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.gallery">แกลเลอรี</span><span class="hub__sub" data-i18n="hub.gallery">ภาพบรรยากาศ และยามค่ำคืน</span></a></li>
-    <li><a class="hub__card" href="#visit" data-view-link="contact"><span class="hub__img"><img src="assets/web/building-sky-800.jpg" srcset="assets/web/building-sky-560.jpg 560w, assets/web/building-sky-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.contactfaq">ติดต่อและคำถาม</span><span class="hub__sub" data-i18n="hub.contact">การเดินทาง ช่องทางติดต่อ และคำถามที่พบบ่อย</span></a></li>
+    <li><a class="hub__card" href="#stay" data-view-link="stay"><span class="hub__img"><img data-pic="pic.room-vana-lake-bedroom" src="assets/web/room-vana-lake-bedroom-800.jpg" srcset="assets/web/room-vana-lake-bedroom-560.jpg 560w, assets/web/room-vana-lake-bedroom-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="600"></span><span class="hub__name" data-i18n="nav.rooms">ห้องพักของเรา</span><span class="hub__sub" data-i18n="hub.stay">สวีทสามวิว: บึงน้ำ สวน และทิวเขา</span></a></li>
+    <li><a class="hub__card" href="#facilities" data-view-link="facilities"><span class="hub__img"><img data-pic="pic.aerial-estate" src="assets/web/aerial-estate-800.jpg" srcset="assets/web/aerial-estate-560.jpg 560w, assets/web/aerial-estate-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="450"></span><span class="hub__name" data-i18n="nav.facilities">สิ่งอำนวยความสะดวก</span><span class="hub__sub" data-i18n="hub.fac">รีสอร์ทจากมุมสูง สระว่ายน้ำ และบึงน้ำ</span></a></li>
+    <li><a class="hub__card" href="#dining" data-view-link="dining"><span class="hub__img"><img data-pic="pic.dining-terrace" src="assets/web/dining-terrace-800.jpg" srcset="assets/web/dining-terrace-560.jpg 560w, assets/web/dining-terrace-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.dining">ห้องอาหาร</span><span class="hub__sub" data-i18n="hub.dining">ครัวผู้ใหญ่ลี ริมบึงน้ำ</span></a></li>
+    <li><a class="hub__card" href="#gather" data-view-link="events"><span class="hub__img"><img data-pic="pic.amphitheatre" src="assets/web/amphitheatre-800.jpg" srcset="assets/web/amphitheatre-560.jpg 560w, assets/web/amphitheatre-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.gather">สัมมนา</span><span class="hub__sub" data-i18n="hub.events">อัฒจันทร์กลางแจ้ง และห้องสัมมนาใกล้รีสอร์ท</span></a></li>
+    <li><a class="hub__card" href="#roam" data-view-link="nearby"><span class="hub__img"><img data-pic="pic.hero-poster" src="assets/web/hero-poster-800.jpg" srcset="assets/web/hero-poster-560.jpg 560w, assets/web/hero-poster-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="450"></span><span class="hub__name" data-i18n="nav.roam">ที่เที่ยว</span><span class="hub__sub" data-i18n="hub.nearby">ไร่องุ่น สนามกอล์ฟ และอุทยานแห่งชาติ</span></a></li>
+    <li><a class="hub__card" href="#gallery" data-view-link="gallery"><span class="hub__img"><img data-pic="pic.moonrise" src="assets/web/moonrise-800.jpg" srcset="assets/web/moonrise-560.jpg 560w, assets/web/moonrise-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.gallery">แกลเลอรี</span><span class="hub__sub" data-i18n="hub.gallery">ภาพบรรยากาศ และยามค่ำคืน</span></a></li>
+    <li><a class="hub__card" href="#visit" data-view-link="contact"><span class="hub__img"><img data-pic="pic.building-sky" src="assets/web/building-sky-800.jpg" srcset="assets/web/building-sky-560.jpg 560w, assets/web/building-sky-800.jpg 800w" sizes="(max-width: 47.99em) calc(50vw - 28px), 340px" alt="" loading="lazy" width="800" height="533"></span><span class="hub__name" data-i18n="nav.contactfaq">ติดต่อและคำถาม</span><span class="hub__sub" data-i18n="hub.contact">การเดินทาง ช่องทางติดต่อ และคำถามที่พบบ่อย</span></a></li>
   </ul>
 </section>
 
@@ -451,10 +451,10 @@ document.documentElement.className += " js";
     </ul>
     <div class="pair">
       <figure class="frame pair__a" data-mr="">
-        <img src="assets/web/aerial-estate-2400.jpg" srcset="assets/web/aerial-estate-800.jpg 800w, assets/web/aerial-estate-1600.jpg 1600w, assets/web/aerial-estate-2400.jpg 2400w, assets/web/aerial-estate-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="ภาพมุมสูงของภัทราวานา รีสอร์ท บึงน้ำ และขุนเขา" data-i18n-attr="alt:air.alt" loading="lazy" data-parallax="8">
+        <img data-pic="pic.aerial-estate" src="assets/web/aerial-estate-2400.jpg" srcset="assets/web/aerial-estate-800.jpg 800w, assets/web/aerial-estate-1600.jpg 1600w, assets/web/aerial-estate-2400.jpg 2400w, assets/web/aerial-estate-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="ภาพมุมสูงของภัทราวานา รีสอร์ท บึงน้ำ และขุนเขา" data-i18n-attr="alt:air.alt" loading="lazy" data-parallax="8">
       </figure>
       <figure class="frame pair__b" data-mr="">
-        <img src="assets/web/reception-2400.jpg" srcset="assets/web/reception-800.jpg 800w, assets/web/reception-1600.jpg 1600w, assets/web/reception-2400.jpg 2400w, assets/web/reception-4k.jpg 3840w" sizes="(max-width: 820px) 60vw, 22vw" alt="ล็อบบี้กรุไม้พร้อมเก้าอี้สาน" data-i18n-attr="alt:air.alt2" loading="lazy">
+        <img data-pic="pic.reception" src="assets/web/reception-2400.jpg" srcset="assets/web/reception-800.jpg 800w, assets/web/reception-1600.jpg 1600w, assets/web/reception-2400.jpg 2400w, assets/web/reception-4k.jpg 3840w" sizes="(max-width: 820px) 60vw, 22vw" alt="ล็อบบี้กรุไม้พร้อมเก้าอี้สาน" data-i18n-attr="alt:air.alt2" loading="lazy">
       </figure>
     </div>
   </div>
@@ -462,7 +462,7 @@ document.documentElement.className += " js";
 
 <!-- band: the great lawn -->
 <section class="band band--top" id="band-lawn" data-dark="" data-owner="facilities" aria-label="สนามหญ้าใหญ่" data-i18n-attr="aria-label:band.a.label">
-  <img class="band__img" src="assets/web/lawn-wings-2400.jpg" srcset="assets/web/lawn-wings-800.jpg 800w, assets/web/lawn-wings-1600.jpg 1600w, assets/web/lawn-wings-2400.jpg 2400w, assets/web/lawn-wings-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy" data-band="">
+  <img data-pic="pic.lawn-wings" class="band__img" src="assets/web/lawn-wings-2400.jpg" srcset="assets/web/lawn-wings-800.jpg 800w, assets/web/lawn-wings-1600.jpg 1600w, assets/web/lawn-wings-2400.jpg 2400w, assets/web/lawn-wings-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy" data-band="">
   <div class="band__scrim" aria-hidden="true"></div>
   <div class="band__inner">
     <p class="band__line st-lines" data-i18n="band.a">เช้าที่ไม่ต้องรีบ <em class="it">สนามหญ้ากว้าง</em> และไม่มีที่ไหนที่ต้องไป</p>
@@ -486,7 +486,7 @@ document.documentElement.className += " js";
         <p class="map__hint" data-i18n="fac.hint">รวมแปดจุดสำคัญไว้ในภาพถ่ายมุมสูงภาพเดียว เลือกสิ่งอำนวยความสะดวกด้านล่างเพื่อดูตำแหน่งบนแผนที่</p>
       </div>
       <div class="map__stage" id="mapStage">
-        <img class="map__img" src="assets/web/aerial-map-edited-2400.jpg" srcset="assets/web/aerial-map-edited-800.jpg 800w, assets/web/aerial-map-edited-1600.jpg 1600w, assets/web/aerial-map-edited-2400.jpg 2400w, assets/web/aerial-map-edited-4k.jpg 3582w" sizes="100vw" alt="ภาพโดรนของภัทราวานาทั้งผืน อาคารห้องสวีท อัฒจันทร์ บึงน้ำ สระว่ายน้ำ และครัวผู้ใหญ่ลี" data-i18n-attr="alt:fac.mapalt" loading="lazy" decoding="async" width="2000" height="1122">
+        <img data-pic="pic.aerial-map-edited" class="map__img" src="assets/web/aerial-map-edited-2400.jpg" srcset="assets/web/aerial-map-edited-800.jpg 800w, assets/web/aerial-map-edited-1600.jpg 1600w, assets/web/aerial-map-edited-2400.jpg 2400w, assets/web/aerial-map-edited-4k.jpg 3582w" sizes="100vw" alt="ภาพโดรนของภัทราวานาทั้งผืน อาคารห้องสวีท อัฒจันทร์ บึงน้ำ สระว่ายน้ำ และครัวผู้ใหญ่ลี" data-i18n-attr="alt:fac.mapalt" loading="lazy" decoding="async" width="2000" height="1122">
         <button class="hot" style="--x:21%;--y:34%" data-hot="suites" data-go="#stay" data-img="assets/web/vana-bedroom-1600.jpg" aria-label="อาคารห้องสวีท" data-i18n-attr="aria-label:fac.h1.t"><span class="hot__dot"><span class="hot__n num">01</span></span><span class="hot__label" data-i18n="fac.h1.t">อาคารห้องสวีท</span></button>
         <button class="hot" style="--x:28.5%;--y:47%" data-hot="amphi" data-go="#gather" data-img="assets/web/amphitheatre-1600.jpg" aria-label="อัฒจันทร์กลางแจ้ง" data-i18n-attr="aria-label:fac.h2.t"><span class="hot__dot"><span class="hot__n num">02</span></span><span class="hot__label" data-i18n="fac.h2.t">อัฒจันทร์กลางแจ้ง</span></button>
         <button class="hot" style="--x:37%;--y:58%" data-hot="lake" data-go="#gallery" data-img="assets/web/lake-dusk-1600.jpg" aria-label="บึงน้ำและป้ายรีสอร์ท" data-i18n-attr="aria-label:fac.h3.t"><span class="hot__dot"><span class="hot__n num">03</span></span><span class="hot__label" data-i18n="fac.h3.t">บึงน้ำและป้ายรีสอร์ท</span></button>
@@ -515,7 +515,7 @@ document.documentElement.className += " js";
       </div>
       <!-- up to 1000 px wide: the chosen place, in the page under the map (never over it), with an index of every place -->
       <div class="pcard js-only" id="placeCard" aria-labelledby="pcardTitle" role="group">
-        <figure class="pcard__media"><img id="pcardImg" src="assets/web/vana-bedroom-1600.jpg" alt="" width="1600" height="1067" loading="lazy"></figure>
+        <figure class="pcard__media"><img data-pic="pic.vana-bedroom" id="pcardImg" src="assets/web/vana-bedroom-1600.jpg" alt="" width="1600" height="1067" loading="lazy"></figure>
         <div class="pcard__body">
           <div class="pcard__top">
             <p class="pcard__step num" id="pcardStep" aria-live="polite"></p>
@@ -546,43 +546,43 @@ document.documentElement.className += " js";
     <ul class="fac" role="list" data-fac="">
       <li class="fac__item" id="fac-pool" data-hot="pool" data-rv="">
         <span class="fac__n num">06</span>
-        <figure class="fac__media"><img src="assets/web/pool-umbrellas-2400.jpg" srcset="assets/web/pool-umbrellas-800.jpg 800w, assets/web/pool-umbrellas-1600.jpg 1600w, assets/web/pool-umbrellas-2400.jpg 2400w, assets/web/pool-umbrellas-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ลานริมสระพร้อมร่มสีส้ม" data-i18n-attr="alt:fac.f1.alt" loading="lazy"></figure>
+        <figure class="fac__media"><img data-pic="pic.pool-umbrellas" src="assets/web/pool-umbrellas-2400.jpg" srcset="assets/web/pool-umbrellas-800.jpg 800w, assets/web/pool-umbrellas-1600.jpg 1600w, assets/web/pool-umbrellas-2400.jpg 2400w, assets/web/pool-umbrellas-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ลานริมสระพร้อมร่มสีส้ม" data-i18n-attr="alt:fac.f1.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f1.t">สระว่ายน้ำและฟิตเนส</h3>
         <p data-i18n="fac.f1.d">สระว่ายน้ำกลางแจ้งหันหน้าสู่ทิวเขา สระลากูนขอบหินสำหรับบ่ายสบาย ๆ และห้องฟิตเนส</p>
       </li>
       <li class="fac__item" id="fac-lake" data-hot="lake" data-rv="">
         <span class="fac__n num">03</span>
-        <figure class="fac__media"><img src="assets/web/lake-dusk-2400.jpg" srcset="assets/web/lake-dusk-800.jpg 800w, assets/web/lake-dusk-1600.jpg 1600w, assets/web/lake-dusk-2400.jpg 2400w, assets/web/lake-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="รีสอร์ทสะท้อนบนผิวน้ำยามโพล้เพล้" data-i18n-attr="alt:fac.f2.alt" loading="lazy"></figure>
+        <figure class="fac__media"><img data-pic="pic.lake-dusk" src="assets/web/lake-dusk-2400.jpg" srcset="assets/web/lake-dusk-800.jpg 800w, assets/web/lake-dusk-1600.jpg 1600w, assets/web/lake-dusk-2400.jpg 2400w, assets/web/lake-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="รีสอร์ทสะท้อนบนผิวน้ำยามโพล้เพล้" data-i18n-attr="alt:fac.f2.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f2.t">บึงน้ำ</h3>
         <p data-i18n="fac.f2.d">รีสอร์ทสร้างล้อมรอบผืนน้ำ ริมฝั่งมีป้ายชื่อรีสอร์ท และเงาสะท้อนบนผิวน้ำที่คุ้มค่ากับการตื่นเช้า</p>
       </li>
       <li class="fac__item" id="fac-amphi" data-hot="amphi" data-rv="">
         <span class="fac__n num">02</span>
-        <figure class="fac__media"><img src="assets/web/amphitheatre-2400.jpg" srcset="assets/web/amphitheatre-800.jpg 800w, assets/web/amphitheatre-1600.jpg 1600w, assets/web/amphitheatre-2400.jpg 2400w, assets/web/amphitheatre-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ลานอัฒจันทร์กลางแจ้ง" data-i18n-attr="alt:fac.f3.alt" loading="lazy"></figure>
+        <figure class="fac__media"><img data-pic="pic.amphitheatre" src="assets/web/amphitheatre-2400.jpg" srcset="assets/web/amphitheatre-800.jpg 800w, assets/web/amphitheatre-1600.jpg 1600w, assets/web/amphitheatre-2400.jpg 2400w, assets/web/amphitheatre-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ลานอัฒจันทร์กลางแจ้ง" data-i18n-attr="alt:fac.f3.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f3.t">อัฒจันทร์กลางแจ้ง</h3>
         <p data-i18n="fac.f3.d">สนามหญ้าลดหลั่นเป็นขั้นเหนือบึงน้ำ แจ้งทีมงานได้เลยว่าต้องการจัดงานแบบไหน แล้วทีมงานจะแนะนำการจัดพื้นที่ให้</p>
       </li>
       <li class="fac__item" id="fac-hall" data-hot="" data-rv="">
         <span class="fac__n fac__n--note" data-i18n="fac.offmap1">นอกพื้นที่รีสอร์ท อยู่ใกล้ ๆ</span>
-        <figure class="fac__media is-crop"><img src="assets/web/hall-classroom-2400.jpg" srcset="assets/web/hall-classroom-800.jpg 800w, assets/web/hall-classroom-1600.jpg 1600w, assets/web/hall-classroom-2400.jpg 2400w, assets/web/hall-classroom-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ห้องสัมมนาจัดแบบคลาสรูม" data-i18n-attr="alt:fac.f4.alt" loading="lazy"></figure>
+        <figure class="fac__media is-crop"><img data-pic="pic.hall-classroom" src="assets/web/hall-classroom-2400.jpg" srcset="assets/web/hall-classroom-800.jpg 800w, assets/web/hall-classroom-1600.jpg 1600w, assets/web/hall-classroom-2400.jpg 2400w, assets/web/hall-classroom-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ห้องสัมมนาจัดแบบคลาสรูม" data-i18n-attr="alt:fac.f4.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f4.t">ห้องสัมมนา</h3>
         <p data-fact="hall.fac">ภัทรา ฮอลล์ ขนาด 280 ตร.ม. ตั้งอยู่นอกรีสอร์ทในระยะใกล้ แบ่งเป็นสองห้องได้ มีเวทีทั้งสองฝั่ง ระบบภาพและเสียง และห้องแต่งตัวส่วนตัว เมื่อใช้เต็มห้องรองรับได้สูงสุด 220 ท่านแบบเธียเตอร์</p>
       </li>
       <li class="fac__item" id="fac-dining" data-hot="kitchen" data-rv="">
         <span class="fac__n num">05</span>
-        <figure class="fac__media"><img src="assets/web/dining-terrace-2400.jpg" srcset="assets/web/dining-terrace-800.jpg 800w, assets/web/dining-terrace-1600.jpg 1600w, assets/web/dining-terrace-2400.jpg 2400w, assets/web/dining-terrace-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ลานรับประทานอาหารริมบึง" data-i18n-attr="alt:fac.f5.alt" loading="lazy"></figure>
+        <figure class="fac__media"><img data-pic="pic.dining-terrace" src="assets/web/dining-terrace-2400.jpg" srcset="assets/web/dining-terrace-800.jpg 800w, assets/web/dining-terrace-1600.jpg 1600w, assets/web/dining-terrace-2400.jpg 2400w, assets/web/dining-terrace-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ลานรับประทานอาหารริมบึง" data-i18n-attr="alt:fac.f5.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f5.t">ครัวผู้ใหญ่ลีและระเบียงไม้</h3>
         <p data-fact="dining.fac">อาหารไทย รองรับได้ถึง 150 ที่นั่งในร่มและบนระเบียงไม้ อาหารเช้าทุกวันตั้งแต่ 7:00 น.</p>
       </li>
       <li class="fac__item" id="fac-loop" data-hot="loop" data-rv="">
         <span class="fac__n num">07</span>
-        <figure class="fac__media"><img src="assets/web/lawn-wings-2400.jpg" srcset="assets/web/lawn-wings-800.jpg 800w, assets/web/lawn-wings-1600.jpg 1600w, assets/web/lawn-wings-2400.jpg 2400w, assets/web/lawn-wings-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="สนามหญ้าและต้นปาล์มหน้าอาคารห้องพัก" data-i18n-attr="alt:fac.f6.alt" loading="lazy"></figure>
+        <figure class="fac__media"><img data-pic="pic.lawn-wings" src="assets/web/lawn-wings-2400.jpg" srcset="assets/web/lawn-wings-800.jpg 800w, assets/web/lawn-wings-1600.jpg 1600w, assets/web/lawn-wings-2400.jpg 2400w, assets/web/lawn-wings-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="สนามหญ้าและต้นปาล์มหน้าอาคารห้องพัก" data-i18n-attr="alt:fac.f6.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f6.t">สวนและทางเดินเล่น</h3>
         <p data-i18n="fac.f6.d">สนามหญ้า ต้นปาล์ม และสวนหิน เชื่อมกันด้วยทางเดินสำหรับเดินเล่นยามเย็น</p>
       </li>
       <li class="fac__item" id="fac-suites" data-hot="suites" data-rv="">
         <span class="fac__n num">01</span>
-        <figure class="fac__media"><img src="assets/web/vana-living-2400.jpg" srcset="assets/web/vana-living-800.jpg 800w, assets/web/vana-living-1600.jpg 1600w, assets/web/vana-living-2400.jpg 2400w, assets/web/vana-living-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ห้องนั่งเล่นของสวีทเปิดออกสู่ระเบียง" data-i18n-attr="alt:fac.f8.alt" loading="lazy"></figure>
+        <figure class="fac__media"><img data-pic="pic.vana-living" src="assets/web/vana-living-2400.jpg" srcset="assets/web/vana-living-800.jpg 800w, assets/web/vana-living-1600.jpg 1600w, assets/web/vana-living-2400.jpg 2400w, assets/web/vana-living-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ห้องนั่งเล่นของสวีทเปิดออกสู่ระเบียง" data-i18n-attr="alt:fac.f8.alt" loading="lazy"></figure>
         <h3 data-i18n="fac.f8.t">ห้องสวีทและห้องพัก 64 ห้อง</h3>
         <p data-i18n="fac.f8.d">ทุกสวีทมีระเบียง เคาน์เตอร์เตรียมอาหาร และทีวี 50 นิ้ว วานา สวีทและภัทรา สวีทมีห้องนั่งเล่นแยก ส่วนภัทรา สวีทและภัทรา จูเนียร์ สวีทมีอ่างอาบน้ำจากุซซี่</p>
       </li>
@@ -640,25 +640,25 @@ document.documentElement.className += " js";
               <!-- the photographs of this room, one set per view: small screens swipe them here, wide screens show them in the stage -->
               <div class="rg">
                 <div class="rg__set" data-view="lake" data-room="3446300000000000005">
-                  <button class="rg__shot" data-full="assets/web/room-vana-lake-bedroom-1600.jpg" data-cap="bedroom"><img src="assets/web/room-vana-lake-bedroom-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-lake-balcony-1600.jpg" data-cap="balcony"><img src="assets/web/room-vana-lake-balcony-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-lake-living-1600.jpg" data-cap="living"><img src="assets/web/room-vana-lake-living-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-lake-kitchenette-1600.jpg" data-cap="kitchenette"><img src="assets/web/room-vana-lake-kitchenette-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-lake-bathroom-1600.jpg" data-cap="bathroom"><img src="assets/web/room-vana-lake-bathroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-lake-bedroom-1600.jpg" data-cap="bedroom"><img data-pic="pic.room-vana-lake-bedroom" src="assets/web/room-vana-lake-bedroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-lake-balcony-1600.jpg" data-cap="balcony"><img data-pic="pic.room-vana-lake-balcony" src="assets/web/room-vana-lake-balcony-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-lake-living-1600.jpg" data-cap="living"><img data-pic="pic.room-vana-lake-living" src="assets/web/room-vana-lake-living-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-lake-kitchenette-1600.jpg" data-cap="kitchenette"><img data-pic="pic.room-vana-lake-kitchenette" src="assets/web/room-vana-lake-kitchenette-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-lake-bathroom-1600.jpg" data-cap="bathroom"><img data-pic="pic.room-vana-lake-bathroom" src="assets/web/room-vana-lake-bathroom-800.jpg" alt="" loading="lazy"></button>
                 </div>
                 <div class="rg__set" data-view="garden" data-room="3446300000000000004" hidden="">
-                  <button class="rg__shot" data-full="assets/web/room-vana-garden-bedroom-1600.jpg" data-cap="bedroom"><img src="assets/web/room-vana-garden-bedroom-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-garden-balcony-1600.jpg" data-cap="balcony"><img src="assets/web/room-vana-garden-balcony-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-garden-living-1600.jpg" data-cap="living"><img src="assets/web/room-vana-garden-living-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-garden-kitchenette-1600.jpg" data-cap="kitchenette"><img src="assets/web/room-vana-garden-kitchenette-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-garden-bathroom-1600.jpg" data-cap="bathroom"><img src="assets/web/room-vana-garden-bathroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-garden-bedroom-1600.jpg" data-cap="bedroom"><img data-pic="pic.room-vana-garden-bedroom" src="assets/web/room-vana-garden-bedroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-garden-balcony-1600.jpg" data-cap="balcony"><img data-pic="pic.room-vana-garden-balcony" src="assets/web/room-vana-garden-balcony-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-garden-living-1600.jpg" data-cap="living"><img data-pic="pic.room-vana-garden-living" src="assets/web/room-vana-garden-living-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-garden-kitchenette-1600.jpg" data-cap="kitchenette"><img data-pic="pic.room-vana-garden-kitchenette" src="assets/web/room-vana-garden-kitchenette-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-garden-bathroom-1600.jpg" data-cap="bathroom"><img data-pic="pic.room-vana-garden-bathroom" src="assets/web/room-vana-garden-bathroom-800.jpg" alt="" loading="lazy"></button>
                 </div>
                 <div class="rg__set" data-view="country" data-room="3446300000000000003" hidden="">
-                  <button class="rg__shot" data-full="assets/web/room-vana-country-bedroom-1600.jpg" data-cap="bedroom"><img src="assets/web/room-vana-country-bedroom-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-country-balcony-1600.jpg" data-cap="balcony"><img src="assets/web/room-vana-country-balcony-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-country-living-1600.jpg" data-cap="living"><img src="assets/web/room-vana-country-living-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-country-kitchenette-1600.jpg" data-cap="kitchenette"><img src="assets/web/room-vana-country-kitchenette-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-vana-country-bathroom-1600.jpg" data-cap="bathroom"><img src="assets/web/room-vana-country-bathroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-country-bedroom-1600.jpg" data-cap="bedroom"><img data-pic="pic.room-vana-country-bedroom" src="assets/web/room-vana-country-bedroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-country-balcony-1600.jpg" data-cap="balcony"><img data-pic="pic.room-vana-country-balcony" src="assets/web/room-vana-country-balcony-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-country-living-1600.jpg" data-cap="living"><img data-pic="pic.room-vana-country-living" src="assets/web/room-vana-country-living-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-country-kitchenette-1600.jpg" data-cap="kitchenette"><img data-pic="pic.room-vana-country-kitchenette" src="assets/web/room-vana-country-kitchenette-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-vana-country-bathroom-1600.jpg" data-cap="bathroom"><img data-pic="pic.room-vana-country-bathroom" src="assets/web/room-vana-country-bathroom-800.jpg" alt="" loading="lazy"></button>
                 </div>
               </div>
               <!-- phones: the photographs one at a time, with the count and buttons beside the swipe -->
@@ -694,18 +694,18 @@ document.documentElement.className += " js";
               <!-- the photographs of this room, one set per view: small screens swipe them here, wide screens show them in the stage -->
               <div class="rg">
                 <div class="rg__set" data-view="lake" data-room="3446300000000000008">
-                  <button class="rg__shot" data-full="assets/web/room-patra-lake-bedroom-1600.jpg" data-cap="bedroom"><img src="assets/web/room-patra-lake-bedroom-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-lake-balcony-1600.jpg" data-cap="balcony"><img src="assets/web/room-patra-lake-balcony-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-lake-jacuzzi-1600.jpg" data-cap="jacuzzi"><img src="assets/web/room-patra-lake-jacuzzi-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-lake-living-1600.jpg" data-cap="living"><img src="assets/web/room-patra-lake-living-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-lake-kitchenette-1600.jpg" data-cap="kitchenette"><img src="assets/web/room-patra-lake-kitchenette-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-lake-bedroom-1600.jpg" data-cap="bedroom"><img data-pic="pic.room-patra-lake-bedroom" src="assets/web/room-patra-lake-bedroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-lake-balcony-1600.jpg" data-cap="balcony"><img data-pic="pic.room-patra-lake-balcony" src="assets/web/room-patra-lake-balcony-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-lake-jacuzzi-1600.jpg" data-cap="jacuzzi"><img data-pic="pic.room-patra-lake-jacuzzi" src="assets/web/room-patra-lake-jacuzzi-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-lake-living-1600.jpg" data-cap="living"><img data-pic="pic.room-patra-lake-living" src="assets/web/room-patra-lake-living-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-lake-kitchenette-1600.jpg" data-cap="kitchenette"><img data-pic="pic.room-patra-lake-kitchenette" src="assets/web/room-patra-lake-kitchenette-800.jpg" alt="" loading="lazy"></button>
                 </div>
                 <div class="rg__set" data-view="garden" data-room="3446300000000000007" hidden="">
-                  <button class="rg__shot" data-full="assets/web/room-patra-garden-bedroom-1600.jpg" data-cap="bedroom"><img src="assets/web/room-patra-garden-bedroom-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-garden-balcony-1600.jpg" data-cap="balcony"><img src="assets/web/room-patra-garden-balcony-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-garden-jacuzzi-1600.jpg" data-cap="jacuzzi"><img src="assets/web/room-patra-garden-jacuzzi-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-garden-living-1600.jpg" data-cap="living"><img src="assets/web/room-patra-garden-living-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-garden-kitchenette-1600.jpg" data-cap="kitchenette"><img src="assets/web/room-patra-garden-kitchenette-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-garden-bedroom-1600.jpg" data-cap="bedroom"><img data-pic="pic.room-patra-garden-bedroom" src="assets/web/room-patra-garden-bedroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-garden-balcony-1600.jpg" data-cap="balcony"><img data-pic="pic.room-patra-garden-balcony" src="assets/web/room-patra-garden-balcony-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-garden-jacuzzi-1600.jpg" data-cap="jacuzzi"><img data-pic="pic.room-patra-garden-jacuzzi" src="assets/web/room-patra-garden-jacuzzi-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-garden-living-1600.jpg" data-cap="living"><img data-pic="pic.room-patra-garden-living" src="assets/web/room-patra-garden-living-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-garden-kitchenette-1600.jpg" data-cap="kitchenette"><img data-pic="pic.room-patra-garden-kitchenette" src="assets/web/room-patra-garden-kitchenette-800.jpg" alt="" loading="lazy"></button>
                 </div>
               </div>
               <!-- phones: the photographs one at a time, with the count and buttons beside the swipe -->
@@ -737,11 +737,11 @@ document.documentElement.className += " js";
               <!-- the photographs of this room, one set per view: small screens swipe them here, wide screens show them in the stage -->
               <div class="rg">
                 <div class="rg__set" data-view="garden" data-room="3446300000000000006">
-                  <button class="rg__shot" data-full="assets/web/room-patra-junior-bedroom-1600.jpg" data-cap="bedroom"><img src="assets/web/room-patra-junior-bedroom-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-junior-balcony-1600.jpg" data-cap="balcony"><img src="assets/web/room-patra-junior-balcony-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-junior-twin-1600.jpg" data-cap="twin"><img src="assets/web/room-patra-junior-twin-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-junior-jacuzzi-1600.jpg" data-cap="jacuzzi"><img src="assets/web/room-patra-junior-jacuzzi-800.jpg" alt="" loading="lazy"></button>
-                  <button class="rg__shot" data-full="assets/web/room-patra-junior-kitchenette-1600.jpg" data-cap="kitchenette"><img src="assets/web/room-patra-junior-kitchenette-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-junior-bedroom-1600.jpg" data-cap="bedroom"><img data-pic="pic.room-patra-junior-bedroom" src="assets/web/room-patra-junior-bedroom-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-junior-balcony-1600.jpg" data-cap="balcony"><img data-pic="pic.room-patra-junior-balcony" src="assets/web/room-patra-junior-balcony-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-junior-twin-1600.jpg" data-cap="twin"><img data-pic="pic.room-patra-junior-twin" src="assets/web/room-patra-junior-twin-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-junior-jacuzzi-1600.jpg" data-cap="jacuzzi"><img data-pic="pic.room-patra-junior-jacuzzi" src="assets/web/room-patra-junior-jacuzzi-800.jpg" alt="" loading="lazy"></button>
+                  <button class="rg__shot" data-full="assets/web/room-patra-junior-kitchenette-1600.jpg" data-cap="kitchenette"><img data-pic="pic.room-patra-junior-kitchenette" src="assets/web/room-patra-junior-kitchenette-800.jpg" alt="" loading="lazy"></button>
                 </div>
               </div>
               <!-- phones: the photographs one at a time, with the count and buttons beside the swipe -->
@@ -757,7 +757,7 @@ document.documentElement.className += " js";
     <!-- the gallery of the open room in its chosen view -->
     <figure class="stay-stage js-only" id="stayStage" aria-label="ภาพถ่ายของห้องที่เลือก" data-i18n-attr="aria-label:stay.stagelabel">
       <div class="stay-stage__view" id="stayView">
-        <img id="stayImg" src="assets/web/room-vana-lake-bedroom-1600.jpg" alt="" loading="lazy"><img id="stayImgNext" src="" alt="">
+        <img data-pic="pic.room-vana-lake-bedroom" id="stayImg" src="assets/web/room-vana-lake-bedroom-1600.jpg" alt="" loading="lazy"><img id="stayImgNext" src="" alt="">
         <button class="stay-stage__open" type="button" id="stayOpen" aria-label="ดูภาพนี้แบบเต็มจอ" data-i18n-attr="aria-label:stay.open"></button>
         <button class="iconbtn iconbtn--glass stay-stage__nav stay-stage__nav--prev" id="stayPrev" aria-label="ภาพก่อนหน้า" data-i18n-attr="aria-label:lb.prev"><svg aria-hidden="true"><use href="#i-back"></use></svg></button>
         <button class="iconbtn iconbtn--glass stay-stage__nav stay-stage__nav--next" id="stayNext" aria-label="ภาพถัดไป" data-i18n-attr="aria-label:lb.next"><svg aria-hidden="true"><use href="#i-arrow"></use></svg></button>
@@ -855,7 +855,7 @@ document.documentElement.className += " js";
     <p class="petsec__note" data-fact="pet.booknote">ห้องว่างทั่วไปยังไม่ใช่การยืนยันห้องสำหรับผู้ที่มากับสัตว์เลี้ยง</p>
   </div>
   <figure class="frame petsec__img" data-mr="">
-    <img src="assets/web/pet-corgi-1168.jpg" srcset="assets/web/pet-corgi-800.jpg 800w, assets/web/pet-corgi-1168.jpg 1168w" sizes="(max-width: 1000px) 100vw, 46vw" width="1168" height="876" alt="สุนัขคอร์กี้นั่งบนโซฟาสีครีมกับหมอนอิงสีเขียวเข้ม" data-i18n-attr="alt:pet.alt" loading="lazy">
+    <img data-pic="pic.pet-corgi" src="assets/web/pet-corgi-1168.jpg" srcset="assets/web/pet-corgi-800.jpg 800w, assets/web/pet-corgi-1168.jpg 1168w" sizes="(max-width: 1000px) 100vw, 46vw" width="1168" height="876" alt="สุนัขคอร์กี้นั่งบนโซฟาสีครีมกับหมอนอิงสีเขียวเข้ม" data-i18n-attr="alt:pet.alt" loading="lazy">
   </figure>
   <!-- what a pet-friendly room has ready, from the resort's own photographs (13 November 2026); no captions on photos -->
   <div class="petsec__kit" aria-labelledby="petKitK">
@@ -863,8 +863,8 @@ document.documentElement.className += " js";
       <h3 class="petsec__kitk" id="petKitK" data-i18n="pet.kitk">ของใช้สำหรับสัตว์เลี้ยง</h3>
       <p data-i18n="pet.kit">จัดเตรียมไว้ในห้องที่รับสัตว์เลี้ยง ทั้งที่นอนและแผ่นรอง ชามอาหารและชามน้ำ ถุงเก็บมูล และถังขยะ</p>
     </div>
-    <button class="frame petsec__kitimg petsec__kitimg--room" type="button" data-full="assets/web/pet-room-1108.jpg" aria-label="Open full size: A suite living room set up for a pet" data-rv=""><img src="assets/web/pet-room-1000.jpg" srcset="assets/web/pet-room-640.jpg 640w, assets/web/pet-room-1000.jpg 1000w" sizes="(max-width: 1000px) 50vw, 20rem" width="1000" height="1334" alt="ห้องนั่งเล่นของสวีทที่จัดไว้สำหรับสัตว์เลี้ยง มีที่นอนสีเขียว แผ่นรอง และชามคู่อยู่ข้างทีวี ถัดไปเป็นเคาน์เตอร์เตรียมอาหาร" data-i18n-attr="alt:pet.kitalt1" loading="lazy" decoding="async"></button>
-    <button class="frame petsec__kitimg" type="button" data-full="assets/web/pet-kit-1080.jpg" aria-label="Open full size: The pet set close up" data-rv=""><img src="assets/web/pet-kit-1000.jpg" srcset="assets/web/pet-kit-640.jpg 640w, assets/web/pet-kit-1000.jpg 1000w" sizes="(max-width: 1000px) 50vw, 20rem" width="1000" height="1250" alt="ของใช้สำหรับสัตว์เลี้ยงในระยะใกล้ ที่นอนสีเขียว แผ่นรองลายควิลต์สองผืน ชามสแตนเลสคู่บนฐาน ที่ใส่ถุงเก็บมูล และถังขยะ" data-i18n-attr="alt:pet.kitalt2" loading="lazy" decoding="async"></button>
+    <button class="frame petsec__kitimg petsec__kitimg--room" type="button" data-full="assets/web/pet-room-1108.jpg" aria-label="Open full size: A suite living room set up for a pet" data-rv=""><img data-pic="pic.pet-room" src="assets/web/pet-room-1000.jpg" srcset="assets/web/pet-room-640.jpg 640w, assets/web/pet-room-1000.jpg 1000w" sizes="(max-width: 1000px) 50vw, 20rem" width="1000" height="1334" alt="ห้องนั่งเล่นของสวีทที่จัดไว้สำหรับสัตว์เลี้ยง มีที่นอนสีเขียว แผ่นรอง และชามคู่อยู่ข้างทีวี ถัดไปเป็นเคาน์เตอร์เตรียมอาหาร" data-i18n-attr="alt:pet.kitalt1" loading="lazy" decoding="async"></button>
+    <button class="frame petsec__kitimg" type="button" data-full="assets/web/pet-kit-1080.jpg" aria-label="Open full size: The pet set close up" data-rv=""><img data-pic="pic.pet-kit" src="assets/web/pet-kit-1000.jpg" srcset="assets/web/pet-kit-640.jpg 640w, assets/web/pet-kit-1000.jpg 1000w" sizes="(max-width: 1000px) 50vw, 20rem" width="1000" height="1250" alt="ของใช้สำหรับสัตว์เลี้ยงในระยะใกล้ ที่นอนสีเขียว แผ่นรองลายควิลต์สองผืน ชามสแตนเลสคู่บนฐาน ที่ใส่ถุงเก็บมูล และถังขยะ" data-i18n-attr="alt:pet.kitalt2" loading="lazy" decoding="async"></button>
   </div>
   <ol class="petsec__points" role="list" data-more="pet" data-more-what="more.w.pet">
     <li data-rv=""><span class="petsec__n num" aria-hidden="true">01</span><h3 data-i18n="pet.p1">อาคารที่รับสัตว์เลี้ยง 1 อาคาร</h3><p data-fact="pet.point1">รับสัตว์เลี้ยงเฉพาะในอาคารที่กำหนดหนึ่งอาคาร ไม่ใช่ทุกห้องสวีท</p></li>
@@ -925,7 +925,7 @@ document.documentElement.className += " js";
     <p class="statement st-lines" data-i18n="dining.lede" data-more="dining" data-more-what="more.w.dining">สถาปัตยกรรมไทยประยุกต์ ทั้งในร่มและกลางแจ้ง ให้มื้อเย็นของคุณ<em class="it">มีเสียงน้ำคลอเบา ๆ</em></p>
     <div class="dining">
       <figure class="frame dining__img" data-mr="">
-        <img src="assets/web/dining-terrace-2400.jpg" srcset="assets/web/dining-terrace-800.jpg 800w, assets/web/dining-terrace-1600.jpg 1600w, assets/web/dining-terrace-2400.jpg 2400w, assets/web/dining-terrace-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="โต๊ะอาหารเช้าบนระเบียงริมบึง" data-i18n-attr="alt:dining.alt" loading="lazy">
+        <img data-pic="pic.dining-terrace" src="assets/web/dining-terrace-2400.jpg" srcset="assets/web/dining-terrace-800.jpg 800w, assets/web/dining-terrace-1600.jpg 1600w, assets/web/dining-terrace-2400.jpg 2400w, assets/web/dining-terrace-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="โต๊ะอาหารเช้าบนระเบียงริมบึง" data-i18n-attr="alt:dining.alt" loading="lazy">
       </figure>
       <div class="dining__card" data-rv="">
         <p class="status" id="diningStatus" data-state=""><i aria-hidden="true"></i><span id="diningStatusText"></span></p>
@@ -939,7 +939,7 @@ document.documentElement.className += " js";
         <p class="card__small js-only" data-i18n="dining.statusnote">สถานะนี้อิงตามเวลาเปิดทำการของร้าน ตามเวลาที่รีสอร์ท แนะนำให้โทรยืนยันอีกครั้งในวันที่มา</p>
       </div>
       <figure class="frame dining__img2" data-mr="">
-        <img src="assets/web/dining-hall-2400.jpg" srcset="assets/web/dining-hall-800.jpg 800w, assets/web/dining-hall-1600.jpg 1600w, assets/web/dining-hall-2400.jpg 2400w, assets/web/dining-hall-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ภายในครัวผู้ใหญ่ลี โต๊ะไม้บนพื้นกระเบื้องสีแดง เคาน์เตอร์กับกระดานเมนู และหน้าต่างบานสูงที่มองออกไปยังสวน" data-i18n-attr="alt:dining.alt2" loading="lazy">
+        <img data-pic="pic.dining-hall" src="assets/web/dining-hall-2400.jpg" srcset="assets/web/dining-hall-800.jpg 800w, assets/web/dining-hall-1600.jpg 1600w, assets/web/dining-hall-2400.jpg 2400w, assets/web/dining-hall-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ภายในครัวผู้ใหญ่ลี โต๊ะไม้บนพื้นกระเบื้องสีแดง เคาน์เตอร์กับกระดานเมนู และหน้าต่างบานสูงที่มองออกไปยังสวน" data-i18n-attr="alt:dining.alt2" loading="lazy">
       </figure>
     </div>
   </div>
@@ -947,7 +947,7 @@ document.documentElement.className += " js";
 
 <!-- band: the pool -->
 <section class="band band--short" id="band-pool" data-dark="" data-owner="gallery" aria-label="ลานริมสระ" data-i18n-attr="aria-label:band.b.label">
-  <img class="band__img" src="assets/web/pool-umbrellas-2400.jpg" srcset="assets/web/pool-umbrellas-800.jpg 800w, assets/web/pool-umbrellas-1600.jpg 1600w, assets/web/pool-umbrellas-2400.jpg 2400w, assets/web/pool-umbrellas-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy" data-band="">
+  <img data-pic="pic.pool-umbrellas" class="band__img" src="assets/web/pool-umbrellas-2400.jpg" srcset="assets/web/pool-umbrellas-800.jpg 800w, assets/web/pool-umbrellas-1600.jpg 1600w, assets/web/pool-umbrellas-2400.jpg 2400w, assets/web/pool-umbrellas-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy" data-band="">
   <div class="band__scrim" aria-hidden="true"></div>
   <div class="band__inner">
     <p class="band__line st-lines" data-i18n="band.b">บ่ายสบาย ๆ <em class="it">ริมสระน้ำ</em></p>
@@ -966,7 +966,7 @@ document.documentElement.className += " js";
   </div>
   <div class="chapter__body">
     <figure class="frame frame--wide" data-mr="">
-      <img src="assets/web/amphitheatre-2400.jpg" srcset="assets/web/amphitheatre-800.jpg 800w, assets/web/amphitheatre-1600.jpg 1600w, assets/web/amphitheatre-2400.jpg 2400w, assets/web/amphitheatre-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="ลานอัฒจันทร์กลางแจ้งใต้ท้องฟ้าครึ้ม" data-i18n-attr="alt:gather.alt" loading="lazy" data-parallax="8">
+      <img data-pic="pic.amphitheatre" src="assets/web/amphitheatre-2400.jpg" srcset="assets/web/amphitheatre-800.jpg 800w, assets/web/amphitheatre-1600.jpg 1600w, assets/web/amphitheatre-2400.jpg 2400w, assets/web/amphitheatre-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="ลานอัฒจันทร์กลางแจ้งใต้ท้องฟ้าครึ้ม" data-i18n-attr="alt:gather.alt" loading="lazy" data-parallax="8">
     </figure>
 
     <!-- hall planner: pick a layout, see the room. The four figures are the full-hall capacities in facts.js (hall) -->
@@ -1002,8 +1002,8 @@ document.documentElement.className += " js";
     </div>
 
     <div class="duo">
-      <figure class="frame is-crop" data-mr=""><img src="assets/web/hall-classroom-2400.jpg" srcset="assets/web/hall-classroom-800.jpg 800w, assets/web/hall-classroom-1600.jpg 1600w, assets/web/hall-classroom-2400.jpg 2400w, assets/web/hall-classroom-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ห้องสัมมนาจัดแบบคลาสรูมเต็มห้อง" data-i18n-attr="alt:gather.alt2" loading="lazy"></figure>
-      <figure class="frame" data-mr=""><img src="assets/web/pool-swim-2400.jpg" srcset="assets/web/pool-swim-800.jpg 800w, assets/web/pool-swim-1600.jpg 1600w, assets/web/pool-swim-2400.jpg 2400w, assets/web/pool-swim-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ผู้เข้าพักว่ายน้ำในสระกลางแจ้งที่หันหน้าสู่ทิวเขา" data-i18n-attr="alt:gather.alt3" loading="lazy"></figure>
+      <figure class="frame is-crop" data-mr=""><img data-pic="pic.hall-classroom" src="assets/web/hall-classroom-2400.jpg" srcset="assets/web/hall-classroom-800.jpg 800w, assets/web/hall-classroom-1600.jpg 1600w, assets/web/hall-classroom-2400.jpg 2400w, assets/web/hall-classroom-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ห้องสัมมนาจัดแบบคลาสรูมเต็มห้อง" data-i18n-attr="alt:gather.alt2" loading="lazy"></figure>
+      <figure class="frame" data-mr=""><img data-pic="pic.pool-swim" src="assets/web/pool-swim-2400.jpg" srcset="assets/web/pool-swim-800.jpg 800w, assets/web/pool-swim-1600.jpg 1600w, assets/web/pool-swim-2400.jpg 2400w, assets/web/pool-swim-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="ผู้เข้าพักว่ายน้ำในสระกลางแจ้งที่หันหน้าสู่ทิวเขา" data-i18n-attr="alt:gather.alt3" loading="lazy"></figure>
     </div>
   </div>
 </section>
@@ -1055,8 +1055,8 @@ document.documentElement.className += " js";
 <!-- ===== after dark: the evening, tonight's sunset and moon ===== -->
 <section class="night" id="tonight" data-dark="" data-owner="gallery" aria-labelledby="tonightTitle">
   <div class="night__media" aria-hidden="true">
-    <img class="night__img is-on" data-night="moon" src="assets/web/moonrise-2400.jpg" srcset="assets/web/moonrise-800.jpg 800w, assets/web/moonrise-1600.jpg 1600w, assets/web/moonrise-2400.jpg 2400w, assets/web/moonrise-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy">
-    <img class="night__img" data-night="dusk" src="assets/web/lake-dusk-2400.jpg" srcset="assets/web/lake-dusk-800.jpg 800w, assets/web/lake-dusk-1600.jpg 1600w, assets/web/lake-dusk-2400.jpg 2400w, assets/web/lake-dusk-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy">
+    <img data-pic="pic.moonrise" class="night__img is-on" data-night="moon" src="assets/web/moonrise-2400.jpg" srcset="assets/web/moonrise-800.jpg 800w, assets/web/moonrise-1600.jpg 1600w, assets/web/moonrise-2400.jpg 2400w, assets/web/moonrise-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy">
+    <img data-pic="pic.lake-dusk" class="night__img" data-night="dusk" src="assets/web/lake-dusk-2400.jpg" srcset="assets/web/lake-dusk-800.jpg 800w, assets/web/lake-dusk-1600.jpg 1600w, assets/web/lake-dusk-2400.jpg 2400w, assets/web/lake-dusk-4k.jpg 3840w" sizes="100vw" alt="" loading="lazy">
     <canvas class="night__canvas" id="nightCanvas"></canvas>
     <div class="night__scrim"></div>
   </div>
@@ -1107,14 +1107,14 @@ document.documentElement.className += " js";
   </div>
   <div class="reel" id="reel">
     <div class="reel__track" id="reelTrack">
-      <button class="reel__item" type="button" data-full="assets/web/moonrise-4k.jpg" aria-label="เปิดภาพที่ 1 จาก 8: จันทร์ขึ้นเหนือบึงน้ำ" data-i18n-attr="aria-label:reel.p1"><img src="assets/web/moonrise-2400.jpg" srcset="assets/web/moonrise-800.jpg 800w, assets/web/moonrise-1600.jpg 1600w, assets/web/moonrise-2400.jpg 2400w, assets/web/moonrise-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
-      <button class="reel__item" type="button" data-full="assets/web/lake-dusk-4k.jpg" aria-label="เปิดภาพที่ 2 จาก 8: อาคารห้องสวีทสะท้อนบนบึงน้ำยามโพล้เพล้" data-i18n-attr="aria-label:reel.p2"><img src="assets/web/lake-dusk-2400.jpg" srcset="assets/web/lake-dusk-800.jpg 800w, assets/web/lake-dusk-1600.jpg 1600w, assets/web/lake-dusk-2400.jpg 2400w, assets/web/lake-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
-      <button class="reel__item" type="button" data-full="assets/web/pool-umbrellas-4k.jpg" aria-label="เปิดภาพที่ 3 จาก 8: ลานริมสระและร่ม" data-i18n-attr="aria-label:reel.p3"><img src="assets/web/pool-umbrellas-2400.jpg" srcset="assets/web/pool-umbrellas-800.jpg 800w, assets/web/pool-umbrellas-1600.jpg 1600w, assets/web/pool-umbrellas-2400.jpg 2400w, assets/web/pool-umbrellas-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
-      <button class="reel__item" type="button" data-full="assets/web/entrance-dusk-4k.jpg" aria-label="เปิดภาพที่ 4 จาก 8: ทางเข้ารีสอร์ทยามฟ้าสีคราม" data-i18n-attr="aria-label:reel.p4"><img src="assets/web/entrance-dusk-2400.jpg" srcset="assets/web/entrance-dusk-800.jpg 800w, assets/web/entrance-dusk-1600.jpg 1600w, assets/web/entrance-dusk-2400.jpg 2400w, assets/web/entrance-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
-      <button class="reel__item" type="button" data-full="assets/web/lagoon-pool-4k.jpg" aria-label="เปิดภาพที่ 5 จาก 8: สระลากูนขอบหิน" data-i18n-attr="aria-label:reel.p5"><img src="assets/web/lagoon-pool-2400.jpg" srcset="assets/web/lagoon-pool-800.jpg 800w, assets/web/lagoon-pool-1600.jpg 1600w, assets/web/lagoon-pool-2400.jpg 2400w, assets/web/lagoon-pool-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
-      <button class="reel__item" type="button" data-full="assets/web/pavilion-lounge-4k.jpg" aria-label="เปิดภาพที่ 6 จาก 8: ศาลานั่งเล่นแบบเปิดโล่ง" data-i18n-attr="aria-label:reel.p6"><img src="assets/web/pavilion-lounge-2400.jpg" srcset="assets/web/pavilion-lounge-800.jpg 800w, assets/web/pavilion-lounge-1600.jpg 1600w, assets/web/pavilion-lounge-2400.jpg 2400w, assets/web/pavilion-lounge-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
-      <button class="reel__item" type="button" data-full="assets/web/lawn-wings-4k.jpg" aria-label="เปิดภาพที่ 7 จาก 8: อาคารห้องสวีทอีกฟากของสนามหญ้าและบึงน้ำ" data-i18n-attr="aria-label:reel.p7"><img src="assets/web/lawn-wings-2400.jpg" srcset="assets/web/lawn-wings-800.jpg 800w, assets/web/lawn-wings-1600.jpg 1600w, assets/web/lawn-wings-2400.jpg 2400w, assets/web/lawn-wings-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
-      <button class="reel__item" type="button" data-full="assets/web/reception-4k.jpg" aria-label="เปิดภาพที่ 8 จาก 8: ล็อบบี้กรุไม้" data-i18n-attr="aria-label:reel.p8"><img src="assets/web/reception-2400.jpg" srcset="assets/web/reception-800.jpg 800w, assets/web/reception-1600.jpg 1600w, assets/web/reception-2400.jpg 2400w, assets/web/reception-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" type="button" data-full="assets/web/moonrise-4k.jpg" aria-label="เปิดภาพที่ 1 จาก 8: จันทร์ขึ้นเหนือบึงน้ำ" data-i18n-attr="aria-label:reel.p1"><img data-pic="pic.moonrise" src="assets/web/moonrise-2400.jpg" srcset="assets/web/moonrise-800.jpg 800w, assets/web/moonrise-1600.jpg 1600w, assets/web/moonrise-2400.jpg 2400w, assets/web/moonrise-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" type="button" data-full="assets/web/lake-dusk-4k.jpg" aria-label="เปิดภาพที่ 2 จาก 8: อาคารห้องสวีทสะท้อนบนบึงน้ำยามโพล้เพล้" data-i18n-attr="aria-label:reel.p2"><img data-pic="pic.lake-dusk" src="assets/web/lake-dusk-2400.jpg" srcset="assets/web/lake-dusk-800.jpg 800w, assets/web/lake-dusk-1600.jpg 1600w, assets/web/lake-dusk-2400.jpg 2400w, assets/web/lake-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" type="button" data-full="assets/web/pool-umbrellas-4k.jpg" aria-label="เปิดภาพที่ 3 จาก 8: ลานริมสระและร่ม" data-i18n-attr="aria-label:reel.p3"><img data-pic="pic.pool-umbrellas" src="assets/web/pool-umbrellas-2400.jpg" srcset="assets/web/pool-umbrellas-800.jpg 800w, assets/web/pool-umbrellas-1600.jpg 1600w, assets/web/pool-umbrellas-2400.jpg 2400w, assets/web/pool-umbrellas-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" type="button" data-full="assets/web/entrance-dusk-4k.jpg" aria-label="เปิดภาพที่ 4 จาก 8: ทางเข้ารีสอร์ทยามฟ้าสีคราม" data-i18n-attr="aria-label:reel.p4"><img data-pic="pic.entrance-dusk" src="assets/web/entrance-dusk-2400.jpg" srcset="assets/web/entrance-dusk-800.jpg 800w, assets/web/entrance-dusk-1600.jpg 1600w, assets/web/entrance-dusk-2400.jpg 2400w, assets/web/entrance-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" type="button" data-full="assets/web/lagoon-pool-4k.jpg" aria-label="เปิดภาพที่ 5 จาก 8: สระลากูนขอบหิน" data-i18n-attr="aria-label:reel.p5"><img data-pic="pic.lagoon-pool" src="assets/web/lagoon-pool-2400.jpg" srcset="assets/web/lagoon-pool-800.jpg 800w, assets/web/lagoon-pool-1600.jpg 1600w, assets/web/lagoon-pool-2400.jpg 2400w, assets/web/lagoon-pool-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" type="button" data-full="assets/web/pavilion-lounge-4k.jpg" aria-label="เปิดภาพที่ 6 จาก 8: ศาลานั่งเล่นแบบเปิดโล่ง" data-i18n-attr="aria-label:reel.p6"><img data-pic="pic.pavilion-lounge" src="assets/web/pavilion-lounge-2400.jpg" srcset="assets/web/pavilion-lounge-800.jpg 800w, assets/web/pavilion-lounge-1600.jpg 1600w, assets/web/pavilion-lounge-2400.jpg 2400w, assets/web/pavilion-lounge-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" type="button" data-full="assets/web/lawn-wings-4k.jpg" aria-label="เปิดภาพที่ 7 จาก 8: อาคารห้องสวีทอีกฟากของสนามหญ้าและบึงน้ำ" data-i18n-attr="aria-label:reel.p7"><img data-pic="pic.lawn-wings" src="assets/web/lawn-wings-2400.jpg" srcset="assets/web/lawn-wings-800.jpg 800w, assets/web/lawn-wings-1600.jpg 1600w, assets/web/lawn-wings-2400.jpg 2400w, assets/web/lawn-wings-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
+      <button class="reel__item" type="button" data-full="assets/web/reception-4k.jpg" aria-label="เปิดภาพที่ 8 จาก 8: ล็อบบี้กรุไม้" data-i18n-attr="aria-label:reel.p8"><img data-pic="pic.reception" src="assets/web/reception-2400.jpg" srcset="assets/web/reception-800.jpg 800w, assets/web/reception-1600.jpg 1600w, assets/web/reception-2400.jpg 2400w, assets/web/reception-4k.jpg 3840w" sizes="(max-width: 820px) 90vw, 30vw" alt="" loading="lazy"></button>
     </div>
   </div>
 </section>
@@ -1205,7 +1205,7 @@ document.documentElement.className += " js";
       </div>
     </div>
     <figure class="frame frame--wide" data-mr="">
-      <img src="assets/web/entrance-dusk-2400.jpg" srcset="assets/web/entrance-dusk-800.jpg 800w, assets/web/entrance-dusk-1600.jpg 1600w, assets/web/entrance-dusk-2400.jpg 2400w, assets/web/entrance-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="ทางเข้ารีสอร์ทและป้ายชื่อยามฟ้าสีคราม" data-i18n-attr="alt:visit.alt" loading="lazy" data-parallax="8">
+      <img data-pic="pic.entrance-dusk" src="assets/web/entrance-dusk-2400.jpg" srcset="assets/web/entrance-dusk-800.jpg 800w, assets/web/entrance-dusk-1600.jpg 1600w, assets/web/entrance-dusk-2400.jpg 2400w, assets/web/entrance-dusk-4k.jpg 3840w" sizes="(max-width: 820px) 100vw, 60vw" alt="ทางเข้ารีสอร์ทและป้ายชื่อยามฟ้าสีคราม" data-i18n-attr="alt:visit.alt" loading="lazy" data-parallax="8">
     </figure>
   </div>
 </section>
@@ -1449,7 +1449,7 @@ document.documentElement.className += " js";
 <script src="film-stream.js?v=65575688" defer=""></script>
 <!-- if the main script cannot be fetched, the page falls back to its plain form: panels open, script-only controls hidden -->
 <script src="i18n-en.js?v=17e6f30a" defer></script>
-<script src="main.js?v=66f7c7c8" defer="" onerror="document.documentElement.classList.remove('js')"></script>
+<script src="main.js?v=b4d8e7e7" defer="" onerror="document.documentElement.classList.remove('js')"></script>
 
 
 </body></html>

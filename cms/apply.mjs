@@ -145,6 +145,43 @@ export function head(html, lang, d, snap, production) {
   return html;
 }
 
+/* Pictures (22 November 2026). Every size of a photograph, wherever the page names it (img, srcset, a data attribute),
+   points at the files its published value names: the studio's original (assets/web/<name>-<size>.jpg) or a picture
+   uploaded in SPINE (content/media/<name>.<16 hex>-<size>.jpg). Whatever the page names now (an earlier build may have
+   written an earlier picture) is matched, so this works on a fresh export and on the pages of the last build alike.
+   Each <img> and <source> showing a photograph is marked data-pic="pic.<name>" (the page's live update and SPINE's
+   preview find it by that). facts: the snapshot's facts; a photograph without a value there keeps its original. */
+const reEsc = (s) => s.replace(/[.*+?^${}()|[\]\\-]/g, '\\$&');
+export function pictureSlots(registry) {
+  return ((registry && registry.fields) || []).filter((f) => f.type === 'picture' && f.kind === 'fact' && PVCMS.pictureStem(f)).map((f) => {
+    const stem = PVCMS.pictureStem(f), sizes = [...new Set((f.variants || []).map((v) => v.s))].map(reEsc).join('|') || '\\d+';
+    return { key: f.key, field: f, re: new RegExp('(?:assets/web/' + reEsc(stem) + '|content/media/' + reEsc(stem) + '\\.[a-f0-9]{16})-(' + sizes + ')\\.(jpg|webp|png)', 'g') };
+  });
+}
+export function pictures(html, registry, facts) {
+  const slots = pictureSlots(registry);
+  if (!slots.length) return html;
+  const F = facts || {};
+  for (const s of slots) {
+    const v = typeof F[s.key] === 'string' && PVCMS.pictureOk(s.field, F[s.key]) ? F[s.key] : s.field.value;
+    html = html.replace(s.re, (m, size, ext) => v + '-' + size + '.' + ext);
+  }
+  return html.replace(/<(img|source)\b[^>]*>/gi, (tag) => {
+    const hit = slots.find((s) => { s.re.lastIndex = 0; const ok = s.re.test(tag); s.re.lastIndex = 0; return ok; });
+    const clean = tag.replace(/\sdata-pic="[^"]*"/g, '');
+    return hit ? clean.replace(/^<(img|source)\b/i, (m) => m + ' data-pic="' + escAttr(hit.key) + '"') : clean;
+  });
+}
+// the pictures a snapshot names that are not the originals, and the files each needs (the build checks they exist)
+export function pictureFilesNeeded(registry, facts) {
+  const out = [];
+  for (const s of pictureSlots(registry)) {
+    const v = facts && facts[s.key];
+    if (typeof v === 'string' && v !== s.field.value) out.push({ key: s.key, value: v, files: PVCMS.pictureFiles(s.field, v) });
+  }
+  return out;
+}
+
 // the build's identity in each page: a machine-readable marker, never shown
 export function markers(html, build) {
   // with a fast lane: only the editor's view (an address with ?live, opened from the Sheet) asks Google for the newest

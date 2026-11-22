@@ -13,7 +13,7 @@ var PVCMS = (function () {
   "use strict";
   var SCHEMA = "patravana.content/1";
   var MODES = ["LIVE", "DRAFT", "HOLD"];
-  var TYPES = ["text", "label", "paragraph", "accent", "alt", "template", "message", "int", "time", "days", "date"];
+  var TYPES = ["text", "label", "paragraph", "accent", "alt", "template", "message", "int", "time", "days", "date", "picture"];
   // the withdrawn 30% campaign, the compounded 41%, and the Doc's stale offers: refused anywhere in published text
   // (4 November 2026; bringing one back needs a new instruction from the owner, and a change to this list)
   var WITHDRAWN = [
@@ -76,6 +76,8 @@ var PVCMS = (function () {
     // a real calendar day: year, month and day must all come back unchanged (2026-13-01 and 2026-02-30 are refused,
     // 29 February only in a leap year), between 2020 and 2100 (Phase 4, 5 November 2026)
     if (t === "date") { if (!realDay(str(raw).trim())) p.push("must be a real date written 2026-11-04"); return p; }
+    // a photograph (22 November 2026): its own original files, or a picture SPINE uploaded for this same photograph
+    if (t === "picture") { if (!pictureOk(field, str(raw).trim())) p.push("must be this photograph's own file name: " + str(field.value) + " (the original) or one SPINE wrote, content/media/" + pictureStem(field) + ".<16 letters and digits>"); return p; }
     var v = t === "message" ? lines(raw) : oneLine(raw);
     if (!v) { if (field.required !== false) p.push(L + " is empty"); return p; }
     if (/[<>]/.test(v)) p.push(L + ": < and > are not allowed (no HTML in cells)");
@@ -95,6 +97,14 @@ var PVCMS = (function () {
     if (/https?:\/\/|www\./i.test(v) && t !== "message") p.push(L + ": web addresses are set by the studio, not typed into text");
     return p;
   }
+  /* Pictures. A picture's value names where its files are: "assets/web/<name>" (the studio's original) or
+     "content/media/<name>.<16 hex>" (uploaded in SPINE); each size is <value>-<size>.<ext> (sizes from the registry). */
+  function pictureStem(field) { var m = /^assets\/web\/([a-z0-9-]+)$/.exec(str(field && field.value)); return m ? m[1] : ""; }
+  function pictureOk(field, v) {
+    var stem = pictureStem(field); if (!stem) return false;
+    return v === "assets/web/" + stem || new RegExp("^content/media/" + stem.replace(/-/g, "\\-") + "\\.[a-f0-9]{16}$").test(v);
+  }
+  function pictureFiles(field, v) { return (field.variants || []).map(function (x) { return v + "-" + x.s + "." + x.ext; }); }
   function normalise(field, raw) {
     var t = field.type;
     if (t === "int") return parseInt(str(raw).trim(), 10);
@@ -238,6 +248,6 @@ var PVCMS = (function () {
     return (e[lang] || e.en).replace(/\{([a-zA-Z0-9_.]+)\}/g, function (m, path) { if (slots && path in slots) return slots[path]; var v = factValue(FX, path, lang); return v == null ? m : v; });
   }
 
-  return { SCHEMA: SCHEMA, MODES: MODES, TYPES: TYPES, WITHDRAWN: WITHDRAWN, render: render, toEditor: toEditor, tokens: tokens, canonical: canonical, checkValue: checkValue, normalise: normalise, build: build, verify: verify, changes: changes, oneLine: oneLine, lines: lines, setFact: setFact, factValue: factValue, factText: factText };
+  return { SCHEMA: SCHEMA, MODES: MODES, TYPES: TYPES, WITHDRAWN: WITHDRAWN, render: render, pictureStem: pictureStem, pictureOk: pictureOk, pictureFiles: pictureFiles, toEditor: toEditor, tokens: tokens, canonical: canonical, checkValue: checkValue, normalise: normalise, build: build, verify: verify, changes: changes, oneLine: oneLine, lines: lines, setFact: setFact, factValue: factValue, factText: factText };
 })();
 if (typeof module !== "undefined" && module.exports) module.exports = PVCMS;

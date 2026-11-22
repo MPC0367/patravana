@@ -2807,6 +2807,19 @@
         apply(snap);
       } catch (e) { /* keep what is here */ } finally { clearTimeout(to); }
     }
+    /* A published photograph (22 November 2026): every <img> and <source> the build marked data-pic="pic.<name>" points
+       at the sizes the new value names (the original assets/web/<name> or a picture uploaded in SPINE). */
+    const PIC_FILE = /(?:assets\/web\/[a-z0-9-]+|content\/media\/[a-z0-9-]+\.[a-f0-9]{16})-(\d+|4k)\.(jpg|webp|png)/g;
+    function swapPicture(key, value) {
+      const m = /^pic\.([a-z0-9-]+)$/.exec(key);
+      if (!m || typeof value !== "string" || !(value === "assets/web/" + m[1] || new RegExp("^content/media/" + m[1] + "\\.[a-f0-9]{16}$").test(value))) return false;
+      $$('[data-pic="' + key + '"]').forEach((el) => ["src", "srcset"].forEach((a) => {
+        const v = el.getAttribute(a); if (!v) return;
+        const nv = v.replace(PIC_FILE, (x, size, ext) => value + "-" + size + "." + ext);
+        if (nv !== v) el.setAttribute(a, nv);
+      }));
+      return true;
+    }
     function apply(snap, preview) {
       const TH = window.PV_TH || {}, JS = window.PV_JS || {}, keys = [];
       Object.keys(snap.content).forEach((k) => {
@@ -2820,7 +2833,10 @@
         I18N.enAttr.forEach((map) => Object.keys(map).forEach((a) => { if (map[a].key === k && map[a].en !== plain(en)) { map[a].en = plain(en); ch = true; } }));
         if (ch) keys.push(k);
       });
-      Object.keys(snap.facts || {}).forEach((k) => { if (setFact(k, snap.facts[k])) keys.push(k); });
+      Object.keys(snap.facts || {}).forEach((k) => {
+        if (k.startsWith("pic.")) { if (!preview) swapPicture(k, snap.facts[k]); return; }   // photographs: swapped where they are, no re-render
+        if (setFact(k, snap.facts[k])) keys.push(k);
+      });
       if (!preview) current = snap.generation;            // a SPINE preview shows texts, it is not a revision
       if (!keys.length) return;
       const holdsFocus = () => { const a = document.activeElement; return !!a && a !== document.body && keys.some((k) => $$('[data-i18n="' + k + '"]').some((el) => el !== a && el.contains(a))); };
@@ -2842,7 +2858,30 @@
         let els = $$('[data-i18n="' + CSS.escape(key) + '"]');
         if (!els.length) I18N.enAttr.forEach((map, el) => { if (Object.keys(map).some((a) => map[a].key === key)) els.push(el); });
         if (!els.length && key.startsWith("fact.")) els = $$('[data-fact="' + CSS.escape(key.slice(5)) + '"]');
+        if (!els.length && key.startsWith("pic.")) els = $$('img[data-pic="' + CSS.escape(key) + '"]');
         return els;
+      };
+      /* Pictures being changed in SPINE: it sends each one as an image (a Blob) for the photographs marked
+         data-pic; the page shows it in their place, here only. A photograph no longer sent gets its own files back. */
+      const shownPics = new Map();
+      const showPictures = (pics) => {
+        const want = new Map();
+        Object.keys(pics || {}).forEach((k) => { const b = pics[k]; if (/^pic\.[a-z0-9-]+$/.test(k) && b instanceof Blob && /^image\/(jpeg|png|webp)$/.test(b.type) && b.size < 20e6) want.set(k, b); });
+        shownPics.forEach((was, k) => {
+          if (want.get(k) === was.blob) return;
+          was.els.forEach(([el, src, srcset, sizes]) => { if (srcset != null) el.setAttribute("srcset", srcset); if (src != null) el.setAttribute("src", src); if (sizes != null) el.setAttribute("sizes", sizes); });
+          URL.revokeObjectURL(was.url); shownPics.delete(k);
+        });
+        want.forEach((blob, k) => {
+          if (shownPics.has(k)) return;
+          const url = URL.createObjectURL(blob), els = [];
+          $$('[data-pic="' + CSS.escape(k) + '"]').forEach((el) => {
+            els.push([el, el.getAttribute("src"), el.getAttribute("srcset"), el.getAttribute("sizes")]);
+            if (el.tagName === "SOURCE") el.setAttribute("srcset", url);
+            else { el.removeAttribute("srcset"); el.removeAttribute("sizes"); el.setAttribute("src", url); }
+          });
+          shownPics.set(k, { blob, url, els });
+        });
       };
       const focusOn = (key) => {
         $$(".pv-spine-focus").forEach((el) => el.classList.remove("pv-spine-focus"));
@@ -2860,6 +2899,7 @@
         try {
           if ((d.lang === "en" || d.lang === "th") && d.lang !== I18N.lang) { releaseSplits(); I18N.apply(d.lang); remakeSplits(); if (hasST) ScrollTrigger.refresh(); }
           if ((d.content && typeof d.content === "object") || (d.facts && typeof d.facts === "object")) apply({ generation: current, content: d.content || {}, facts: d.facts || {} }, true);
+          if (d.pictures && typeof d.pictures === "object") showPictures(d.pictures);
           if (typeof d.focus === "string" || d.focus === null) focusOn(d.focus);
         } catch (err) { tell({ type: "spine:error", message: String(err && err.message || err).slice(0, 200) }); }
       });

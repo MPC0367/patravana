@@ -7,7 +7,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { applyRelease } from './release.mjs';
-import { PVCMS } from './apply.mjs';
+import { PVCMS, pictureFilesNeeded } from './apply.mjs';
 
 const [inboxPath, resultPath] = process.argv.slice(2);
 const DIR = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
@@ -32,6 +32,11 @@ try {
   if (!/^[0-9a-f]{16,64}$/.test(String(env.nonce || ''))) result.problems.push('no nonce');
   const registry = JSON.parse(readFileSync(DIR + 'cms/registry.json', 'utf8'));
   if (snap) result.problems.push(...PVCMS.verify(snap, registry));
+  // a picture uploaded in SPINE: every size it names must already be in this repository (SPINE puts them there first)
+  if (snap) for (const p of pictureFilesNeeded(registry, snap.facts)) {
+    const missing = p.files.filter((f) => !/^content\/media\/[a-z0-9-]+\.[a-f0-9]{16}-(\d+|4k)\.(jpg|webp|png)$/.test(f) || !existsSync(DIR + f));
+    if (missing.length) result.problems.push('the picture for ' + p.key + ' is not on the website yet (' + missing.slice(0, 3).join(', ') + (missing.length > 3 ? ' and ' + (missing.length - 3) + ' more' : '') + ')');
+  }
   if (result.problems.length) finish(1);
   // never older than what is live: a delayed publication can never put back older content
   const mpath = DIR + 'content/manifest.json';
