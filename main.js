@@ -2570,6 +2570,24 @@
   let openBookPanel = null;                                    // set by initBooking
   function initOffers() {
     const list = $("#offerList"), neutral = $('.ticket[data-offer="current"]'); if (!list || !neutral || !FX || !FX.offers || !window.fetch) return;
+    /* the "View offers" dropdown (26 November 2026): the verified offers sit folded under one bar that says how many there
+       are and what they are called; the bar opens and closes them in place. The booking-page and group cards stay below.
+       While there are no offers the bar is hidden and the booking-page card leads, as before. */
+    const drop = $("#offerDrop"), dropBtn = $("#offerDropBtn"), dropPanel = $("#offerDropPanel"), dropList = $("#offerDropList") || list;
+    const dropN = $("#offerDropN"), dropSub = $("#offerDropSub"), reduce = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let settle = 0;
+    function setOpen(open) {
+      if (!drop || !dropBtn || !dropPanel) return;
+      dropBtn.setAttribute("aria-expanded", String(open));
+      drop.classList.toggle("is-open", open);
+      dropPanel.inert = !open;
+      // while it moves the panel clips its cards; once open it lets their hover shadow show
+      clearTimeout(settle); drop.classList.remove("is-settled");
+      if (open) settle = setTimeout(() => drop.classList.add("is-settled"), reduce() ? 0 : 600);
+    }
+    if (dropBtn) dropBtn.addEventListener("click", () => setOpen(dropBtn.getAttribute("aria-expanded") !== "true"));
+    // the Home guide's offer card leads here: it arrives with the offers open
+    $$(".hub__card--offer").forEach((a) => a.addEventListener("click", () => { if (drop && !drop.hidden) setOpen(true); }));
     // the Home guide's offer line: its second line sits beside the teaser, not inside it (fixed 22 November 2026)
     const teaser = $("[data-offer-teaser]"), teaserHead = teaser && $("[data-offer-head]", teaser), teaserExtra = $("[data-offer-extra]");
     let doc = null, shownIds = "";
@@ -2607,14 +2625,23 @@
       // was checked, the language (Phase 4: the id alone let a changed offer keep its old text)
       const offers = usableOffers(doc, Date.now()), ids = JSON.stringify([I18N.lang, offers.length ? doc.fetchedAt : "", offers]);
       if (ids === shownIds) return; shownIds = ids;
-      $$('.ticket[data-offer="feed"], .offers__checked', list).forEach((x) => x.remove());
+      $$('.ticket[data-offer="feed"], .offers__checked', dropList).forEach((x) => x.remove());
       neutral.classList.toggle("ticket--hot", !offers.length);
-      offers.forEach((o, i) => { const c = card(o); if (i === 0) c.classList.add("ticket--hot"); list.insertBefore(c, neutral); });
+      if (dropList === list) offers.forEach((o, i) => { const c = card(o); if (i === 0) c.classList.add("ticket--hot"); list.insertBefore(c, neutral); });
+      else offers.forEach((o) => dropList.append(card(o)));
+      if (drop) {
+        drop.hidden = !offers.length;
+        if (!offers.length) setOpen(false);
+        // two columns for four offers, otherwise as many as fit up to three, so no row ends with one card alone
+        dropList.style.setProperty("--offer-cols", String(offers.length === 4 ? 2 : Math.min(3, offers.length || 1)));
+        if (dropN) dropN.textContent = String(offers.length);
+        if (dropSub) dropSub.textContent = offers.map((o) => o.title[I18N.lang] || o.title.en).join(", ");
+      }
       if (offers.length) {
         // an approved list says whose it is and the day it was last updated; a feed says when it was last checked
         const approved = doc.source === "approved";
         const at = new Intl.DateTimeFormat(I18N.lang === "th" ? "th-TH" : "en-GB", approved ? { timeZone: "Asia/Bangkok", day: "numeric", month: "long", year: "numeric" } : { timeZone: "Asia/Bangkok", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(doc.fetchedAt));
-        list.append(el("p", "offers__checked", I18N.t(approved ? "offerApproved" : "offerChecked", { at })));
+        dropList.append(el("p", "offers__checked", I18N.t(approved ? "offerApproved" : "offerChecked", { at })));
       }
       if (teaserHead) {
         teaserHead.textContent = offers.length ? (offers[0].title[I18N.lang] || offers[0].title.en) : I18N.t("offerHubHead");

@@ -1313,6 +1313,39 @@ html[lang="th"] .ticket__head { letter-spacing: 0; line-height: 1.32; }
 .ticket:not(.ticket--hot) .pill--light { background: var(--forest); border-color: var(--forest); color: var(--ivory); }
 .ticket:not(.ticket--hot) .pill--light::after { background: var(--charcoal); }
 .ticket:not(.ticket--hot) .pill--light:hover { border-color: var(--charcoal); }
+/* the "View offers" dropdown (26 November 2026): one forest bar with the number of offers and their names; it opens the
+   offer cards in place, and closes them again. Closed, the panel is out of sight, out of the tab order and unread. */
+.offerdrop { margin-bottom: 1.2rem; }
+.offerdrop__btn { width: 100%; display: flex; align-items: center; gap: 1.1rem; padding: 1rem 1.2rem 1rem 1rem; border: 1px solid var(--forest); border-radius: 22px; background: var(--forest); color: var(--ivory); text-align: left; font: inherit; cursor: pointer; transition: box-shadow .5s var(--ease), translate .5s var(--ease); }
+.offerdrop__btn:hover { box-shadow: 0 22px 50px rgba(37,39,36,.22); translate: 0 -3px; }
+.offerdrop__btn:focus-visible { outline: 2px solid var(--forest); outline-offset: 4px; }
+.offerdrop__n { flex: none; display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; background: var(--sand); color: var(--forest); font-family: var(--f-display); font-size: 1.3rem; font-weight: 500; line-height: 1; }
+.offerdrop__txt { flex: 1; min-width: 0; display: grid; gap: .2rem; }
+.offerdrop__label { font-family: var(--f-display); font-weight: 500; font-size: clamp(1.35rem, 2vw, 1.75rem); line-height: 1.15; letter-spacing: -.03em; }
+html[lang="th"] .offerdrop__label { letter-spacing: 0; line-height: 1.35; }
+.offerdrop__sub { font-size: .9rem; line-height: 1.4; color: rgba(244,240,231,.8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.offerdrop__ic { flex: none; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1px solid var(--line-on-dark-2); transition: rotate .45s var(--ease), background .3s; }
+.offerdrop__ic svg { width: 1.05rem; height: 1.05rem; }
+.offerdrop__btn:hover .offerdrop__ic { background: rgba(244,240,231,.12); }
+.offerdrop.is-open .offerdrop__ic { rotate: 180deg; }
+.offerdrop__panel { display: grid; grid-template-rows: 0fr; opacity: 0; visibility: hidden; transition: grid-template-rows .55s var(--ease), opacity .3s, visibility 0s .55s; }
+.offerdrop.is-open .offerdrop__panel { grid-template-rows: 1fr; opacity: 1; visibility: visible; transition: grid-template-rows .55s var(--ease), opacity .45s .05s, visibility 0s; }
+.offerdrop__inner { min-height: 0; overflow: hidden; }
+.offerdrop.is-settled .offerdrop__inner { overflow: visible; }
+.tickets.offerdrop__list { padding-top: 1.2rem; grid-template-columns: repeat(var(--offer-cols, 3), minmax(0, 1fr)); }
+@media (max-width: 62.5em) {
+  .tickets.offerdrop__list { display: grid; grid-template-columns: minmax(0, 1fr); overflow: visible; scroll-snap-type: none; margin-inline: 0; padding-inline: 0; }
+  .offerdrop__list .ticket { flex: none; }
+}
+@media (max-width: 40em) {
+  .offerdrop__btn { gap: .8rem; padding: .85rem .9rem .85rem .85rem; }
+  .offerdrop__n { width: 2.6rem; height: 2.6rem; font-size: 1.1rem; }
+  .offerdrop__ic { width: 2.4rem; height: 2.4rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .offerdrop__btn, .offerdrop__ic, .offerdrop__panel, .offerdrop.is-open .offerdrop__panel { transition: none; }
+  .offerdrop__btn:hover { translate: none; }
+}
 .ticket.is-ended .ticket__head, .ticket.is-ended .ticket__head b { color: var(--earth); text-decoration: line-through; text-decoration-thickness: 1px; }
 /* the offers are whole cards on a phone, one under another: never a sliver of the next one at the edge */
 @media (max-width: 40em) {
