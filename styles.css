@@ -1893,3 +1893,57 @@ a.rev__name { text-decoration: underline; text-decoration-color: var(--line-2); 
 .pv-spine-focus { outline: 3px solid #F5B700 !important; outline-offset: 4px; border-radius: 4px; animation: pvSpinePulse 1.6s ease-in-out 2; }
 @keyframes pvSpinePulse { 50% { outline-color: rgba(245, 183, 0, .35); } }
 @media (prefers-reduced-motion: reduce) { .pv-spine-focus { animation: none; } }
+
+/* ---------- cookie settings in the footer (consent.js shows the button only on the live site with an ID set) ---------- */
+.foot__cookie[hidden] { display: none; }
+button.foot__concept { padding: 0; font-size: inherit; line-height: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+button.foot__concept:hover { color: var(--ivory); }
+
+/* consent-card:start  export-pages.mjs copies this block into the cookie policy pages, which have no styles.css: every
+   var() here keeps its fallback.
+   ---------- the cookie question (consent.js, 27 November 2026) ----------
+   Asked once, on the live site, once a Google Analytics ID is set in facts.js, after the loading screen has gone. It sits
+   just under the top bar (across the screen on a phone, at the right on wider screens), so the booking controls at the
+   foot of the screen (the planner, the phone's bottom bar, the floating Book button) stay clear. Calm glass: the ivory of
+   the solid top bar with the page blurred behind it, one hairline, no shine. Its two answers look and weigh the same (the
+   site's ghost pill). Out of the way while a menu, drawer, booking panel or photo viewer is open. */
+.pv-cookie {
+  position: fixed; z-index: 900; top: calc(5.4rem + env(safe-area-inset-top, 0px)); right: max(var(--pad, 1.25rem), env(safe-area-inset-right, 0px));
+  width: min(25rem, calc(100vw - 2rem)); max-height: calc(100vh - 7rem); max-height: calc(100svh - 7rem); overflow-y: auto; overscroll-behavior: contain;
+  padding: 1.1rem 1.2rem 1.15rem; border-radius: 22px; border: 1px solid var(--line, rgba(181, 165, 141, .42));
+  background: rgba(244, 240, 231, .97); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  color: var(--charcoal, #252724); box-shadow: 0 22px 56px -20px rgba(27, 31, 28, .42);
+  font-family: var(--f-body, "DM Sans", "Sarabun", system-ui, sans-serif); font-size: .9rem; line-height: 1.55; text-align: left;
+  animation: pvCookieIn .6s var(--ease, cubic-bezier(.22, 1, .36, 1)) both;
+}
+html[lang="th"] .pv-cookie { font-family: var(--f-body, "Sarabun", "DM Sans", system-ui, sans-serif); line-height: 1.7; }
+.pv-cookie:focus { outline: none; }
+.pv-cookie:focus-visible, .pv-cookie :focus-visible { outline: 2px solid var(--forest, #35543F); outline-offset: 3px; }
+.pv-cookie__h { margin: 0 0 .35rem; font-family: var(--f-display, "Montserrat", "Prompt", system-ui, sans-serif); font-size: 1.02rem; font-weight: 500; line-height: 1.35; letter-spacing: -.01em; color: var(--forest, #35543F); }
+html[lang="th"] .pv-cookie__h { letter-spacing: 0; line-height: 1.5; }
+.pv-cookie[data-mode="settings"] .pv-cookie__h { padding-right: 2.6rem; }
+.pv-cookie__p { margin: 0; color: var(--charcoal, #252724); }
+.pv-cookie__p a { color: var(--forest, #35543F); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; white-space: nowrap; }
+.pv-cookie__p a:hover { color: var(--charcoal, #252724); }
+.pv-cookie__status { margin: .6rem 0 0; font-weight: 500; color: var(--forest, #35543F); }
+.pv-cookie__acts { display: flex; gap: .5rem; margin-top: .95rem; }
+.pv-cookie__btn {
+  flex: 1 1 0; min-width: 0; min-height: 44px; margin: 0; padding: .55rem 1rem; border-radius: 999px; border: 1px solid var(--line-2, rgba(118, 101, 84, .55));
+  background: transparent; color: var(--charcoal, #252724); font: inherit; font-size: .9rem; font-weight: 500; line-height: 1.3; letter-spacing: .01em; cursor: pointer;
+  transition: color .35s, border-color .35s, background .35s;
+}
+.pv-cookie__btn:hover, .pv-cookie__btn:focus-visible { border-color: var(--forest, #35543F); color: var(--forest, #35543F); background: var(--panel, rgba(217, 219, 212, .38)); }
+.pv-cookie__x {
+  position: absolute; top: .45rem; right: .45rem; display: grid; place-items: center; width: 44px; height: 44px; margin: 0; padding: 0;
+  border: 0; border-radius: 50%; background: none; color: var(--earth, #766554); cursor: pointer; transition: color .3s, background .3s;
+}
+.pv-cookie__x:hover { color: var(--forest, #35543F); background: var(--panel, rgba(217, 219, 212, .38)); }
+body.has-overlay .pv-cookie { visibility: hidden; }
+/* a slide only, never a fade: the words are legible from the first frame */
+@keyframes pvCookieIn { from { transform: translateY(-10px); } to { transform: none; } }
+@media (max-width: 51.25em) {
+  .pv-cookie { top: calc(4.4rem + env(safe-area-inset-top, 0px)); left: max(.75rem, env(safe-area-inset-left, 0px)); right: max(.75rem, env(safe-area-inset-right, 0px)); width: auto; padding: .95rem 1rem 1rem; font-size: .88rem; }
+}
+@media (prefers-reduced-motion: reduce) { .pv-cookie { animation: none; } .pv-cookie__btn, .pv-cookie__x { transition: none; } }
+@media print { .pv-cookie { display: none; } }
+/* consent-card:end */

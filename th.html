@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="th" data-locale="th"><head>
 <meta charset="UTF-8">
-<meta name="pv-build" content="a8347b22b896-c56">
+<meta name="pv-build" content="adc5ca16143c-c56">
 <meta name="pv-content" content="56">
 <meta name="pv-live" content="https://script.google.com/macros/s/AKfycbzUB0wwKaD7KskTFDWAxMB_kcaBExYeVBPkADWCVvrliZ0Tt8rdQpBARE51c_UGg0Pj/exec">
 <script data-pv-lane>/[?&]live(=|&|$)/.test(location.search)&&window.fetch&&(window.PVLane=fetch("https://script.google.com/macros/s/AKfycbzUB0wwKaD7KskTFDWAxMB_kcaBExYeVBPkADWCVvrliZ0Tt8rdQpBARE51c_UGg0Pj/exec?since=56",{credentials:"omit",cache:"no-store",redirect:"follow"}).then(function(r){return r.ok?r.json():null}).catch(function(){return null}))</script>
@@ -62,7 +62,7 @@ document.documentElement.className += " js";
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300..800&amp;family=Fraunces:ital,opsz,wght@1,9..144,300..500&amp;family=DM+Sans:opsz,wght@9..40,300..600&amp;family=Prompt:wght@300;400;500;600&amp;family=Sarabun:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=2e9d8116">
+<link rel="stylesheet" href="styles.css?v=9631714d">
 </head>
 <body>
 
@@ -1308,6 +1308,10 @@ document.documentElement.className += " js";
   <div class="foot__base">
     <span data-i18n="foot.copy">ภาพและข้อมูล © ภัทราวานา รีสอร์ท เขาใหญ่</span>
     <a class="foot__concept" href="#privacy" data-i18n="privacy.k">ความเป็นส่วนตัว</a>
+    <!-- the cookie policy (written by export-pages.mjs) is always linked; "Cookie settings" is shown by consent.js only on the
+         live site once a Google Analytics ID is set in facts.js (analytics.ga4) -->
+    <a class="foot__concept" href="cookie-policy-th" data-i18n="cookie.policy" data-i18n-attr="href:cookie.href">นโยบายคุกกี้</a>
+    <span class="foot__cookie" data-cookie-wrap="" hidden=""><button class="foot__concept" type="button" data-cookie-settings=""><span data-i18n="cookie.settings">ตั้งค่าคุกกี้</span></button></span>
     <button class="textlink js-only foot__all" type="button" id="viewAll" aria-pressed="false"><span data-i18n="foot.all">แสดงทั้งหน้า</span></button>
     <button class="textlink js-only" type="button" id="toTop"><span data-i18n="foot.top">กลับขึ้นด้านบน</span></button>
   </div>
@@ -1453,13 +1457,14 @@ document.documentElement.className += " js";
 })();
 </script>
 <!-- /motion-libs -->
-<script src="facts.js?v=b8afb139" defer=""></script>
-<script src="i18n.js?v=ccbb15f7" defer=""></script>
+<script src="facts.js?v=14f4da7b" defer=""></script>
+<script src="consent.js?v=d29733c1" defer=""></script>
+<script src="i18n.js?v=aceaeef0" defer=""></script>
 <script src="scene.js?v=29086502" defer=""></script>
 <script src="film-manifest.js?v=5f40123b" defer=""></script>
 <script src="film-stream.js?v=65575688" defer=""></script>
 <!-- if the main script cannot be fetched, the page falls back to its plain form: panels open, script-only controls hidden -->
-<script src="i18n-en.js?v=b5ae32a2" defer></script>
+<script src="i18n-en.js?v=1a42649f" defer></script>
 <script src="main.js?v=94edb8bd" defer="" onerror="document.documentElement.classList.remove('js')"></script>
 
 

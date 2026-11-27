@@ -189,6 +189,9 @@ window.PV_FACTS = {
   "show": 5,
   "rotateSeconds": 7
  },
+ "analytics": {
+  "ga4": "G-QV62419KMY"
+ },
  "text": {
   "pet.summary": {
    "en": "Pet-friendly stays are available in one designated building.",
