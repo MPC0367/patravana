@@ -3089,6 +3089,11 @@
     const G = new Float32Array(1025); for (let i = 0; i < 1025; i++) G[i] = Math.exp(-i / 128 * 3);   // four steps per unit: no rings
     const LIN = new Float32Array(256); for (let i = 0; i < 256; i++) { const c = i / 255; LIN[i] = c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); }
     const S = () => (window.innerWidth > 900 ? 12 : 9);   // one field pixel per 12 screen pixels (9 on phones); the blur hides the grain of it
+    // Touch screens (phones, iPads; 28 November 2026): the green is painted onto its section and scrolls with the page.
+    // Keeping the light in place while the page moves meant redrawing it at every scroll step, and on an iPad the script
+    // learns the scroll position a moment late, so the light ran with the page and snapped back ("boomeranging", user)
+    const ua = navigator.userAgent || "";
+    const TOUCH = (window.matchMedia && matchMedia("(pointer: coarse)").matches) || /iP(hone|ad|od)|Android/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
     // the pools for this moment, in field pixels over the window
     // the glow drifts toward the pointer while it is over a green section (mouse and pen only), and back to its own path
     const glow = { x: null, y: null, tx: null, ty: null, w: 0, t: 0 };
@@ -3120,16 +3125,32 @@
       }
       return q;
     }
+    // the softening: two passes of a three-wide box over the rows just drawn, in the canvas (a CSS blur on this layer
+    // showed straight streaks on an iPad, where Safari draws a large blurred layer in tiles; user, 28 November 2026)
+    function soften(hst, y0, y1) {
+      const w = hst.w, h = hst.h, d = hst.img.data, n = w * h * 3;
+      if (!hst.tmp || hst.tmp.length !== n) { hst.tmp = new Float32Array(n); hst.tmp2 = new Float32Array(n); }
+      const A = hst.tmp, Bf = hst.tmp2, r0 = Math.max(0, y0 - 2), r1 = Math.min(h, y1 + 2);
+      for (let y = r0; y < r1; y++) for (let x = 0; x < w; x++) { const i = (y * w + x) * 4, j = (y * w + x) * 3; A[j] = d[i]; A[j + 1] = d[i + 1]; A[j + 2] = d[i + 2]; }
+      for (let pass = 0; pass < 2; pass++) {
+        for (let y = r0; y < r1; y++) for (let x = 0; x < w; x++) { const a = (y * w + Math.max(0, x - 1)) * 3, b = (y * w + x) * 3, c = (y * w + Math.min(w - 1, x + 1)) * 3; for (let ch = 0; ch < 3; ch++) Bf[b + ch] = (A[a + ch] + A[b + ch] + A[c + ch]) / 3; }
+        for (let y = r0; y < r1; y++) for (let x = 0; x < w; x++) { const a = (Math.max(r0, y - 1) * w + x) * 3, b = (y * w + x) * 3, c = (Math.min(r1 - 1, y + 1) * w + x) * 3; for (let ch = 0; ch < 3; ch++) A[b + ch] = (Bf[a + ch] + Bf[b + ch] + Bf[c + ch]) / 3; }
+      }
+      for (let y = y0; y < y1; y++) for (let x = 0; x < w; x++) { const i = (y * w + x) * 4, j = (y * w + x) * 3; d[i] = A[j]; d[i + 1] = A[j + 1]; d[i + 2] = A[j + 2]; }
+    }
     function paint(hst, q) {
       const s = S(), rect = hst.el.getBoundingClientRect(), w = Math.max(8, Math.ceil(rect.width / s)), h = Math.max(8, Math.ceil(rect.height / s));
       if (w !== hst.w || h !== hst.h || !hst.img) { hst.w = w; hst.h = h; hst.cv.width = w; hst.cv.height = h; hst.img = hst.ctx.createImageData(w, h); }
-      const md = hst.mood, d = hst.img.data, ox = rect.left / s, oy = rect.top / s, vh = window.innerHeight / s;
+      const md = hst.mood, d = hst.img.data, ox = TOUCH ? 0 : rect.left / s, oy = TOUCH ? 0 : rect.top / s, vh = window.innerHeight / s;
       const cols = [md.pools[0], md.pools[1], md.pools[2], md.pools[3], md.pools[4], md.glow, md.shade], B = md.base, CEIL = md.ceil;
       const PIV = md.piv, K = md.k, TOP = CEIL * .97, KNEE = CEIL * .78;
-      // only the rows in view (and a margin) are drawn; the rest keep what they had
-      const y0 = Math.max(0, Math.floor(-oy) - 2), y1 = Math.min(h, Math.ceil(vh - oy) + 2);
+      // only the rows in view (and a margin) are drawn; the rest keep what they had. On a touch screen the whole section
+      // is drawn, so the rows that scroll into view are already there
+      const y0 = TOUCH ? 0 : Math.max(0, Math.floor(-oy) - 2), y1 = TOUCH ? h : Math.min(h, Math.ceil(vh - oy) + 2);
       for (let y = y0; y < y1; y++) {
-        let o = y * w * 4; const fy = y + oy;
+        // on a touch screen the window's field is laid down the section, each window-height the mirror of the one
+        // before, so it runs on without a seam and stays with the section
+        let o = y * w * 4; const fy = TOUCH ? (((y % (2 * vh)) + 2 * vh) % (2 * vh) <= vh ? ((y % (2 * vh)) + 2 * vh) % (2 * vh) : 2 * vh - ((y % (2 * vh)) + 2 * vh) % (2 * vh)) : y + oy;
         for (let x = 0; x < w; x++) {
           const fx = x + ox; let R = B[0], Gc = B[1], Bl = B[2];
           for (let k = 0; k < q.length; k += 6) {
@@ -3148,10 +3169,12 @@
           d[o++] = R; d[o++] = Gc; d[o++] = Bl; d[o++] = 255;
         }
       }
+      soften(hst, y0, y1);
       hst.ctx.putImageData(hst.img, 0, 0);
       if (!hst.on) { hst.on = true; hst.el.classList.add("is-gfx"); }
     }
-    let tau = Math.random() * 20, boost = 0, vel = 0, lastY = window.scrollY, lastT = 0, lastDraw = 0, running = false;
+    let tau = Math.random() * 20, boost = 0, vel = 0, lastY = window.scrollY, lastT = 0, lastDraw = 0, running = false, lastScroll = 0;
+    if (TOUCH) window.addEventListener("scroll", () => { lastScroll = performance.now(); }, { passive: true });
     const shown = () => hosts.filter((x) => x.vis);
     const drawAll = (t, v) => { const q = pools(tau, t, v); shown().forEach((x) => paint(x, q)); };
     // still: drawn once per scroll, never animated, for reduced motion and for a visitor saving data (Phase 4)
@@ -3163,6 +3186,11 @@
       running = false;
       if (document.hidden || !shown().length) { lastT = 0; return; }   // no green section on screen: nothing is drawn
       const dt = lastT ? Math.min(.1, (now - lastT) / 1000) : 0; lastT = now;
+      if (TOUCH) {
+        tau += dt * IDLE;
+        if (now - lastScroll > 160 && now - lastDraw > IDLE_MS) { drawAll(now / 1000, 0); lastDraw = now; }
+        go(); return;
+      }
       const y = window.scrollY, Hh = Math.max(1, window.innerHeight), dy = y - lastY; lastY = y;
       boost += (Math.abs(dy) / Hh * SCROLL - boost) * .15;
       vel += ((dt > 0 ? Math.max(-3, Math.min(3, dy / Hh / dt)) : 0) - vel) * .12;
@@ -3178,11 +3206,11 @@
     const settle = () => { clearTimeout(quiet); quiet = setTimeout(() => drawAll(0, 0), 60); };
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => { const x = hosts.find((hh) => hh.el === e.target); if (x) x.vis = e.isIntersecting; });
-      if (shown().length) { if (still) settle(); else go(); }
+      if (shown().length) { if (still || TOUCH) settle(); if (!still) go(); }
     }, { rootMargin: "-2px 0px -2px 0px" });           // a section that only touches the edge does not count
     hosts.forEach((x) => io.observe(x.el));
     // reduced motion: the field holds still; the window onto it still follows the page as it scrolls
-    if (still) window.addEventListener("scroll", () => { if (shown().length) requestAnimationFrame(() => drawAll(0, 0)); }, { passive: true });
+    if (still && !TOUCH) window.addEventListener("scroll", () => { if (shown().length) requestAnimationFrame(() => drawAll(0, 0)); }, { passive: true });
     document.addEventListener("visibilitychange", () => { if (!document.hidden && shown().length) go(); });
     let refit = 0;
     window.addEventListener("resize", () => { clearTimeout(refit); refit = setTimeout(() => { if (shown().length) drawAll(performance.now() / 1000, 0); }, 150); });
